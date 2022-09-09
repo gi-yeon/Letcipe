@@ -1,6 +1,11 @@
 <template>
-  <v-container class="init-page" @click="moveMain">
-    <v-row justify="center">
+  <v-container
+    class="init-page"
+    justify="center"
+    align="center"
+    @click="moveMain"
+  >
+    <v-row>
       <v-col class="logo-wrap">
         <v-col class="logo-title">
           <h1>
@@ -44,6 +49,7 @@ export default {
 * {
   font-family: 'LeeSeoyun';
 }
+
 .init-page {
   height: 100vh;
   display: flex;
@@ -51,12 +57,17 @@ export default {
   align-items: center;
   background-image: url('/bg/bg_img.png');
 }
-
 .logo-wrap {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+.col {
+  max-width: 80%;
+}
+.row {
+  justify-content: center;
 }
 .logo-horizontal {
   cursor: pointer;
@@ -65,6 +76,15 @@ export default {
 .logo-title {
   color: #364067;
   text-align: center;
+}
+
+@media (min-width: 800px) {
+  .container {
+    max-width: 100%;
+  }
+  .logo-horizontal {
+    width: 30%;
+  }
 }
 
 .logo-horizontal {
