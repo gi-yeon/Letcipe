@@ -1,20 +1,22 @@
 <template>
-  <div class="init-page" @click="moveMain">
-    <div class="logo-wrap">
-      <div class="logo-title">
-        <h1>
-          당신의, <br />스마트한 데일리
-          <br />
-          장보기 도우미
-        </h1>
-      </div>
-      <img
-        class="logo-horizontal"
-        src="/icon/logo_icon_b.png"
-        alt="logo_icon.png"
-      />
-    </div>
-  </div>
+  <v-container class="init-page" @click="moveMain">
+    <v-row justify="center">
+      <v-col class="logo-wrap">
+        <v-col class="logo-title">
+          <h1>
+            당신의, <br />스마트한 데일리
+            <br />
+            장보기 도우미
+          </h1>
+        </v-col>
+        <img
+          class="logo-horizontal"
+          src="/icon/logo_icon_b.png"
+          alt="logo_icon.png"
+        />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -66,8 +68,8 @@ export default {
 }
 
 .logo-horizontal {
-  animation: slide-in-right 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards,
-    logo-jello 0.9s linear 1s;
+  animation: slide-in-right 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards,
+    logo-jello 0.9s linear 1.2s;
 }
 
 /* .logo-horizontal {
