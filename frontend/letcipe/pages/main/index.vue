@@ -1,11 +1,14 @@
 <template>
-  <div>안녕여기는 main page</div>
+  <v-container class="main-container"> </v-container>
 </template>
 
 <script>
 export default {
   name: 'MainPage',
+  data() {
+    return {}
+  },
 }
 </script>
 
-<style></style>
+<style scoped></style>

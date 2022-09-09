@@ -1,25 +1,30 @@
 <template>
-  <div class="init-page" @click="moveMain">
-    <div class="logo-wrap">
-      <div class="logo-title">
-        <h1>
-          당신의, <br />스마트한 데일리
-          <br />
-          장보기 도우미
-        </h1>
-      </div>
-      <img
-        class="logo-horizontal"
-        src="/icon/logo_icon_b.png"
-        alt="logo_icon.png"
-      />
-    </div>
-  </div>
+  <v-container class="init-page" @click="moveMain">
+    <v-row justify="center">
+      <v-col class="logo-wrap">
+        <v-col class="logo-title">
+          <h1>
+            당신의, <br />스마트한 데일리
+            <br />
+            장보기 도우미
+          </h1>
+        </v-col>
+        <img
+          class="logo-horizontal"
+          src="/icon/logo_icon_b.png"
+          alt="logo_icon.png"
+        />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 export default {
   name: 'IndexPage',
+  data() {
+    return {}
+  },
   methods: {
     moveMain() {
       this.$router.push('/main')
@@ -63,11 +68,17 @@ export default {
 }
 
 .logo-horizontal {
-  -webkit-animation: slide-in-right 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)
-    both;
-  animation: slide-in-right 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: slide-in-right 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards,
+    logo-jello 0.9s linear 1.2s;
 }
-@-webkit-keyframes logo-horizontal {
+
+/* .logo-horizontal {
+  -webkit-animation: logo-jello 0.9s both;
+  animation: logo-jello 0.9s both;
+  animation-delay: 1.2s;
+} */
+
+@-webkit-keyframes slide-in-right {
   0% {
     -webkit-transform: translateX(1000px);
     transform: translateX(1000px);
@@ -92,41 +103,7 @@ export default {
   }
 }
 
-.logo-horizontal {
-  -webkit-animation: logo-horizontal 0.9s both;
-  animation: logo-horizontal 0.9s both;
-}
-@-webkit-keyframes logo-horizontal {
-  0% {
-    -webkit-transform: scale3d(1, 1, 1);
-    transform: scale3d(1, 1, 1);
-  }
-  30% {
-    -webkit-transform: scale3d(1.25, 0.75, 1);
-    transform: scale3d(1.25, 0.75, 1);
-  }
-  40% {
-    -webkit-transform: scale3d(0.75, 1.25, 1);
-    transform: scale3d(0.75, 1.25, 1);
-  }
-  50% {
-    -webkit-transform: scale3d(1.15, 0.85, 1);
-    transform: scale3d(1.15, 0.85, 1);
-  }
-  65% {
-    -webkit-transform: scale3d(0.95, 1.05, 1);
-    transform: scale3d(0.95, 1.05, 1);
-  }
-  75% {
-    -webkit-transform: scale3d(1.05, 0.95, 1);
-    transform: scale3d(1.05, 0.95, 1);
-  }
-  100% {
-    -webkit-transform: scale3d(1, 1, 1);
-    transform: scale3d(1, 1, 1);
-  }
-}
-@keyframes jello-horizontal {
+@-webkit-keyframes logo-jello {
   0% {
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1);

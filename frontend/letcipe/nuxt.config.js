@@ -80,5 +80,12 @@ export default {
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    parallel: true,
+    cache: true,
+    hardSource: true,
+    extractCSS: process.env.NODE_ENV === 'production',
+    optimizeCSS: process.env.NODE_ENV === 'production',
+    transpile: ['vue-intersect'],
+  },
 }
