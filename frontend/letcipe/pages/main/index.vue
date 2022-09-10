@@ -23,31 +23,41 @@
           </div>
         </div>
         <div class="my-container">
-          <v-carousel elevation="4" height="100%" style="border-radius: 30px">
+          <v-carousel height="100%" style="border-radius: 30px">
             <v-carousel-item v-for="(item, i) in userPlayList" :key="i">
               <v-container>
-                <v-row>
+                <v-row style="margin: -25px">
                   <v-col cols="12">
-                    <v-card class="my-card mx-auto blue-grey lighten-4">
-                      <div class="d-flex flex-no-wrap justify-center">
-                        <div>
-                          <div class="my-lecipe">
-                            <v-avatar class="ma-3" size="100">
-                              <v-img :src="'https://2bob.co.kr/' + item.url">
-                                <v-icon x-large>mdi-play</v-icon>
-                              </v-img>
-                            </v-avatar>
+                    <v-hover>
+                      <template #default="{ hover }">
+                        <v-card
+                          :elevation="hover ? 24 : 6"
+                          :class="hover ? 'lime lighten-3' : 'lime lighten-2'"
+                          class="my-card mx-auto"
+                        >
+                          <div class="d-flex flex-no-wrap justify-center pa-3">
+                            <div>
+                              <div class="my-lecipe">
+                                <v-avatar class="ma-3" size="100">
+                                  <v-img
+                                    :src="'https://2bob.co.kr/' + item.url"
+                                  >
+                                    <v-icon x-large>mdi-play</v-icon>
+                                  </v-img>
+                                </v-avatar>
+                              </div>
+                              <v-card-title
+                                class="my-title text-h5"
+                                v-text="item.title"
+                              ></v-card-title>
+                              <v-card-subtitle
+                                v-text="item.sub_title"
+                              ></v-card-subtitle>
+                            </div>
                           </div>
-                          <v-card-title
-                            class="my-title text-h5"
-                            v-text="item.title"
-                          ></v-card-title>
-                          <v-card-subtitle
-                            v-text="item.sub_title"
-                          ></v-card-subtitle>
-                        </div>
-                      </div>
-                    </v-card>
+                        </v-card>
+                      </template>
+                    </v-hover>
                   </v-col>
                 </v-row>
               </v-container>
@@ -55,15 +65,48 @@
           </v-carousel>
         </div>
         <div class="btn-group">
-          <v-btn class="mx-2" fab dark x-large color="amber">
-            <v-icon dark> mdi-android </v-icon>
-          </v-btn>
-          <v-btn class="mx-2" fab dark x-large color="amber">
-            <v-icon dark> mdi-android </v-icon>
-          </v-btn>
-          <v-btn class="mx-2" fab dark x-large color="amber">
-            <v-icon dark> mdi-android </v-icon>
-          </v-btn>
+          <v-hover>
+            <template #default="{ hover }">
+              <v-btn
+                :elevation="hover ? 24 : 6"
+                class="mx-2"
+                fab
+                dark
+                x-large
+                color="amber"
+              >
+                <v-icon dark> mdi-android </v-icon>
+              </v-btn>
+            </template>
+          </v-hover>
+          <v-hover>
+            <template #default="{ hover }">
+              <v-btn
+                :elevation="hover ? 24 : 6"
+                class="mx-2"
+                fab
+                dark
+                x-large
+                color="amber"
+              >
+                <v-icon dark> mdi-android </v-icon>
+              </v-btn>
+            </template>
+          </v-hover>
+          <v-hover>
+            <template #default="{ hover }">
+              <v-btn
+                :elevation="hover ? 24 : 6"
+                class="mx-2"
+                fab
+                dark
+                x-large
+                color="amber"
+              >
+                <v-icon dark> mdi-android </v-icon>
+              </v-btn>
+            </template>
+          </v-hover>
         </div>
         <div class="chart-group mt-7 mb-7">
           <div>오늘 20:00 기준</div>
@@ -85,32 +128,40 @@
           </div>
           <v-row>
             <v-col>
-              <v-card
-                v-for="(data, i) in lecipeData"
-                :key="i"
-                class="mx-auto mt-2 mb-2 d-flex align-center light-green lighten-2"
-              >
-                <div class="ml-4">{{ i }}</div>
-                <v-list-item three-line>
-                  <v-list-item-avatar tile size="50" color="grey">
-                    <v-img
-                      src="https://2bob.co.kr/data/recipe/20191212142613-HV8JG.jpg"
-                    >
-                    </v-img
-                  ></v-list-item-avatar>
-                  <v-list-item-content>
-                    <v-list-item-title class="mb-1">
-                      {{ data.title }}
-                    </v-list-item-title>
-                    <v-list-item-subtitle>{{
-                      data.sub_title
-                    }}</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-                <v-btn class="mr-3" fab dark x-small color="pink" outlined>
-                  <v-icon dark>mdi-heart</v-icon>
-                </v-btn>
-              </v-card>
+              <v-hover v-for="(data, i) in lecipeData" :key="i">
+                <template #default="{ hover }">
+                  <v-card
+                    :elevation="hover ? 24 : 6"
+                    :class="
+                      hover ? 'light-green lighten-3' : 'light-green lighten-2'
+                    "
+                    class="lecipe-list-group mx-auto mt-2 mb-2 d-flex align-center"
+                  >
+                    <div class="ml-4">{{ i }}</div>
+                    <v-list-item three-line>
+                      <v-list-item-avatar tile size="57">
+                        <v-img
+                          elevation="10"
+                          src="https://2bob.co.kr/data/recipe/20191212142613-HV8JG.jpg"
+                          style="border-radius: 5px"
+                        >
+                        </v-img
+                      ></v-list-item-avatar>
+                      <v-list-item-content>
+                        <v-list-item-title class="mb-1">
+                          {{ data.title }}
+                        </v-list-item-title>
+                        <v-list-item-subtitle>{{
+                          data.sub_title
+                        }}</v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-btn class="mr-3" fab dark x-small color="pink" outlined>
+                      <v-icon dark>mdi-heart</v-icon>
+                    </v-btn>
+                  </v-card>
+                </template>
+              </v-hover>
             </v-col>
           </v-row>
         </div>
@@ -120,7 +171,7 @@
             <div>같은 재료가 들어간 레시피 더보기</div>
             <div>전체보기</div>
           </div>
-          <div class="rec-imgs-group d-flex">
+          <div class="rec-imgs-group d-flex justify-space-between">
             <v-avatar
               v-for="(ref, i) in refImg"
               :key="i"
@@ -144,7 +195,7 @@
             <div>{{ user }}님 맞춤 추천</div>
             <div>전체보기</div>
           </div>
-          <div class="rec-imgs-group d-flex">
+          <div class="rec-imgs-group d-flex justify-space-between">
             <v-avatar
               v-for="(ref, i) in refImg"
               :key="i"
@@ -284,6 +335,7 @@ export default {
 .title-imgs {
   display: flex;
   overflow-x: scroll;
+  cursor: pointer;
 }
 .card {
   margin-right: 10%;
@@ -292,6 +344,7 @@ export default {
 .ref-imgs {
   width: 150px;
   height: 150px !important;
+  cursor: pointer;
 }
 
 .ref-wrap {
@@ -323,6 +376,7 @@ export default {
 }
 .my-card {
   border-radius: 30px;
+  cursor: pointer;
 }
 
 .my-lecipe {
@@ -356,6 +410,10 @@ export default {
   display: flex;
   justify-content: center;
   text-align: center;
+  cursor: pointer;
+}
+.lecipe-list-group {
+  cursor: pointer;
 }
 
 /* rec-imgs-group css */

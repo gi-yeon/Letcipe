@@ -83,7 +83,7 @@ export default {
   build: {
     parallel: true,
     // ERROR  [hardsource:bb467e33] Could not freeze ./.nuxt/router.js: Cannot read property 'hash' of undefined 같은 오류가 뜨면
-    // cache와 hardSource 지우고 빌드한 후 재설정.
+    // node_modules에서 cache/hard-source 지우고 다시 npm run dev 로 빌드하면 에러 사라짐.
     cache: true,
     hardSource: true,
     extractCSS: process.env.NODE_ENV === 'production',
