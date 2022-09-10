@@ -1,14 +1,377 @@
 <template>
-  <v-container class="main-container"> </v-container>
+  <div id="app">
+    <v-app id="inspire">
+      <div class="main-container">
+        <div class="title-wrap">
+          <div class="title">{{ user }}님이 좋아할 레시피</div>
+          <div class="title-imgs">
+            <div v-for="(ref, i) in refImg" :key="i" class="card">
+              <div>{{ user }}맞춤 추천</div>
+              <v-card>
+                <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
+                  <div class="ref-wrap">
+                    <v-card-title class="ref-title">{{
+                      ref.title
+                    }}</v-card-title>
+                    <v-card-subtitle class="ref-subtitle">{{
+                      ref.sub_title
+                    }}</v-card-subtitle>
+                  </div>
+                </v-img>
+              </v-card>
+            </div>
+          </div>
+        </div>
+        <div class="my-container">
+          <v-carousel elevation="4" height="100%" style="border-radius: 30px">
+            <v-carousel-item v-for="(item, i) in userPlayList" :key="i">
+              <v-container>
+                <v-row>
+                  <v-col cols="12">
+                    <v-card class="my-card mx-auto blue-grey lighten-4">
+                      <div class="d-flex flex-no-wrap justify-center">
+                        <div>
+                          <div class="my-lecipe">
+                            <v-avatar class="ma-3" size="100">
+                              <v-img :src="'https://2bob.co.kr/' + item.url">
+                                <v-icon x-large>mdi-play</v-icon>
+                              </v-img>
+                            </v-avatar>
+                          </div>
+                          <v-card-title
+                            class="my-title text-h5"
+                            v-text="item.title"
+                          ></v-card-title>
+                          <v-card-subtitle
+                            v-text="item.sub_title"
+                          ></v-card-subtitle>
+                        </div>
+                      </div>
+                    </v-card>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-carousel-item>
+          </v-carousel>
+        </div>
+        <div class="btn-group">
+          <v-btn class="mx-2" fab dark x-large color="amber">
+            <v-icon dark> mdi-android </v-icon>
+          </v-btn>
+          <v-btn class="mx-2" fab dark x-large color="amber">
+            <v-icon dark> mdi-android </v-icon>
+          </v-btn>
+          <v-btn class="mx-2" fab dark x-large color="amber">
+            <v-icon dark> mdi-android </v-icon>
+          </v-btn>
+        </div>
+        <div class="chart-group mt-7 mb-7">
+          <div>오늘 20:00 기준</div>
+          <div class="chart-header">
+            <div>Let'cipe차트</div>
+            <div>전체보기</div>
+          </div>
+          <div class="chart-chips-group">
+            <v-chip
+              v-for="(tag, i) in tag_set"
+              :key="i"
+              class="tag-set ma-1"
+              close
+              color="green"
+              outlined
+            >
+              {{ tag }}
+            </v-chip>
+          </div>
+          <v-row>
+            <v-col>
+              <v-card
+                v-for="(data, i) in lecipeData"
+                :key="i"
+                class="mx-auto mt-2 mb-2 d-flex align-center light-green lighten-2"
+              >
+                <div class="ml-4">{{ i }}</div>
+                <v-list-item three-line>
+                  <v-list-item-avatar tile size="50" color="grey">
+                    <v-img
+                      src="https://2bob.co.kr/data/recipe/20191212142613-HV8JG.jpg"
+                    >
+                    </v-img
+                  ></v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title class="mb-1">
+                      {{ data.title }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle>{{
+                      data.sub_title
+                    }}</v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-btn class="mr-3" fab dark x-small color="pink" outlined>
+                  <v-icon dark>mdi-heart</v-icon>
+                </v-btn>
+              </v-card>
+            </v-col>
+          </v-row>
+        </div>
+        <div class="ingrediant-base-group mt-2 mb-3">
+          <div>최근 먹은 두부 토마토 파스타</div>
+          <div class="chart-header">
+            <div>같은 재료가 들어간 레시피 더보기</div>
+            <div>전체보기</div>
+          </div>
+          <div class="rec-imgs-group d-flex">
+            <v-avatar
+              v-for="(ref, i) in refImg"
+              :key="i"
+              size="130"
+              tile
+              class="mr-2"
+              ><v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
+                <div class="ref-wrap">
+                  <v-card-title class="ref-title">{{ ref.title }}</v-card-title>
+                  <v-card-subtitle class="ref-subtitle">{{
+                    ref.sub_title
+                  }}</v-card-subtitle>
+                </div>
+              </v-img></v-avatar
+            >
+          </div>
+        </div>
+        <div class="lecipe-base-group mt-3 mb-2">
+          <div>이런 레시피리스트 어때요?</div>
+          <div class="chart-header">
+            <div>{{ user }}님 맞춤 추천</div>
+            <div>전체보기</div>
+          </div>
+          <div class="rec-imgs-group d-flex">
+            <v-avatar
+              v-for="(ref, i) in refImg"
+              :key="i"
+              size="130"
+              tile
+              class="mr-2"
+              ><v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
+                <div class="ref-wrap">
+                  <v-card-title class="ref-title">{{ ref.title }}</v-card-title>
+                  <v-card-subtitle class="ref-subtitle">{{
+                    ref.sub_title
+                  }}</v-card-subtitle>
+                </div>
+              </v-img></v-avatar
+            >
+          </div>
+        </div>
+      </div>
+    </v-app>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'MainPage',
   data() {
-    return {}
+    return {
+      user: '렛싸피',
+      userPlayList: [
+        {
+          url: 'data/recipe/20191212142613-HV8JG.jpg',
+          sub_title: '만소~만소',
+          title: '만두소시지꼬치',
+          content:
+            '소떡소떡을 응용한 만두요리예요. 떡 대신 만두가 실하게 자리잡았답니다. 추억의 케첩 양념에 고소함을 더할 마요네즈도 꼭 곁들여주세요.',
+          ingrediants: {
+            must: '냉동 납작만두(15개), 소시지(12개), 마요네즈(2)',
+            option: '고추장(1)+케첩(4)+올리고당(2)',
+            souce: '',
+          },
+        },
+        {
+          url: 'data/recipe/20170419170950-RSFQM.jpg',
+          sub_title: '알싸한 파로 승부 걸었다',
+          title: '매운파골뱅이무침',
+          content:
+            '고춧가루와 고추만 맵다고 생각했다면 큰 오산. 골뱅이무침에 소면 대신 파채를 듬뿍 곁들여보세요. 아삭하고 알싸한 파의 매운맛,이번에 제대로 경험할 거예요.',
+          ingrediants: {
+            must: '콩나물(2줌=150g),통조림 골뱅이(1캔=400g), 대파(4대×20cm=대파채 4컵 분량=180g)',
+            option: '풋고추(1개)',
+            souce: '소금(0.2)',
+          },
+        },
+      ],
+      refImg: [
+        {
+          url: 'data/recipe/20210810152825-4Y20E.jpg',
+          sub_title: '끝맛이 개운한',
+          title: '오이찜닭',
+        },
+        {
+          url: 'data/recipe/20210810142007-EYPBD.jpg',
+          sub_title: '색다른 꿀조합',
+          title: '명란 오이무침',
+        },
+        {
+          url: 'data/recipe/20210713113307-VT9JZ.jpg',
+          sub_title: '식감이 재밌는',
+          title: '소고기 오이볶음밥',
+        },
+        {
+          url: 'data/recipe/20210708104052-PX6S9.jpg',
+          sub_title: '오래도록 아삭한',
+          title: '오이 물김치',
+        },
+        {
+          url: 'data/recipe/20220825153420-BD8U3.png',
+          sub_title: '다이어터를 위한 후식냉면',
+          title: '오이냉면',
+        },
+      ],
+      tag_set: ['Now', '최신', '추석', '쉐프의리스트', '더보기'],
+      lecipeData: [
+        {
+          url: '',
+          sub_title: '다이어터를 위한 후식냉면',
+          title: '오이냉면',
+        },
+        {
+          url: '',
+          sub_title: '다이어터를 위한 후식냉면',
+          title: '오이냉면',
+        },
+        {
+          url: '',
+          sub_title: '다이어터를 위한 후식냉면',
+          title: '오이냉면',
+        },
+      ],
+    }
   },
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+@font-face {
+  font-family: 'LeeSeoyun';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202-2@1.0/LeeSeoyun.woff')
+    format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+
+* {
+  font-family: 'LeeSeoyun';
+  /* border: 1px solid rgb(42, 55, 246); */
+}
+
+.main-container {
+  height: 100%;
+  padding: 10%;
+  background-image: url('/bg/bg_img.png');
+}
+.title {
+  font-size: x-large;
+  font-family: 'LeeSeoyun';
+}
+.v-application .title {
+  font-family: 'LeeSeoyun' !important;
+  font-size: x-large !important;
+}
+.title-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.title-imgs {
+  display: flex;
+  overflow-x: scroll;
+}
+.card {
+  margin-right: 10%;
+  width: 150px;
+}
+.ref-imgs {
+  width: 150px;
+  height: 150px !important;
+}
+
+.ref-wrap {
+  width: 150px;
+  height: 80px;
+  background-color: rgba(49, 49, 49, 0.422);
+}
+.ref-title {
+  /* color: rgb(0, 0, 0); */
+  color: aliceblue;
+  text-align: right;
+  font-size: large;
+  font-weight: bolder;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ref-subtitle {
+  /* color: rgb(0, 0, 0); */
+  color: aliceblue;
+  text-align: right;
+}
+.my-container {
+  padding-top: 10%;
+  padding-bottom: 10%;
+}
+.my-title {
+  font-family: 'LeeSeoyun' !important;
+}
+.my-card {
+  border-radius: 30px;
+}
+
+.my-lecipe {
+  display: flex;
+  justify-content: center;
+}
+
+/* 캐러셀 css */
+/* .v-carousel__controls {
+      display: none;
+    } */
+/* btn-group css */
+
+.btn-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* chart-group css */
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+}
+.chart-chips-group {
+  display: flex;
+  overflow-x: scroll;
+}
+.tag-set {
+  padding: 0 12px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+/* rec-imgs-group css */
+.rec-imgs-group {
+  overflow: scroll;
+}
+/* 일반 screen */
+@media (max-width: 800px) {
+  .ref-imgs {
+    width: 200px;
+    height: 200px;
+  }
+
+  .imgs {
+    justify-content: space-between;
+    overflow-x: scroll;
+  }
+}
+</style>
