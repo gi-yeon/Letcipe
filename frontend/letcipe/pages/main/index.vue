@@ -334,7 +334,7 @@ export default {
 }
 .title-imgs {
   display: flex;
-  overflow-x: scroll;
+  overflow-x: hidden;
   cursor: pointer;
 }
 .card {

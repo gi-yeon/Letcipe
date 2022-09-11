@@ -83,7 +83,7 @@ export default {
     max-width: 100%;
   }
   .logo-horizontal {
-    width: 30%;
+    width: 20%;
   }
 }
 
