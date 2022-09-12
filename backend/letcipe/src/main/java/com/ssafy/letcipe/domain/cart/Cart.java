@@ -1,23 +1,21 @@
-package com.ssafy.letcipe.domain.historyListItem;
+package com.ssafy.letcipe.domain.cart;
 
-import com.ssafy.letcipe.domain.history.History;
 import com.ssafy.letcipe.domain.recipe.Recipe;
+import com.ssafy.letcipe.domain.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
-@NoArgsConstructor
 @Getter
-@IdClass(HistoryItemPK.class)
-public class HistoryItem implements Serializable {
-
+@NoArgsConstructor
+@IdClass(CartPK.class)
+public class Cart {
     @Id
-    @ManyToOne(targetEntity = History.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "history_id", referencedColumnName = "id")
-    private History history;
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
     @Id
     @ManyToOne(targetEntity = Recipe.class, fetch = FetchType.LAZY)

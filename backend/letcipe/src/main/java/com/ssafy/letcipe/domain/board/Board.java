@@ -1,5 +1,6 @@
 package com.ssafy.letcipe.domain.board;
 
+import com.ssafy.letcipe.domain.type.StatusType;
 import com.ssafy.letcipe.domain.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,8 +33,8 @@ public class Board {
     @ColumnDefault("0")
     private Long likes;
 
-//    @Column(name = "status", nullable = false)
-//    private StatusType statusType;
+    @Column(name = "is_deleted", nullable = false)
+    private StatusType statusType;
 
     @Column(name = "reg_time")
     @Temporal(TemporalType.TIMESTAMP)

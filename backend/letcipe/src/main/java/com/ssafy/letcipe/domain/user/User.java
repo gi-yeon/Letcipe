@@ -1,5 +1,6 @@
 package com.ssafy.letcipe.domain.user;
 
+import com.ssafy.letcipe.domain.type.StatusType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,8 +38,8 @@ public class User {
     @Column(name = "profile_image")
     private String profileImage;
 
-//    @Column(name = "is_deleted", nullable = false)
-//    private StatusType statusType;
+    @Column(name = "is_deleted", nullable = false)
+    private StatusType statusType;
 
     @Column(name = "birth", nullable = false)
     private Date birth;

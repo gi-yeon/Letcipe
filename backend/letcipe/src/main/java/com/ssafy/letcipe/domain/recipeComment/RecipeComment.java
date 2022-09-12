@@ -1,6 +1,6 @@
-package com.ssafy.letcipe.domain.recipeList;
+package com.ssafy.letcipe.domain.recipeComment;
 
-import com.ssafy.letcipe.domain.type.StatusType;
+import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,24 +9,24 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@NoArgsConstructor
 @Getter
-public class RecipeList {
-
+@NoArgsConstructor
+public class RecipeComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", unique = true)
     private Long id;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @Column(name = "name")
-    private String name;
+    @ManyToOne(targetEntity = Recipe.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipe_id", referencedColumnName = "id")
+    private Recipe recipe;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "content", nullable = false)
+    private String content;
 
     @Column(name = "reg_time")
     @Temporal(TemporalType.TIMESTAMP)
@@ -34,11 +34,4 @@ public class RecipeList {
 
     @Column(name = "mod_time")
     private Date modTime;
-
-    @Column(name = "is_deleted", nullable = false)
-    private StatusType statusType;
-
-    @Column(name = "is_shared")
-    private SharedType isShared;
-
 }
