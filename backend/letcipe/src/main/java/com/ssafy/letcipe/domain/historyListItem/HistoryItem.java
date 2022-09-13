@@ -6,13 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @IdClass(HistoryItemPK.class)
-public class HistoryItem implements Serializable {
+public class HistoryItem {
 
     @Id
     @ManyToOne(targetEntity = History.class, fetch = FetchType.LAZY)

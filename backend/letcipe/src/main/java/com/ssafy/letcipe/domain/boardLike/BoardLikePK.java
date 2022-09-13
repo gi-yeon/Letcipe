@@ -1,7 +1,6 @@
 package com.ssafy.letcipe.domain.boardLike;
 
 import com.ssafy.letcipe.domain.board.Board;
-import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -6,13 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @IdClass(RecipeListItemPK.class)
-public class RecipeListItem implements Serializable {
+public class RecipeListItem {
 
     @Id
     @ManyToOne(targetEntity = RecipeList.class, fetch = FetchType.LAZY)
