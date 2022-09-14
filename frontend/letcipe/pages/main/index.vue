@@ -23,6 +23,7 @@
           </div>
         </div>
         <div class="my-container">
+          <div>{{ user }}님의 현재 진행중인 레시피리스트</div>
           <v-carousel height="100%" style="border-radius: 30px">
             <v-carousel-item v-for="(item, i) in userPlayList" :key="i">
               <v-container>
@@ -63,6 +64,45 @@
               </v-container>
             </v-carousel-item>
           </v-carousel>
+        </div>
+        <div class="cart-group">
+          <div>{{ user }}님의 장보기 리스트</div>
+          <v-card
+            flat
+            color="green lighten-2"
+            height="250px"
+            style="overflow: scroll; border-radius: 25px"
+          >
+            <v-card-text>
+              <v-container fluid>
+                <div style="color: white">
+                  <v-icon>mdi-cart</v-icon> 장보기 목록
+                </div>
+                <v-row v-for="(c, i) in checklist" :key="i">
+                  <v-col>
+                    <v-checkbox
+                      v-model="checklist[i]"
+                      :label="checklist[i]"
+                      color="indigo darken-3"
+                      :value="checklist[i]"
+                      hide-details
+                    ></v-checkbox>
+                  </v-col>
+                  <!-- <v-row align="center">
+                    <v-checkbox
+                      v-model="enabled"
+                      hide-details
+                      class="shrink mr-2 mt-0"
+                    ></v-checkbox>
+                    <v-text-field
+                      :disabled="!enabled"
+                      label="I only work if you check the box"
+                    ></v-text-field>
+                  </v-row> -->
+                </v-row>
+              </v-container>
+            </v-card-text>
+          </v-card>
         </div>
         <div class="btn-group">
           <v-hover>
@@ -109,7 +149,7 @@
           </v-hover>
         </div>
         <div class="chart-group mt-7 mb-7">
-          <div>오늘 20:00 기준</div>
+          <div>오늘 {{ time }} 기준</div>
           <div class="chart-header">
             <div>Let'cipe차트</div>
             <div>전체보기</div>
@@ -295,7 +335,22 @@ export default {
           title: '오이냉면',
         },
       ],
+      checklist: ['양파', '오이', '토마토', '대파', '쪽마늘'],
+      time: '',
     }
+  },
+  created() {
+    setInterval(this.findnow.bind(this), 1000)
+  },
+  methods: {
+    findnow() {
+      const today = new Date()
+      const hours = ('0' + today.getHours()).slice(-2)
+      const minutes = ('0' + today.getMinutes()).slice(-2)
+      const seconds = ('0' + today.getSeconds()).slice(-2)
+      this.time = hours + ':' + minutes + ':' + seconds
+      // console.log(this.time)
+    },
   },
 }
 </script>
@@ -318,6 +373,9 @@ export default {
   height: 100%;
   padding: 10%;
   background-image: url('/bg/bg_img.png');
+  background-repeat: repeat;
+  /* background-color: rgba(255, 255, 221, 0.771); */
+  color: black;
 }
 .title {
   font-size: x-large;
@@ -334,8 +392,9 @@ export default {
 }
 .title-imgs {
   display: flex;
-  overflow-x: hidden;
+  overflow: auto;
   cursor: pointer;
+  transform: translate3d(0, 0, 0);
 }
 .card {
   margin-right: 10%;
@@ -359,7 +418,7 @@ export default {
   font-size: large;
   font-weight: bolder;
   display: block;
-  overflow: hidden;
+  overflow: auto;
   text-overflow: ellipsis;
 }
 .ref-subtitle {
@@ -390,6 +449,12 @@ export default {
     } */
 /* btn-group css */
 
+/* cart-group css */
+.cart-group {
+  margin-top: 3%;
+  margin-bottom: 3%;
+}
+/* btn-group css */
 .btn-group {
   display: flex;
   justify-content: space-between;
@@ -403,7 +468,7 @@ export default {
 }
 .chart-chips-group {
   display: flex;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 .tag-set {
   padding: 0 12px;
@@ -418,7 +483,7 @@ export default {
 
 /* rec-imgs-group css */
 .rec-imgs-group {
-  overflow: scroll;
+  overflow: auto;
 }
 /* 일반 screen */
 @media (max-width: 800px) {
@@ -429,7 +494,7 @@ export default {
 
   .imgs {
     justify-content: space-between;
-    overflow-x: scroll;
+    overflow-x: auto;
   }
 }
 </style>
