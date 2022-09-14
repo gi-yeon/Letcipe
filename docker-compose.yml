@@ -5,7 +5,7 @@ services:
             - mysql
         build: 
             context: ./
-            dockerfile: ./demo/Dockerfile
+            dockerfile: ./backend/Dockerfile
             network: my_net
         container_name: back
         user: root
