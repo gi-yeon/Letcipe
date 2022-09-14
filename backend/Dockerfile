@@ -8,7 +8,7 @@ LABEL maintainer="giyeon3145@gmail.com"
 EXPOSE 8888
 
 #가져올 파일 jar또는 war
-ARG JAR_FILE=./demo/build/libs/*.jar
+ARG JAR_FILE=./backend/build/libs/*.jar
 
 #war파일 복사
 COPY ${JAR_FILE} app.jar
