@@ -10,18 +10,18 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-@IdClass(RecipeTagPK.class)
 public class RecipeTag {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
     @ManyToOne(targetEntity = Recipe.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private Recipe recipe;
 
-    @Id
     @ManyToOne(targetEntity = Tag.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id", referencedColumnName = "id")
     private Tag tag;
-
-
 
 }

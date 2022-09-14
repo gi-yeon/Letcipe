@@ -10,15 +10,17 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @Getter
-@IdClass(RecipeListItemPK.class)
 public class RecipeListItem {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
     @ManyToOne(targetEntity = RecipeList.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_list_id", referencedColumnName = "id")
     private RecipeList recipeList;
 
-    @Id
     @ManyToOne(targetEntity = Recipe.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private Recipe recipe;

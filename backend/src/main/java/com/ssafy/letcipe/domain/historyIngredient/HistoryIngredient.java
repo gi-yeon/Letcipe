@@ -1,4 +1,4 @@
-package com.ssafy.letcipe.domain.historyAdditional;
+package com.ssafy.letcipe.domain.historyIngredient;
 
 import com.ssafy.letcipe.domain.history.History;
 import com.ssafy.letcipe.domain.ingredient.Ingredient;
@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @Getter
-public class HistoryAdditional {
+public class HistoryIngredient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +27,7 @@ public class HistoryAdditional {
 
     @Column(name = "amount", nullable = false)
     private int amount;
+
+    @Column(name = "is_purchased", nullable = false)
+    private PurchaseType purchaseType;
 }
