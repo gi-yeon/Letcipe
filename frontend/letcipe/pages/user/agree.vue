@@ -2,12 +2,13 @@
   <div id="app">
     <v-app>
       <div class="agree-container">
-        <div class="d-flex justify-center">
-          <v-img
+        <div class="d-flex justify-center mt-8" style="font-size: xx-large">
+          <!-- <v-img
             class="logo-img"
             src="/icon/Logo_word_icon_b.png"
             alt="Logo_word_icon_b.png"
-          />
+          /> -->
+          약관 동의 및 시작
         </div>
         <section class="fadeInUp">
           <div class="all-terms-wrap">

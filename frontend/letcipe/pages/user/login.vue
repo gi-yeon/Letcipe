@@ -3,7 +3,7 @@
     <v-app>
       <v-container class="login-container">
         <div class="login-title">로그인</div>
-        <div class="login-wrap">
+        <div class="login-wrap fadeInUp">
           <div>
             <div class="login-input">
               <v-text-field
@@ -131,6 +131,19 @@ export default {
 
   .login-wrap {
     width: 60%;
+  }
+}
+.fadeInUp {
+  animation: fadeInUp 1s ease backwards;
+}
+@keyframes fadeInUp {
+  0% {
+    transform: translate(0px, 100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0px, 0);
+    opacity: 1;
   }
 }
 </style>
