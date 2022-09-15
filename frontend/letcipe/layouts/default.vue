@@ -22,6 +22,9 @@ export default {
   font-family: 'LeeSeoyun';
 }
 #app {
-  background-color: white;
+  /* background-color: white; */
+  color: black;
+  background-image: url('/bg/bg_img.png');
+  background-repeat: repeat;
 }
 </style>

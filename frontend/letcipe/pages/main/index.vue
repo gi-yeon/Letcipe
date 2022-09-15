@@ -78,13 +78,13 @@
                 <div style="color: white">
                   <v-icon>mdi-cart</v-icon> 장보기 목록
                 </div>
-                <v-row v-for="(c, i) in checklist" :key="i">
+                <v-row v-for="(c, index) in checklist" :key="index">
                   <v-col>
                     <v-checkbox
-                      v-model="checklist[i]"
-                      :label="checklist[i]"
+                      v-model="checklist[index]"
+                      :label="c"
                       color="indigo darken-3"
-                      :value="checklist[i]"
+                      :value="c"
                       hide-details
                     ></v-checkbox>
                   </v-col>
@@ -376,6 +376,8 @@ export default {
   background-repeat: repeat;
   /* background-color: rgba(255, 255, 221, 0.771); */
   color: black;
+  margin-top: 70px;
+  margin-bottom: 70px;
 }
 .title {
   font-size: x-large;
@@ -485,8 +487,11 @@ export default {
 .rec-imgs-group {
   overflow: auto;
 }
-/* 일반 screen */
-@media (max-width: 800px) {
+.container {
+  max-width: 100%;
+}
+/* 모바일 screen */
+@media (max-width: 400px) {
   .ref-imgs {
     width: 200px;
     height: 200px;
