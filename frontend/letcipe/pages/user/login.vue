@@ -5,19 +5,21 @@
         <div class="login-title">로그인</div>
         <div class="login-wrap fadeInUp">
           <div>
-            <div class="login-input">
-              <v-text-field
-                label="아이디"
-                :rules="rules"
-                hide-details="auto"
-              ></v-text-field>
-            </div>
-            <div class="login-input">
-              <v-text-field
-                label="비밀번호"
-                :rules="rules"
-                hide-details="auto"
-              ></v-text-field>
+            <div>
+              <div class="login-input">
+                <v-text-field
+                  label="아이디"
+                  :rules="rules"
+                  hide-details="auto"
+                ></v-text-field>
+              </div>
+              <div class="login-input">
+                <v-text-field
+                  label="비밀번호"
+                  :rules="rules"
+                  hide-details="auto"
+                ></v-text-field>
+              </div>
             </div>
             <div class="find-wrap">
               <v-icon small color="#51600d">mdi-information</v-icon>
@@ -62,9 +64,9 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .login-container {
-  height: 100vh;
+  /* height: 100vh; */
   width: 100vw;
   display: flex;
   flex-direction: column;
@@ -102,7 +104,7 @@ export default {
   color: #aac821;
 }
 .btn {
-  margin-top: 3%;
+  padding-top: 3%;
   margin-bottom: 3%;
 }
 .theme--dark.v-input input,

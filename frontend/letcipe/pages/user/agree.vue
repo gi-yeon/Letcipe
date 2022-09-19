@@ -984,14 +984,14 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin-top: 2%;
+  padding-top: 2%;
 }
 /* 전체 동의 CSS */
 .all-terms-wrap {
   font-size: larger;
   margin-left: 25px;
   margin-right: 25px;
-  margin-bottom: 25px;
+  padding-bottom: 25px;
 }
 .terms-title {
   display: flex;

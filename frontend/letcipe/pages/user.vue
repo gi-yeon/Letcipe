@@ -31,12 +31,7 @@ export default {
 }
 
 .user-wrap {
-  height: 100%;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-image: url('/bg/bg_img.png');
-  background-repeat: repeat;
+  margin-top: 70px;
+  margin-bottom: 70px;
 }
 </style>
