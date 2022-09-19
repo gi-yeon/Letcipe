@@ -1,5 +1,5 @@
 <template>
-  <div>안녕 여기는 user의 main</div>
+  <div>안녕 여기는 레시피</div>
 </template>
 
 <script>

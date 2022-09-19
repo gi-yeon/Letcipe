@@ -1,16 +1,14 @@
 <template>
-  <div id="app">
-    <Nuxt />
-  </div>
+  <nuxt-child></nuxt-child>
 </template>
 
 <script>
 export default {
-  name: 'DefaultLayout',
+  name: 'RecipePage',
 }
 </script>
 
-<style>
+<style scope>
 @font-face {
   font-family: 'LeeSeoyun';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202-2@1.0/LeeSeoyun.woff')
@@ -20,11 +18,5 @@ export default {
 }
 * {
   font-family: 'LeeSeoyun';
-}
-#app {
-  /* background-color: white; */
-  color: black;
-  background-image: url('/bg/bg_img.png');
-  background-repeat: repeat;
 }
 </style>

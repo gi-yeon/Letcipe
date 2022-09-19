@@ -64,7 +64,7 @@ export default {
   align-items: center;
 }
 .col {
-  max-width: 80%;
+  max-width: 100%;
 }
 .row {
   justify-content: center;
@@ -83,7 +83,7 @@ export default {
     max-width: 100%;
   }
   .logo-horizontal {
-    width: 30%;
+    width: 20%;
   }
 }
 
