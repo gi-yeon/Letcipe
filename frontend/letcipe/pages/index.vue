@@ -55,7 +55,8 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url('/bg/bg_img.png');
+  /* background-image: url('/bg/bg_img.png'); */
+  background-color: #ffbc35;
 }
 .logo-wrap {
   display: flex;
@@ -74,7 +75,8 @@ export default {
   width: 60%;
 }
 .logo-title {
-  color: #364067;
+  /* color: #364067; */
+  color: white;
   text-align: center;
 }
 

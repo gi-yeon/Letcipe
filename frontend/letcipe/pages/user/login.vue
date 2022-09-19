@@ -71,8 +71,8 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-image: url('/bg/bg_img.png');
-  background-repeat: repeat;
+  /* background-image: url('/bg/bg_img.png'); */
+  /* background-repeat: repeat; */
   padding-top: 70px;
   padding-bottom: 70px;
 }

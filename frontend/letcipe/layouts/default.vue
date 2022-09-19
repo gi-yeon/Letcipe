@@ -24,7 +24,8 @@ export default {
 #app {
   /* background-color: white; */
   color: black;
-  background-image: url('/bg/bg_img.png');
+  /* background-image: url('/bg/bg_img.png'); */
+  background-color: white;
   background-repeat: repeat;
 }
 </style>

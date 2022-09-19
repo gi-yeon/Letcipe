@@ -37,6 +37,7 @@ export default {
   position: fixed;
   bottom: 0;
   z-index: 999;
+  box-shadow: 0 4px 7px black;
 }
 .footer-icon-wrap {
   display: flex;

@@ -127,15 +127,15 @@ export default {
 .mypage-container {
   height: 100%;
   padding: 8%;
-  background-image: url('/bg/bg_img.png');
+  /* background-image: url('/bg/bg_img.png'); */
   background-repeat: repeat;
   /* background-color: rgba(255, 255, 221, 0.771); */
   color: black;
 }
 .user-section {
   /* background-color: white !important; */
-  background-image: url('/bg/bg_img.png');
-  background-repeat: repeat;
+  /* background-image: url('/bg/bg_img.png'); */
+  /* background-repeat: repeat; */
 }
 .list-btns {
   margin: 1.5rem 0 1.5rem 0;

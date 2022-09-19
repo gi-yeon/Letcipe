@@ -9,15 +9,16 @@
         </div>
       </div>
       <div class="logo-wrap">
-        <div>
+        <!-- <div>
           <v-icon size="1.2rem" color="black" style="position: fixed; top: 0"
             >mdi-bookmark</v-icon
           >
-        </div>
+        </div> -->
         <img
           class="logo_word"
           src="/icon/Logo_word_icon_b.png"
           alt="Logo_word_icon_b.png"
+          @click="moveMain"
         />
       </div>
       <div v-if="user === null || user === ''">
@@ -46,6 +47,9 @@ export default {
     moveLogin() {
       this.$router.push('/user/login')
     },
+    moveMain() {
+      this.$router.push('/main')
+    },
   },
 }
 </script>
@@ -62,8 +66,8 @@ export default {
   background-color: rgb(255, 255, 255);
   height: 70px;
   width: 100%;
-
   z-index: 999;
+  box-shadow: 0 -4px 10px black;
 }
 /* hamburger menu css */
 .hamburger-menu {

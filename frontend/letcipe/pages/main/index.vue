@@ -372,8 +372,9 @@ export default {
 .main-container {
   height: 100%;
   padding: 10%;
-  background-image: url('/bg/bg_img.png');
+  /* background-image: url('/bg/bg_img.png'); */
   background-repeat: repeat;
+  background-color: white;
   /* background-color: rgba(255, 255, 221, 0.771); */
   color: black;
   margin-top: 70px;
