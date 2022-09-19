@@ -1,5 +1,6 @@
 package com.ssafy.letcipe.domain.recipeList;
 
+import com.ssafy.letcipe.domain.recipeListItem.RecipeListItem;
 import com.ssafy.letcipe.domain.type.StatusType;
 import com.ssafy.letcipe.domain.user.User;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -40,5 +42,9 @@ public class RecipeList {
 
     @Column(name = "is_shared")
     private SharedType isShared;
+
+    @OneToMany(targetEntity = RecipeListItem.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipe_list_item_id", referencedColumnName = "id")
+    private List<RecipeListItem> recipeListItems;
 
 }
