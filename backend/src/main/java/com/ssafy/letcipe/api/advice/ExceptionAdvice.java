@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
 @RestControllerAdvice
@@ -33,8 +34,8 @@ public class ExceptionAdvice {
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(FileUploadException.class)
-    public ResponseEntity handleFileUploadException(FileUploadException e) {
+    @ExceptionHandler({FileUploadException.class, FileNotFoundException.class})
+    public ResponseEntity handleFileUploadException(Exception e) {
         printLog(e);
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
