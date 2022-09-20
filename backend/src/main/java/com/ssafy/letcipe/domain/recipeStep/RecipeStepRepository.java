@@ -1,8 +1,8 @@
-package com.ssafy.letcipe.domain.recipeList;
+package com.ssafy.letcipe.domain.recipeStep;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RecipeListRepository extends JpaRepository<RecipeList, Long> {
+public interface RecipeStepRepository extends JpaRepository<RecipeStep, Long> {
 }

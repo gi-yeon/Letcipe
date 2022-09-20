@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -30,10 +30,9 @@ public class BoardComment {
     private String content;
 
     @Column(name = "reg_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date regTime;
+    private LocalDateTime regTime;
 
     @Column(name = "mod_time")
-    private Date modTime;
+    private LocalDateTime modTime;
 
 }
