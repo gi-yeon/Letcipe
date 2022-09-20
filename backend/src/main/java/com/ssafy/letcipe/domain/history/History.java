@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -23,8 +23,7 @@ public class History {
     private User user;
 
     @Column(name = "reg_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date regTime;
+    private LocalDateTime regTime;
 
     @Column(name = "process", nullable = false)
     private ProcessType process;

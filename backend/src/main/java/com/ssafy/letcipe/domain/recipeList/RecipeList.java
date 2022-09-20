@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -29,11 +29,10 @@ public class RecipeList {
     private String description;
 
     @Column(name = "reg_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date regTime;
+    private LocalDateTime regTime;
 
     @Column(name = "mod_time")
-    private Date modTime;
+    private LocalDateTime modTime;
 
     @Column(name = "is_deleted", nullable = false)
     private StatusType statusType;
