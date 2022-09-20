@@ -59,5 +59,6 @@ public class Recipe {
         this.category = category;
         this.repImg = repImg;
         this.isDeleted = StatusType.N;
+        this.regTime = LocalDateTime.now();
     }
 }

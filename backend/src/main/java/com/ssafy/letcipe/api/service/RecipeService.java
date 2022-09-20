@@ -39,7 +39,7 @@ public class RecipeService {
     private final RecipeBookmarkRepository recipeBookmarkRepository;
     private final RecipeLikeRepository recipeLikeRepository;
     @Transactional
-    public void createRecipe(long userId,ReqCreateRecipeDto dto) throws NullPointerException, FileUploadException {
+    public void createRecipe(ReqCreateRecipeDto dto,long userId) throws NullPointerException, FileUploadException {
         // 유저 찾기
         User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("회원 정보를 찾을 수 없습니다"));
         // 레시피 대표 이미지 업로드

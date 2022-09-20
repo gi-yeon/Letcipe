@@ -28,90 +28,58 @@ public class RecipeController {
     @PostMapping("")
     public ResponseEntity createRecipe(@ModelAttribute ReqCreateRecipeDto createDto) throws FileUploadException {
         int userId = 1; // TODO 토큰에서 유저 id 가져와야 함
-        recipeService.createRecipe(userId, createDto);
-        return ResponseEntity.ok("");
+        recipeService.createRecipe(createDto,userId);
+        return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/{recipe_id}")
+    public ResponseEntity updateRecipe(@PathVariable int recipe_id, @ModelAttribute ReqCreateRecipeDto updateDto) {
+        int userId = 1; // TODO 토큰에서 유저 id 가져와야 함
+        logger.info("요청변수:{}", updateDto);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/like")
-    ResponseEntity<?> createRecipeLike(@RequestBody ReqCreateRecipeLikeDto requestDto){
-        HttpStatus status=HttpStatus.OK;
-        try{
-            recipeService.createLike(requestDto,1L);
-        }catch (SQLException | NullPointerException e){
-            System.out.println(e.getMessage());
-            status=HttpStatus.BAD_REQUEST;
-        }
-        return new ResponseEntity<>(status);
+    ResponseEntity createRecipeLike(@RequestBody ReqCreateRecipeLikeDto requestDto) throws SQLException {
+        recipeService.createLike(requestDto, 1L);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/like")
-    ResponseEntity<?> deleteRecipeLike(@RequestBody ReqDeleteRecipeLikeDto requestDto){
-        HttpStatus status=HttpStatus.OK;
-        try{
-            recipeService.deleteLike(requestDto,1L);
-        }catch(SQLException | NullPointerException e){
-            System.out.println(e.getMessage());
-            status=HttpStatus.BAD_REQUEST;
-        }
-        return new ResponseEntity<>(status);
+    ResponseEntity deleteRecipeLike(@RequestBody ReqDeleteRecipeLikeDto requestDto) throws SQLException {
+        recipeService.deleteLike(requestDto, 1L);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/mark")
-    ResponseEntity<?> createRecipeBookmark(@RequestBody ReqCreateRecipeBookmarkDto requestDto){
-        HttpStatus status=HttpStatus.OK;
-        try{
-            recipeService.createBookmark(requestDto,1L);
-        }catch(SQLException | NullPointerException e){
-            System.out.println(e.getMessage());
-            status=HttpStatus.BAD_REQUEST;
-        }
-        return new ResponseEntity<>(status);
+    ResponseEntity createRecipeBookmark(@RequestBody ReqCreateRecipeBookmarkDto requestDto) throws SQLException {
+        recipeService.createBookmark(requestDto, 1L);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/mark")
-    ResponseEntity<?> deleteRecipeBookmark(@RequestBody ReqDeleteRecipeBookmarkDto requestDto){
-        HttpStatus status=HttpStatus.OK;
-        try{
-            recipeService.deleteBookmark(requestDto,1L);
-        }catch(SQLException | NullPointerException e){
-            System.out.println(e.getMessage());
-            status=HttpStatus.BAD_REQUEST;
-        }
-        return new ResponseEntity<>(status);
+    ResponseEntity deleteRecipeBookmark(@RequestBody ReqDeleteRecipeBookmarkDto requestDto) throws SQLException {
+        recipeService.deleteBookmark(requestDto, 1L);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/comment")
-    ResponseEntity<?> createRecipeComment(@RequestBody ReqCreateRecipeCommentDto requestDto){
-        HttpStatus status=HttpStatus.OK;
-        try{
-            recipeService.createComment(requestDto,1L);
-        }catch(SQLException | NullPointerException e){
-            status=HttpStatus.BAD_REQUEST;
-            e.printStackTrace();
-        }
-        return new ResponseEntity<>(status);
+    ResponseEntity createRecipeComment(@RequestBody ReqCreateRecipeCommentDto requestDto) throws SQLException {
+        recipeService.createComment(requestDto, 1L);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/comment")
-    ResponseEntity<?> updateRecipeComment(@RequestBody ReqUpdateRecipeCommentDto requestDto){
-        HttpStatus status=HttpStatus.OK;
-        try{
-            recipeService.updateComment(requestDto);
-        }catch(SQLException | NullPointerException e){
-            status=HttpStatus.BAD_REQUEST;
-            e.printStackTrace();
-        }
-        return new ResponseEntity<>(status);
+    ResponseEntity updateRecipeComment(@RequestBody ReqUpdateRecipeCommentDto requestDto) throws SQLException {
+        recipeService.updateComment(requestDto);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/comment/{recipeCommentId}")
-    ResponseEntity<?> deleteRecipeComment(@PathVariable Long recipeCommentId){
-        HttpStatus status= HttpStatus.OK;
-        try{
-            recipeService.deleteComment(recipeCommentId);
-        }catch (SQLException | NullPointerException e){
-            status=HttpStatus.BAD_REQUEST;
-            e.printStackTrace();
-        }
-        return new ResponseEntity<>(status);
+    ResponseEntity deleteRecipeComment(@PathVariable Long recipeCommentId) throws SQLException {
+        recipeService.deleteComment(recipeCommentId);
+        return ResponseEntity.ok().build();
     }
+
+
 }
