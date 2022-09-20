@@ -16,12 +16,12 @@ import java.util.UUID;
 @Component
 public class FileHandler {
     @Value("${file.upload.dir}")
-    private String BASE_PATH;
+    private static String BASE_PATH;
 
     @Value("${file.upload.url}")
-    private String BASE_URL;
+    private static String BASE_URL;
 
-    private final String sep = File.separator;
+    private static final String sep = File.separator;
 
     /**
      * 이미지 파일을 업로드
@@ -30,7 +30,7 @@ public class FileHandler {
      * @return 저장된 이미지의 url
      * @throws FileNotFoundException 업로드 할 이미지가 빈 경우
      */
-    public String uploadImage(MultipartFile imgFile) throws FileUploadException {
+    public static String uploadImage(MultipartFile imgFile) throws FileUploadException {
         // 유효성 검사
         if (imgFile.isEmpty())
             throw new FileUploadException("업로드하려는 파일이 없습니다.");
@@ -72,7 +72,7 @@ public class FileHandler {
         return new String(BASE_URL+"/"+uuid + ext);
     }
 
-    public File getImageFile(String fileName) throws FileNotFoundException {
+    public static File getImageFile(String fileName) throws FileNotFoundException {
         String path = new String(BASE_PATH+sep+fileName);
         File file;
         try {
