@@ -2,6 +2,8 @@ package com.ssafy.letcipe.domain.recipe;
 
 import com.ssafy.letcipe.domain.type.StatusType;
 import com.ssafy.letcipe.domain.user.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -48,4 +50,14 @@ public class Recipe {
     @Column(name = "rep_img")
     private String repImg;
 
+    @Builder
+    public Recipe(User user, String title, String content, Integer serving, String category, String repImg) {
+        this.user = user;
+        this.title = title;
+        this.content = content;
+        this.serving = serving;
+        this.category = category;
+        this.repImg = repImg;
+        this.isDeleted = StatusType.N;
+    }
 }
