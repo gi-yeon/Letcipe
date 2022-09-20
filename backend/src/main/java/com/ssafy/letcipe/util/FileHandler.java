@@ -71,6 +71,18 @@ public class FileHandler {
         return new String(BASE_URL+"/"+uuid + ext);
     }
 
+    public void deleteImageFile(String url) throws FileNotFoundException {
+        String fileName = url.substring(url.lastIndexOf('/'));
+        String path = new String(BASE_PATH + sep + fileName);
+        File file;
+        try {
+            file = new File(path);
+            file.delete();
+        } catch (Exception e) {
+            throw new FileNotFoundException("파일을 찾을 수 없습니다.");
+        }
+    }
+
     public File getImageFile(String fileName) throws FileNotFoundException {
         String path = new String(BASE_PATH+sep+fileName);
         File file;
