@@ -1,6 +1,7 @@
 package com.ssafy.letcipe.api.service;
 
 import com.ssafy.letcipe.api.dto.recipe.ReqCreateRecipeDto;
+import com.ssafy.letcipe.api.dto.recipe.ReqUpdateRecipeDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqCreateRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqDeleteRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeComment.ReqCreateRecipeCommentDto;
@@ -26,6 +27,7 @@ import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
 @Service
@@ -38,10 +40,11 @@ public class RecipeService {
     private final RecipeCommentRepository recipeCommentRepository;
     private final RecipeBookmarkRepository recipeBookmarkRepository;
     private final RecipeLikeRepository recipeLikeRepository;
+
     @Transactional
-    public void createRecipe(ReqCreateRecipeDto dto,long userId) throws NullPointerException, FileUploadException {
+    public void createRecipe(ReqCreateRecipeDto dto, long userId) throws NullPointerException, FileUploadException {
         // 유저 찾기
-        User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("회원 정보를 찾을 수 없습니다"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("회원 정보를 찾을 수 없습니다"));
         // 레시피 대표 이미지 업로드
         String recipeImgUrl = fileHandler.uploadImage(dto.getRepImg());
 
@@ -50,6 +53,7 @@ public class RecipeService {
                 .user(user)
                 .title(dto.getTitle())
                 .content(dto.getContent())
+                .cookingTime(dto.getCookingTime())
                 .serving(dto.getServing())
                 .category(dto.getCategory())
                 .repImg(recipeImgUrl)
@@ -70,6 +74,47 @@ public class RecipeService {
             recipeStepRepository.save(recipeStep);
         }
     }
+
+    @Transactional
+    public void updateRecipe(ReqUpdateRecipeDto updateDto, long recipe_id) throws NullPointerException, FileNotFoundException, FileUploadException {
+        System.out.println("호출됨");
+        // 대표 이미지 null check
+        if (updateDto.getRepImg() == null || updateDto.getRepImg().isEmpty()) {
+            throw new FileNotFoundException("대표 이미지가 없습니다.");
+        }
+
+        Recipe recipe = recipeRepository.findById(recipe_id).orElseThrow(() -> new NullPointerException("레시피를 찾을 수 없습니다."));
+
+        // 기존 대표 이미지 삭제
+        fileHandler.deleteImageFile(recipe.getRepImg());
+        // 새로운 대표 이미지 업로드
+        String newRepImg = fileHandler.uploadImage(updateDto.getRepImg());
+
+        // 기존 스텝 삭제
+        for (int i = recipe.getSteps().size() - 1; i >= 0; i--) {
+            RecipeStep step = recipe.getSteps().get(i);
+            System.out.println("step = " + step);
+            fileHandler.deleteImageFile(step.getImg());
+            recipeStepRepository.delete(step);
+        }
+
+        // 새로운 스텝 추가
+        for (ReqCreateRecipeStepDto step : updateDto.getStepDtoList()) {
+            String stepImgUrl = fileHandler.uploadImage(step.getImg());
+            RecipeStep recipeStep = RecipeStep.builder()
+                    .recipe(recipe)
+                    .step(step.getStep())
+                    .content(step.getContent())
+                    .img(stepImgUrl)
+                    .build();
+
+            recipeStepRepository.save(recipeStep);
+        }
+
+        // 레시피 수정
+        recipe.updateRecipe(updateDto, newRepImg);
+    }
+
     @Transactional
     public void deleteComment(Long recipeCommentId) throws SQLException {
         RecipeComment comment = recipeCommentRepository
@@ -129,13 +174,13 @@ public class RecipeService {
     }
 
     @Transactional
-    public void createLike(ReqCreateRecipeLikeDto requestDto, Long userId) throws SQLException{
-        User user=userRepository
+    public void createLike(ReqCreateRecipeLikeDto requestDto, Long userId) throws SQLException {
+        User user = userRepository
                 .findById(userId)
-                .orElseThrow(()->new NullPointerException());
-        Recipe recipe=recipeRepository
+                .orElseThrow(() -> new NullPointerException());
+        Recipe recipe = recipeRepository
                 .findById(requestDto.getRecipeId())
-                .orElseThrow(()->new NullPointerException());
+                .orElseThrow(() -> new NullPointerException());
         recipeLikeRepository
                 .save(
                         RecipeLike.builder()
@@ -146,10 +191,11 @@ public class RecipeService {
     }
 
     @Transactional
-    public void deleteLike(ReqDeleteRecipeLikeDto requestDto, Long userId) throws SQLException{
-        RecipeLike like=recipeLikeRepository
+    public void deleteLike(ReqDeleteRecipeLikeDto requestDto, Long userId) throws SQLException {
+        RecipeLike like = recipeLikeRepository
                 .findByUserIdAndRecipeId(userId, requestDto.getRecipeId())
-                .orElseThrow(()->new NullPointerException());
+                .orElseThrow(() -> new NullPointerException());
         recipeLikeRepository.delete(like);
     }
+
 }

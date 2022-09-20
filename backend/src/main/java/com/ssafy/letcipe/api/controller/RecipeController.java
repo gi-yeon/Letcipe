@@ -1,6 +1,7 @@
 package com.ssafy.letcipe.api.controller;
 
 import com.ssafy.letcipe.api.dto.recipe.ReqCreateRecipeDto;
+import com.ssafy.letcipe.api.dto.recipe.ReqUpdateRecipeDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqCreateRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqDeleteRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeComment.ReqCreateRecipeCommentDto;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
 @RestController
@@ -33,9 +35,10 @@ public class RecipeController {
     }
 
     @PutMapping("/{recipe_id}")
-    public ResponseEntity updateRecipe(@PathVariable int recipe_id, @ModelAttribute ReqCreateRecipeDto updateDto) {
+    public ResponseEntity updateRecipe(@PathVariable long recipe_id, @ModelAttribute ReqUpdateRecipeDto updateDto) throws FileNotFoundException, FileUploadException {
         int userId = 1; // TODO 토큰에서 유저 id 가져와야 함
-        logger.info("요청변수:{}", updateDto);
+        logger.info("요청변수:{},{}",recipe_id, updateDto);
+        recipeService.updateRecipe(updateDto,recipe_id);
         return ResponseEntity.ok().build();
     }
 
