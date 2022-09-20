@@ -1,7 +1,9 @@
 package com.ssafy.letcipe.domain.recipeBookmark;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.user.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,5 +26,9 @@ public class RecipeBookmark {
     @ManyToOne(targetEntity = Recipe.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
     private Recipe recipe;
-
+    @Builder
+    public RecipeBookmark(User user, Recipe recipe) {
+        this.user = user;
+        this.recipe = recipe;
+    }
 }
