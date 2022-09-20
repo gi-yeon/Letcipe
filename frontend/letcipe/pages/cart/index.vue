@@ -169,6 +169,11 @@ export default {
       ],
     }
   },
+  methods: {
+    minusNum() {},
+    addNum() {},
+    plusCartList() {},
+  },
 }
 </script>
 
