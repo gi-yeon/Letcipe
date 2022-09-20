@@ -1,5 +1,6 @@
 package com.ssafy.letcipe.api.advice;
 
+import com.ssafy.letcipe.exception.AuthorityViolationException;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,5 +39,12 @@ public class ExceptionAdvice {
     public ResponseEntity handleFileUploadException(Exception e) {
         printLog(e);
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(AuthorityViolationException.class)
+    public ResponseEntity illegalRequestException(Exception e) {
+        logger.warn("해킹 시도 감지!");
+        printLog(e);
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 }
