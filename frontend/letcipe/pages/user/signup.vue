@@ -12,12 +12,7 @@
               <div class="d-flex flex-column">
                 <div>아이디</div>
                 <div class="d-flex">
-                  <v-text-field
-                    v-model="id"
-                    :rules="rules.id_rule"
-                    placeholder="아이디"
-                    solo
-                  ></v-text-field>
+                  <v-text-field v-model="id" :rules="rules.id_rule" placeholder="아이디" solo></v-text-field>
                   <v-btn height="48px" color="letcipe">중복확인</v-btn>
                 </div>
               </div>
@@ -45,12 +40,7 @@
               </div>
               <div class="d-flex flex-column">
                 <div>이름</div>
-                <v-text-field
-                  v-model="user_nm"
-                  :rules="rules.nm_rule"
-                  placeholder="이름"
-                  solo
-                ></v-text-field>
+                <v-text-field v-model="user_nm" :rules="rules.nm_rule" placeholder="이름" solo></v-text-field>
               </div>
               <div class="d-flex flex-column">
                 <div>생년월일</div>
@@ -74,10 +64,7 @@
                       v-on="on"
                     ></v-text-field>
                   </template>
-                  <v-date-picker
-                    v-model="birthdate"
-                    @input="bdmenu = false"
-                  ></v-date-picker>
+                  <v-date-picker v-model="birthdate" @input="bdmenu = false"></v-date-picker>
                 </v-menu>
               </div>
               <div class="d-flex flex-column">
@@ -100,7 +87,6 @@
                     <img :src="preview_profile" alt />
                   </v-avatar>
                   <v-file-input
-                    v-model="file"
                     width="50%"
                     label="이미지 업로드"
                     outlined
@@ -120,24 +106,14 @@
               <div class="d-flex flex-column">
                 <div>이메일</div>
                 <div class="d-flex justify-space-between align-items-center">
-                  <v-text-field
-                    v-model="email_id"
-                    placeholder="ssafy"
-                    solo
-                  ></v-text-field>
+                  <v-text-field v-model="email_id" placeholder="ssafy" solo></v-text-field>
                   <span>@</span>
                   <v-text-field
                     v-model="email_address"
                     placeholder="letcipe.com"
                     solo
-                    >{{ email_address }}</v-text-field
-                  >
-                  <v-select
-                    v-model="email_address"
-                    :items="emails"
-                    label="직접입력"
-                    solo
-                  ></v-select>
+                  >{{ email_address }}</v-text-field>
+                  <v-select v-model="email_address" :items="emails" label="직접입력" solo></v-select>
                 </div>
                 <!-- <div>
                 <v-row align="center">
@@ -145,29 +121,37 @@
                     <v-select :items="emails" label="직접입력" solo></v-select>
                   </v-col>
                 </v-row>
-              </div> -->
+                </div>-->
               </div>
               <div class="d-flex flex-column">
                 <div>휴대전화번호</div>
                 <div class="d-flex justify-space-between align-items-center">
-                  <v-text-field v-model="phoneRef" placeholder="010" solo>{{
+                  <v-text-field v-model="phoneRef" placeholder="010" solo>
+                    {{
                     phoneRef
-                  }}</v-text-field>
+                    }}
+                  </v-text-field>
                   <span>-</span>
-                  <v-text-field v-model="phoneFirst" placeholder="0000" solo>{{
+                  <v-text-field v-model="phoneFirst" placeholder="0000" solo>
+                    {{
                     phoneFirst
-                  }}</v-text-field>
+                    }}
+                  </v-text-field>
                   <span>-</span>
-                  <v-text-field v-model="phoneSecond" placeholder="0000" solo>{{
+                  <v-text-field v-model="phoneSecond" placeholder="0000" solo>
+                    {{
                     phoneSecond
-                  }}</v-text-field>
+                    }}
+                  </v-text-field>
                   <v-btn height="48px" class="pl-2">인증</v-btn>
                 </div>
               </div>
               <div class="d-flex">
-                <v-text-field v-model="validNum" placeholder="SK123LDk" solo>{{
+                <v-text-field v-model="validNum" placeholder="SK123LDk" solo>
+                  {{
                   validNum
-                }}</v-text-field>
+                  }}
+                </v-text-field>
                 <v-btn height="48px" class="pl-2">확인</v-btn>
               </div>
             </div>
@@ -187,45 +171,23 @@
                     style="width: 20px"
                     @click="find_Postcode()"
                   ></v-text-field>
-                  <v-btn height="48px" class="ml-3" @click="find_Postcode()"
-                    >주소검색</v-btn
-                  >
+                  <v-btn height="48px" class="ml-3" @click="find_Postcode()">주소검색</v-btn>
                 </div>
-                <v-text-field
-                  id="address"
-                  v-model="mainAddress"
-                  placeholder="주소"
-                  solo
-                ></v-text-field>
-                <v-text-field
-                  id="address-detail"
-                  v-model="detailsAddress"
-                  placeholder="상세주소"
-                  solo
-                ></v-text-field>
+                <v-text-field id="address" v-model="mainAddress" placeholder="주소" solo></v-text-field>
+                <v-text-field id="address-detail" v-model="detailsAddress" placeholder="상세주소" solo></v-text-field>
               </div>
               <div class="d-flex flex-column">
                 <div>직업</div>
-                <v-select
-                  v-model="job"
-                  :items="jobs"
-                  label="직업"
-                  solo
-                ></v-select>
+                <v-select v-model="job" :items="jobs" label="직업" solo></v-select>
               </div>
               <div class="d-flex flex-column">
                 <div>가구원 수</div>
-                <v-select
-                  v-model="familymember"
-                  :items="famCnt"
-                  label="가구원 수"
-                  solo
-                ></v-select>
+                <v-select v-model="familymember" :items="famCnt" label="가구원 수" solo></v-select>
               </div>
             </div>
           </v-form>
           <v-card-actions>
-            <v-btn text @click="$refs.form.reset()">Clear</v-btn>
+            <v-btn text @click="clearForm">Clear</v-btn>
             <v-spacer></v-spacer>
             <v-btn
               :disabled="!form"
@@ -233,8 +195,7 @@
               class="white--text"
               color="deep-purple accent-4"
               depressed
-              >Submit</v-btn
-            >
+            >Submit</v-btn>
           </v-card-actions>
         </div>
       </v-container>
@@ -322,6 +283,9 @@ export default {
     }
   },
   methods: {
+    clearForm() {
+      this.$refs.form.reset()
+    },
     find_Postcode() {
       new window.daum.Postcode({
         oncomplete: (data) => {
