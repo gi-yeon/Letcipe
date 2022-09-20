@@ -83,4 +83,8 @@ public class Recipe {
         this.repImg = repImg;
         this.modTime = LocalDateTime.now();
     }
+
+    public void delete() {
+        this.isDeleted = StatusType.Y;
+    }
 }

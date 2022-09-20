@@ -42,6 +42,13 @@ public class RecipeController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/{recipe_id}")
+    public ResponseEntity deleteRecipe(@PathVariable long recipe_id) {
+        long userId = 1L; // TODO 토큰에서 유저 id 가져와야 함
+        recipeService.deleteRecipe(recipe_id,userId);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/like")
     ResponseEntity createRecipeLike(@RequestBody ReqCreateRecipeLikeDto requestDto) throws SQLException {
         recipeService.createLike(requestDto, 1L);

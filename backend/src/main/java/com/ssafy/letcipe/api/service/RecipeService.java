@@ -21,6 +21,7 @@ import com.ssafy.letcipe.domain.recipeStep.RecipeStep;
 import com.ssafy.letcipe.domain.recipeStep.RecipeStepRepository;
 import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.domain.user.UserRepository;
+import com.ssafy.letcipe.exception.AuthorityViolationException;
 import com.ssafy.letcipe.util.FileHandler;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -116,6 +117,16 @@ public class RecipeService {
     }
 
     @Transactional
+    public void deleteRecipe(long recipe_id, long userId) throws AuthorityViolationException {
+        Recipe recipe = recipeRepository.findById(recipe_id).orElseThrow(() -> new NullPointerException("레시피를 찾을 수 없습니다."));
+        if (userId != recipe.getUser().getId()) throw new AuthorityViolationException("작성자만이 삭제할 수 있습니다.");
+
+        // 삭제 처리
+        recipe.delete();
+    }
+
+
+    @Transactional
     public void deleteComment(Long recipeCommentId) throws SQLException {
         RecipeComment comment = recipeCommentRepository
                 .findById(recipeCommentId)
@@ -197,5 +208,6 @@ public class RecipeService {
                 .orElseThrow(() -> new NullPointerException());
         recipeLikeRepository.delete(like);
     }
+
 
 }
