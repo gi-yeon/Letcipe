@@ -1,1 +1,37 @@
+version: "3.8"
+services:
+    deployback:
+        depends_on:
+            - mysql
+        build: 
+            context: ./
+            dockerfile: ./backend/Dockerfile
+            network: my_net
+        container_name: back
+        user: root
+        environment:
+            SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ssafy
+            SPRING_DATASOURCE_USERNAME: root
+            SPRING_DATASOURCE_PASSWORD: fPttlvl0914
+        ports:
+            - 8888:8888
+    mysql:
+     container_name: mysql
+     user: root
+     image: mysql:8.0.28 # 컨테이너에서 사용하는 base image 지정
+     restart: always # 컨테이너 다운 시 재시작하라는 명령어
+     volumes: # -v 옵션과 동일
+         - mysql:/var/lib/mysql
+     environment: # 컨테이너 안의 환경변수 설정
+         - MYSQL_ROOT_PASSWORD=fPttlvl0914
+         - MYSQL_DATABASE=ssafy
+     ports: # -p 옵션과 동일
+         - "3306:3306"
+volumes:
+    mysql:
+        name: mysql
+networks:
+    default:
+        external:
+            name: my_net
 
