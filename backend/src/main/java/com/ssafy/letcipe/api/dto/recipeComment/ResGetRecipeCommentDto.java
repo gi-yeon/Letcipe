@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @Builder
-public class ResReadRecipeCommentDto {
+public class ResGetRecipeCommentDto {
     long id;
     long userId;
     String nickname;
@@ -19,8 +19,8 @@ public class ResReadRecipeCommentDto {
     LocalDateTime modTime;
 
 
-    public static ResReadRecipeCommentDto createDto(RecipeComment recipeComment) {
-        return ResReadRecipeCommentDto.builder()
+    public static ResGetRecipeCommentDto createDto(RecipeComment recipeComment) {
+        return ResGetRecipeCommentDto.builder()
                 .id(recipeComment.getId())
                 .nickname(recipeComment.getUser().getNickname())
                 .content(recipeComment.getContent())

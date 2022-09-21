@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ReqUpdateRecipeCommentDto {
+public class ReqPutRecipeCommentDto {
     Long recipeCommentId;
     String content;
 }

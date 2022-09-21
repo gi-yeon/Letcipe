@@ -1,7 +1,6 @@
 package com.ssafy.letcipe.api.dto.recipe;
 
-import com.ssafy.letcipe.api.dto.recipeComment.ResReadRecipeCommentDto;
-import com.ssafy.letcipe.api.dto.user.ResReadUserDto;
+import com.ssafy.letcipe.api.dto.user.ResGetUserDto;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipeTag.RecipeTag;
 import lombok.AllArgsConstructor;
@@ -15,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ResGetRecipeDto {
     long id;
-    ResReadUserDto user;
+    ResGetUserDto user;
     String title;
     String content;
     int cookingTime;
@@ -31,7 +30,7 @@ public class ResGetRecipeDto {
     public static ResGetRecipeDto createDto(Recipe recipe) {
         return ResGetRecipeDto.builder()
                 .id(recipe.getId())
-                .user(ResReadUserDto.createDto(recipe.getUser()))
+                .user(ResGetUserDto.createDto(recipe.getUser()))
                 .title(recipe.getTitle())
                 .content(recipe.getContent())
                 .cookingTime((recipe.getCookingTime()))

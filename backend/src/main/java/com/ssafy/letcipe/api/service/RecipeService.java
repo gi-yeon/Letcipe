@@ -4,11 +4,11 @@ import com.ssafy.letcipe.api.dto.recipe.ReqCreateRecipeDto;
 import com.ssafy.letcipe.api.dto.recipe.ReqUpdateRecipeDto;
 import com.ssafy.letcipe.api.dto.recipe.ResGetRecipeDto;
 import com.ssafy.letcipe.api.dto.recipe.ResReadRecipeDto;
-import com.ssafy.letcipe.api.dto.recipeBookmark.ReqCreateRecipeBookmarkDto;
+import com.ssafy.letcipe.api.dto.recipeBookmark.ReqPostRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqDeleteRecipeBookmarkDto;
-import com.ssafy.letcipe.api.dto.recipeComment.ReqCreateRecipeCommentDto;
-import com.ssafy.letcipe.api.dto.recipeComment.ReqUpdateRecipeCommentDto;
-import com.ssafy.letcipe.api.dto.recipeLike.ReqCreateRecipeLikeDto;
+import com.ssafy.letcipe.api.dto.recipeComment.ReqPostRecipeCommentDto;
+import com.ssafy.letcipe.api.dto.recipeComment.ReqPutRecipeCommentDto;
+import com.ssafy.letcipe.api.dto.recipeLike.ReqPostRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqDeleteRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeStep.ReqCreateRecipeStepDto;
 import com.ssafy.letcipe.domain.recipe.Recipe;
@@ -149,7 +149,7 @@ public class RecipeService {
     }
 
     @Transactional
-    public void updateComment(ReqUpdateRecipeCommentDto requestDto) throws SQLException {
+    public void updateComment(ReqPutRecipeCommentDto requestDto) throws SQLException {
         RecipeComment comment = recipeCommentRepository
                 .findById(requestDto.getRecipeCommentId())
                 .orElseThrow(() -> new NullPointerException());
@@ -157,7 +157,7 @@ public class RecipeService {
     }
 
     @Transactional
-    public void createComment(ReqCreateRecipeCommentDto requestDto, Long userId) throws SQLException {
+    public void createComment(ReqPostRecipeCommentDto requestDto, Long userId) throws SQLException {
         System.out.println("recipe id : " + requestDto.getRecipeId());
         System.out.println("content: " + requestDto.getContent());
         User user = userRepository
@@ -175,7 +175,7 @@ public class RecipeService {
     }
 
     @Transactional
-    public void createBookmark(ReqCreateRecipeBookmarkDto requestDto, Long userId) throws SQLException {
+    public void createBookmark(ReqPostRecipeBookmarkDto requestDto, Long userId) throws SQLException {
         User user = userRepository
                 .findById(userId)
                 .orElseThrow(() -> new NullPointerException());
@@ -199,7 +199,7 @@ public class RecipeService {
     }
 
     @Transactional
-    public void createLike(ReqCreateRecipeLikeDto requestDto, Long userId) throws SQLException {
+    public void createLike(ReqPostRecipeLikeDto requestDto, Long userId) throws SQLException {
         User user = userRepository
                 .findById(userId)
                 .orElseThrow(() -> new NullPointerException());

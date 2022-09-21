@@ -3,19 +3,17 @@ package com.ssafy.letcipe.api.controller;
 import com.ssafy.letcipe.api.dto.recipe.ReqCreateRecipeDto;
 import com.ssafy.letcipe.api.dto.recipe.ReqUpdateRecipeDto;
 import com.ssafy.letcipe.api.dto.recipe.ResReadRecipeDto;
-import com.ssafy.letcipe.api.dto.recipeBookmark.ReqCreateRecipeBookmarkDto;
+import com.ssafy.letcipe.api.dto.recipeBookmark.ReqPostRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqDeleteRecipeBookmarkDto;
-import com.ssafy.letcipe.api.dto.recipeComment.ReqCreateRecipeCommentDto;
-import com.ssafy.letcipe.api.dto.recipeComment.ReqUpdateRecipeCommentDto;
-import com.ssafy.letcipe.api.dto.recipeLike.ReqCreateRecipeLikeDto;
+import com.ssafy.letcipe.api.dto.recipeComment.ReqPostRecipeCommentDto;
+import com.ssafy.letcipe.api.dto.recipeComment.ReqPutRecipeCommentDto;
+import com.ssafy.letcipe.api.dto.recipeLike.ReqPostRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqDeleteRecipeLikeDto;
 import com.ssafy.letcipe.api.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -61,7 +59,7 @@ public class RecipeController {
     }
 
     @PostMapping("/like")
-    ResponseEntity createRecipeLike(@RequestBody ReqCreateRecipeLikeDto requestDto) throws SQLException {
+    ResponseEntity createRecipeLike(@RequestBody ReqPostRecipeLikeDto requestDto) throws SQLException {
         try {
             recipeService.createLike(requestDto, 1L);
         } catch (RuntimeException e) {
@@ -81,7 +79,7 @@ public class RecipeController {
     }
 
     @PostMapping("/mark")
-    ResponseEntity createRecipeBookmark(@RequestBody ReqCreateRecipeBookmarkDto requestDto) throws SQLException {
+    ResponseEntity createRecipeBookmark(@RequestBody ReqPostRecipeBookmarkDto requestDto) throws SQLException {
         recipeService.createBookmark(requestDto, 1L);
         return ResponseEntity.ok().build();
     }
@@ -93,13 +91,13 @@ public class RecipeController {
     }
 
     @PostMapping("/comment")
-    ResponseEntity createRecipeComment(@RequestBody ReqCreateRecipeCommentDto requestDto) throws SQLException {
+    ResponseEntity createRecipeComment(@RequestBody ReqPostRecipeCommentDto requestDto) throws SQLException {
         recipeService.createComment(requestDto, 1L);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/comment")
-    ResponseEntity updateRecipeComment(@RequestBody ReqUpdateRecipeCommentDto requestDto) throws SQLException {
+    ResponseEntity updateRecipeComment(@RequestBody ReqPutRecipeCommentDto requestDto) throws SQLException {
         recipeService.updateComment(requestDto);
         return ResponseEntity.ok().build();
     }

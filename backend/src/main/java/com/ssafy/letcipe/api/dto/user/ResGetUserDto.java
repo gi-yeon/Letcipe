@@ -8,12 +8,12 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class ResReadUserDto {
+public class ResGetUserDto {
     long id;
     String nickname;
 
-    public static ResReadUserDto createDto(User user) {
-        return ResReadUserDto.builder()
+    public static ResGetUserDto createDto(User user) {
+        return ResGetUserDto.builder()
                 .id(user.getId())
                 .nickname(user.getNickname())
                 .build();

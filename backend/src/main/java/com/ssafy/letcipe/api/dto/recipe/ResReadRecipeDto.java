@@ -1,7 +1,7 @@
 package com.ssafy.letcipe.api.dto.recipe;
 
-import com.ssafy.letcipe.api.dto.recipeComment.ResReadRecipeCommentDto;
-import com.ssafy.letcipe.api.dto.user.ResReadUserDto;
+import com.ssafy.letcipe.api.dto.recipeComment.ResGetRecipeCommentDto;
+import com.ssafy.letcipe.api.dto.user.ResGetUserDto;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
 import com.ssafy.letcipe.domain.recipeComment.RecipeComment;
@@ -19,7 +19,7 @@ import java.util.List;
 @Builder
 public class ResReadRecipeDto {
     long id;
-    ResReadUserDto user;
+    ResGetUserDto user;
     String title;
     String content;
     int cookingTime;
@@ -29,13 +29,13 @@ public class ResReadRecipeDto {
     boolean isLike;
     int recipeBookmark;
     boolean isBookmark;
-    private List<ResReadRecipeCommentDto> recipeComment;
+    private List<ResGetRecipeCommentDto> recipeComment;
 
     private List<RecipeTag> tags;
 
     public ResReadRecipeDto(Recipe recipe,long userId) {
         this.id = recipe.getId();
-        this.user = ResReadUserDto.createDto(recipe.getUser());
+        this.user = ResGetUserDto.createDto(recipe.getUser());
         this.title = recipe.getTitle();
         this.content = recipe.getContent();
         this.cookingTime = recipe.getCookingTime();
@@ -44,7 +44,7 @@ public class ResReadRecipeDto {
         this.recipeBookmark = recipe.getBookmarks().size();
         this.recipeComment = new ArrayList<>();
         for (RecipeComment comment : recipe.getComments()) {
-            recipeComment.add(ResReadRecipeCommentDto.createDto(comment));
+            recipeComment.add(ResGetRecipeCommentDto.createDto(comment));
         }
 
         this.tags = recipe.getTags();

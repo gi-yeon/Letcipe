@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReqCreateRecipeBookmarkDto {
+public class ReqPostRecipeBookmarkDto {
     Long recipeId;
 }
