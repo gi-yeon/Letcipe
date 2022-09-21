@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,4 +59,10 @@ public class UserController {
         return ResponseEntity.ok(resultMap);
     }
 
+    @GetMapping("")
+    public ResponseEntity readUser(HttpServletRequest request){
+        Long userId = jwtService.getUserId(request);
+        ResGetUserDto resDto = userService.readUser(userId);
+        return ResponseEntity.ok(resDto);
+    }
 }

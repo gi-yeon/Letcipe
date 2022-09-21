@@ -58,4 +58,9 @@ public class UserService {
 
         return user;
     }
+
+    public ResGetUserDto readUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
+        return new ResGetUserDto(user);
+    }
 }

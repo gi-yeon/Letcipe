@@ -18,4 +18,9 @@ public class ResGetUserDto {
                 .nickname(user.getNickname())
                 .build();
     }
+
+    public ResGetUserDto(User user) {
+        this.id = user.getId();
+        this.nickname = user.getNickname();
+    }
 }
