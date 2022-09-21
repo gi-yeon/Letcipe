@@ -65,4 +65,18 @@ public class UserController {
         ResGetUserDto resDto = userService.readUser(userId);
         return ResponseEntity.ok(resDto);
     }
+
+    @PatchMapping("")
+    public ResponseEntity deleteUser(HttpServletRequest request) {
+        Long userId = jwtService.getUserId(request);
+        userService.deleteUser(userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("")
+    public ResponseEntity updateUser(@RequestBody ReqPutUserDto requestDto, HttpServletRequest request) {
+        Long userId = jwtService.getUserId(request);
+        userService.updateUser(userId, requestDto);
+        return ResponseEntity.ok().build();
+    }
 }

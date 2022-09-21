@@ -63,4 +63,16 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
         return new ResGetUserDto(user);
     }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
+        user.delete();
+    }
+
+    @Transactional
+    public void updateUser(Long userId, ReqPutUserDto requestDto) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
+        user.update(requestDto);
+    }
 }
