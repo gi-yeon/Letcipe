@@ -52,15 +52,6 @@ public class UserService {
         userRepository.save(admin);
     }
 
-    public ResGetUserDto readUserInfo(Long userId) {
-          // 유저 정보 가져오기
-        User user=userRepository
-                .findById(userId)
-                .orElseThrow(()->new NullPointerException("유저 정보가 없습니다."));
-        return ResGetUserDto.builder()
-                .user(user)
-                .build();
-    }
     @Transactional
     public void deleteUser(Long userId) {
         User user=userRepository
