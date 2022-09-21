@@ -1,5 +1,6 @@
 package com.ssafy.letcipe.api.service;
 
+import com.ssafy.letcipe.api.dto.user.ReqLoginUserDto;
 import com.ssafy.letcipe.api.dto.user.ReqPostUserDto;
 import com.ssafy.letcipe.api.dto.user.ReqPutUserDto;
 import com.ssafy.letcipe.api.dto.user.ResGetUserDto;
@@ -25,7 +26,7 @@ public class UserService {
         StringBuilder sb = new StringBuilder();
 
         String salt = encryptUtils.getSalt(requestDto.getUserId());
-        sb.append(salt).append(requestDto.getUserId());
+        sb.append(salt).append(requestDto.getPassword());
         String password = encryptUtils.encrypt(sb.toString());
 
         // 유저 엔티티 생성
@@ -43,5 +44,18 @@ public class UserService {
                 .phone(requestDto.getPhone())
                 .build();
         userRepository.save(user);
+    }
+
+    public User loginUser(ReqLoginUserDto requestDto) throws NoSuchAlgorithmException {
+        StringBuilder sb = new StringBuilder();
+
+        String salt = encryptUtils.getSalt(requestDto.getUserId());
+        sb.append(salt).append(requestDto.getPassword());
+        String password = encryptUtils.encrypt(sb.toString());
+
+        User user = userRepository.findByUserIdAndPassword(requestDto.getUserId(), password)
+                .orElseThrow(() -> new NullPointerException());
+
+        return user;
     }
 }

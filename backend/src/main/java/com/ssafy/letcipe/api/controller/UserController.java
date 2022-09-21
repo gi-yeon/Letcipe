@@ -1,10 +1,12 @@
 package com.ssafy.letcipe.api.controller;
 
+import com.ssafy.letcipe.api.dto.user.ReqLoginUserDto;
 import com.ssafy.letcipe.api.dto.user.ReqPostUserDto;
 import com.ssafy.letcipe.api.dto.user.ReqPutUserDto;
 import com.ssafy.letcipe.api.dto.user.ResGetUserDto;
 import com.ssafy.letcipe.api.service.JwtService;
 import com.ssafy.letcipe.api.service.UserService;
+import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.util.EncryptUtils;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -13,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -34,6 +38,17 @@ public class UserController {
     public ResponseEntity createUser(@RequestBody ReqPostUserDto requestDto) throws NoSuchAlgorithmException {
         userService.createUser(requestDto);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("login")
+    public ResponseEntity loginUser(@RequestBody ReqLoginUserDto requestDto) throws NoSuchAlgorithmException {
+        User user = userService.loginUser(requestDto);
+        String token = jwtService.createToken(user);
+
+        Map<String, String> resultMap = new HashMap<>();
+        resultMap.put("access-token", token);
+
+        return ResponseEntity.ok(resultMap);
     }
 
 }
