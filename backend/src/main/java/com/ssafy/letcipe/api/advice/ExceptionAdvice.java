@@ -38,7 +38,7 @@ public class ExceptionAdvice {
     @ExceptionHandler({FileUploadException.class, FileNotFoundException.class})
     public ResponseEntity handleFileUploadException(Exception e) {
         printLog(e);
-        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(AuthorityViolationException.class)
