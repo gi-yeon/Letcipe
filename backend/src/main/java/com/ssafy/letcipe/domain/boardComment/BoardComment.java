@@ -2,6 +2,7 @@ package com.ssafy.letcipe.domain.boardComment;
 
 import com.ssafy.letcipe.domain.board.Board;
 import com.ssafy.letcipe.domain.user.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -35,4 +36,17 @@ public class BoardComment {
     @Column(name = "mod_time")
     private LocalDateTime modTime;
 
+    @Builder
+    public BoardComment(User user, Board board, String content, LocalDateTime regTime, LocalDateTime modTime){
+        this.user = user;
+        this.board = board;
+        this.content = content;
+        this.regTime = regTime;
+        this.modTime = modTime;
+    }
+
+    public void putBoardComment(String content){
+        this.content = content;
+        this.modTime = LocalDateTime.now();
+    }
 }
