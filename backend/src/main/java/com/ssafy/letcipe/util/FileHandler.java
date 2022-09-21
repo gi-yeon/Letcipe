@@ -88,6 +88,7 @@ public class FileHandler {
         File file;
         try {
             file = new File(path);
+            if (!file.exists()) throw new FileNotFoundException("파일을 찾을 수 없습니다.");
         } catch (Exception e) {
             throw new FileNotFoundException("파일을 찾을 수 없습니다.");
         }
