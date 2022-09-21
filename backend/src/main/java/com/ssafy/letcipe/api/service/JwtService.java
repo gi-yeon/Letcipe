@@ -26,7 +26,7 @@ public class JwtService {
      * @return 받아온 값
      */
     public String getJwtToken(HttpServletRequest request) {
-        return request.getHeader("letcipe-token");
+        return request.getHeader("access-token");
     }
 
     /**
@@ -40,7 +40,7 @@ public class JwtService {
                 .setHeaderParam("typ", "JWT")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * EXPIRE_MINUTES))
-                .claim("userId", user.getUserId())
+                .claim("userId", user.getId())
                 .signWith(SignatureAlgorithm.HS256, generateKey()).compact();
         return jwt;
     }
