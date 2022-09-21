@@ -40,6 +40,13 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 로그인
+     *
+     * @param requestDto
+     * @return access token
+     * @throws NoSuchAlgorithmException
+     */
     @PostMapping("login")
     public ResponseEntity loginUser(@RequestBody ReqLoginUserDto requestDto) throws NoSuchAlgorithmException {
         User user = userService.loginUser(requestDto);
