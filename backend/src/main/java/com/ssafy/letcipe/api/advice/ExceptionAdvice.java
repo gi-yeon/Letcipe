@@ -30,6 +30,5 @@ public class ExceptionAdvice {
     public ResponseEntity NFEHandler(NullPointerException e) {
         printLog(e);
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
-
     }
 }
