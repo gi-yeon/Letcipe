@@ -24,7 +24,7 @@ public class Recipe {
     @Column(name = "title", length = 30, nullable = false)
     private String title;
 
-    @Column(name = "content", length = 100, nullable = false)
+    @Column(name = "content", nullable = false)
     private String content;
 
     @Column(name = "cooking_time")
