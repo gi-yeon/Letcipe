@@ -23,6 +23,21 @@ public class EncryptUtils {
     }
 
     /**
+     * userId에서 salt 생성
+     *
+     * @param userId
+     * @return salt
+     */
+    public String getSalt(String userId) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(userId.charAt(0));
+        sb.append(userId.charAt(userId.length() - 1));
+
+        return sb.toString();
+    }
+
+    /**
      *
      * @param bytes
      * @return
