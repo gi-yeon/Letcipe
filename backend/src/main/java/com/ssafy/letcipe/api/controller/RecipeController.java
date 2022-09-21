@@ -112,6 +112,7 @@ public class RecipeController {
 
     @GetMapping("")
     ResponseEntity searchRecipe(@RequestParam String keyword) throws SQLException {
+        logger.info("변수:{}",keyword);
         return ResponseEntity.ok(recipeService.searchRecipe(keyword));
     }
 

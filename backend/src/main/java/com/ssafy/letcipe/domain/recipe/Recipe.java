@@ -71,12 +71,11 @@ public class Recipe {
     @OneToMany(fetch = LAZY, mappedBy = "recipe")
     private List<RecipeTag> tags = new ArrayList<>();
 
-    @OneToMany(fetch = EAGER, mappedBy = "recipe")
+    @OneToMany(fetch = LAZY, mappedBy = "recipe")
     private List<RecipeLike> likes = new ArrayList<>();
 
     @OneToMany(fetch = LAZY, mappedBy = "recipe")
     private List<RecipeBookmark> bookmarks = new ArrayList<>();
-
 
     @Builder
     public Recipe(User user, String title, String content,Integer cookingTime, Integer serving, String category, String repImg) {

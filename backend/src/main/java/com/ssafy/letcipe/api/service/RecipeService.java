@@ -32,7 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -227,7 +228,14 @@ public class RecipeService {
         recipeLikeRepository.delete(like);
     }
 
-    public ResGetRecipeDto searchRecipe(String keyword) throws SQLException {
-        return null;
+    @Transactional
+    public List<ResGetRecipeDto> searchRecipe(String keyword) throws SQLException {
+        List<Recipe> searched = recipeRepository.findByKeyword(keyword);
+        List<ResGetRecipeDto> result = new ArrayList<>();
+        for (Recipe recipe : searched) {
+            result.add(ResGetRecipeDto.createDto(recipe));
+        }
+
+        return result;
     }
 }
