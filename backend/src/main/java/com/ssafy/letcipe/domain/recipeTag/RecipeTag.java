@@ -1,5 +1,6 @@
 package com.ssafy.letcipe.domain.recipeTag;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.letcipe.domain.tag.Tag;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import lombok.Getter;
@@ -18,6 +19,7 @@ public class RecipeTag {
 
     @ManyToOne(targetEntity = Recipe.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id", referencedColumnName = "id")
+    @JsonIgnore
     private Recipe recipe;
 
     @ManyToOne(targetEntity = Tag.class, fetch = FetchType.LAZY)

@@ -1,25 +1,21 @@
 package com.ssafy.letcipe.api.dto.user;
 
-import com.ssafy.letcipe.domain.user.GenderType;
-import com.ssafy.letcipe.domain.user.JobType;
 import com.ssafy.letcipe.domain.user.User;
-import com.ssafy.letcipe.domain.user.UserType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
+@Builder
 public class ResGetUserDto {
-    String name, nickname;
-    GenderType gender;
-    JobType job;
-    UserType userType;
+    long id;
+    String nickname;
 
-    @Builder
-    public ResGetUserDto(User user) {
-        this.name = user.getName();
-        this.nickname = user.getNickname();
-        this.gender = user.getGender();
-        this.job = user.getJob();
-        this.userType = user.getUserType();
+    public static ResGetUserDto createDto(User user) {
+        return ResGetUserDto.builder()
+                .id(user.getId())
+                .nickname(user.getNickname())
+                .build();
     }
 }
