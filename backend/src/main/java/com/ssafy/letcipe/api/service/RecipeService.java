@@ -2,6 +2,8 @@ package com.ssafy.letcipe.api.service;
 
 import com.ssafy.letcipe.api.dto.recipe.ReqCreateRecipeDto;
 import com.ssafy.letcipe.api.dto.recipe.ReqUpdateRecipeDto;
+import com.ssafy.letcipe.api.dto.recipe.ResGetRecipeDto;
+import com.ssafy.letcipe.api.dto.recipe.ResReadRecipeDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqCreateRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqDeleteRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeComment.ReqCreateRecipeCommentDto;
@@ -30,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +45,16 @@ public class RecipeService {
     private final RecipeBookmarkRepository recipeBookmarkRepository;
     private final RecipeLikeRepository recipeLikeRepository;
 
+    public Recipe getRecipe(long recipeId) throws NullPointerException {
+        return recipeRepository.findById(recipeId).orElseThrow(() -> new NullPointerException("레시피를 찾을 수 없습니다."));
+    }
+
+
+    @Transactional
+    public ResReadRecipeDto readRecipe(long recipe_id,long userId) {
+        Recipe recipe = getRecipe(recipe_id);
+        return new ResReadRecipeDto(recipe,userId);
+    }
     @Transactional
     public void createRecipe(ReqCreateRecipeDto dto, long userId) throws NullPointerException, FileUploadException {
         // 유저 찾기
@@ -84,7 +97,7 @@ public class RecipeService {
             throw new FileNotFoundException("대표 이미지가 없습니다.");
         }
 
-        Recipe recipe = recipeRepository.findById(recipe_id).orElseThrow(() -> new NullPointerException("레시피를 찾을 수 없습니다."));
+        Recipe recipe = getRecipe(recipe_id);
 
         // 기존 대표 이미지 삭제
         fileHandler.deleteImageFile(recipe.getRepImg());
@@ -118,7 +131,7 @@ public class RecipeService {
 
     @Transactional
     public void deleteRecipe(long recipe_id, long userId) throws AuthorityViolationException {
-        Recipe recipe = recipeRepository.findById(recipe_id).orElseThrow(() -> new NullPointerException("레시피를 찾을 수 없습니다."));
+        Recipe recipe = getRecipe(recipe_id);
         if (userId != recipe.getUser().getId()) throw new AuthorityViolationException("작성자만이 삭제할 수 있습니다.");
 
         // 삭제 처리
@@ -192,13 +205,18 @@ public class RecipeService {
         Recipe recipe = recipeRepository
                 .findById(requestDto.getRecipeId())
                 .orElseThrow(() -> new NullPointerException());
-        recipeLikeRepository
-                .save(
-                        RecipeLike.builder()
-                                .recipe(recipe)
-                                .user(user)
-                                .build()
-                );
+        
+        try {
+            recipeLikeRepository
+                    .save(
+                            RecipeLike.builder()
+                                    .recipe(recipe)
+                                    .user(user)
+                                    .build()
+                    );
+        } catch(RuntimeException e) {
+            throw new SQLException("이미 좋아요 하였음.");
+        }
     }
 
     @Transactional
@@ -209,5 +227,7 @@ public class RecipeService {
         recipeLikeRepository.delete(like);
     }
 
-
+    public ResGetRecipeDto searchRecipe(String keyword) throws SQLException {
+        return null;
+    }
 }

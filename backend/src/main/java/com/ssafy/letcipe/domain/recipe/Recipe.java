@@ -2,7 +2,11 @@ package com.ssafy.letcipe.domain.recipe;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.letcipe.api.dto.recipe.ReqUpdateRecipeDto;
+import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
+import com.ssafy.letcipe.domain.recipeComment.RecipeComment;
+import com.ssafy.letcipe.domain.recipeLike.RecipeLike;
 import com.ssafy.letcipe.domain.recipeStep.RecipeStep;
+import com.ssafy.letcipe.domain.recipeTag.RecipeTag;
 import com.ssafy.letcipe.domain.type.StatusType;
 import com.ssafy.letcipe.domain.user.User;
 import lombok.AllArgsConstructor;
@@ -15,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
@@ -58,8 +63,20 @@ public class Recipe {
     private String repImg;
 
     @OneToMany(fetch = LAZY, mappedBy = "recipe")
-    @JsonIgnore
     private List<RecipeStep> steps = new ArrayList<>();
+
+    @OneToMany(fetch = LAZY, mappedBy = "recipe")
+    private List<RecipeComment> comments = new ArrayList<>();
+
+    @OneToMany(fetch = LAZY, mappedBy = "recipe")
+    private List<RecipeTag> tags = new ArrayList<>();
+
+    @OneToMany(fetch = EAGER, mappedBy = "recipe")
+    private List<RecipeLike> likes = new ArrayList<>();
+
+    @OneToMany(fetch = LAZY, mappedBy = "recipe")
+    private List<RecipeBookmark> bookmarks = new ArrayList<>();
+
 
     @Builder
     public Recipe(User user, String title, String content,Integer cookingTime, Integer serving, String category, String repImg) {
