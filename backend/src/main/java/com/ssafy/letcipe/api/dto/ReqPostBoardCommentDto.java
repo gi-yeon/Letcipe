@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReqPostBoardCommentDto {
-    private Long board_id;              //content만 있어도 될듯..?
+    private Long boardId;              //content만 있어도 될듯..?
     private String content;
 }

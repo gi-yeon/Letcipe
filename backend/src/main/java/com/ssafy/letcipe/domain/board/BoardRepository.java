@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,7 +15,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     // status type에 맞는 애들만 추려서, 알아서 pagenation을 해서 보내줌.
     Page<Board> findByStatusType(StatusType statusType, Pageable pageable);
 
-    //그냥 보드 리스트 조회
-//    List<Board> findAllByStatusType(StatusType statusType);
+    Optional<Board> findByStatusTypeAndId(StatusType statusType, Long boardId);
 
 }

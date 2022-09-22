@@ -24,15 +24,6 @@ public class BoardController {
         return new ResponseEntity<>(boardService.getBoardList(page, board_num), HttpStatus.OK);
     }
 
-//    @GetMapping("")
-//    public ResponseEntity<List<ResGetBoardListDto>> getBoardList() {
-////        List<ResGetBoardListDto> boards = boardService.getBoardList();
-////        Map<String, Object> res = new HashMap<>();
-////        res.put("boardList", boards);
-//        return new ResponseEntity<>(  boardService.getBoardList() , HttpStatus.OK);
-//    }
-
-
 
     @GetMapping("/{board_id}")
     public ResponseEntity<ResGetBoardDto> getBoard(@PathVariable Long board_id) {
@@ -76,10 +67,10 @@ public class BoardController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/comment/{board_comment_id}")
-    public ResponseEntity deleteBoardComment(@PathVariable Long board_comment_id) throws Exception {
+    @PatchMapping("/comment/{board_comment_id}")
+    public ResponseEntity patchBoardComment(@PathVariable Long board_comment_id) throws Exception {
         Long user_id = 1L;
-        boardService.deleteBoardComment(board_comment_id, user_id);
+        boardService.patchBoardComment(board_comment_id, user_id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

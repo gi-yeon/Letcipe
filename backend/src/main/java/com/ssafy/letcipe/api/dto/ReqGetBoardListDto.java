@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReqGetBoardListDto {
     private int page;
-    private int board_num;
+    private int boardNum;
 }

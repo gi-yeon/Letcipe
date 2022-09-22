@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -45,16 +46,16 @@ public class Board {
     @Column(name = "is_deleted", nullable = false)
     private StatusType statusType;
 
-    @CreatedDate //게시판이라는 그걸 만들때 reg_date 알아서 넣어줌. 현재 서버시간을 reg_date로 넣어줌.
     @Column(name = "reg_time")
     private LocalDateTime regTime;
 
     @Builder
-    public Board(User user, String title, String content, StatusType statusType) {
+    public Board(User user, String title, String content, StatusType statusType, LocalDateTime regTime) {
         this.user = user;
         this.title = title;
         this.content = content;
         this.statusType = statusType;
+        this.regTime = regTime;
     }
 
     public void putBoard(String title, String content) {

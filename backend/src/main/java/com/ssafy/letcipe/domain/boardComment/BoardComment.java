@@ -1,6 +1,7 @@
 package com.ssafy.letcipe.domain.boardComment;
 
 import com.ssafy.letcipe.domain.board.Board;
+import com.ssafy.letcipe.domain.type.StatusType;
 import com.ssafy.letcipe.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,17 +37,26 @@ public class BoardComment {
     @Column(name = "mod_time")
     private LocalDateTime modTime;
 
+    @Column(name = "is_deleted", nullable = false)
+    private StatusType statusType;
+
+
     @Builder
-    public BoardComment(User user, Board board, String content, LocalDateTime regTime, LocalDateTime modTime){
+    public BoardComment(User user, Board board, String content, LocalDateTime regTime, LocalDateTime modTime, StatusType statusType){
         this.user = user;
         this.board = board;
         this.content = content;
         this.regTime = regTime;
         this.modTime = modTime;
+        this.statusType = statusType;
     }
 
     public void putBoardComment(String content){
         this.content = content;
         this.modTime = LocalDateTime.now();
+    }
+
+    public void patchBoardComment() {
+        this.statusType = StatusType.Y;
     }
 }
