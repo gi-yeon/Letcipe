@@ -2,7 +2,6 @@ package com.ssafy.letcipe.domain.recipeListItem;
 
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipeList.RecipeList;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,11 +27,4 @@ public class RecipeListItem {
 
     @Column(name = "amount", nullable = false)
     private Integer amount;
-
-    @Builder
-    public RecipeListItem(RecipeList recipeList, Recipe recipe){
-        this.recipeList = recipeList;
-        this.recipe = recipe;
-        this.amount = 1;
-    }
 }
