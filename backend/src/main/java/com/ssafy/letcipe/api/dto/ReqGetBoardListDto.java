@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReqPostBoardCommentDto {
-    private Long boardId;              //content만 있어도 될듯..?
-    private String content;
+public class ReqGetBoardListDto {
+    private int page;
+    private int boardNum;
 }

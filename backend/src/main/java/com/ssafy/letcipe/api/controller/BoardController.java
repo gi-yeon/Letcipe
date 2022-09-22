@@ -1,8 +1,7 @@
 package com.ssafy.letcipe.api.controller;
 
-import com.ssafy.letcipe.api.dto.ReqPostBoardCommentDto;
-import com.ssafy.letcipe.api.dto.ReqPutBoardCommentDto;
-import com.ssafy.letcipe.api.dto.ResGetBoardDto;
+import com.ssafy.letcipe.api.dto.*;
+
 import com.ssafy.letcipe.api.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,11 +9,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+
 @Controller
 @RequestMapping("/board")
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;
+
+    @GetMapping("")
+    public ResponseEntity<List<ResGetBoardListDto>> getBoardList(int page, int board_num) throws Exception{
+        return new ResponseEntity<>(boardService.getBoardList(page, board_num), HttpStatus.OK);
+    }
 
     @GetMapping("/{board_id}")
     public ResponseEntity<ResGetBoardDto> getBoard(@PathVariable Long board_id) {
@@ -29,6 +36,28 @@ public class BoardController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PostMapping("")
+    public ResponseEntity postBoard(@RequestBody ReqPostBoardDto reqPostBoardDto) {
+        Long user_id = 1L;
+        boardService.postBoard(reqPostBoardDto.getTitle(), reqPostBoardDto.getContent(), user_id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/{board_id}")
+    public ResponseEntity updateBoard(@PathVariable Long board_id, @RequestBody ReqPostBoardDto reqPostBoardDto) throws Exception {
+        Long user_id = 1L;
+        boardService.putBoard(board_id, reqPostBoardDto.getTitle(), reqPostBoardDto.getContent(), user_id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @PatchMapping("/{board_id}")
+    public ResponseEntity patchBoard(@PathVariable Long board_id) throws Exception {
+        Long user_id = 1L;
+        boardService.patchBoard(board_id, user_id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @PutMapping("/comment/{board_comment_id}")
     public ResponseEntity putBoardComment(@PathVariable Long board_comment_id, @RequestBody  ReqPutBoardCommentDto boardCommentDto) throws Exception {
         Long user_id  = 1L;
@@ -36,10 +65,10 @@ public class BoardController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/comment/{board_comment_id}")
-    public ResponseEntity deleteBoardComment(@PathVariable Long board_comment_id) throws Exception {
+    @PatchMapping("/comment/{board_comment_id}")
+    public ResponseEntity patchBoardComment(@PathVariable Long board_comment_id) throws Exception {
         Long user_id = 1L;
-        boardService.deleteBoardComment(board_comment_id, user_id);
+        boardService.patchBoardComment(board_comment_id, user_id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
