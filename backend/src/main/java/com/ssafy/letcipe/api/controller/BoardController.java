@@ -1,6 +1,7 @@
 package com.ssafy.letcipe.api.controller;
 
 import com.ssafy.letcipe.api.dto.*;
+
 import com.ssafy.letcipe.api.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -8,9 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 
 @Controller
 @RequestMapping("/board")
@@ -18,12 +18,10 @@ import java.util.Map;
 public class BoardController {
     private final BoardService boardService;
 
-    //페이지네이션
     @GetMapping("")
     public ResponseEntity<List<ResGetBoardListDto>> getBoardList(int page, int board_num) throws Exception{
         return new ResponseEntity<>(boardService.getBoardList(page, board_num), HttpStatus.OK);
     }
-
 
     @GetMapping("/{board_id}")
     public ResponseEntity<ResGetBoardDto> getBoard(@PathVariable Long board_id) {

@@ -1,6 +1,7 @@
 package com.ssafy.letcipe.api.service;
 
 import com.ssafy.letcipe.api.dto.*;
+
 import com.ssafy.letcipe.domain.board.Board;
 import com.ssafy.letcipe.domain.board.BoardRepository;
 import com.ssafy.letcipe.domain.boardComment.BoardComment;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +69,6 @@ public class BoardService {
                 ()-> new NullPointerException("해당 유저를 찾을 수 없습니다."));
         return ResGetBoardDto.createDto(board, user, comments);
     }
-
 
 
     @Transactional
@@ -131,6 +132,7 @@ public class BoardService {
                 .modTime(LocalDateTime.now())
                 .statusType(StatusType.N)
                 .build();
+
 
         boardCommentRepository.save(comment);
     }
