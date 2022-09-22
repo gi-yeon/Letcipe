@@ -20,57 +20,57 @@ public class BoardController {
 
     //페이지네이션
     @GetMapping("")
-    public ResponseEntity<List<ResGetBoardListDto>> getBoardList(int page, int board_num) throws Exception{
-        return new ResponseEntity<>(boardService.getBoardList(page, board_num), HttpStatus.OK);
+    public ResponseEntity<List<ResGetBoardListDto>> getBoardList(int page, int boardNum) throws Exception{
+        return new ResponseEntity<>(boardService.getBoardList(page, boardNum), HttpStatus.OK);
     }
 
 
-    @GetMapping("/{board_id}")
-    public ResponseEntity<ResGetBoardDto> getBoard(@PathVariable Long board_id) {
-        Long user_id = 1L;
-        return new ResponseEntity<>(boardService.getBoard(board_id, user_id), HttpStatus.OK);
+    @GetMapping("/{boardId}")
+    public ResponseEntity<ResGetBoardDto> getBoard(@PathVariable Long boardId) {
+        Long userId = 1L;
+        return new ResponseEntity<>(boardService.getBoard(boardId, userId), HttpStatus.OK);
     }
 
-    @PostMapping("/{board_id}/comment")
-    public ResponseEntity postBoardComment(@PathVariable Long board_id, @RequestBody ReqPostBoardCommentDto boardCommentDto) {
-        Long user_id = 1L;
-        boardService.postBoardComment(board_id, boardCommentDto, user_id);
+    @PostMapping("/{boardId}/comment")
+    public ResponseEntity postBoardComment(@PathVariable Long boardId, @RequestBody ReqPostBoardCommentDto boardCommentDto) {
+        Long userId = 1L;
+        boardService.postBoardComment(boardId, boardCommentDto, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("")
     public ResponseEntity postBoard(@RequestBody ReqPostBoardDto reqPostBoardDto) {
-        Long user_id = 1L;
-        boardService.postBoard(reqPostBoardDto.getTitle(), reqPostBoardDto.getContent(), user_id);
+        Long userId = 1L;
+        boardService.postBoard(reqPostBoardDto.getTitle(), reqPostBoardDto.getContent(), userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/{board_id}")
-    public ResponseEntity updateBoard(@PathVariable Long board_id, @RequestBody ReqPostBoardDto reqPostBoardDto) throws Exception {
-        Long user_id = 1L;
-        boardService.putBoard(board_id, reqPostBoardDto.getTitle(), reqPostBoardDto.getContent(), user_id);
+    @PutMapping("/{boardId}")
+    public ResponseEntity updateBoard(@PathVariable Long boardId, @RequestBody ReqPostBoardDto reqPostBoardDto) throws Exception {
+        Long userId = 1L;
+        boardService.putBoard(boardId, reqPostBoardDto.getTitle(), reqPostBoardDto.getContent(), userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
-    @PatchMapping("/{board_id}")
-    public ResponseEntity patchBoard(@PathVariable Long board_id) throws Exception {
-        Long user_id = 1L;
-        boardService.patchBoard(board_id, user_id);
+    @PatchMapping("/{boardId}")
+    public ResponseEntity patchBoard(@PathVariable Long boardId) throws Exception {
+        Long userId = 1L;
+        boardService.patchBoard(boardId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/comment/{board_comment_id}")
-    public ResponseEntity putBoardComment(@PathVariable Long board_comment_id, @RequestBody  ReqPutBoardCommentDto boardCommentDto) throws Exception {
-        Long user_id  = 1L;
-        boardService.putBoardComment(board_comment_id, boardCommentDto, user_id);
+    @PutMapping("/comment/{boardCommentId}")
+    public ResponseEntity putBoardComment(@PathVariable Long boardCommentId, @RequestBody  ReqPutBoardCommentDto boardCommentDto) throws Exception {
+        Long userId  = 1L;
+        boardService.putBoardComment(boardCommentId, boardCommentDto, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PatchMapping("/comment/{board_comment_id}")
-    public ResponseEntity patchBoardComment(@PathVariable Long board_comment_id) throws Exception {
-        Long user_id = 1L;
-        boardService.patchBoardComment(board_comment_id, user_id);
+    @PatchMapping("/comment/{boardCommentId}")
+    public ResponseEntity patchBoardComment(@PathVariable Long boardCommentId) throws Exception {
+        Long userId = 1L;
+        boardService.patchBoardComment(boardCommentId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
