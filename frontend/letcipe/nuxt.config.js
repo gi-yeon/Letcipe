@@ -21,7 +21,14 @@ export default {
         content: 'upgrade-insecure-requests',
       },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {
+        rel: 'stylesheet',
+        type: 'text/css',
+        href: 'https://cdn.shopify.com/s/files/1/2979/3338/files/UGC-style.css',
+      },
+    ],
     script: [
       // 다음 주소 검색 API
       { src: '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js' },
@@ -29,6 +36,9 @@ export default {
       {
         src: 'https://kit.fontawesome.com/454a2244bd.js',
         crossorigin: 'anonymous',
+      },
+      {
+        src: 'https://cdn.shopify.com/s/files/1/2979/3338/files/UGC_-_new_v.3.js',
       },
     ],
   },
