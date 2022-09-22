@@ -30,9 +30,9 @@ public class BoardService {
 
     //page로 조회
     @Transactional
-    public List<ResGetBoardListDto> getBoardList(int page, int board_num) throws Exception{
+    public List<ResGetBoardListDto> getBoardList(int page, int boardNum) throws Exception{
         if(page == 0) throw new Exception("잘못된 요청입니다.");
-        PageRequest pageRequest = PageRequest.of(page-1, board_num);
+        PageRequest pageRequest = PageRequest.of(page-1, boardNum);
 
         List<Board> boardList = boardRepository.findByStatusType(StatusType.N, pageRequest)
                                                .stream()
