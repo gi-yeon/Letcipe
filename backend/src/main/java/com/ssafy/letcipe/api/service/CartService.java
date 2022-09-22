@@ -59,14 +59,26 @@ public class CartService {
                 .orElseThrow(() -> new NullPointerException("레시피를 찾을 수 없습니다."));
         Cart cart = cartRepository.findByUserAndRecipe(user, recipe)
                 .orElseThrow(() -> new NullPointerException("레시피를 등록한 적 없습니다."));
-        cart.updateCart(requestDto.getOperator());
+        cart.update(requestDto.getOperator());
     }
 
+    @Transactional
     public void createCartIngredient(ReqPostCartIngredientDto requestDto, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
         Ingredient ingredient = ingredientRepository.findById(requestDto.getIngredientId())
                 .orElseThrow(() -> new NullPointerException("재료를 찾을 수 없습니다."));
 
         cartIngredientRepository.save(new CartIngredient(user, ingredient, requestDto.getOperator()));
+    }
+
+    @Transactional
+    public void patchCartIngredient(ReqPatchCartIngredientDto requestDto, Long userId) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
+        Ingredient ingredient = ingredientRepository.findById(requestDto.getIngredientId())
+                .orElseThrow(() -> new NullPointerException("재료를 찾을 수 없습니다."));
+        CartIngredient cartIngredient = cartIngredientRepository.findByUserAndIngredient(user, ingredient)
+                .orElseThrow(() -> new NullPointerException("수정한 적 없습니다."));
+        cartIngredient.update(requestDto.getOperator());
     }
 }

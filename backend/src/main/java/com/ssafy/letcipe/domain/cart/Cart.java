@@ -35,13 +35,13 @@ public class Cart {
         this.amount = i;
     }
 
-    public void updateCart(char operator) {
+    public void update(char operator) {
         switch (operator) {
             case '+':
                 this.amount++;
                 break;
             case '-':
-                if(this.amount > 1) {
+                if (this.amount > 1) {
                     this.amount--;
                 } else {
                     throw new AuthorityViolationException("더 이상 줄일 수 없습니다.");
@@ -50,3 +50,4 @@ public class Cart {
         }
     }
 }
+

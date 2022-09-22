@@ -1,9 +1,6 @@
 package com.ssafy.letcipe.api.controller;
 
-import com.ssafy.letcipe.api.dto.cart.ReqDeleteCartDto;
-import com.ssafy.letcipe.api.dto.cart.ReqPatchCartDto;
-import com.ssafy.letcipe.api.dto.cart.ReqPostCartDto;
-import com.ssafy.letcipe.api.dto.cart.ReqPostCartIngredientDto;
+import com.ssafy.letcipe.api.dto.cart.*;
 import com.ssafy.letcipe.api.service.CartService;
 import com.ssafy.letcipe.api.service.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +53,13 @@ public class CartController {
     public ResponseEntity createCartIngredient(@RequestBody ReqPostCartIngredientDto requestDto, HttpServletRequest request) {
         Long userId = jwtService.getUserId(request);
         cartService.createCartIngredient(requestDto, userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("cart-ingredient")
+    public ResponseEntity patchCartIngredient(@RequestBody ReqPatchCartIngredientDto requestDto, HttpServletRequest request) {
+        Long userId = jwtService.getUserId(request);
+        cartService.patchCartIngredient(requestDto, userId);
         return ResponseEntity.ok().build();
     }
 }

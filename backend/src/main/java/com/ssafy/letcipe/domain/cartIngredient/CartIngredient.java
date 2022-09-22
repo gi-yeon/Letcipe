@@ -43,4 +43,19 @@ public class CartIngredient {
                 break;
         }
     }
+
+    public void update(char operator) {
+        switch (operator) {
+            case '+':
+                this.amount++;
+                break;
+            case '-':
+                if(this.amount > 1) {
+                    this.amount--;
+                } else {
+                    throw new AuthorityViolationException("더 이상 줄일 수 없습니다.");
+                }
+                break;
+        }
+    }
 }
