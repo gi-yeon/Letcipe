@@ -3,7 +3,7 @@
     <v-app id="inspire"
       ><div id="recipedetail-container">
         <v-container style="width: 100%">
-          <v-card :loading="loading" class="mx-auto my-12">
+          <v-card class="mx-auto my-12">
             <v-img src="https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg"
               ><div class="ref-wrap">
                 <v-card-title class="text-md-h1 ref-title">{{
@@ -40,7 +40,7 @@
               <v-card-text>{{ content }}</v-card-text>
               <v-card-title class="text-md-h4">재료</v-card-title>
               <v-simple-table>
-                <template v-slot:default>
+                <template #default>
                   <thead>
                     <tr>
                       <th class="text-left">재료명</th>
@@ -49,7 +49,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="item in recipeIngredient" :key="item.name">
+                    <tr v-for="(item, i) in recipeIngredient" :key="i">
                       <td>{{ item.name }}</td>
                       <td>{{ item.amount }}</td>
                       <td>{{ item.unit }}</td>
@@ -78,7 +78,7 @@
 
             <v-card-text>
               <v-chip-group column>
-                <v-chip v-for="tag in tags" :key="tag">
+                <v-chip v-for="(tag, i) in tags" :key="i">
                   {{ tag.name }}
                 </v-chip>
               </v-chip-group>

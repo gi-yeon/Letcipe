@@ -1,5 +1,5 @@
 <template>
-  <div class="recipe-wrap">
+  <div class="recipelist-wrap">
     <header-component></header-component>
     <nuxt-child></nuxt-child>
     <footer-component></footer-component>
@@ -10,7 +10,7 @@
 import HeaderComponent from '../components/HeaderComponent.vue'
 import FooterComponent from '../components/FooterComponent.vue'
 export default {
-  name: 'RecipePage',
+  name: 'RecipeListPage',
   components: {
     HeaderComponent,
     FooterComponent,
@@ -29,7 +29,7 @@ export default {
 * {
   font-family: 'LeeSeoyun';
 }
-.recipe-wrap {
+.recipelist-wrap {
   margin-top: 70px;
   margin-bottom: 70px;
 }
