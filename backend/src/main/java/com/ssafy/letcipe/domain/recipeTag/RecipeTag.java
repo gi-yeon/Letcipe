@@ -3,6 +3,7 @@ package com.ssafy.letcipe.domain.recipeTag;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.letcipe.domain.tag.Tag;
 import com.ssafy.letcipe.domain.recipe.Recipe;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,9 @@ public class RecipeTag {
     @JoinColumn(name = "tag_id", referencedColumnName = "id")
     private Tag tag;
 
+    @Builder
+    public RecipeTag(Recipe recipe, Tag tag) {
+        this.recipe = recipe;
+        this.tag = tag;
+    }
 }
