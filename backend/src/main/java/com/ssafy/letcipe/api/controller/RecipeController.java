@@ -11,9 +11,8 @@ import com.ssafy.letcipe.api.dto.recipeLike.ReqPostRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqDeleteRecipeLikeDto;
 import com.ssafy.letcipe.api.service.RecipeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -24,16 +23,15 @@ import java.sql.SQLException;
 @RestController
 @RequestMapping("/recipe")
 @RequiredArgsConstructor
+@Log4j2
 public class RecipeController {
     private final RecipeService recipeService;
-    private final Logger logger = LoggerFactory.getLogger(RecipeController.class);
 
     @GetMapping("/{recipe_id}")
     @Transactional
     public ResponseEntity readRecipe(@PathVariable long recipe_id) {
         long userId = 1L; // TODO 토큰에서 유저 id 가져와야 함, 없다면 -1 등으로 표기
         ResReadRecipeDto recipe = recipeService.readRecipe(recipe_id, userId);
-        System.out.println("recipe = " + recipe);
         return ResponseEntity.ok(recipe);
     }
 
@@ -110,7 +108,6 @@ public class RecipeController {
 
     @GetMapping("")
     ResponseEntity searchRecipe(@RequestParam String keyword) throws SQLException {
-        logger.info("변수:{}",keyword);
         return ResponseEntity.ok(recipeService.searchRecipe(keyword));
     }
 

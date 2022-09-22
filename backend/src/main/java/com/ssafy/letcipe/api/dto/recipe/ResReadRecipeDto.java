@@ -47,7 +47,11 @@ public class ResReadRecipeDto {
             recipeComment.add(ResGetRecipeCommentDto.createDto(comment));
         }
 
-        this.tags = recipe.getTags();
+        this.tags = new ArrayList<>();
+        for (RecipeTag tag : recipe.getTags()) {
+            tags.add(tag);
+        }
+
 
         for (RecipeLike like : recipe.getLikes()) {
             if (like.getUser().getId() == userId) {
