@@ -235,9 +235,10 @@ public class RecipeService {
         List<Recipe> searched = recipeRepository.findByKeyword(pageable,keyword);
         List<ResGetRecipeDto> result = new ArrayList<>();
         for (Recipe recipe : searched) {
-            result.add(ResGetRecipeDto.createDto(recipe));
+            result.add(new ResGetRecipeDto(recipe));
         }
 
         return result;
     }
+
 }
