@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @Builder
-public class ResReadRecipeDto {
+public class ResGetDetailRecipeDto {
     long id;
     ResGetUserDto user;
     String title;
@@ -33,7 +33,7 @@ public class ResReadRecipeDto {
 
     private List<RecipeTag> tags;
 
-    public ResReadRecipeDto(Recipe recipe,long userId) {
+    public ResGetDetailRecipeDto(Recipe recipe, long userId) {
         this.id = recipe.getId();
         this.user = ResGetUserDto.createDto(recipe.getUser());
         this.title = recipe.getTitle();

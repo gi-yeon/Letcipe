@@ -1,9 +1,9 @@
 package com.ssafy.letcipe.api.service;
 
-import com.ssafy.letcipe.api.dto.recipe.ReqCreateRecipeDto;
-import com.ssafy.letcipe.api.dto.recipe.ReqUpdateRecipeDto;
+import com.ssafy.letcipe.api.dto.recipe.ReqPostRecipeDto;
+import com.ssafy.letcipe.api.dto.recipe.ReqPutRecipeDto;
 import com.ssafy.letcipe.api.dto.recipe.ResGetRecipeDto;
-import com.ssafy.letcipe.api.dto.recipe.ResReadRecipeDto;
+import com.ssafy.letcipe.api.dto.recipe.ResGetDetailRecipeDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqPostRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqDeleteRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeComment.ReqPostRecipeCommentDto;
@@ -52,12 +52,12 @@ public class RecipeService {
 
 
     @Transactional
-    public ResReadRecipeDto readRecipe(long recipe_id,long userId) {
+    public ResGetDetailRecipeDto readRecipe(long recipe_id, long userId) {
         Recipe recipe = getRecipe(recipe_id);
-        return new ResReadRecipeDto(recipe,userId);
+        return new ResGetDetailRecipeDto(recipe,userId);
     }
     @Transactional
-    public void createRecipe(ReqCreateRecipeDto dto, long userId) throws NullPointerException, FileUploadException {
+    public void createRecipe(ReqPostRecipeDto dto, long userId) throws NullPointerException, FileUploadException {
         // 유저 찾기
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("회원 정보를 찾을 수 없습니다"));
         // 레시피 대표 이미지 업로드
@@ -91,7 +91,7 @@ public class RecipeService {
     }
 
     @Transactional
-    public void updateRecipe(ReqUpdateRecipeDto updateDto, long recipe_id) throws NullPointerException, FileNotFoundException, FileUploadException {
+    public void updateRecipe(ReqPutRecipeDto updateDto, long recipe_id) throws NullPointerException, FileNotFoundException, FileUploadException {
         System.out.println("호출됨");
         // 대표 이미지 null check
         if (updateDto.getRepImg() == null || updateDto.getRepImg().isEmpty()) {
