@@ -38,7 +38,7 @@ public class CartController {
     @GetMapping("cart")
     public ResponseEntity readCart(HttpServletRequest request) {
         Long userId = jwtService.getUserId(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(cartService.getCart(userId));
     }
 }
 

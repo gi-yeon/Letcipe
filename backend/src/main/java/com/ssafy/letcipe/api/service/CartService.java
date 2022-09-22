@@ -2,6 +2,8 @@ package com.ssafy.letcipe.api.service;
 
 import com.ssafy.letcipe.api.dto.cart.ReqDeleteCartDto;
 import com.ssafy.letcipe.api.dto.cart.ReqPostCartDto;
+import com.ssafy.letcipe.api.dto.cart.ResGetCartDto;
+import com.ssafy.letcipe.api.dto.cart.ResGetCartItemDto;
 import com.ssafy.letcipe.domain.cart.Cart;
 import com.ssafy.letcipe.domain.cart.CartRepository;
 import com.ssafy.letcipe.domain.recipe.Recipe;
@@ -11,6 +13,8 @@ import com.ssafy.letcipe.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
@@ -37,5 +41,11 @@ public class CartService {
         Cart cart = cartRepository.findByUserAndRecipe(user, recipe)
                 .orElseThrow(() -> new NullPointerException("레시피를 등록한 적 없습니다."));
         cartRepository.delete(cart);
+    }
+
+    @Transactional
+    public ResGetCartDto getCart(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
+        return new ResGetCartDto(user.getCarts());
     }
 }
