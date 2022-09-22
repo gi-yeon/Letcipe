@@ -1,6 +1,7 @@
 package com.ssafy.letcipe.api.dto.recipe;
 
 import com.ssafy.letcipe.api.dto.ingredient.ResGetRecipeIngredientDto;
+import com.ssafy.letcipe.api.dto.recipeTag.ResGetRecipeTagDto;
 import com.ssafy.letcipe.api.dto.user.ResGetUserDto;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipeTag.RecipeTag;
@@ -26,23 +27,7 @@ public class ResGetRecipeDto {
     int recipeBookmark;
     int recipeComment;
     List<ResGetRecipeIngredientDto> ingredients;
-    List<RecipeTag> tags;
-
-    public static ResGetRecipeDto createDto(Recipe recipe) {
-        return ResGetRecipeDto.builder()
-                .id(recipe.getId())
-                .user(ResGetUserDto.createDto(recipe.getUser()))
-                .title(recipe.getTitle())
-                .content(recipe.getContent())
-                .cookingTime((recipe.getCookingTime()))
-                .serving(recipe.getServing())
-                .repImg(recipe.getRepImg())
-                .recipeLike(recipe.getLikes().size())
-                .recipeBookmark((recipe.getBookmarks().size()))
-                .recipeComment(recipe.getComments().size())
-                //.tags(recipe.getTags())
-                .build();
-    }
+    List<ResGetRecipeTagDto> tags;
 
     public ResGetRecipeDto(Recipe recipe) {
         this.id = recipe.getId();
@@ -57,7 +42,7 @@ public class ResGetRecipeDto {
         this.recipeComment = recipe.getComments().size();
         this.tags = new ArrayList<>();
         for (RecipeTag tag : recipe.getTags()) {
-            tags.add(tag);
+            tags.add(new ResGetRecipeTagDto(tag));
         }
     }
 }

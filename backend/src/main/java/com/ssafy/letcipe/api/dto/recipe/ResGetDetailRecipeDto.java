@@ -1,11 +1,14 @@
 package com.ssafy.letcipe.api.dto.recipe;
 
 import com.ssafy.letcipe.api.dto.recipeComment.ResGetRecipeCommentDto;
+import com.ssafy.letcipe.api.dto.recipeStep.ResGetRecipeStepDto;
+import com.ssafy.letcipe.api.dto.recipeTag.ResGetRecipeTagDto;
 import com.ssafy.letcipe.api.dto.user.ResGetUserDto;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
 import com.ssafy.letcipe.domain.recipeComment.RecipeComment;
 import com.ssafy.letcipe.domain.recipeLike.RecipeLike;
+import com.ssafy.letcipe.domain.recipeStep.RecipeStep;
 import com.ssafy.letcipe.domain.recipeTag.RecipeTag;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,9 +32,10 @@ public class ResGetDetailRecipeDto {
     boolean isLike;
     int recipeBookmark;
     boolean isBookmark;
-    private List<ResGetRecipeCommentDto> recipeComment;
+    List<ResGetRecipeCommentDto> recipeComment;
+    List<ResGetRecipeTagDto> tags;
+    List<ResGetRecipeStepDto> recipeSteps;
 
-    private List<RecipeTag> tags;
 
     public ResGetDetailRecipeDto(Recipe recipe, long userId) {
         this.id = recipe.getId();
@@ -49,9 +53,8 @@ public class ResGetDetailRecipeDto {
 
         this.tags = new ArrayList<>();
         for (RecipeTag tag : recipe.getTags()) {
-            tags.add(tag);
+            tags.add(new ResGetRecipeTagDto(tag));
         }
-
 
         for (RecipeLike like : recipe.getLikes()) {
             if (like.getUser().getId() == userId) {
@@ -66,6 +69,12 @@ public class ResGetDetailRecipeDto {
                 break;
             }
         }
+
+        this.recipeSteps = new ArrayList<>();
+        for (RecipeStep step : recipe.getSteps()) {
+            this.recipeSteps.add(new ResGetRecipeStepDto(step));
+        }
+
 
     }
 }

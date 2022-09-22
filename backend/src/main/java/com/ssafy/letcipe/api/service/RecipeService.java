@@ -10,7 +10,7 @@ import com.ssafy.letcipe.api.dto.recipeComment.ReqPostRecipeCommentDto;
 import com.ssafy.letcipe.api.dto.recipeComment.ReqPutRecipeCommentDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqPostRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqDeleteRecipeLikeDto;
-import com.ssafy.letcipe.api.dto.recipeStep.ReqCreateRecipeStepDto;
+import com.ssafy.letcipe.api.dto.recipeStep.ReqPostRecipeStepDto;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipe.RecipeRepository;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
@@ -27,7 +27,6 @@ import com.ssafy.letcipe.exception.AuthorityViolationException;
 import com.ssafy.letcipe.util.FileHandler;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -79,7 +78,7 @@ public class RecipeService {
         recipeRepository.save(recipe);
 
         // 스텝 만들기
-        for (ReqCreateRecipeStepDto step : dto.getStepDtoList()) {
+        for (ReqPostRecipeStepDto step : dto.getStepDtoList()) {
             String stepImgUrl = fileHandler.uploadImage(step.getImg());
             RecipeStep recipeStep = RecipeStep.builder()
                     .recipe(recipe)
@@ -116,7 +115,7 @@ public class RecipeService {
         }
 
         // 새로운 스텝 추가
-        for (ReqCreateRecipeStepDto step : updateDto.getStepDtoList()) {
+        for (ReqPostRecipeStepDto step : updateDto.getStepDtoList()) {
             String stepImgUrl = fileHandler.uploadImage(step.getImg());
             RecipeStep recipeStep = RecipeStep.builder()
                     .recipe(recipe)
