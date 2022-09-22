@@ -1,9 +1,6 @@
 package com.ssafy.letcipe.api.service;
 
-import com.ssafy.letcipe.api.dto.cart.ReqDeleteCartDto;
-import com.ssafy.letcipe.api.dto.cart.ReqPostCartDto;
-import com.ssafy.letcipe.api.dto.cart.ResGetCartDto;
-import com.ssafy.letcipe.api.dto.cart.ResGetCartItemDto;
+import com.ssafy.letcipe.api.dto.cart.*;
 import com.ssafy.letcipe.domain.cart.Cart;
 import com.ssafy.letcipe.domain.cart.CartRepository;
 import com.ssafy.letcipe.domain.recipe.Recipe;
@@ -47,5 +44,15 @@ public class CartService {
     public ResGetCartDto getCart(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
         return new ResGetCartDto(user.getCarts());
+    }
+
+    @Transactional
+    public void updateCartRecipe(ReqPatchCartDto requestDto, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
+        Recipe recipe = recipeRepository.findById(requestDto.getRecipeId())
+                .orElseThrow(() -> new NullPointerException("레시피를 찾을 수 없습니다."));
+        Cart cart = cartRepository.findByUserAndRecipe(user, recipe)
+                .orElseThrow(() -> new NullPointerException("레시피를 등록한 적 없습니다."));
+        cart.updateCart(requestDto.getOperator());
     }
 }

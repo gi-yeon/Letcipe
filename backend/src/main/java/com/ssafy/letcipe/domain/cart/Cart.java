@@ -2,6 +2,7 @@ package com.ssafy.letcipe.domain.cart;
 
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.user.User;
+import com.ssafy.letcipe.exception.AuthorityViolationException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,5 +33,20 @@ public class Cart {
         this.user = user;
         this.recipe = recipe;
         this.amount = i;
+    }
+
+    public void updateCart(char operator) {
+        switch (operator) {
+            case '+':
+                this.amount++;
+                break;
+            case '-':
+                if(this.amount > 1) {
+                    this.amount--;
+                } else {
+                    throw new AuthorityViolationException("더 이상 줄일 수 없습니다.");
+                }
+                break;
+        }
     }
 }

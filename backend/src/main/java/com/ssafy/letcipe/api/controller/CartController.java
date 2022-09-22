@@ -1,6 +1,7 @@
 package com.ssafy.letcipe.api.controller;
 
 import com.ssafy.letcipe.api.dto.cart.ReqDeleteCartDto;
+import com.ssafy.letcipe.api.dto.cart.ReqPatchCartDto;
 import com.ssafy.letcipe.api.dto.cart.ReqPostCartDto;
 import com.ssafy.letcipe.api.service.CartService;
 import com.ssafy.letcipe.api.service.JwtService;
@@ -39,6 +40,13 @@ public class CartController {
     public ResponseEntity readCart(HttpServletRequest request) {
         Long userId = jwtService.getUserId(request);
         return ResponseEntity.ok(cartService.getCart(userId));
+    }
+
+    @PatchMapping("cart-recipe")
+    public ResponseEntity updateCartRecipe(@RequestBody ReqPatchCartDto requestDto, HttpServletRequest request){
+        Long userId = jwtService.getUserId(request);
+        cartService.updateCartRecipe(requestDto, userId);
+        return ResponseEntity.ok().build();
     }
 }
 
