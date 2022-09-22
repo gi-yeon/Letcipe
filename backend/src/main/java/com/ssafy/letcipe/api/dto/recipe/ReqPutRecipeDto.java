@@ -17,5 +17,6 @@ public class ReqPutRecipeDto {
     int cookingTime;
     int serving;
     MultipartFile repImg;
+    List<ReqPostRecipeIngredientDto> ingredients;
     List<String> tagList;
 }
