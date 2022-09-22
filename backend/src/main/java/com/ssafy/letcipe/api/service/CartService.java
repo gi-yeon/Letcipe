@@ -81,4 +81,14 @@ public class CartService {
                 .orElseThrow(() -> new NullPointerException("수정한 적 없습니다."));
         cartIngredient.update(requestDto.getOperator());
     }
+
+    @Transactional
+    public void deleteCartIngredient(ReqDeleteCartIngredientDto requestDto, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
+        Ingredient ingredient = ingredientRepository.findById(requestDto.getIngredientId())
+                .orElseThrow(() -> new NullPointerException("재료를 찾을 수 없습니다."));
+        CartIngredient cartIngredient = cartIngredientRepository.findByUserAndIngredient(user, ingredient)
+                .orElseThrow(() -> new NullPointerException("수정한 적 없습니다."));
+        cartIngredientRepository.delete(cartIngredient);
+    }
 }

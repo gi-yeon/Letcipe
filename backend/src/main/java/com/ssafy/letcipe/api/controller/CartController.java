@@ -62,5 +62,12 @@ public class CartController {
         cartService.patchCartIngredient(requestDto, userId);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("cart-ingredient")
+    public ResponseEntity deleteCartIngredient(@RequestBody ReqDeleteCartIngredientDto requestDto, HttpServletRequest request) {
+        Long userId = jwtService.getUserId(request);
+        cartService.deleteCartIngredient(requestDto, userId);
+        return ResponseEntity.noContent().build();
+    }
 }
 
