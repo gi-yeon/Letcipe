@@ -115,8 +115,6 @@ public class RecipeService {
 
     @Transactional
     public void updateRecipe(ReqPutRecipeDto updateDto, long recipe_id) throws NullPointerException, FileNotFoundException, FileUploadException {
-        System.out.println("호출됨");
-        System.out.println(updateDto);
         // 대표 이미지 null check
         if (updateDto.getRepImg() == null || updateDto.getRepImg().isEmpty()) {
             throw new FileNotFoundException("대표 이미지가 없습니다.");
@@ -137,12 +135,9 @@ public class RecipeService {
             recipeStepService.createRecipeStep(recipe,step);
         }
 
-        System.out.println("기존 재료 삭제");
         // 기존 레시피 재료 삭제
         recipeIngredientService.deleteRecipeIngredients(recipe);
 
-
-        System.out.println("새로운 재료 추가");
         // 새로운 레시피 재료 추가
         for (ReqPostRecipeIngredientDto ingredientDto : updateDto.getIngredients()) {
             // 재료 찾기
@@ -264,14 +259,14 @@ public class RecipeService {
         // 레시피 엔티티 응답용 객체로 변환
         for (Recipe recipe : searched) {
             // 레시피의 재료 목록
-            List<ResGetRecipeIngredientDto> ingredientResponses = new ArrayList<>();
+            List<ResGetRecipeIngredientDto> recipeIngredientResponses = new ArrayList<>();
             // 응답용 재료 객체로 변환
             for (RecipeIngredient ri : recipe.getIngredients()) {
                 ResGetIngredientDto ing = ingredientService.getIngredientResponse(ri.getIngredient());
-                ingredientResponses.add(new ResGetRecipeIngredientDto(ing,ri.getAmount()));
+                recipeIngredientResponses.add(new ResGetRecipeIngredientDto(ing,ri.getAmount()));
             }
 
-            result.add(new ResGetRecipeDto(recipe,ingredientResponses));
+            result.add(new ResGetRecipeDto(recipe,recipeIngredientResponses));
         }
 
         return result;

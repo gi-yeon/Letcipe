@@ -15,8 +15,8 @@ public class ResGetCartItemDto {
     private ResGetRecipeDto recipe;
     private Integer amount;
 
-    public ResGetCartItemDto(Cart cart){
-        this.recipe = ResGetRecipeDto.createDto(cart.getRecipe());
-        this.amount = cart.getAmount();
+    public ResGetCartItemDto(ResGetRecipeDto recipeDto, int amount){
+        this.recipe = recipeDto;
+        this.amount = amount;
     }
 }

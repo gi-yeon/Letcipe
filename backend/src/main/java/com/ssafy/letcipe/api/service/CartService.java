@@ -1,6 +1,9 @@
 package com.ssafy.letcipe.api.service;
 
 import com.ssafy.letcipe.api.dto.cart.*;
+import com.ssafy.letcipe.api.dto.ingredient.ResGetIngredientDto;
+import com.ssafy.letcipe.api.dto.recipe.ResGetRecipeDto;
+import com.ssafy.letcipe.api.dto.recipeIngredient.ResGetRecipeIngredientDto;
 import com.ssafy.letcipe.domain.cart.Cart;
 import com.ssafy.letcipe.domain.cart.CartRepository;
 import com.ssafy.letcipe.domain.cartIngredient.CartIngredient;
@@ -9,6 +12,7 @@ import com.ssafy.letcipe.domain.ingredient.Ingredient;
 import com.ssafy.letcipe.domain.ingredient.IngredientRepository;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipe.RecipeRepository;
+import com.ssafy.letcipe.domain.recipeIngredient.RecipeIngredient;
 import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +31,7 @@ public class CartService {
     private final CartRepository cartRepository;
     private final IngredientRepository ingredientRepository;
     private final CartIngredientRepository cartIngredientRepository;
+    private final IngredientService ingredientService;
 
     @Transactional
     public void createCart(ReqPostCartDto requestDto, Long userId) {
@@ -49,7 +55,21 @@ public class CartService {
     @Transactional
     public ResGetCartDto getCart(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
-        return new ResGetCartDto(user.getCarts());
+        // cartGetDto만듦
+        List<ResGetCartItemDto> cartDtos = new ArrayList<>();
+        for (Cart cart : user.getCarts()) {
+            List<ResGetRecipeIngredientDto> list = new ArrayList<>();
+            for (RecipeIngredient ri : cart.getRecipe().getIngredients()) {
+                ResGetIngredientDto ing = ingredientService.getIngredientResponse(ri.getIngredient());
+                list.add(new ResGetRecipeIngredientDto(ing, ri.getAmount()));
+            }
+
+            ResGetRecipeDto recipeDto = new ResGetRecipeDto(cart.getRecipe(), list);
+            ResGetCartItemDto cartItemDto = new ResGetCartItemDto(recipeDto,cart.getAmount());
+            cartDtos.add(cartItemDto);
+        }
+
+        return new ResGetCartDto(cartDtos);
     }
 
     @Transactional
