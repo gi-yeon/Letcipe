@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "recipe_id" }) })
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +27,10 @@ public class Cart {
 
     @Column(name = "amount", nullable = false)
     private Integer amount;
+
+    public Cart(User user, Recipe recipe, int i) {
+        this.user = user;
+        this.recipe = recipe;
+        this.amount = i;
+    }
 }
