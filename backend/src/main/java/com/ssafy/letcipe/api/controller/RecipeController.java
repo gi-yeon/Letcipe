@@ -1,8 +1,8 @@
 package com.ssafy.letcipe.api.controller;
 
-import com.ssafy.letcipe.api.dto.recipe.ReqCreateRecipeDto;
-import com.ssafy.letcipe.api.dto.recipe.ReqUpdateRecipeDto;
-import com.ssafy.letcipe.api.dto.recipe.ResReadRecipeDto;
+import com.ssafy.letcipe.api.dto.recipe.ReqPostRecipeDto;
+import com.ssafy.letcipe.api.dto.recipe.ReqPutRecipeDto;
+import com.ssafy.letcipe.api.dto.recipe.ResGetDetailRecipeDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqPostRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqDeleteRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeComment.ReqPostRecipeCommentDto;
@@ -31,21 +31,21 @@ public class RecipeController {
     @Transactional
     public ResponseEntity readRecipe(@PathVariable long recipe_id) {
         long userId = 1L; // TODO 토큰에서 유저 id 가져와야 함, 없다면 -1 등으로 표기
-        ResReadRecipeDto recipe = recipeService.readRecipe(recipe_id, userId);
+        ResGetDetailRecipeDto recipe = recipeService.readRecipe(recipe_id, userId);
         return ResponseEntity.ok(recipe);
     }
 
     @PostMapping("")
-    public ResponseEntity createRecipe(@ModelAttribute ReqCreateRecipeDto createDto) throws FileUploadException {
+    public ResponseEntity createRecipe(@ModelAttribute ReqPostRecipeDto dto) throws FileUploadException {
         int userId = 1; // TODO 토큰에서 유저 id 가져와야 함
-        recipeService.createRecipe(createDto, userId);
+        recipeService.createRecipe(dto, userId);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{recipe_id}")
-    public ResponseEntity updateRecipe(@PathVariable long recipe_id, @ModelAttribute ReqUpdateRecipeDto updateDto) throws FileNotFoundException, FileUploadException {
+    public ResponseEntity updateRecipe(@PathVariable long recipe_id, @ModelAttribute ReqPutRecipeDto dto) throws FileNotFoundException, FileUploadException {
         int userId = 1; // TODO 토큰에서 유저 id 가져와야 함
-        recipeService.updateRecipe(updateDto, recipe_id);
+        recipeService.updateRecipe(dto, recipe_id);
         return ResponseEntity.ok().build();
     }
 
