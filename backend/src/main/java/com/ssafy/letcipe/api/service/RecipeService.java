@@ -27,6 +27,8 @@ import com.ssafy.letcipe.exception.AuthorityViolationException;
 import com.ssafy.letcipe.util.FileHandler;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -229,8 +231,8 @@ public class RecipeService {
     }
 
     @Transactional
-    public List<ResGetRecipeDto> searchRecipe(String keyword) throws SQLException {
-        List<Recipe> searched = recipeRepository.findByKeyword(keyword);
+    public List<ResGetRecipeDto> searchRecipe(Pageable pageable, String keyword) throws SQLException {
+        List<Recipe> searched = recipeRepository.findByKeyword(pageable,keyword);
         List<ResGetRecipeDto> result = new ArrayList<>();
         for (Recipe recipe : searched) {
             result.add(ResGetRecipeDto.createDto(recipe));
