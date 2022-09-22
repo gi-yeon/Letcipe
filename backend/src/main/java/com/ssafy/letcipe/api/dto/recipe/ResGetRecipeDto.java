@@ -39,7 +39,7 @@ public class ResGetRecipeDto {
                 .recipeLike(recipe.getLikes().size())
                 .recipeBookmark((recipe.getBookmarks().size()))
                 .recipeComment(recipe.getComments().size())
-                .tags(recipe.getTags())
+                //.tags(recipe.getTags())
                 .build();
     }
 }

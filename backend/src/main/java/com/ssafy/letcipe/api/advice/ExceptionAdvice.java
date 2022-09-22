@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestControllerAdvice
 public class ExceptionAdvice {
@@ -46,5 +47,11 @@ public class ExceptionAdvice {
         logger.warn("해킹 시도 감지!");
         printLog(e);
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public  ResponseEntity duplicatedException(Exception e) {
+        printLog(e);
+        return new ResponseEntity(HttpStatus.CONFLICT);
     }
 }
