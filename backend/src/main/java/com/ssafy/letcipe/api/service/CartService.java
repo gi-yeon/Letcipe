@@ -28,4 +28,14 @@ public class CartService {
 
         cartRepository.save(new Cart(user, recipe, 1));
     }
+
+    @Transactional
+    public void deleteCart(ReqDeleteCartDto requestDto, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
+        Recipe recipe = recipeRepository.findById(requestDto.getRecipeId())
+                .orElseThrow(() -> new NullPointerException("레시피를 찾을 수 없습니다."));
+        Cart cart = cartRepository.findByUserAndRecipe(user, recipe)
+                .orElseThrow(() -> new NullPointerException("레시피를 등록한 적 없습니다."));
+        cartRepository.delete(cart);
+    }
 }

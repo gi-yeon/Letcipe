@@ -28,6 +28,13 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("cart")
+    public ResponseEntity deleteCart(@RequestBody ReqDeleteCartDto requestDto, HttpServletRequest request) {
+        Long userId = jwtService.getUserId(request);
+        cartService.deleteCart(requestDto, userId);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("cart")
     public ResponseEntity readCart(HttpServletRequest request) {
         Long userId = jwtService.getUserId(request);

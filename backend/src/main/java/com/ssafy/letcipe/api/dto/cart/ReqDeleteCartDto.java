@@ -2,11 +2,12 @@ package com.ssafy.letcipe.api.dto.cart;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReqDeleteCartDto {
-    Long recipe_id;
+    Long recipeId;
 }
