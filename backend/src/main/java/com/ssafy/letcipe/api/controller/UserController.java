@@ -75,4 +75,10 @@ public class UserController {
         Long userId = jwtService.getUserId(request);
         return ResponseEntity.ok(userService.readUserRecipeList(userId, pageable));
     }
+
+    @GetMapping("mark/recipe")
+    public ResponseEntity readRecipeBookMark(HttpServletRequest request, Pageable pageable) {
+        Long userId = jwtService.getUserId(request);
+        return ResponseEntity.ok(userService.readRecipeBookMark(userId, pageable));
+    }
 }
