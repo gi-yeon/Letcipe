@@ -1,9 +1,8 @@
 package com.ssafy.letcipe.api.service;
 
-import com.ssafy.letcipe.api.dto.user.ReqLoginUserDto;
-import com.ssafy.letcipe.api.dto.user.ReqPostUserDto;
-import com.ssafy.letcipe.api.dto.user.ReqPutUserDto;
-import com.ssafy.letcipe.api.dto.user.ResGetUserDto;
+import com.ssafy.letcipe.api.dto.user.*;
+import com.ssafy.letcipe.domain.recipe.Recipe;
+import com.ssafy.letcipe.domain.recipe.RecipeRepository;
 import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.domain.user.UserRepository;
 import com.ssafy.letcipe.domain.user.UserType;
@@ -12,12 +11,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Pageable;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final RecipeRepository recipeRepository;
 
     private final EncryptUtils encryptUtils;
 
@@ -79,5 +82,16 @@ public class UserService {
 
     public User findUser(long userId) throws NullPointerException {
         return userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
+    }
+
+    @Transactional
+    public ResGetUserRecipeListDto readUserRecipe(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
+        List<Recipe> recipeList = recipeRepository.findAllByUser(pageable, user);
+        List<ResGetUserRecipeDto> dtoList = new ArrayList<>();
+        for(Recipe recipe: recipeList){
+            dtoList.add(new ResGetUserRecipeDto(recipe));
+        }
+        return new ResGetUserRecipeListDto(dtoList);
     }
 }

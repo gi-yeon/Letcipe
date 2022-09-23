@@ -1,5 +1,6 @@
 package com.ssafy.letcipe.domain.recipe;
 
+import com.ssafy.letcipe.domain.user.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +15,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
             "where r.title like concat('%',:keyword,'%')" +
             "or t.name like concat('%',:keyword,'%')")
     List<Recipe> findByKeyword(Pageable pageable, String keyword) throws SQLException;
+
+    List<Recipe> findAllByUser(Pageable pageable, User user);
 }
