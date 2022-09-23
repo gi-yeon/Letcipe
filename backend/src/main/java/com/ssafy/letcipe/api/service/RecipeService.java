@@ -258,13 +258,6 @@ public class RecipeService {
 
         // 레시피 엔티티 응답용 객체로 변환
         for (Recipe recipe : searched) {
-//            // 레시피의 재료 목록
-//            List<ResGetRecipeIngredientDto> recipeIngredientResponses = new ArrayList<>();
-//            // 응답용 재료 객체로 변환
-//            for (RecipeIngredient ri : recipe.getIngredients()) {
-//                ResGetIngredientDto ing = ingredientService.getIngredientResponse(ri.getIngredient());
-//                recipeIngredientResponses.add(new ResGetRecipeIngredientDto(ing,ri.getAmount()));
-//            }
             result.add(getRecipeDto(recipe));
         }
 
