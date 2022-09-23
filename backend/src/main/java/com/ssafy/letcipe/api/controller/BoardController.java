@@ -2,8 +2,9 @@ package com.ssafy.letcipe.api.controller;
 
 import com.ssafy.letcipe.api.dto.*;
 
-import com.ssafy.letcipe.api.service.BoardService;
+import com.ssafy.letcipe.api.service.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,8 +20,8 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("")
-    public ResponseEntity<List<ResGetBoardListDto>> getBoardList(int page, int boardNum) throws Exception{
-        return new ResponseEntity<>(boardService.getBoardList(page, boardNum), HttpStatus.OK);
+    public ResponseEntity<List<ResGetBoardListDto>> getBoardList(Pageable pageable) throws Exception{
+        return new ResponseEntity<>(boardService.getBoardList(pageable), HttpStatus.OK);
     }
 
     @GetMapping("/{board_id}")
