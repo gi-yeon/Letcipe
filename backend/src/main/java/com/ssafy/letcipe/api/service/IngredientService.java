@@ -52,7 +52,7 @@ public class IngredientService {
                 return similarity1-similarity2;
         });
         Map<String,Object> map = new LinkedHashMap<>();
-        for (int i = 0; i<dtos.size() && map.size() <= 5; i++) {
+        for (int i = 0; i<dtos.size() && map.size() <= 10; i++) {
             map.putIfAbsent(dtos.get(i).getName(),dtos.get(i));
         }
         return map;
