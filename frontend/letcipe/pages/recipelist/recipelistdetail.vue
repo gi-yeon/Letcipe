@@ -180,6 +180,7 @@ export default {
     allAddCart() {
       if (!this.isAllCheck) {
         this.isAllCheck = true
+        this.cart = []
         for (let i = 0; i < this.recipeListItems.length; i++) {
           this.cart.push(this.recipeListItems[i])
         }
