@@ -37,4 +37,10 @@ public class HistoryController {
         historyService.updateHistory(reqUpdateHistoryDto);
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping("/ingredient/{history_ingredient_id}")
+    public ResponseEntity<?> checkHistoryIngredient(@PathVariable("history_ingredient_id") Long history_ingredient_id){
+        historyService.checkHistoryIngredient(history_ingredient_id);
+        return ResponseEntity.ok().build();
+    }
 }
