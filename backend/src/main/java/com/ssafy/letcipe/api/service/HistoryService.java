@@ -1,5 +1,6 @@
 package com.ssafy.letcipe.api.service;
 
+import com.ssafy.letcipe.api.dto.history.ResGetDetailHistoryDto;
 import com.ssafy.letcipe.api.dto.history.ResGetHistoryDto;
 import com.ssafy.letcipe.domain.history.History;
 import com.ssafy.letcipe.domain.history.HistoryRepository;
@@ -27,8 +28,8 @@ public class HistoryService {
     }
 
     @Transactional
-    public ResGetHistoryDto getHistory(Long historyId) {
+    public ResGetDetailHistoryDto getHistory(Long historyId) {
         History history = historyRepository.findById(historyId).orElseThrow();
-        return new ResGetHistoryDto(history);
+        return new ResGetDetailHistoryDto(history);
     }
 }

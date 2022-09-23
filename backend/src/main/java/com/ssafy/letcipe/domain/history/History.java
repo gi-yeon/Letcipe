@@ -1,5 +1,6 @@
 package com.ssafy.letcipe.domain.history;
 
+import com.ssafy.letcipe.domain.historyIngredient.HistoryIngredient;
 import com.ssafy.letcipe.domain.historyItem.HistoryItem;
 import com.ssafy.letcipe.domain.type.StatusType;
 import com.ssafy.letcipe.domain.user.User;
@@ -40,4 +41,7 @@ public class History {
 
     @OneToMany(targetEntity = HistoryItem.class, mappedBy = "history", fetch = FetchType.LAZY)
     private List<HistoryItem> historyItems = new ArrayList<>();
+
+    @OneToMany(targetEntity = HistoryIngredient.class, mappedBy = "history", fetch = FetchType.LAZY)
+    private List<HistoryIngredient> historyIngredients = new ArrayList<>();
 }
