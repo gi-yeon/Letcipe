@@ -1,13 +1,11 @@
 package com.ssafy.letcipe.api.controller;
 
+import com.ssafy.letcipe.api.dto.history.ReqUpdateHistoryDto;
 import com.ssafy.letcipe.api.dto.history.ResGetHistoryDto;
 import com.ssafy.letcipe.api.service.HistoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,5 +24,17 @@ public class HistoryController {
     @GetMapping("/{history_id}")
     public ResponseEntity<?> getHistory(@PathVariable("history_id") Long historyId){
         return ResponseEntity.ok(historyService.getHistory(historyId));
+    }
+
+    @PatchMapping("/{history_id}")
+    public ResponseEntity<?> deleteHistory(@PathVariable("history_id") Long historyId){
+        historyService.deleteHistory(historyId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("")
+    public ResponseEntity<?> updateHistory(@RequestBody ReqUpdateHistoryDto reqUpdateHistoryDto){
+        historyService.updateHistory(reqUpdateHistoryDto);
+        return ResponseEntity.ok().build();
     }
 }

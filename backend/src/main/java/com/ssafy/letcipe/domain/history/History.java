@@ -44,4 +44,12 @@ public class History {
 
     @OneToMany(targetEntity = HistoryIngredient.class, mappedBy = "history", fetch = FetchType.LAZY)
     private List<HistoryIngredient> historyIngredients = new ArrayList<>();
+
+    public void update(ProcessType process) {
+        this.process = process;
+    }
+
+    public void delete() {
+        this.isDeleted = StatusType.Y;
+    }
 }
