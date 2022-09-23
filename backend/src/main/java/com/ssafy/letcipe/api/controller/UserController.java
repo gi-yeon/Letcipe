@@ -69,4 +69,10 @@ public class UserController {
         Long userId = jwtService.getUserId(request);
         return ResponseEntity.ok(userService.readUserRecipe(userId, pageable));
     }
+
+    @GetMapping("recipelist")
+    public ResponseEntity readUserRecipeList(HttpServletRequest request, Pageable pageable){
+        Long userId = jwtService.getUserId(request);
+        return ResponseEntity.ok(userService.readUserRecipeList(userId, pageable));
+    }
 }

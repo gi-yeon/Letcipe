@@ -3,6 +3,8 @@ package com.ssafy.letcipe.api.service;
 import com.ssafy.letcipe.api.dto.user.*;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipe.RecipeRepository;
+import com.ssafy.letcipe.domain.recipeList.RecipeList;
+import com.ssafy.letcipe.domain.recipeList.RecipeListRepository;
 import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.domain.user.UserRepository;
 import com.ssafy.letcipe.domain.user.UserType;
@@ -22,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final RecipeRepository recipeRepository;
 
+    private final RecipeListRepository recipeListRepository;
     private final EncryptUtils encryptUtils;
 
     @Transactional
@@ -85,13 +88,23 @@ public class UserService {
     }
 
     @Transactional
-    public ResGetUserRecipeListDto readUserRecipe(Long userId, Pageable pageable) {
+    public ResGetUserRecipesDto readUserRecipe(Long userId, Pageable pageable) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
         List<Recipe> recipeList = recipeRepository.findAllByUser(pageable, user);
         List<ResGetUserRecipeDto> dtoList = new ArrayList<>();
         for(Recipe recipe: recipeList){
             dtoList.add(new ResGetUserRecipeDto(recipe));
         }
-        return new ResGetUserRecipeListDto(dtoList);
+        return new ResGetUserRecipesDto(dtoList);
+    }
+
+    public ResGetUserRecipeListsDto readUserRecipeList(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
+        List<RecipeList> recipeListList = recipeListRepository.findAllByUser(pageable, user);
+        List<ResGetUserRecipeListDto> dtoList = new ArrayList<>();
+        for(RecipeList recipeList: recipeListList){
+            dtoList.add(new ResGetUserRecipeListDto(recipeList));
+        }
+        return new ResGetUserRecipeListsDto(dtoList);
     }
 }
