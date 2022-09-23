@@ -25,4 +25,10 @@ public class HistoryService {
         }
         return result;
     }
+
+    @Transactional
+    public ResGetHistoryDto getHistory(Long historyId) {
+        History history = historyRepository.findById(historyId).orElseThrow();
+        return new ResGetHistoryDto(history);
+    }
 }
