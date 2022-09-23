@@ -15,7 +15,7 @@ public class ResGetRecipeListItemDto {
     private Integer amount;
 
     public ResGetRecipeListItemDto(RecipeListItem recipeListItem){
-        this.recipe = ResGetRecipeDto.createDto(recipeListItem.getRecipe());
+        this.recipe = new ResGetRecipeDto(recipeListItem.getRecipe(),null);
         this.amount = recipeListItem.getAmount();
     }
 }

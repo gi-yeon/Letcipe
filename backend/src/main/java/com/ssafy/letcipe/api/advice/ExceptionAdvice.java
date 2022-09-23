@@ -30,8 +30,8 @@ public class ExceptionAdvice {
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity handleNPE(NullPointerException e) {
+    @ExceptionHandler({NullPointerException.class,IllegalArgumentException.class})
+    public ResponseEntity handleNPE(Exception e) {
         printLog(e);
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }

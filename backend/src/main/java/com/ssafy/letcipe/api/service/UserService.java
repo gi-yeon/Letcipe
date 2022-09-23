@@ -20,6 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final EncryptUtils encryptUtils;
+
     @Transactional
     public void createUser(ReqPostUserDto requestDto) throws NoSuchAlgorithmException {
 
@@ -30,7 +31,7 @@ public class UserService {
         String password = encryptUtils.encrypt(sb.toString());
 
         // 유저 엔티티 생성
-        User user=User.builder()
+        User user = User.builder()
                 .userId(requestDto.getUserId())
                 .userType(UserType.USER)
                 .birth(requestDto.getBirth())
@@ -74,5 +75,9 @@ public class UserService {
     public void updateUser(Long userId, ReqPutUserDto requestDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
         user.update(requestDto);
+    }
+
+    public User findUser(long userId) throws NullPointerException {
+        return userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
     }
 }
