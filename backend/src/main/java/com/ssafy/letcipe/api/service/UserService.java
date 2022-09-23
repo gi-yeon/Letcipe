@@ -7,6 +7,8 @@ import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmarkRepository;
 import com.ssafy.letcipe.domain.recipeList.RecipeList;
 import com.ssafy.letcipe.domain.recipeList.RecipeListRepository;
+import com.ssafy.letcipe.domain.recipeListBookmark.RecipeListBookmark;
+import com.ssafy.letcipe.domain.recipeListBookmark.RecipeListBookmarkRepository;
 import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.domain.user.UserRepository;
 import com.ssafy.letcipe.domain.user.UserType;
@@ -27,6 +29,7 @@ public class UserService {
     private final RecipeRepository recipeRepository;
     private final RecipeListRepository recipeListRepository;
     private final RecipeBookmarkRepository recipeBookmarkRepository;
+    private final RecipeListBookmarkRepository recipeListBookmarkRepository;
     private final EncryptUtils encryptUtils;
 
     @Transactional
@@ -110,13 +113,23 @@ public class UserService {
         return new ResGetUserRecipeListsDto(dtoList);
     }
 
-    public ResGetUserRecipesDto readRecipeBookMark(Long userId, Pageable pageable) {
+    public ResGetUserRecipesDto readRecipeBookmark(Long userId, Pageable pageable) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
-        List<RecipeBookmark> recipeList = recipeBookmarkRepository.findAllByUser(pageable, user);
+        List<RecipeBookmark> recipeBookmarkList = recipeBookmarkRepository.findAllByUser(pageable, user);
         List<ResGetUserRecipeDto> dtoList = new ArrayList<>();
-        for(RecipeBookmark recipeBookmark: recipeList){
+        for(RecipeBookmark recipeBookmark: recipeBookmarkList){
             dtoList.add(new ResGetUserRecipeDto(recipeBookmark.getRecipe()));
         }
         return new ResGetUserRecipesDto(dtoList);
+    }
+
+    public ResGetUserRecipeListsDto readRecipeListBookmark(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
+        List<RecipeListBookmark> recipeListBookmarkList = recipeListBookmarkRepository.findAllByUser(pageable, user);
+        List<ResGetUserRecipeListDto> dtoList = new ArrayList<>();
+        for(RecipeListBookmark recipeListBookmark: recipeListBookmarkList){
+            dtoList.add(new ResGetUserRecipeListDto(recipeListBookmark.getRecipeList()));
+        }
+        return new ResGetUserRecipeListsDto(dtoList);
     }
 }

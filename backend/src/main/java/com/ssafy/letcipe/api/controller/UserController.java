@@ -77,8 +77,14 @@ public class UserController {
     }
 
     @GetMapping("mark/recipe")
-    public ResponseEntity readRecipeBookMark(HttpServletRequest request, Pageable pageable) {
+    public ResponseEntity readRecipeBookmark(HttpServletRequest request, Pageable pageable) {
         Long userId = jwtService.getUserId(request);
-        return ResponseEntity.ok(userService.readRecipeBookMark(userId, pageable));
+        return ResponseEntity.ok(userService.readRecipeBookmark(userId, pageable));
+    }
+
+    @GetMapping("mark/recipelist")
+    public ResponseEntity readRecipeListBookmark(HttpServletRequest request, Pageable pageable) {
+        Long userId = jwtService.getUserId(request);
+        return ResponseEntity.ok(userService.readRecipeListBookmark(userId, pageable));
     }
 }
