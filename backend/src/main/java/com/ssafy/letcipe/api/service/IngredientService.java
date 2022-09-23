@@ -53,7 +53,7 @@ public class IngredientService {
         });
         Map<String,Object> map = new LinkedHashMap<>();
         for (int i = 0; i<dtos.size() && map.size() <= 5; i++) {
-            map.putIfAbsent(dtos.get(i).getName(),dtos.get(i).getCategory());
+            map.putIfAbsent(dtos.get(i).getName(),dtos.get(i));
         }
         return map;
     }
