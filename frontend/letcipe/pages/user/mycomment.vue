@@ -43,7 +43,7 @@
                     style="border: 1px solid black !important"
                     align="left"
                   >
-                    <v-list-item-content @click="commentDetail()">
+                    <v-list-item-content @click="commentDetail(i)">
                       <v-row>
                         <v-col>
                           <v-list-item-subtitle>{{
@@ -82,9 +82,71 @@
               </div>
             </v-col>
           </v-row>
-        </v-container>
-      </div></v-app
-    >
+          <div class="text-center">
+            <v-dialog v-model="commentDialog" width="500">
+              <v-card>
+                <v-list-item
+                  three-line
+                  style="border: 1px solid black !important"
+                  align="left"
+                >
+                  <v-list-item-content>
+                    <v-row class="mb-5">
+                      <v-col>
+                        <v-list-item-subtitle>{{
+                          selectedComment.user
+                        }}</v-list-item-subtitle></v-col
+                      ><v-col align="right">
+                        <v-list-item-subtitle>{{
+                          selectedComment.regTime
+                        }}</v-list-item-subtitle></v-col
+                      ></v-row
+                    >
+
+                    <!-- <v-list-item-title
+                        style="
+                          text-overflow: ellipsis;
+                          overflow: hidden;
+                          white-space: nowrap;
+                          display: inline-block;
+                          font-size: 1.2rem;
+                        "
+                      > -->
+
+                    <v-list-item-title
+                      style="font-size: 1.2rem"
+                      class="text-wrap pb-4"
+                    >
+                      {{ selectedComment.content }}
+                    </v-list-item-title>
+                    <v-row>
+                      <v-col cols="12" align="right">
+                        <v-list-item-subtitle
+                          ><v-btn text
+                            >원문 보기 >>
+                          </v-btn></v-list-item-subtitle
+                        ></v-col
+                      ><v-col class="d-flex justify-space-between ml-8 mr-8">
+                        <v-btn
+                          dark
+                          style="width: 45%"
+                          @click="commentDialog = false"
+                          >닫기</v-btn
+                        >
+                        <v-btn dark style="width: 45%" @click="deleteComment()"
+                          >삭제</v-btn
+                        ></v-col
+                      ></v-row
+                    >
+
+                    <v-row></v-row>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-card>
+            </v-dialog>
+          </div>
+        </v-container></div
+    ></v-app>
   </div>
 </template>
 
@@ -101,7 +163,8 @@ export default {
         {
           user: '나야나',
           board: '1',
-          content: '밥도둑레시피입니다.',
+          content:
+            '밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.',
           regTime: '2022-09-08',
         },
         {
@@ -118,6 +181,13 @@ export default {
           regTime: '2022-09-08',
         },
       ],
+      commentDialog: false,
+      selectedComment: {
+        user: null,
+        board: null,
+        content: null,
+        regTime: null,
+      },
     }
   },
   created() {
@@ -164,6 +234,13 @@ export default {
       console.log(this.checkedComment)
     },
     deleteComment() {},
+    commentDetail(index) {
+      this.selectedComment.user = this.comments[index].user
+      this.selectedComment.board = this.comments[index].board
+      this.selectedComment.content = this.comments[index].content
+      this.selectedComment.regTime = this.comments[index].regTime
+      this.commentDialog = true
+    },
   },
 }
 </script>

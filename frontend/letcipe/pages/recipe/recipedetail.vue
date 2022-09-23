@@ -83,40 +83,42 @@
                 </v-chip>
               </v-chip-group>
             </v-card-text>
+            <v-row>
+              <v-col align="center">
+                <div
+                  v-for="(comment, i) in recipeComment"
+                  :key="i"
+                  style="width: 80%"
+                >
+                  <div class="mx-auto pt-2 pb-2 d-flex align-center">
+                    <v-list-item
+                      three-line
+                      style="border: 1px solid black !important"
+                      align="left"
+                    >
+                      <v-list-item-content>
+                        <v-row>
+                          <v-col>
+                            <v-list-item-subtitle class="recipe-comment">
+                              {{ comment.nickname }}</v-list-item-subtitle
+                            ></v-col
+                          ><v-col align="right">
+                            <v-list-item-subtitle class="recipe-comment">{{
+                              comment.reg_time
+                            }}</v-list-item-subtitle></v-col
+                          ></v-row
+                        >
+
+                        <v-list-item-subtitle class="recipe-comment">
+                          {{ comment.content }}
+                        </v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </div>
+                </div>
+              </v-col>
+            </v-row>
           </v-card>
-          <!-- <v-img
-            class="ref-imgs"
-            src="https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg"
-            style="margin: auto"
-          >
-            <div class="ref-wrap">
-              <v-card-title class="text-md-h1">{{ title }}</v-card-title>
-
-              <v-card-subtitle class="text-md-h3">맛있겠다!</v-card-subtitle>
-            </div>
-          </v-img>
-          <v-card-text style="margin: auto; padding: 16px 0px 16px 0px">
-            <v-row style="text-align: center">
-              <v-col
-                cols="7"
-                style="padding: 0% 0% 0% 10%"
-                class="text-md-h5 text-left"
-              >
-                <v-icon small color="blue lighten-1">mdi-thumb-up</v-icon
-                >&nbsp;{{ recipeLike }}&nbsp;&nbsp;
-                <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon
-                >&nbsp;{{ recipeBookmark }} <br />등록일자 : 2022-09-18</v-col
-              ><v-col cols="4"
-                ><v-btn class="text-md-h5">+담기</v-btn></v-col
-              ></v-row
-            >
-
-            <v-card-title class="text-md-h3">{{ title }}</v-card-title>
-            <v-card-subtitle class="text-md-h5">맛있겠다!</v-card-subtitle>
-            <v-card-subtitle>Chef&nbsp;{{ nickname }}</v-card-subtitle>
-            <v-card-text>{{ content }}</v-card-text>
-            <v-card-title>재료 </v-card-title>
-          </v-card-text> -->
         </v-container>
       </div></v-app
     >
@@ -156,9 +158,9 @@ export default {
       ],
       recipeComment: [
         {
-          nickname: 1,
-          content: 'asd',
-          reg_time: '',
+          nickname: '수리수리마수리',
+          content: 'asd맛나는 레시피일까요아닐까요',
+          reg_time: '2022-09-24',
           mod_time: '',
         },
       ],
@@ -233,7 +235,11 @@ export default {
   color: aliceblue;
   text-align: right;
 }
-
+.recipe-comment {
+  font-size: 0.8rem;
+  margin: 0px 0px;
+  padding: 0%;
+}
 /* 글자 크기 조절 방법좀 알려주세요~~ */
 @media (min-width: 960px) {
   .v-application .text-md-h1 {
