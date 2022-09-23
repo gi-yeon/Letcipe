@@ -28,6 +28,7 @@ public class CartService {
 
     private final UserRepository userRepository;
     private final RecipeRepository recipeRepository;
+    private final RecipeService recipeService;
     private final CartRepository cartRepository;
     private final IngredientRepository ingredientRepository;
     private final CartIngredientRepository cartIngredientRepository;
@@ -55,17 +56,9 @@ public class CartService {
     @Transactional
     public ResGetCartDto getCart(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
-        // cartGetDto만듦
         List<ResGetCartItemDto> cartDtos = new ArrayList<>();
         for (Cart cart : user.getCarts()) {
-            List<ResGetRecipeIngredientDto> list = new ArrayList<>();
-            for (RecipeIngredient ri : cart.getRecipe().getIngredients()) {
-                ResGetIngredientDto ing = ingredientService.getIngredientResponse(ri.getIngredient());
-                list.add(new ResGetRecipeIngredientDto(ing, ri.getAmount()));
-            }
-
-            ResGetRecipeDto recipeDto = new ResGetRecipeDto(cart.getRecipe(), list);
-            ResGetCartItemDto cartItemDto = new ResGetCartItemDto(recipeDto,cart.getAmount());
+            ResGetCartItemDto cartItemDto = new ResGetCartItemDto(recipeService.getRecipeDto(cart.getRecipe()),cart.getAmount());
             cartDtos.add(cartItemDto);
         }
 

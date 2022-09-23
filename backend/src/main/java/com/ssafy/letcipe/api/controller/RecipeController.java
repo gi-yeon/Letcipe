@@ -113,4 +113,9 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.searchRecipe(pageable,keyword));
     }
 
+    @GetMapping("/best")
+    ResponseEntity getBestRecipes(Pageable pageable) throws SQLException {
+        return ResponseEntity.ok(recipeService.getBestRecipes(pageable));
+    }
+
 }
