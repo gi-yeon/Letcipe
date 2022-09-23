@@ -14,7 +14,7 @@ import com.ssafy.letcipe.api.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -109,8 +109,13 @@ public class RecipeController {
     }
 
     @GetMapping("")
-    ResponseEntity searchRecipe(@RequestParam String keyword, @RequestParam int page, @RequestParam int size) throws SQLException {
-        return ResponseEntity.ok(recipeService.searchRecipe(PageRequest.of(page-1,size),keyword));
+    ResponseEntity searchRecipe(@RequestParam String keyword, Pageable pageable) throws SQLException {
+        return ResponseEntity.ok(recipeService.searchRecipe(pageable,keyword));
+    }
+
+    @GetMapping("/best")
+    ResponseEntity getBestRecipes(Pageable pageable) throws SQLException {
+        return ResponseEntity.ok(recipeService.getBestRecipes(pageable));
     }
 
 }
