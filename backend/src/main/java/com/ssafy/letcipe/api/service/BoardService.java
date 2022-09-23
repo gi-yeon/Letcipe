@@ -10,7 +10,9 @@ import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.websocket.AuthenticationException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,10 +30,12 @@ public class BoardService {
 
     //page로 조회
     @Transactional
-    public List<ResGetBoardListDto> getBoardList(int page, int boardNum) throws Exception{
-        if(page == 0) throw new Exception("잘못된 요청입니다.");
-        PageRequest pageRequest = PageRequest.of(page-1, boardNum);
+    public List<ResGetBoardListDto> getBoardList(Pageable pageable) throws Exception{
+        if(pageable.getPageNumber() == 0) throw new Exception("잘못된 요청입니다.");
+        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize());
 
+//      int firstP = pageRequest.getPageNumber()-1;
+//      PageRequest P = PageRequest.of(firstP, pageRequest.getPageSize());
         List<Board> boardList = boardRepository.findByStatusType(StatusType.N, pageRequest)
                                                .stream()
                                                .collect(Collectors.toList());
