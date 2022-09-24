@@ -40,7 +40,7 @@ public class Recipe {
     private LocalDateTime modTime;
 
     @Column(name = "is_deleted", nullable = false)
-    private StatusType isDeleted;
+    private StatusType statusType;
 
     @Column(name = "category", nullable = false)
     private String category;

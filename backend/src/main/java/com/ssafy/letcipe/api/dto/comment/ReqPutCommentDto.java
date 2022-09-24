@@ -1,4 +1,4 @@
-package com.ssafy.letcipe.api.dto;
+package com.ssafy.letcipe.api.dto.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReqPostBoardDto {
-
-    private String title;
+public class ReqPutCommentDto {
+    private Long id;
     private String content;
-
 }

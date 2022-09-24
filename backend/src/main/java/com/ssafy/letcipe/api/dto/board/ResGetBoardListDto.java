@@ -1,4 +1,4 @@
-package com.ssafy.letcipe.api.dto;
+package com.ssafy.letcipe.api.dto.board;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.AllArgsConstructor;

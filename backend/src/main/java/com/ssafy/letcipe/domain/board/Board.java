@@ -30,9 +30,6 @@ public class Board {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToMany(mappedBy = "board")
-    private List<BoardComment> boardCommentList;
-
     @Column(name = "title", nullable = false)
     private String title;
 
