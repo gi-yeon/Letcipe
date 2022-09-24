@@ -8,7 +8,7 @@
             class="logo-img"
             src="/icon/Logo_word_icon_b.png"
             alt="Logo_word_icon_b.png"
-          /> -->
+            />-->
             약관 동의 및 시작
           </div>
           <section class="fadeInUp">
@@ -40,12 +40,8 @@
               <!-- <span class="input-chk">
                         <i class="far fa-check-circle"></i>
                         <label for="terms-service">Let'cipe 이용약관 동의 (필수)</label>
-          </span> ---->
-              <div
-                class="terms-title"
-                :class="{ active: first }"
-                @click="agreeFirst"
-              >
+              </span> ---->
+              <div class="terms-title" :class="{ active: first }" @click="agreeFirst">
                 <div class="check-icon-wrap d-flex align-center">
                   <img
                     class="check-mark-icon"
@@ -76,26 +72,22 @@
                   </p>
                 </div>
                 <div class="article">
-                  <h3 class="article-title">
-                    다양한 Let'cipe 서비스를 즐겨보세요.
-                  </h3>
+                  <h3 class="article-title">다양한 Let'cipe 서비스를 즐겨보세요.</h3>
                   <p class="article-text">
                     Let'cipe는
-                    <a href="https://www.letcipe.com/" target="_blank"
-                      >www.letcipe.com</a
-                    >을 비롯한 Let'cipe 도메인의 웹사이트 및
+                    <a href="https://www.letcipe.com/" target="_blank">www.letcipe.com</a>을 비롯한 Let'cipe 도메인의 웹사이트 및
                     응용프로그램(어플리케이션, 앱)을 통해 정보 검색, 다른
                     이용자와의 커뮤니케이션, 콘텐츠 제공, 상품 쇼핑 등 여러분의
                     생활에 편리함을 더할 수 있는 다양한 서비스를 제공하고
-                    있습니다. <br />여러분은 PC, 휴대폰 등 인터넷 이용이 가능한
+                    있습니다.
+                    <br />여러분은 PC, 휴대폰 등 인터넷 이용이 가능한
                     각종 단말기를 통해 각양각색의 Let'cipe 서비스를 자유롭게
                     이용하실 수 있으며, 개별 서비스들의 구체적인 내용은 각
                     서비스 상의 안내, 공지사항,
                     <a
                       href="https://help.letcipe.com/support/home.nhn"
                       target="_blank"
-                      >Let'cipe 웹고객센터(이하 ‘고객센터’)</a
-                    >
+                    >Let'cipe 웹고객센터(이하 ‘고객센터’)</a>
                     도움말 등에서 쉽게 확인하실 수 있습니다.
                   </p>
                   <p class="article-text">
@@ -136,8 +128,7 @@
                     <a
                       href="https://help.letcipe.com/support/contents/contents.nhn?serviceNo=532&amp;categoryNo=1441"
                       target="_blank"
-                      >Let'cipe 회원가입 방법</a
-                    >
+                    >Let'cipe 회원가입 방법</a>
                     등에서 확인해 주세요.
                   </p>
                   <p class="article-text">
@@ -165,15 +156,12 @@
                     <a
                       href="https://help.letcipe.com/support/contents/contents.nhn?serviceNo=532&amp;categoryNo=16952"
                       target="_blank"
-                      >Let'cipe 단체회원(단체 아이디) 소개</a
-                    >
+                    >Let'cipe 단체회원(단체 아이디) 소개</a>
                     등에서 확인해 주시기 바랍니다.
                   </p>
                 </div>
                 <div class="article">
-                  <h3 class="article-title">
-                    여러분이 제공한 콘텐츠를 소중히 다룰 것입니다.
-                  </h3>
+                  <h3 class="article-title">여러분이 제공한 콘텐츠를 소중히 다룰 것입니다.</h3>
                   <p class="article-text">
                     Let'cipe는 여러분이 게재한 게시물이 Let'cipe 서비스를 통해
                     다른 이용자들에게 전달되어 우리 모두의 삶을 더욱 풍요롭게
@@ -231,9 +219,7 @@
                   </p>
                 </div>
                 <div class="article">
-                  <h3 class="article-title">
-                    여러분의 개인정보를 소중히 보호합니다.
-                  </h3>
+                  <h3 class="article-title">여러분의 개인정보를 소중히 보호합니다.</h3>
                   <p class="article-text">
                     Let'cipe는 서비스의 원활한 제공을 위하여 회원이 동의한
                     목적과 범위 내에서만 개인정보를 수집∙이용하며, 개인정보 보호
@@ -243,8 +229,7 @@
                     <a
                       href="http://policy.letcipe.com/policy/privacy.html"
                       target="_blank"
-                      >개인정보 처리방침</a
-                    >에서 확인하실 수 있습니다.
+                    >개인정보 처리방침</a>에서 확인하실 수 있습니다.
                   </p>
                   <p class="article-text">
                     Let'cipe는 여러분이 서비스를 이용하기 위해 일정 기간 동안
@@ -267,14 +252,12 @@
                     <a
                       href="https://inoti.letcipe.com/inoti/main.nhn"
                       target="_blank"
-                      >게시중단요청서비스</a
-                    >를 운영하고 있습니다. 보다 상세한 내용 및 절차는 고객센터
+                    >게시중단요청서비스</a>를 운영하고 있습니다. 보다 상세한 내용 및 절차는 고객센터
                     내
                     <a
                       href="https://help.letcipe.com/support/contents/contents.nhn?serviceNo=958&amp;categoryNo=3423"
                       target="_blank"
-                      >게시중단요청서비스 소개</a
-                    >를 참고해 주세요.
+                    >게시중단요청서비스 소개</a>를 참고해 주세요.
                   </p>
                   <p class="article-text">
                     한편, Let'cipe 서비스를 통해 타인의 콘텐츠를 이용한다고 하여
@@ -294,8 +277,7 @@
                     <a
                       href="http://policy.letcipe.com/policy/disclaimer.html"
                       target="_blank"
-                      >법적고지</a
-                    >가 적용된다는 점을 유의해 주세요.
+                    >법적고지</a>가 적용된다는 점을 유의해 주세요.
                   </p>
                 </div>
                 <div class="article">
@@ -323,9 +305,7 @@
                   </p>
                 </div>
                 <div class="article">
-                  <h3 class="article-title">
-                    Let'cipe 서비스 이용과 관련하여 몇 가지 주의사항이 있습니다.
-                  </h3>
+                  <h3 class="article-title">Let'cipe 서비스 이용과 관련하여 몇 가지 주의사항이 있습니다.</h3>
                   <p class="article-text">
                     Let'cipe는 여러분이 Let'cipe 서비스를 자유롭고 편리하게
                     이용할 수 있도록 최선을 다하고 있습니다. 다만, 여러분이
@@ -361,7 +341,9 @@
                       관련 법령상 금지되거나 형사처벌의 대상이 되는 행위를
                       수행하거나 이를 교사 또는 방조하는 등의 범죄 관련 직접적인
                       위험이 확인된 게시물,
-                      <span class="article-text">
+                      <span
+                        class="article-text"
+                      >
                         관련 법령에서 홍보, 광고, 판매 등을 금지하고 있는 물건
                         또는 서비스를 홍보, 광고, 판매하는 내용의 게시물,
                       </span>
@@ -374,7 +356,9 @@
                       수치심을 유발시키거나 왜곡된 성 의식 등을 야기할 수 있는
                       내용의 게시물, 타인에게 잔혹감 또는 혐오감을 일으킬 수
                       있는 폭력적이고 자극적인 내용의 게시물,
-                      <span class="article-text">
+                      <span
+                        class="article-text"
+                      >
                         본인 이외의 자를 사칭하거나 허위사실을 주장하는 등
                         타인을 기만하는 내용의 게시물,
                       </span>
@@ -406,13 +390,15 @@
                       수집하거나, Let'cipe 검색 서비스에서 특정 질의어로
                       검색하거나 혹은 그 검색결과에서 특정 검색결과를
                       선택(이른바 ‘클릭’)하는 등
-                      <span class="article-text">
+                      <span
+                        class="article-text"
+                      >
                         이용자(사람)의 실제 이용을 전제로 하는 Let'cipe 서비스의
                         제공 취지에 부합하지 않는 방식으로 Let'cipe 서비스를
                         이용하거나 이와 같은 Let'cipe 서비스에 대한 어뷰징(남용)
                         행위를 막기 위한 Let'cipe의 기술적 조치를 무력화하려는
-                        일체의 행위 </span
-                      >(예: IP를 지속적으로 바꿔가며 접속하는 행위, Captcha를
+                        일체의 행위
+                      </span>(예: IP를 지속적으로 바꿔가며 접속하는 행위, Captcha를
                       외부 솔루션 등을 통해 우회하거나 무력화 하는 행위 등)를
                       시도해서는 안 됩니다.
                     </li>
@@ -421,15 +407,17 @@
                         Let'cipe의 동의 없이 자동화된 수단에 의해 Let'cipe
                         서비스 상에 광고가 게재되는 영역 또는 그 밖의 영역에
                         부호, 문자, 음성, 음향, 그림, 사진, 동영상, 링크 등으로
-                        구성된 각종 콘텐츠 자체 또는 파일을 삽입 </span
-                      >해서는 안 됩니다. 또한, Let'cipe 서비스 또는 이에 포함된
+                        구성된 각종 콘텐츠 자체 또는 파일을 삽입
+                      </span>해서는 안 됩니다. 또한, Let'cipe 서비스 또는 이에 포함된
                       소프트웨어를 복사, 수정할 수 없으며, 이를 판매, 양도, 대여
                       또는 담보로 제공하거나 타인에게 그 이용을 허락해서는 안
                       됩니다. Let'cipe 서비스에 포함된 소프트웨어를 역 설계,
                       소스코드 추출 시도, 복제, 분해, 모방, 기타 변형하는 등의
                       행위도 금지됩니다(다만, 오픈소스에 해당되는 경우 그 자체
                       조건에 따릅니다).
-                      <span class="article-text">
+                      <span
+                        class="article-text"
+                      >
                         그 밖에 바이러스나 기타 악성 코드를 업로드하거나
                         Let'cipe 서비스의 원활한 운영을 방해할 목적으로 서비스
                         기능을 비정상적으로 이용하는 행위
@@ -448,9 +436,7 @@
                   </p>
                 </div>
                 <div class="article">
-                  <h3 class="article-title">
-                    부득이 서비스 이용을 제한할 경우 합리적인 절차를 준수합니다.
-                  </h3>
+                  <h3 class="article-title">부득이 서비스 이용을 제한할 경우 합리적인 절차를 준수합니다.</h3>
                   <p class="article-text">
                     Let'cipe는 다양한 정보와 의견이 담긴 여러분의 콘텐츠를
                     소중히 다룰 것을 약속 드립니다만, 여러분이 게재한 게시물이
@@ -484,9 +470,7 @@
                   </p>
                 </div>
                 <div class="article">
-                  <h3 class="article-title">
-                    Let'cipe의 잘못은 Let'cipe가 책임집니다.
-                  </h3>
+                  <h3 class="article-title">Let'cipe의 잘못은 Let'cipe가 책임집니다.</h3>
                   <p class="article-text">
                     Let'cipe는 여러분이 Let'cipe 서비스를 이용함에 있어
                     Let'cipe의 고의 또는 과실로 인하여 손해를 입게 될 경우 관련
@@ -511,9 +495,7 @@
                   </p>
                 </div>
                 <div class="article">
-                  <h3 class="article-title">
-                    언제든지 Let'cipe 서비스 이용계약을 해지하실 수 있습니다.
-                  </h3>
+                  <h3 class="article-title">언제든지 Let'cipe 서비스 이용계약을 해지하실 수 있습니다.</h3>
                   <p class="article-text">
                     Let'cipe에게는 참 안타까운 일입니다만, 회원은 언제든지
                     Let'cipe 서비스 이용계약 해지를 신청하여 회원에서 탈퇴할 수
@@ -532,9 +514,7 @@
                   </p>
                 </div>
                 <div class="article">
-                  <h3 class="article-title">
-                    일부 Let'cipe 서비스에는 광고가 포함되어 있습니다.
-                  </h3>
+                  <h3 class="article-title">일부 Let'cipe 서비스에는 광고가 포함되어 있습니다.</h3>
                   <p class="article-text">
                     여러분이 다양한 Let'cipe 서비스를 이용하다 보면 간혹 일부
                     개별 서비스에 광고가 포함된 경우가 있습니다. Let'cipe
@@ -560,9 +540,7 @@
                   </p>
                 </div>
                 <div class="article">
-                  <h3 class="article-title">
-                    서비스 중단 또는 변경 시 꼭 알려드리겠습니다.
-                  </h3>
+                  <h3 class="article-title">서비스 중단 또는 변경 시 꼭 알려드리겠습니다.</h3>
                   <p class="article-text">
                     Let'cipe는 연중 무휴, 1일 24시간 안정적으로 서비스를
                     제공하기 위해 최선을 다하고 있습니다만, 컴퓨터, 서버 등
@@ -596,9 +574,10 @@
                     전자메일, 서비스 내 알림 또는 기타 적절한 전자적 수단을 통해
                     개별적으로 알려 드릴 것이며, 다만 회원 전체에 대한 통지가
                     필요할 경우엔 7일 이상
-                    <a href="https://www.letcipe.com" target="_blank"
-                      >www.letcipe.com</a
-                    >을 비롯한 Let'cipe 도메인의 웹사이트 및
+                    <a
+                      href="https://www.letcipe.com"
+                      target="_blank"
+                    >www.letcipe.com</a>을 비롯한 Let'cipe 도메인의 웹사이트 및
                     응용프로그램(어플리케이션, 앱) 초기 화면 또는 공지사항 등에
                     관련 내용을 게시하도록 하겠습니다.
                   </p>
@@ -657,29 +636,22 @@
                     따릅니다.
                   </p>
                   <ul class="article-text">
-                    <li class="article-text-list">
-                      공지 일자: 2022년 7월 30일
-                    </li>
-                    <li class="article-text-list">
-                      적용 일자: 2022년 8월 19일
-                    </li>
+                    <li class="article-text-list">공지 일자: 2022년 7월 30일</li>
+                    <li class="article-text-list">적용 일자: 2022년 8월 19일</li>
                   </ul>
                   <p class="article-text">
                     Let'cipe 서비스와 관련하여 궁금하신 사항이 있으시면
-                    <a href="https://help.letcipe.com/" target="_blank"
-                      >고객센터</a
-                    >(대표번호: 204 – 2040/ 평일 09:00~18:00)로 문의 주시기
+                    <a
+                      href="https://help.letcipe.com/"
+                      target="_blank"
+                    >고객센터</a>(대표번호: 204 – 2040/ 평일 09:00~18:00)로 문의 주시기
                     바랍니다.
                   </p>
                 </div>
               </div>
             </div>
             <div class="necessary-terms-wrap">
-              <div
-                class="terms-title"
-                :class="{ active: second }"
-                @click="agreeSecond"
-              >
+              <div class="terms-title" :class="{ active: second }" @click="agreeSecond">
                 <div class="check-icon-wrap">
                   <img
                     class="check-mark-icon d-flex align-center"
@@ -759,7 +731,8 @@
                       자동화된 방법으로 생성하여 이를 저장(수집)하거나,
                       <br />2) 이용자 기기의 고유한 정보를 원래의 값을 확인하지
                       못 하도록 안전하게 변환하여 수집합니다. 서비스 이용
-                      과정에서 위치정보가 수집될 수 있으며, <br />Let'cipe에서
+                      과정에서 위치정보가 수집될 수 있으며,
+                      <br />Let'cipe에서
                       제공하는 위치기반 서비스에 대해서는 'Let'cipe
                       위치기반서비스 이용약관'에서 자세하게 규정하고 있습니다.
                       <br />이와 같이 수집된 정보는 개인정보와의 연계 여부 등에
@@ -846,7 +819,8 @@
                         부정 가입 및 이용 방지
                         <br />부정 이용자의 가입인증 휴대전화번호 또는 DI
                         (만14세 미만의 경우 법정대리인DI) : 탈퇴일로부터 6개월
-                        보관 <br />탈퇴한 이용자의 휴대전화번호(복호화가
+                        보관
+                        <br />탈퇴한 이용자의 휴대전화번호(복호화가
                         불가능한 일방향 암호화(해시처리)) : 탈퇴일로부터 6개월
                         보관
                       </li>
@@ -917,28 +891,20 @@
         </div>
         <div>
           <v-row justify="center pa-8">
-            <v-btn color="#aac821" dark @click="check()"> 동의 및 시작 </v-btn>
+            <v-btn color="#aac821" dark @click="check()">동의 및 시작</v-btn>
 
             <v-dialog v-model="dialog" max-width="290">
               <v-card>
-                <v-card-title class="text-h5">
-                  모든 약관에 동의해주세요.
-                </v-card-title>
+                <v-card-title class="text-h5">모든 약관에 동의해주세요.</v-card-title>
 
-                <v-card-text>
-                  Let'cipe의 모든 약관에 동의해야 가입하실 수 있습니다.
-                </v-card-text>
+                <v-card-text>Let'cipe의 모든 약관에 동의해야 가입하실 수 있습니다.</v-card-text>
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
 
-                  <v-btn color="green darken-1" text @click="moveSignup">
-                    전체동의 및 시작
-                  </v-btn>
+                  <v-btn color="green darken-1" text @click="moveSignup">전체동의 및 시작</v-btn>
 
-                  <v-btn color="green darken-1" text @click="dialog = false">
-                    돌아가기
-                  </v-btn>
+                  <v-btn color="green darken-1" text @click="dialog = false">돌아가기</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -992,8 +958,8 @@ export default {
 
 <style scoped>
 .agree-page {
-  padding-top: 70px;
-  padding-bottom: 70px;
+  /* padding-top: 70px; */
+  /* padding-bottom: 70px; */
   display: flex;
   flex-direction: column;
 }

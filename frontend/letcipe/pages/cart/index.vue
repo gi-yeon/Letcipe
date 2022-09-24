@@ -8,7 +8,7 @@
             <div style="font-size: x-large;">장바구니</div>
             <v-icon>mdi-blank</v-icon>
           </div>
-          <div class="d-flex justify-space-between">
+          <div class="d-flex justify-space-between" @click="moveWirte">
             <div>레시피리스트 제목을 입력해주세요</div>
             <v-icon>mdi-chevron-right</v-icon>
           </div>
@@ -76,14 +76,17 @@
           <div v-for="(item, i) in cartList" :key="i">
             <div class="d-flex justify-space-between pa-2">
               <div style="font-size: x-large">{{item.ingredient}}</div>
-              <div style="font-size: x-large;">
-                <v-btn class="mx-2" fab dark x-small color="#aac821" @click="minusNum">
-                  <v-icon dark>mdi-minus</v-icon>
-                </v-btn>
-                {{ item.num }}
-                <v-btn class="mx-2" fab dark x-small color="#aac821" @click="addNum">
-                  <v-icon dark>mdi-plus</v-icon>
-                </v-btn>
+              <div>
+                <div style="font-size: x-large;">
+                  <v-btn class="mx-2" fab dark x-small color="#aac821" @click="minusNum">
+                    <v-icon dark>mdi-minus</v-icon>
+                  </v-btn>
+                  {{ item.num }}
+                  <v-btn class="mx-2" fab dark x-small color="#aac821" @click="addNum">
+                    <v-icon dark>mdi-plus</v-icon>
+                  </v-btn>
+                </div>
+                <div style="float: right;">{{item.num}}g</div>
               </div>
             </div>
             <v-divider></v-divider>
@@ -173,6 +176,9 @@ export default {
     minusNum() {},
     addNum() {},
     plusCartList() {},
+    moveWirte() {
+      this.$router.push('/cart/write')
+    },
   },
 }
 </script>

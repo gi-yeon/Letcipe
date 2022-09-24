@@ -1,24 +1,16 @@
 <template>
-  <v-container
-    class="init-page"
-    justify="center"
-    align="center"
-    @click="moveMain"
-  >
+  <v-container class="init-page" justify="center" align="center" @click="moveMain">
     <v-row>
       <v-col class="logo-wrap">
         <v-col class="logo-title">
           <h1>
-            당신의, <br />스마트한 데일리
-            <br />
-            장보기 도우미
+            당신의,
+            <br />스마트한 데일리
+            <br />장보기 도우미
           </h1>
         </v-col>
-        <img
-          class="logo-horizontal"
-          src="/icon/logo_icon_b.png"
-          alt="logo_icon.png"
-        />
+        <img class="logo-horizontal" src="/icon/logo_icon_b.png" alt="logo_icon.png" />
+        <div>아직은 폰 크기로만 보아야 합니다.</div>
       </v-col>
     </v-row>
   </v-container>

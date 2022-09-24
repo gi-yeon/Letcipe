@@ -9,18 +9,7 @@ import {
   myrecipeList,
 } from '@/api/user'
 
-export const state = () => ({
-  loginMember: null,
-  flightNum: '',
-  seatInfo: null,
-  memberDetail: null,
-  terms: {
-    termService: 'N',
-    privacyPolicy: 'N',
-    locationBased: 'N',
-    promotionalInfo: 'N',
-  },
-})
+export const state = () => ({})
 
 export const mutations = {}
 

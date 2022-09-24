@@ -7,33 +7,21 @@
           <div>
             <div>
               <div class="login-input">
-                <v-text-field
-                  label="아이디"
-                  :rules="rules"
-                  hide-details="auto"
-                ></v-text-field>
+                <v-text-field label="아이디" :rules="rules" hide-details="auto"></v-text-field>
               </div>
               <div class="login-input">
-                <v-text-field
-                  label="비밀번호"
-                  :rules="rules"
-                  hide-details="auto"
-                ></v-text-field>
+                <v-text-field label="비밀번호" :rules="rules" hide-details="auto"></v-text-field>
               </div>
             </div>
-            <div class="find-wrap">
+            <div class="find-wrap" @click="moveFindIdPW">
               <v-icon small color="#51600d">mdi-information</v-icon>
               <div>아이디|비밀번호 찾기</div>
             </div>
           </div>
           <div>
             <div class="btn-wrap">
-              <v-btn class="btn" color="#AAC821" @click="moveMain"
-                >로그인</v-btn
-              >
-              <v-btn class="btn" color="#AAC821" @click="moveAgree"
-                >회원가입</v-btn
-              >
+              <v-btn class="btn" color="#AAC821" @click="moveMain">로그인</v-btn>
+              <v-btn class="btn" color="#AAC821" @click="moveAgree">회원가입</v-btn>
             </div>
           </div>
         </div>
@@ -60,6 +48,9 @@ export default {
     moveMain() {
       this.$router.push('/main')
     },
+    moveFindIdPW() {
+      this.$router.push('/user/pwinqury')
+    },
   },
 }
 </script>
@@ -73,8 +64,8 @@ export default {
   align-items: center;
   /* background-image: url('/bg/bg_img.png'); */
   /* background-repeat: repeat; */
-  padding-top: 70px;
-  padding-bottom: 70px;
+  /* padding-top: 70px; */
+  /* padding-bottom: 70px; */
 }
 .login-title {
   font-size: xx-large;
@@ -97,6 +88,7 @@ export default {
   color: #51600d;
   display: flex;
   justify-content: flex-end;
+  cursor: pointer;
 }
 .btn-wrap {
   display: flex;

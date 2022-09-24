@@ -1,13 +1,13 @@
 <template>
   <div id="app">
     <v-app>
-      <v-container class="signup-container">
-        <div class="signup-title">회원가입</div>
-        <div class="signup-wrap fadeInUp">
+      <v-container class="modify-container">
+        <div class="modify-title">회원수정</div>
+        <div class="modify-wrap fadeInUp">
           <v-form ref="form" v-model="form">
             <div class="necessary-info">
               <div class="d-flex">
-                <div class="signup-subtitle">필수정보</div>
+                <div class="modify-subtitle">필수정보</div>
               </div>
               <div class="d-flex flex-column">
                 <div>아이디</div>
@@ -44,28 +44,65 @@
                 </div>
               </div>
               <div class="d-flex flex-column">
-                <div>비밀번호</div>
+                <div>현재 비밀번호</div>
+                <v-text-field
+                  v-model="oldPw"
+                  :append-icon="showPW ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="showPW ? 'text' : 'password'"
+                  placeholder="현재 비밀번호"
+                  solo
+                  @click:append="showPW = !showPW"
+                ></v-text-field>
+                <div>새 비밀번호</div>
                 <v-text-field
                   v-model="pw"
                   :rules="rules.pw_rule"
                   :append-icon="showPW ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="showPW ? 'text' : 'password'"
-                  placeholder="비밀번호"
+                  placeholder="새 비밀번호"
                   solo
                   @click:append="showPW = !showPW"
                 ></v-text-field>
-                <div>비밀번호 확인</div>
+                <div>새 비밀번호 확인</div>
                 <v-text-field
                   v-model="pwck"
                   :rules="rules.pwck_rule"
                   :append-icon="showPWCK ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="showPWCK ? 'text' : 'password'"
-                  placeholder="비밀번호 확인"
+                  placeholder="새 비밀번호 확인"
                   solo
                   @click:append="showPWCK = !showPWCK"
                 ></v-text-field>
+                <v-dialog v-model="dialogPwChange" persistent max-width="290">
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      color="letcipe"
+                      height="48px"
+                      style="color: white;"
+                      v-bind="attrs"
+                      @click="oldPwCheck(oldPw)"
+                      v-on="on"
+                    >비밀번호변경</v-btn>
+                  </template>
+                  <v-card v-if="checkOldPw===true">
+                    <v-card-title class="text-h5">Caution</v-card-title>
+                    <v-card-text>현재 비밀번호가 맞지 않습니다.</v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="green darken-1" text @click="dialogPwChange = false">확인</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                  <v-card v-if="checkOldPw===false">
+                    <v-card-title class="text-h5">Caution</v-card-title>
+                    <v-card-text>비밀번호가 정상적으로 변경되었습니다.</v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="green darken-1" text @click="dialogPwChange = false">확인</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
               </div>
-              <div class="d-flex flex-column">
+              <div class="d-flex flex-column pt-7">
                 <div>이름</div>
                 <v-text-field v-model="userNm" :rules="rules.nm_rule" placeholder="이름" solo></v-text-field>
               </div>
@@ -260,7 +297,7 @@
             <v-divider></v-divider>
             <div class="option-info pt-5">
               <div class="d-flex">
-                <div class="signup-subtitle">선택정보</div>
+                <div class="modify-subtitle">선택정보</div>
               </div>
               <div class="d-flex flex-column">
                 <div>주소</div>
@@ -291,7 +328,7 @@
           <v-card-actions>
             <v-btn text @click="clearForm">지우기</v-btn>
             <v-spacer></v-spacer>
-            <v-dialog v-model="dialogSignup" persistent max-width="290">
+            <v-dialog v-model="dialogModify" persistent max-width="290">
               <template #activator="{ on, attrs }">
                 <v-btn
                   :disabled="!form"
@@ -300,7 +337,7 @@
                   color="letcipe"
                   depressed
                   v-bind="attrs"
-                  @click="signUp()"
+                  @click="modify()"
                   v-on="on"
                 >가입</v-btn>
               </template>
@@ -309,7 +346,11 @@
                 <v-card-text>성공적으로 가입되었습니다!</v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" text @click="dialogSignup = false">확인</v-btn>
+                  <v-btn
+                    color="green darken-1"
+                    text
+                    @click="[dialogModify = false, moveMypage()]"
+                  >확인</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -322,10 +363,11 @@
 
 <script>
 export default {
-  name: 'SignupPage',
+  name: 'ModifyPage',
   data() {
     return {
       id: '',
+      oldPw: '',
       pw: '',
       pwck: '',
       showPW: false,
@@ -405,10 +447,18 @@ export default {
       checkCode: true,
       dialogCode2: false,
       checkValidNum: true,
-      dialogSignup: false,
+      dialogModify: false,
+      dialogPwChange: false,
+      checkOldPw: true,
     }
   },
   methods: {
+    moveMain() {
+      this.$router.push('/main')
+    },
+    moveMypage() {
+      this.$router.push('/user/mypage')
+    },
     clearForm() {
       this.$refs.form.reset()
     },
@@ -511,19 +561,18 @@ export default {
     varification(validNum) {
       console.log(validNum)
     },
-    signUp() {
+    modify() {
       console.log('가입')
+    },
+    oldPwCheck(oldPw) {
+      console.log(oldPw)
     },
   },
 }
 </script>
 
 <style scoped>
-/* #app {
-  background-image: url('/bg/bg_img.png');
-  background-repeat: repeat;
-} */
-.signup-container {
+.modify-container {
   height: 100%;
   width: 60%;
   display: flex;
@@ -534,28 +583,28 @@ export default {
   /* padding-top: 70px;
   padding-bottom: 70px; */
 }
-.signup-title {
+.modify-title {
   font-size: xx-large;
   color: black;
   text-align: center;
   padding-top: 5%;
   /* padding-bottom: 15%; */
 }
-.signup-subtitle {
+.modify-subtitle {
   font-size: x-large;
 }
 
-.signup-wrap {
+.modify-wrap {
   width: 100%;
   /* padding-bottom: 70px; */
 }
 
-.signup-input > .v-input__control {
+.modify-input > .v-input__control {
   min-height: 36px !important;
 }
 
 @media (max-width: 415px) {
-  .signup-container {
+  .modify-container {
     height: 100%;
     width: 100vw;
     display: flex;
@@ -566,29 +615,29 @@ export default {
     /* padding-top: 70px;
   padding-bottom: 70px; */
   }
-  .signup-title {
+  .modify-title {
     font-size: xx-large;
     color: black;
     text-align: center;
     padding-top: 5%;
     /* padding-bottom: 15%; */
   }
-  .signup-subtitle {
+  .modify-subtitle {
     font-size: x-large;
   }
 
-  .signup-wrap {
+  .modify-wrap {
     width: 100%;
     /* padding-bottom: 70px; */
   }
 
-  .signup-input > .v-input__control {
+  .modify-input > .v-input__control {
     min-height: 36px !important;
   }
 }
 
 @media (min-width: 900px) {
-  .signup-container {
+  .modify-container {
     height: 100%;
     width: 30%;
     display: flex;
@@ -599,23 +648,23 @@ export default {
     /* padding-top: 70px;
   padding-bottom: 70px; */
   }
-  .signup-title {
+  .modify-title {
     font-size: xx-large;
     color: black;
     text-align: center;
     padding-top: 5%;
     /* padding-bottom: 15%; */
   }
-  .signup-subtitle {
+  .modify-subtitle {
     font-size: x-large;
   }
 
-  .signup-wrap {
+  .modify-wrap {
     width: 100%;
     /* padding-bottom: 70px; */
   }
 
-  .signup-input > .v-input__control {
+  .modify-input > .v-input__control {
     min-height: 36px !important;
   }
 }

@@ -8,12 +8,12 @@
           <div class="bar-bottom"></div>
         </div>
       </div>
-      <div class="logo-wrap">
+      <div class="logo-wrap" @click="moveMain">
         <!-- <div>
           <v-icon size="1.2rem" color="black" style="position: fixed; top: 0"
             >mdi-bookmark</v-icon
           >
-        </div> -->
+        </div>-->
         <img
           class="logo_word"
           src="/icon/Logo_word_icon_b.png"
@@ -22,14 +22,10 @@
         />
       </div>
       <div v-if="user === null || user === ''">
-        <v-icon size="3rem" color="black" class="mr-2" @click="moveLogin"
-          >mdi-login-variant</v-icon
-        >
+        <v-icon size="3rem" color="black" class="mr-2" @click="moveLogin">mdi-login-variant</v-icon>
       </div>
       <div v-else>
-        <v-icon size="3rem" color="black" class="mr-2"
-          >mdi-account-circle</v-icon
-        >
+        <v-icon size="3rem" color="black" class="mr-2">mdi-account-circle</v-icon>
       </div>
     </div>
   </div>
@@ -124,6 +120,7 @@ export default {
 
 .logo-wrap {
   display: flex;
+  cursor: pointer;
 }
 .logo_word {
   height: 8vh;
