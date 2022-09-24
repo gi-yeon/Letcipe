@@ -1,18 +1,15 @@
 <template>
-  <div class="recipe-wrap">
-    <header-component></header-component>
+  <div class="search-wrap">
     <nuxt-child></nuxt-child>
     <footer-component></footer-component>
   </div>
 </template>
 
 <script>
-import HeaderComponent from '../components/HeaderComponent.vue'
 import FooterComponent from '../components/FooterComponent.vue'
 export default {
-  name: 'RecipePage',
+  name: 'SearchPage',
   components: {
-    HeaderComponent,
     FooterComponent,
   },
 }
@@ -29,7 +26,7 @@ export default {
 * {
   font-family: 'LeeSeoyun';
 }
-.recipe-wrap {
+.search-wrap {
   margin-top: 70px;
   margin-bottom: 70px;
 }
