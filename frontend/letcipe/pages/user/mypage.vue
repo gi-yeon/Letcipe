@@ -34,7 +34,7 @@
           <v-container style="padding: 0%">
             <div class="list-btns">
               <v-row style="margin: auto">
-                <v-col cols="6">
+                <v-col cols="6" @click="moveProgress">
                   <v-icon class="menu-icon">mdi-book-open-page-variant-outline</v-icon>진행중인 리스트
                 </v-col>
                 <span style="margin: auto">|</span>
@@ -45,7 +45,7 @@
             </div>
           </v-container>
 
-          <v-container style="padding: 0rem; margin: auto">
+          <v-container class="fadeInUp" style="padding: 0rem; margin: auto">
             <v-row style="margin: auto; text-align: center">
               <v-col cols="3">
                 <v-icon x-large class="menu-icon">mdi-book-outline</v-icon>
@@ -99,7 +99,7 @@
                 좋아요한
                 <br />레시피
               </v-col>
-              <v-col cols="3" class="menu-title">댓글관리</v-col>
+              <v-col cols="3" class="menu-title" @click="moveComment">댓글관리</v-col>
               <v-col cols="3" class="menu-title">내 글 관리</v-col>
             </v-row>
           </v-container>
@@ -125,6 +125,12 @@ export default {
     },
     moveCheckList() {
       this.$router.push('/check')
+    },
+    moveComment() {
+      this.$router.push('/user/comment')
+    },
+    moveProgress() {
+      this.$router.push('/user/progress')
     },
   },
 }
@@ -157,5 +163,19 @@ export default {
 }
 .menu-icon {
   color: black;
+}
+
+.fadeInUp {
+  animation: fadeInUp 1s ease backwards;
+}
+@keyframes fadeInUp {
+  0% {
+    transform: translate(0px, 100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0px, 0);
+    opacity: 1;
+  }
 }
 </style>

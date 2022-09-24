@@ -27,7 +27,7 @@ export default {
   font-family: 'LeeSeoyun';
 }
 .search-wrap {
-  margin-top: 70px;
+  /* margin-top: 70px; */
   margin-bottom: 70px;
 }
 </style>

@@ -11,7 +11,7 @@
         <v-icon x-large class="footer-icon" @click="moveCart">mdi-cart-plus</v-icon>
       </div>
       <div>
-        <v-icon x-large class="footer-icon">mdi-magnify</v-icon>
+        <v-icon x-large class="footer-icon" @click="moveSearch">mdi-magnify</v-icon>
       </div>
       <div>
         <v-icon x-large class="footer-icon">mdi-clipboard-text</v-icon>
@@ -35,6 +35,9 @@ export default {
     },
     moveCart() {
       this.$router.push('/cart')
+    },
+    moveSearch() {
+      this.$router.push('/search')
     },
   },
 }

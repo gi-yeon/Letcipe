@@ -28,7 +28,7 @@
         <v-tabs-items v-model="tabs" class="check-tabs-wrap">
           <v-tab-item v-for="i in 2" :key="i" :value="'mobile-tabs-5-' + i">
             <v-card flat>
-              <v-card-text v-if="i === 1">
+              <v-card-text v-if="i === 1" class="fadeInUp">
                 <div class="shopping-wrap">
                   <div class="before-shopping">
                     <div class="d-flex justify-space-between align-center">
@@ -108,7 +108,7 @@
                   </v-card>
                 </v-dialog>
               </v-card-text>
-              <v-card-text v-else-if="i === 2">
+              <v-card-text v-else-if="i === 2" class="fadeInUp">
                 <div class="shopping-wrap">
                   <div
                     v-for="(cg, index) in category"
@@ -309,5 +309,18 @@ export default {
 .after-shopping {
   padding: 4%;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
+.fadeInUp {
+  animation: fadeInUp 1s ease backwards;
+}
+@keyframes fadeInUp {
+  0% {
+    transform: translate(0px, 100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0px, 0);
+    opacity: 1;
+  }
 }
 </style>

@@ -2,14 +2,14 @@
   <div id="app">
     <v-app id="inspire">
       <div class="makerecipe-container">
-        <v-container style="padding: 0%"
-          ><v-card-title
+        <v-container style="padding: 0%">
+          <v-card-title
             class="justify-center"
             style="background-color: white; font-size: 1.7rem"
-            >레시피 등록</v-card-title
-          ><v-divider></v-divider
-          ><v-card
-            ><v-card-title class="recipe-component">레시피 제목</v-card-title>
+          >레시피 등록</v-card-title>
+          <v-divider></v-divider>
+          <v-card>
+            <v-card-title class="recipe-component">레시피 제목</v-card-title>
             <div class="recipe-input d-flex justify-center">
               <v-text-field
                 class="text-md-h6"
@@ -21,9 +21,7 @@
                 color="#aac821"
               ></v-text-field>
             </div>
-            <v-card-title class="recipe-component"
-              >레시피 대표 사진</v-card-title
-            >
+            <v-card-title class="recipe-component">레시피 대표 사진</v-card-title>
             <div class="recipe-input d-flex justify-center">
               <v-file-input
                 v-model="image"
@@ -35,12 +33,7 @@
               ></v-file-input>
             </div>
             <div class="d-flex justify-center">
-              <v-img
-                v-if="url != null"
-                max-width="50%"
-                :src="url"
-                class="d-flex justify-center"
-              ></v-img>
+              <v-img v-if="url != null" max-width="50%" :src="url" class="d-flex justify-center"></v-img>
             </div>
 
             <v-card-title class="recipe-component">요리 소개</v-card-title>
@@ -58,38 +51,35 @@
             </div>
             <v-card-title class="recipe-component">카테고리</v-card-title>
             <div class="recipe-input d-flex justify-center">
-              <v-select
-                class="text-md-h6"
-                :items="items"
-                outlined
-                placeholder="카테고리 선택"
-              ></v-select>
+              <v-select class="text-md-h6" :items="items" outlined placeholder="카테고리 선택"></v-select>
             </div>
 
             <v-card-title class="recipe-component">추가 정보</v-card-title>
             <div class="d-flex justify-center mr-5 ml-5">
-              <v-card-subtitle class="d-flex justify-left align-center"
-                >조리 시간&nbsp;&nbsp;&nbsp;<v-text-field
+              <v-card-subtitle class="d-flex justify-left align-center">
+                조리 시간&nbsp;&nbsp;&nbsp;
+                <v-text-field
                   class="recipe-input-content text-md-h6"
                   filled
                   hide-details="auto"
                   outlined
                   color="#aac821"
-                ></v-text-field
-                >&nbsp;분 </v-card-subtitle
-              ><v-card-subtitle class="d-flex justify-left align-center"
-                >요리량&nbsp;&nbsp;&nbsp;<v-text-field
+                ></v-text-field>&nbsp;분
+              </v-card-subtitle>
+              <v-card-subtitle class="d-flex justify-left align-center">
+                요리량&nbsp;&nbsp;&nbsp;
+                <v-text-field
                   class="recipe-input-content text-md-h6"
                   filled
                   hide-details="auto"
                   outlined
                   color="#aac821"
-                ></v-text-field
-                >&nbsp;인분</v-card-subtitle
-              >
+                ></v-text-field>&nbsp;인분
+              </v-card-subtitle>
             </div>
-            <v-divider></v-divider><v-divider></v-divider
-            ><v-card-title class="recipe-component">재료</v-card-title>
+            <v-divider></v-divider>
+            <v-divider></v-divider>
+            <v-card-title class="recipe-component">재료</v-card-title>
             <v-simple-table style="width: 90%; margin: auto">
               <template #default>
                 <thead>
@@ -107,8 +97,8 @@
                     <td class="text-center">{{ item.unit }}</td>
 
                     <th class="text-center">
-                      <v-icon @click="editItem(item)">mdi-pencil</v-icon
-                      ><v-icon @click="deleteItem(item)"> mdi-delete</v-icon>
+                      <v-icon @click="editItem(item)">mdi-pencil</v-icon>
+                      <v-icon @click="deleteItem(item)">mdi-delete</v-icon>
                     </th>
                   </tr>
                 </tbody>
@@ -117,9 +107,7 @@
             <div class="d-flex justify-center">
               <v-dialog v-model="dialog" max-width="500px">
                 <template #activator="{ on, attrs }">
-                  <v-btn dark class="mb-5 mt-6" v-bind="attrs" v-on="on">
-                    재료 추가
-                  </v-btn>
+                  <v-btn dark class="mb-5 mt-6" v-bind="attrs" v-on="on">재료 추가</v-btn>
                 </template>
 
                 <v-card>
@@ -131,22 +119,13 @@
                     <v-container>
                       <v-row>
                         <v-col cols="12" sm="6" md="4">
-                          <v-text-field
-                            v-model="editedItem.name"
-                            label="재료명"
-                          ></v-text-field>
+                          <v-text-field v-model="editedItem.name" label="재료명"></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="6" md="4">
-                          <v-text-field
-                            v-model="editedItem.amount"
-                            label="재료량"
-                          ></v-text-field>
+                          <v-text-field v-model="editedItem.amount" label="재료량"></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="6" md="4">
-                          <v-text-field
-                            v-model="editedItem.unit"
-                            label="단위"
-                          ></v-text-field>
+                          <v-text-field v-model="editedItem.unit" label="단위"></v-text-field>
                         </v-col>
                       </v-row>
                     </v-container>
@@ -154,25 +133,19 @@
 
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="close">
-                      취소
-                    </v-btn>
-                    <v-btn color="blue darken-1" text @click="save">
-                      재료 저장
-                    </v-btn>
+                    <v-btn color="blue darken-1" text @click="close">취소</v-btn>
+                    <v-btn color="blue darken-1" text @click="save">재료 저장</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
             </div>
-            <v-divider></v-divider><v-divider></v-divider>
+            <v-divider></v-divider>
+            <v-divider></v-divider>
             <v-card-title class="recipe-component">요리 순서</v-card-title>
             <div v-for="(step, i) in steps" :key="i">
               <div class="d-flex justify-space-between">
-                <v-card-title class="text-subtitle-2 recipe-component"
-                  >Step {{ step.no }}</v-card-title
-                ><v-icon class="mr-5" color="red" @click="deleteStep(i)"
-                  >mdi-minus-circle</v-icon
-                >
+                <v-card-title class="text-subtitle-2 recipe-component">Step {{ step.no }}</v-card-title>
+                <v-icon class="mr-5" color="red" @click="deleteStep(i)">mdi-minus-circle</v-icon>
               </div>
               <div class="recipe-input d-flex justify-center">
                 <v-file-input
@@ -209,22 +182,25 @@
             <div class="d-flex justify-center">
               <v-btn dark class="mt-4 mb-6" @click="addStep">스탭 추가</v-btn>
             </div>
-            <v-divider></v-divider><v-divider></v-divider>
-            <v-card-title class="recipe-component">태그 </v-card-title>
+            <v-divider></v-divider>
+            <v-divider></v-divider>
+            <v-card-title class="recipe-component">태그</v-card-title>
             <div class="d-flex justify-center">
-              <v-input><hash-tags @setTags="setTags"></hash-tags></v-input>
+              <v-input>
+                <hash-tags @setTags="setTags"></hash-tags>
+              </v-input>
             </div>
             <br />
 
             <div class="d-flex justify-center">
-              <v-btn dark class="mr-6 ml-6 mb-5">저장</v-btn
-              ><v-btn dark class="mr-6 ml-6 mb-5">저장 후 공개</v-btn
-              ><v-btn dark class="mr-6 ml-6 mb-5">취소</v-btn>
-            </div></v-card
-          ></v-container
-        >
-      </div></v-app
-    >
+              <v-btn dark class="mr-6 ml-6 mb-5">저장</v-btn>
+              <v-btn dark class="mr-6 ml-6 mb-5">저장 후 공개</v-btn>
+              <v-btn dark class="mr-6 ml-6 mb-5">취소</v-btn>
+            </div>
+          </v-card>
+        </v-container>
+      </div>
+    </v-app>
   </div>
 </template>
 
@@ -232,7 +208,7 @@
 import HashTags from '@/components/Hashtags.vue'
 
 export default {
-  name: 'MakeRecipe',
+  name: 'CreateRecipe',
   components: {
     HashTags,
   },

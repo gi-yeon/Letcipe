@@ -117,7 +117,7 @@ export default {
   }
 }
 
-@-webkit-keyframes logo-jello {
+@keyframes logo-jello {
   0% {
     -webkit-transform: scale3d(1, 1, 1);
     transform: scale3d(1, 1, 1);

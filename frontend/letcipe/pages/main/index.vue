@@ -150,6 +150,7 @@
                       hover ? 'light-green lighten-3' : 'light-green lighten-2'
                     "
                     class="lecipe-list-group mx-auto mt-2 mb-2 d-flex align-center"
+                    @click="moveDetail"
                   >
                     <div class="ml-4">{{ i }}</div>
                     <v-list-item three-line>
@@ -185,7 +186,14 @@
             <div>전체보기</div>
           </div>
           <div class="rec-imgs-group d-flex justify-space-between">
-            <v-avatar v-for="(ref, i) in refImg" :key="i" size="130" tile class="mr-2">
+            <v-avatar
+              v-for="(ref, i) in refImg"
+              :key="i"
+              size="130"
+              tile
+              class="mr-2"
+              @click="moveDetail"
+            >
               <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
                 <div class="ref-wrap">
                   <v-card-title class="ref-title">{{ ref.title }}</v-card-title>
@@ -206,7 +214,14 @@
             <div>전체보기</div>
           </div>
           <div class="rec-imgs-group d-flex justify-space-between">
-            <v-avatar v-for="(ref, i) in refImg" :key="i" size="130" tile class="mr-2">
+            <v-avatar
+              v-for="(ref, i) in refImg"
+              :key="i"
+              size="130"
+              tile
+              class="mr-2"
+              @click="moveListDetail"
+            >
               <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
                 <div class="ref-wrap">
                   <v-card-title class="ref-title">{{ ref.title }}</v-card-title>
@@ -317,6 +332,12 @@ export default {
       const seconds = ('0' + today.getSeconds()).slice(-2)
       this.time = hours + ':' + minutes + ':' + seconds
       // console.log(this.time)
+    },
+    moveListDetail() {
+      this.$router.push('/recipelist/detail')
+    },
+    moveDetail() {
+      this.$router.push('/recipe/detail')
     },
   },
 }

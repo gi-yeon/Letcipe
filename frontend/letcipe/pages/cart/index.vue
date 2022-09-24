@@ -8,7 +8,7 @@
             <div style="font-size: x-large;">장바구니</div>
             <v-icon>mdi-blank</v-icon>
           </div>
-          <div class="d-flex justify-space-between" @click="moveWirte">
+          <div class="d-flex justify-space-between pb-7" @click="moveWirte">
             <div>레시피리스트 제목을 입력해주세요</div>
             <v-icon>mdi-chevron-right</v-icon>
           </div>
@@ -21,7 +21,7 @@
           </div>
         </div>
         <v-spacer></v-spacer>
-        <div class="cart-recipe-wrap">
+        <div class="cart-recipe-wrap fadeInUp">
           <div class="d-flex pa-2">
             <v-icon>mdi-cart</v-icon>
             <div>내가 담은 레시피</div>
@@ -67,7 +67,7 @@
             <v-divider></v-divider>
           </div>
         </div>
-        <div class="cart-ingredient-wrap">
+        <div class="cart-ingredient-wrap fadeInUp">
           <div class="d-flex pa-2">
             <v-icon>mdi-cart</v-icon>
             <div>장보기 목록</div>
@@ -97,7 +97,7 @@
             </v-btn>
           </div>
         </div>
-        <div class="cart-count-wrap">
+        <div class="cart-count-wrap fadeInUp">
           <div class="ma-2">총 합계</div>
           <v-divider></v-divider>
           <div class="d-flex justify-space-between ma-2">
@@ -110,7 +110,7 @@
             <div>17</div>
           </div>
         </div>
-        <div class="cart-btn-wrap pt-3">
+        <div class="cart-btn-wrap pt-3 fadeInUp">
           <v-btn elevation="5" width="100%" large color="#aac821" class="white--text">장보기</v-btn>
         </div>
       </v-container>

@@ -7,7 +7,7 @@
           <div style="font-size: x-large">레시피리스트 작성</div>
           <v-icon>mdi-blank</v-icon>
         </div>
-        <div class="write-body-wrap">
+        <div class="write-body-wrap fadeInUp">
           <div>
             <div>리스트 이름</div>
             <v-textarea placeholder="이름을 지어주세요." auto-grow solo rows="1" row-height="15"></v-textarea>
@@ -24,7 +24,7 @@
           </div>
         </div>
 
-        <div class="ref-img-wrap">
+        <div class="ref-img-wrap fadeInUp">
           <div>대표사진선택</div>
           <div class="ref-images d-flex">
             <v-avatar
@@ -52,7 +52,7 @@
             </v-avatar>
           </div>
         </div>
-        <div class="d-flex justify-center pt-8">
+        <div class="d-flex justify-center pt-8 fadeInUp">
           <v-dialog v-model="dialog" persistent max-width="290">
             <template #activator="{ on, attrs }">
               <v-btn
@@ -168,5 +168,18 @@ export default {
   font-size: xx-large;
   /* background-color: rgb(255, 255, 255); */
   color: #cde856;
+}
+.fadeInUp {
+  animation: fadeInUp 1s ease backwards;
+}
+@keyframes fadeInUp {
+  0% {
+    transform: translate(0px, 100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0px, 0);
+    opacity: 1;
+  }
 }
 </style>

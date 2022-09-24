@@ -4,51 +4,43 @@
   <div id="app">
     <v-app id="inspire">
       <div class="progressrecipelist-container">
-        <v-container style="padding: 0%"
-          ><v-card-title
+        <v-container style="padding: 0%">
+          <v-card-title
             class="justify-center"
             style="background-color: white; font-size: 1.7rem"
-            >진행중인 레시피리스트</v-card-title
-          ><v-divider></v-divider>
+          >진행중인 레시피리스트</v-card-title>
+          <v-divider></v-divider>
           <!-- <div v-for="(recipeList, i) in letcipeList" :key="i"> -->
           <v-list-item three-line style="background-color: white">
-            <v-list-item-avatar tile size="100"
-              ><v-img
-                src="https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg"
-              ></v-img></v-list-item-avatar
-            ><v-list-item-content>
+            <v-list-item-avatar tile size="100">
+              <v-img src="https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg"></v-img>
+            </v-list-item-avatar>
+            <v-list-item-content>
               <!-- 레시피리스트에도 서브 타이틀 넣을지? -->
               <!-- <div
                 class="text-overline mb-4"
                 style="margin-bottom: 0% !important"
               >
                 OVERLINE
-              </div> -->
-              <v-list-item-title
-                style="display: inline; font-size: 1.4rem; float: left"
-                >{{ letcipeList.name }}
-                <span style="font-size: 1rem; color: green; float: right">
-                  진행중
-                </span></v-list-item-title
-              >
+              </div>-->
+              <v-list-item-title style="display: inline; font-size: 1.4rem; float: left">
+                {{ letcipeList.name }}
+                <span style="font-size: 1rem; color: green; float: right">진행중</span>
+              </v-list-item-title>
 
               <br />
-              <v-list-item-subtitle>{{
+              <v-list-item-subtitle>
+                {{
                 letcipeList.description
-              }}</v-list-item-subtitle>
+                }}
+              </v-list-item-subtitle>
 
-              <v-list-item-subtitle
-                >생성일 : {{ letcipeList.reg_time }}</v-list-item-subtitle
-              >
+              <v-list-item-subtitle>생성일 : {{ letcipeList.reg_time }}</v-list-item-subtitle>
               <v-list-item-subtitle style="text-align: right">
-                총 17개의 재료를 포함하고 있어요&nbsp;&nbsp;<v-icon
-                  v-if="!isShow"
-                  @click="showRecipes"
-                  >mdi-chevron-down</v-icon
-                ><v-icon v-else @click="hideRecipes"
-                  >mdi-chevron-up</v-icon
-                ></v-list-item-subtitle
-              >
+                총 17개의 재료를 포함하고 있어요&nbsp;&nbsp;
+                <v-icon v-if="!isShow" @click="showRecipes">mdi-chevron-down</v-icon>
+                <v-icon v-else @click="hideRecipes">mdi-chevron-up</v-icon>
+              </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
           <v-divider></v-divider>
@@ -57,32 +49,31 @@
             <v-card-title
               class="justify-center"
               style="background-color: white; color: #7cb342"
-              >포함된 레시피 목록</v-card-title
-            >
+            >포함된 레시피 목록</v-card-title>
             <v-divider></v-divider>
             <div v-for="(recipeInfo, i) in letcipeList.recipeListItem" :key="i">
               <v-list-item three-line style="background-color: white">
-                <v-list-item-avatar tile size="100"
-                  ><v-img
-                    src="https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg"
-                  ></v-img></v-list-item-avatar
-                ><v-list-item-content>
-                  <v-list-item-title>{{
+                <v-list-item-avatar tile size="100">
+                  <v-img src="https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg"></v-img>
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{
                     recipeInfo.recipe.title
-                  }}</v-list-item-title>
+                    }}
+                  </v-list-item-title>
 
-                  <v-list-item-subtitle>{{
+                  <v-list-item-subtitle>
+                    {{
                     recipeInfo.recipe.content
-                  }}</v-list-item-subtitle>
+                    }}
+                  </v-list-item-subtitle>
                   <div class="d-flex justify-space-between">
                     <v-list-item-subtitle>
-                      <v-icon small color="pink lighten-1"
-                        >mdi-cards-heart</v-icon
-                      >{{ recipeInfo.recipe.recipeLike }}
+                      <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
+                      {{ recipeInfo.recipe.recipeLike }}
                     </v-list-item-subtitle>
-                    <v-list-item-subtitle style="text-align: right"
-                      >선택한 재료 4개를 포함하고 있어요.</v-list-item-subtitle
-                    >
+                    <v-list-item-subtitle style="text-align: right">선택한 재료 4개를 포함하고 있어요.</v-list-item-subtitle>
                   </div>
                 </v-list-item-content>
               </v-list-item>
@@ -94,14 +85,14 @@
             <v-btn large color="lime darken-1" style="width: 50%">시작</v-btn>
           </div>
         </v-container>
-      </div></v-app
-    >
+      </div>
+    </v-app>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'UserRecipelist',
+  name: 'ProgressPage',
   data() {
     return {
       letcipeList: {
