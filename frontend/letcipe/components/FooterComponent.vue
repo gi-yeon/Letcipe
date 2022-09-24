@@ -2,13 +2,13 @@
   <div id="footer-container">
     <div class="footer-icon-wrap">
       <div>
-        <v-icon x-large class="footer-icon">mdi-home</v-icon>
+        <v-icon x-large class="footer-icon" @click="moveMain">mdi-home</v-icon>
       </div>
       <div>
-        <v-icon x-large class="footer-icon">mdi-account</v-icon>
+        <v-icon x-large class="footer-icon" @click="moveMypage">mdi-account</v-icon>
       </div>
       <div>
-        <v-icon x-large class="footer-icon">mdi-cart-plus</v-icon>
+        <v-icon x-large class="footer-icon" @click="moveCart">mdi-cart-plus</v-icon>
       </div>
       <div>
         <v-icon x-large class="footer-icon">mdi-magnify</v-icon>
@@ -23,6 +23,20 @@
 <script>
 export default {
   name: 'FooterComponent',
+  data() {
+    return {}
+  },
+  methods: {
+    moveMain() {
+      this.$router.push('/main')
+    },
+    moveMypage() {
+      this.$router.push('/user/mypage')
+    },
+    moveCart() {
+      this.$router.push('/cart')
+    },
+  },
 }
 </script>
 
@@ -37,6 +51,7 @@ export default {
   position: fixed;
   bottom: 0;
   z-index: 999;
+  box-shadow: 0 4px 7px black;
 }
 .footer-icon-wrap {
   display: flex;
