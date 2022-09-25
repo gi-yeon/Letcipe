@@ -9,8 +9,8 @@ public class ResGetHistoryItemDto {
     private ResGetRecipeDto recipe;
     private Integer amount;
 
-    public ResGetHistoryItemDto(HistoryItem historyItem){
-//        this.recipe = new ResGetRecipeDto(historyItem.getRecipe(),null);
+    public ResGetHistoryItemDto(HistoryItem historyItem, ResGetRecipeDto resGetRecipeDto) {
+        this.recipe = new ResGetRecipeDto(historyItem.getRecipe(), resGetRecipeDto.getIngredients());
         this.amount = historyItem.getAmount();
     }
 }
