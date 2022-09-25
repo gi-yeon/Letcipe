@@ -1,4 +1,4 @@
-package com.ssafy.letcipe.api.dto;
+package com.ssafy.letcipe.api.dto.board;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReqGetBoardListDto {
-    private int page;
-    private int boardNum;
+public class ReqPutBoardCommentDto {
+    private String content;
 }

@@ -1,7 +1,6 @@
-package com.ssafy.letcipe.api.dto;
+package com.ssafy.letcipe.api.dto.board;
 
 import com.ssafy.letcipe.domain.board.Board;
-import com.ssafy.letcipe.domain.boardComment.BoardComment;
 import com.ssafy.letcipe.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
