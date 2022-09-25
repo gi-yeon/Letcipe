@@ -258,18 +258,30 @@ public class RecipeService {
 
         // 레시피 엔티티 응답용 객체로 변환
         for (Recipe recipe : searched) {
-            // 레시피의 재료 목록
-            List<ResGetRecipeIngredientDto> recipeIngredientResponses = new ArrayList<>();
-            // 응답용 재료 객체로 변환
-            for (RecipeIngredient ri : recipe.getIngredients()) {
-                ResGetIngredientDto ing = ingredientService.getIngredientResponse(ri.getIngredient());
-                recipeIngredientResponses.add(new ResGetRecipeIngredientDto(ing,ri.getAmount()));
-            }
-
-            result.add(new ResGetRecipeDto(recipe,recipeIngredientResponses));
+            result.add(getRecipeDto(recipe));
         }
 
         return result;
     }
+    public ResGetRecipeDto getRecipeDto(Recipe recipe) {
+        List<ResGetRecipeIngredientDto> recipeIngredientResponses = new ArrayList<>();
+        // 응답용 재료 객체로 변환
+        for (RecipeIngredient ri : recipe.getIngredients()) {
+            ResGetIngredientDto ing = ingredientService.getIngredientResponse(ri.getIngredient());
+            recipeIngredientResponses.add(new ResGetRecipeIngredientDto(ing,ri.getAmount()));
+        }
 
+        return new ResGetRecipeDto(recipe,recipeIngredientResponses);
+    }
+
+    @Transactional
+    public List<ResGetRecipeDto> getBestRecipes(Pageable pageable) throws SQLException {
+        List<Recipe> recipes = recipeRepository.findBestRecipes(pageable);
+//        List<Recipe> recipes = null;
+        List<ResGetRecipeDto> result = new ArrayList<>();
+        for (Recipe recipe : recipes) {
+            result.add(getRecipeDto(recipe));
+        }
+        return result;
+    }
 }
