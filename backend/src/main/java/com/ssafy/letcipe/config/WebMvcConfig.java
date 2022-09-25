@@ -17,7 +17,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://i7a709.p.ssafy.io" ,"http://localhost:8080", "http://localhost:8081")
+                .allowedOrigins("https://j7a705.1.ssafy.io" ,"http://localhost:8080", "http://localhost:8081")
                 .allowedMethods("*")
                 .allowCredentials(true);
     }
@@ -25,7 +25,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // TODO 필요 url에 적용 필요
-        registry.addInterceptor(jwtInterceptor)
-                .addPathPatterns("/**");
+        //registry.addInterceptor(jwtInterceptor)
+          //      .addPathPatterns("/**");
     }
 }

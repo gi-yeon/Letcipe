@@ -20,4 +20,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     // from recipe r right join recipe_like l on r.id = l.recipe_id group by r.id order by count(l.user_id) desc;
     @Query("select r from RecipeLike l left join Recipe r on r = l.recipe group by r order by count(l) desc")
     List<Recipe> findBestRecipes(Pageable pageable) throws SQLException;
+
+    List<Recipe> findAllByUser(Pageable pageable, User user);
 }

@@ -12,7 +12,9 @@ import com.ssafy.letcipe.domain.recipeListBookmark.RecipeListBookmarkRepository;
 import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.domain.user.UserRepository;
 import com.ssafy.letcipe.domain.user.UserType;
+import com.ssafy.letcipe.exception.AuthorityViolationException;
 import com.ssafy.letcipe.util.EncryptUtils;
+import com.ssafy.letcipe.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +33,7 @@ public class UserService {
     private final RecipeBookmarkRepository recipeBookmarkRepository;
     private final RecipeListBookmarkRepository recipeListBookmarkRepository;
     private final EncryptUtils encryptUtils;
+    private final StringUtils stringUtils;
 
     @Transactional
     public void createUser(ReqPostUserDto requestDto) throws NoSuchAlgorithmException {
@@ -131,5 +134,44 @@ public class UserService {
             dtoList.add(new ResGetUserRecipeListDto(recipeListBookmark.getRecipeList()));
         }
         return new ResGetUserRecipeListsDto(dtoList);
+    }
+
+    public String readUserId(ReqGetUserIdDto requestDto) {
+        User user = userRepository.findByNameAndPhone(requestDto.getName(), requestDto.getPhone())
+                .orElseThrow(() -> new NullPointerException());
+        return user.getUserId();
+    }
+
+    @Transactional
+    public String readPassword(ReqGetPasswordDto requestDto) throws NoSuchAlgorithmException {
+        User user = userRepository.findByUserIdAndPhone(requestDto.getUserId(), requestDto.getPhone())
+                .orElseThrow(() -> new NullPointerException());
+        String newPassword = stringUtils.getRandomString(10);
+        StringBuilder sb = new StringBuilder();
+
+        String salt = encryptUtils.getSalt(user.getUserId());
+        sb.append(salt).append(newPassword);
+        user.updatePassword(encryptUtils.encrypt(sb.toString()));
+
+        return newPassword;
+    }
+
+    @Transactional
+    public void updatePassword(ReqUpdatePasswordDto requestDto, Long userId) throws NoSuchAlgorithmException {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
+
+        StringBuilder sb = new StringBuilder();
+        String salt = encryptUtils.getSalt(user.getUserId());
+        sb.append(salt).append(requestDto.getPassword());
+        String password = encryptUtils.encrypt(sb.toString());
+
+        if(password.equals(user.getPassword())) {
+            sb = new StringBuilder();
+            sb.append(salt).append(requestDto.getNewPassword());
+            String newPassword = encryptUtils.encrypt(sb.toString());
+            user.updatePassword(newPassword);
+        } else {
+            throw new AuthorityViolationException("비밀번호를 변경할 수 없습니다.");
+        }
     }
 }

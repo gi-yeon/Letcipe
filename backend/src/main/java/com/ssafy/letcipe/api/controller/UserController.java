@@ -87,4 +87,21 @@ public class UserController {
         Long userId = jwtService.getUserId(request);
         return ResponseEntity.ok(userService.readRecipeListBookmark(userId, pageable));
     }
+
+    @PostMapping("id")
+    public ResponseEntity readUserId(@RequestBody ReqGetUserIdDto requestDto){
+        return ResponseEntity.ok(userService.readUserId(requestDto));
+    }
+
+    @PostMapping("password")
+    public ResponseEntity readPassword(@RequestBody ReqGetPasswordDto requestDto) throws NoSuchAlgorithmException {
+        return ResponseEntity.ok(userService.readPassword(requestDto));
+    }
+
+    @PatchMapping("password")
+    public ResponseEntity updatePassword(@RequestBody ReqUpdatePasswordDto requestDto, HttpServletRequest request) throws NoSuchAlgorithmException {
+        Long userId = jwtService.getUserId(request);
+        userService.updatePassword(requestDto, userId);
+        return ResponseEntity.ok().build();
+    }
 }
