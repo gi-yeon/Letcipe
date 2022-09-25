@@ -2,6 +2,7 @@ package com.ssafy.letcipe.domain.recipeIngredient;
 
 import com.ssafy.letcipe.domain.ingredient.Ingredient;
 import com.ssafy.letcipe.domain.recipe.Recipe;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,11 @@ public class RecipeIngredient {
 
     @Column(name = "amount")
     private Double amount;
+
+    @Builder
+    public RecipeIngredient(Recipe recipe, Ingredient ingredient, Double amount) {
+        this.recipe = recipe;
+        this.ingredient = ingredient;
+        this.amount = amount;
+    }
 }

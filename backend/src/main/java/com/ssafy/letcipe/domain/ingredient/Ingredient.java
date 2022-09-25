@@ -1,7 +1,6 @@
 package com.ssafy.letcipe.domain.ingredient;
 
 import com.ssafy.letcipe.domain.headerCode.HeaderCode;
-import com.ssafy.letcipe.domain.measure.Measure;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,10 +19,12 @@ public class Ingredient {
     @Column(name = "name", length = 50, nullable = false)
     private String name;
 
-    @ManyToOne(targetEntity = Measure.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "measure_id", referencedColumnName = "id")
-    private Measure measure;
-
     @Column(name = "category")
     private String category;
+
+    @Column(name = "measure")
+    private String measure;
+
+    @Column(name = "gml")
+    private Double gml;
 }
