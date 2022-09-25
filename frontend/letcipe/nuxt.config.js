@@ -92,7 +92,7 @@ export default {
     },
   },
   server: {
-        host: "0.0.0.0"
+        host: "3.35.229.27"
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
