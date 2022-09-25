@@ -67,6 +67,9 @@ public class User {
     @Column(name = "user_type", nullable = false)
     private UserType userType;
 
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
     @OneToMany(fetch = LAZY, mappedBy = "user")
     private List<Cart> carts = new ArrayList<>();
 
@@ -99,5 +102,9 @@ public class User {
 
     public void updatePassword(String password) {
         this.password = password;
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }
