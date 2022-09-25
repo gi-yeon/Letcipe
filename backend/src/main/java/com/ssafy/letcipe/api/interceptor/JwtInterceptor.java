@@ -25,7 +25,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         if(jwtService.checkJwtToken(token)){
             return true;
         } else {
-            throw new AuthorityViolationException("잘못된 토큰입니다.");
+            throw new AuthorityViolationException("access token을 재 발급 받으십시오");
         }
     }
 }
