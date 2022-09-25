@@ -1,13 +1,9 @@
 package com.ssafy.letcipe.api.controller;
 
-import com.ssafy.letcipe.api.dto.user.ReqLoginUserDto;
-import com.ssafy.letcipe.api.dto.user.ReqPostUserDto;
-import com.ssafy.letcipe.api.dto.user.ReqPutUserDto;
-import com.ssafy.letcipe.api.dto.user.ResGetUserDto;
+import com.ssafy.letcipe.api.dto.user.*;
 import com.ssafy.letcipe.api.service.JwtService;
 import com.ssafy.letcipe.api.service.UserService;
 import com.ssafy.letcipe.domain.user.User;
-import com.ssafy.letcipe.util.EncryptUtils;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.Pageable;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -28,26 +26,12 @@ public class UserController {
 
     private final Logger logger = LoggerFactory.getLogger(RecipeController.class);
 
-    /**
-     * 회원가입
-     * 
-     * @param requestDto
-     * @return
-     * @throws NoSuchAlgorithmException
-     */
     @PostMapping("")
     public ResponseEntity createUser(@RequestBody ReqPostUserDto requestDto) throws NoSuchAlgorithmException {
         userService.createUser(requestDto);
         return ResponseEntity.ok().build();
     }
 
-    /**
-     * 로그인
-     *
-     * @param requestDto
-     * @return access token
-     * @throws NoSuchAlgorithmException
-     */
     @PostMapping("login")
     public ResponseEntity loginUser(@RequestBody ReqLoginUserDto requestDto) throws NoSuchAlgorithmException {
         User user = userService.loginUser(requestDto);
@@ -78,5 +62,29 @@ public class UserController {
         Long userId = jwtService.getUserId(request);
         userService.updateUser(userId, requestDto);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("recipe")
+    public ResponseEntity readUserRecipe(HttpServletRequest request, Pageable pageable){
+        Long userId = jwtService.getUserId(request);
+        return ResponseEntity.ok(userService.readUserRecipe(userId, pageable));
+    }
+
+    @GetMapping("recipelist")
+    public ResponseEntity readUserRecipeList(HttpServletRequest request, Pageable pageable){
+        Long userId = jwtService.getUserId(request);
+        return ResponseEntity.ok(userService.readUserRecipeList(userId, pageable));
+    }
+
+    @GetMapping("mark/recipe")
+    public ResponseEntity readRecipeBookmark(HttpServletRequest request, Pageable pageable) {
+        Long userId = jwtService.getUserId(request);
+        return ResponseEntity.ok(userService.readRecipeBookmark(userId, pageable));
+    }
+
+    @GetMapping("mark/recipelist")
+    public ResponseEntity readRecipeListBookmark(HttpServletRequest request, Pageable pageable) {
+        Long userId = jwtService.getUserId(request);
+        return ResponseEntity.ok(userService.readRecipeListBookmark(userId, pageable));
     }
 }
