@@ -31,19 +31,19 @@ public class User {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "user_id", nullable = false, length = 30)
+    @Column(name = "user_id", nullable = false, unique = true, length = 30)
     private String userId;
 
-    @Column(name = "email", nullable = false, length = 40)
+    @Column(name = "email", nullable = false, unique = true, length = 40)
     private String email;
 
     @Column(name = "password", nullable = false, length = 100)
     private String password;
 
-    @Column(name = "nickname", nullable = false, length = 20)
+    @Column(name = "nickname", nullable = false, unique = true, length = 20)
     private String nickname;
 
-    @Column(name = "phone", length = 100)
+    @Column(name = "phone", unique = true, length = 100)
     private String phone;
 
     @Column(name = "profile_image")
