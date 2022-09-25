@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface RecipeListRepository extends JpaRepository<RecipeList, Long> {
-    List<RecipeList> findByNameContaining(String keyword);
+    List<RecipeList> findByNameContaining(Pageable pageable, String keyword);
 
     List<RecipeList> findAllByUser(Pageable pageable, User user);
 }
