@@ -1,15 +1,17 @@
 package com.ssafy.letcipe.api.dto.history;
 
+import com.ssafy.letcipe.api.dto.ingredient.ResGetIngredientDto;
 import com.ssafy.letcipe.domain.historyIngredient.HistoryIngredient;
 import com.ssafy.letcipe.domain.historyIngredient.PurchaseType;
+import com.ssafy.letcipe.domain.ingredient.Ingredient;
 
 public class ResGetHistoryIngredientDto {
-//    private ResGetIngredientDto ingredient;
+    private String name;
     private Integer amount;
     private PurchaseType isPurchased;
 
     public ResGetHistoryIngredientDto(HistoryIngredient historyIngredient) {
-//        this.ingredient = new ResGetIngredientDto(historyIngredient.getIngredient());
+        this.name = historyIngredient.getIngredient().getName();
         this.amount = historyIngredient.getAmount();
         this.isPurchased = historyIngredient.getPurchaseType();
     }

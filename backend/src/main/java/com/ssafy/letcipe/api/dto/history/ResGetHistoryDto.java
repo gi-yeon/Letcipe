@@ -17,14 +17,11 @@ public class ResGetHistoryDto {
     private String review;
     private List<ResGetHistoryItemDto> historyItems;
 
-    public ResGetHistoryDto(History history) {
+    public ResGetHistoryDto(History history, List<ResGetHistoryItemDto> historyItems) {
         this.id = history.getId();
         this.regTime = history.getRegTime();
         this.process = history.getProcess();
         this.review = history.getReview();
-        this.historyItems = new ArrayList<>();
-        for (HistoryItem historyItem : history.getHistoryItems()) {
-            historyItems.add(new ResGetHistoryItemDto(historyItem));
-        }
+        this.historyItems = historyItems;
     }
 }

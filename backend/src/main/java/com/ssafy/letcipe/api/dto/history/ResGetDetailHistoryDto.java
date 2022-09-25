@@ -6,6 +6,7 @@ import com.ssafy.letcipe.domain.historyIngredient.HistoryIngredient;
 import com.ssafy.letcipe.domain.historyItem.HistoryItem;
 import lombok.Getter;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,17 +20,12 @@ public class ResGetDetailHistoryDto {
     private List<ResGetHistoryItemDto> historyItems;
     private List<ResGetHistoryIngredientDto> historyIngredients;
 
-    public ResGetDetailHistoryDto(History history) {
+    public ResGetDetailHistoryDto(History history, List<ResGetHistoryItemDto> historyItems, List<ResGetHistoryIngredientDto> resGetHistoryIngredientDtoList) {
         this.id = history.getId();
         this.regTime = history.getRegTime();
         this.process = history.getProcess();
         this.review = history.getReview();
-        this.historyItems = new ArrayList<>();
-        for (HistoryItem historyItem : history.getHistoryItems()) {
-            historyItems.add(new ResGetHistoryItemDto(historyItem));
-        }
-        for (HistoryIngredient historyIngredient : history.getHistoryIngredients()) {
-//            historyItems.add(new ResGetHistoryIngredientDto(historyIngredient.getIngredient()));
-        }
+        this.historyItems = historyItems;
+//        this.historyIngredients = resGetHistoryIngredientDtoList;
     }
 }
