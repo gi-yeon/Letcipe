@@ -9,7 +9,8 @@ services:
             network: my_net
         container_name: nuxt
         user: root
-        ports: 4000:4000
+        ports: 
+            - 4000:4000
         
     deployback:
         depends_on:
