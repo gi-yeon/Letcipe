@@ -5,6 +5,8 @@ import com.ssafy.letcipe.api.dto.board.ResGetBoardListDto;
 import com.ssafy.letcipe.domain.board.Board;
 import com.ssafy.letcipe.domain.board.BoardRepository;
 import com.ssafy.letcipe.domain.boardComment.BoardCommentRepository;
+import com.ssafy.letcipe.domain.comment.BoardType;
+import com.ssafy.letcipe.domain.comment.CommentRepository;
 import com.ssafy.letcipe.domain.type.StatusType;
 import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.domain.user.UserRepository;
@@ -23,7 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BoardService {
     private final BoardRepository boardRepository;
-    private final BoardCommentRepository boardCommentRepository;
+    private final CommentRepository commentRepository;
     private final UserRepository userRepository;
 
     //page로 조회
@@ -103,7 +105,7 @@ public class BoardService {
 
         if(!board.getUser().getUserId().equals(user.getUserId()))
             throw new Exception("본인 게시글만 삭제가 가능합니다.");
-        int rownum = boardCommentRepository.updateStatusType(StatusType.Y, board);
+        int rownum = commentRepository.updateStatusType(StatusType.Y, board.getId(), BoardType.BOARD);
         System.out.println(rownum);
         board.patchBoard();
         boardRepository.save(board);

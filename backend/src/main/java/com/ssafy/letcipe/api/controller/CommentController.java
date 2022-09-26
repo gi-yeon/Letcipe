@@ -1,7 +1,5 @@
 package com.ssafy.letcipe.api.controller;
 
-import com.ssafy.letcipe.api.dto.ReqPostBoardCommentDto;
-import com.ssafy.letcipe.api.dto.ReqPutBoardCommentDto;
 import com.ssafy.letcipe.api.dto.comment.ReqPatchCommentDto;
 import com.ssafy.letcipe.api.dto.comment.ReqPostCommentDto;
 import com.ssafy.letcipe.api.dto.comment.ReqPutCommentDto;
