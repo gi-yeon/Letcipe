@@ -12,9 +12,19 @@ import {
   deleteComment,
 } from '@/api/recipe'
 
-export const state = () => ({})
+export const state = () => ({
+  recipeDetail: {},
+})
 
-export const mutations = {}
+export const mutations = {
+  SET_RECIPE_DETAIL(state, recipeDetail) {
+    state.recipeDetail = recipeDetail
+  },
+
+  CLEAR_RECIPE_DETAIL(state) {
+    state.recipeDetail = {}
+  },
+}
 
 export const getters = {}
 
@@ -23,17 +33,22 @@ export const actions = {
     await RecipeDetail(
       recipeId,
       ({ data }) => {
-        commit('')
+        commit('SET_RECIPE_DETAIL', data)
+        // console.log(data)
       },
       (error) => {
         console.log(error)
       }
     )
   },
-  async selectRecipeDetail({ commit }) {
+  async selectRecipeDetail({ commit }, formData) {
     await selectRecipeDetail(
+      console.log(formData),
+
+      JSON.stringify(formData),
       ({ data }) => {
         commit('')
+        console.log('등록 성공!')
       },
       (error) => {
         console.log(error)

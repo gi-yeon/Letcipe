@@ -1,6 +1,8 @@
-import { apiInstance } from '.'
+import { apiInstance, fileInstance } from '.'
+// import { fileInstance } from './multipart'
 
 const api = apiInstance()
+const fileapi = fileInstance()
 
 // 레시피 상세 조회
 async function RecipeDetail(recipeId, success, fail) {
@@ -8,8 +10,8 @@ async function RecipeDetail(recipeId, success, fail) {
 }
 
 // 레시피 등록
-async function selectRecipeDetail(success, fail) {
-  await api.post(`/api/recipe`).then(success).catch(fail)
+async function selectRecipeDetail(formData, success, fail) {
+  await fileapi.post(`/api/recipe`, formData).then(success).catch(fail)
 }
 
 // 레시피 수정
