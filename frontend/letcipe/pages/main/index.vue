@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <v-app id="inspire">
-      <div class="main-container">
+      <v-container class="main-container">
         <div class="title-wrap">
           <div class="title">{{ user }}님이 좋아할 레시피</div>
           <div class="title-imgs">
@@ -10,12 +10,16 @@
               <v-card>
                 <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
                   <div class="ref-wrap">
-                    <v-card-title class="ref-title">{{
+                    <v-card-title class="ref-title">
+                      {{
                       ref.title
-                    }}</v-card-title>
-                    <v-card-subtitle class="ref-subtitle">{{
+                      }}
+                    </v-card-title>
+                    <v-card-subtitle class="ref-subtitle">
+                      {{
                       ref.sub_title
-                    }}</v-card-subtitle>
+                      }}
+                    </v-card-subtitle>
                   </div>
                 </v-img>
               </v-card>
@@ -40,20 +44,13 @@
                             <div>
                               <div class="my-lecipe">
                                 <v-avatar class="ma-3" size="100">
-                                  <v-img
-                                    :src="'https://2bob.co.kr/' + item.url"
-                                  >
+                                  <v-img :src="'https://2bob.co.kr/' + item.url">
                                     <v-icon x-large>mdi-play</v-icon>
                                   </v-img>
                                 </v-avatar>
                               </div>
-                              <v-card-title
-                                class="my-title text-h5"
-                                v-text="item.title"
-                              ></v-card-title>
-                              <v-card-subtitle
-                                v-text="item.sub_title"
-                              ></v-card-subtitle>
+                              <v-card-title class="my-title text-h5" v-text="item.title"></v-card-title>
+                              <v-card-subtitle v-text="item.sub_title"></v-card-subtitle>
                             </div>
                           </div>
                         </v-card>
@@ -76,7 +73,7 @@
             <v-card-text>
               <v-container fluid>
                 <div style="color: white">
-                  <v-icon>mdi-cart</v-icon> 장보기 목록
+                  <v-icon>mdi-cart</v-icon>장보기 목록
                 </div>
                 <v-row v-for="(c, index) in checklist" :key="index">
                   <v-col>
@@ -98,7 +95,7 @@
                       :disabled="!enabled"
                       label="I only work if you check the box"
                     ></v-text-field>
-                  </v-row> -->
+                  </v-row>-->
                 </v-row>
               </v-container>
             </v-card-text>
@@ -107,43 +104,22 @@
         <div class="btn-group">
           <v-hover>
             <template #default="{ hover }">
-              <v-btn
-                :elevation="hover ? 24 : 6"
-                class="mx-2"
-                fab
-                dark
-                x-large
-                color="amber"
-              >
-                <v-icon dark> mdi-android </v-icon>
+              <v-btn :elevation="hover ? 24 : 6" class="mx-2" fab dark x-large color="amber">
+                <v-icon dark>mdi-android</v-icon>
               </v-btn>
             </template>
           </v-hover>
           <v-hover>
             <template #default="{ hover }">
-              <v-btn
-                :elevation="hover ? 24 : 6"
-                class="mx-2"
-                fab
-                dark
-                x-large
-                color="amber"
-              >
-                <v-icon dark> mdi-android </v-icon>
+              <v-btn :elevation="hover ? 24 : 6" class="mx-2" fab dark x-large color="amber">
+                <v-icon dark>mdi-android</v-icon>
               </v-btn>
             </template>
           </v-hover>
           <v-hover>
             <template #default="{ hover }">
-              <v-btn
-                :elevation="hover ? 24 : 6"
-                class="mx-2"
-                fab
-                dark
-                x-large
-                color="amber"
-              >
-                <v-icon dark> mdi-android </v-icon>
+              <v-btn :elevation="hover ? 24 : 6" class="mx-2" fab dark x-large color="amber">
+                <v-icon dark>mdi-android</v-icon>
               </v-btn>
             </template>
           </v-hover>
@@ -162,9 +138,7 @@
               close
               color="green"
               outlined
-            >
-              {{ tag }}
-            </v-chip>
+            >{{ tag }}</v-chip>
           </div>
           <v-row>
             <v-col>
@@ -176,6 +150,7 @@
                       hover ? 'light-green lighten-3' : 'light-green lighten-2'
                     "
                     class="lecipe-list-group mx-auto mt-2 mb-2 d-flex align-center"
+                    @click="moveDetail"
                   >
                     <div class="ml-4">{{ i }}</div>
                     <v-list-item three-line>
@@ -184,16 +159,15 @@
                           elevation="10"
                           src="https://2bob.co.kr/data/recipe/20191212142613-HV8JG.jpg"
                           style="border-radius: 5px"
-                        >
-                        </v-img
-                      ></v-list-item-avatar>
+                        ></v-img>
+                      </v-list-item-avatar>
                       <v-list-item-content>
-                        <v-list-item-title class="mb-1">
-                          {{ data.title }}
-                        </v-list-item-title>
-                        <v-list-item-subtitle>{{
+                        <v-list-item-title class="mb-1">{{ data.title }}</v-list-item-title>
+                        <v-list-item-subtitle>
+                          {{
                           data.sub_title
-                        }}</v-list-item-subtitle>
+                          }}
+                        </v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
                     <v-btn class="mr-3" fab dark x-small color="pink" outlined>
@@ -218,15 +192,19 @@
               size="130"
               tile
               class="mr-2"
-              ><v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
+              @click="moveDetail"
+            >
+              <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
                 <div class="ref-wrap">
                   <v-card-title class="ref-title">{{ ref.title }}</v-card-title>
-                  <v-card-subtitle class="ref-subtitle">{{
+                  <v-card-subtitle class="ref-subtitle">
+                    {{
                     ref.sub_title
-                  }}</v-card-subtitle>
+                    }}
+                  </v-card-subtitle>
                 </div>
-              </v-img></v-avatar
-            >
+              </v-img>
+            </v-avatar>
           </div>
         </div>
         <div class="lecipe-base-group mt-3 mb-2">
@@ -242,18 +220,22 @@
               size="130"
               tile
               class="mr-2"
-              ><v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
+              @click="moveListDetail"
+            >
+              <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
                 <div class="ref-wrap">
                   <v-card-title class="ref-title">{{ ref.title }}</v-card-title>
-                  <v-card-subtitle class="ref-subtitle">{{
+                  <v-card-subtitle class="ref-subtitle">
+                    {{
                     ref.sub_title
-                  }}</v-card-subtitle>
+                    }}
+                  </v-card-subtitle>
                 </div>
-              </v-img></v-avatar
-            >
+              </v-img>
+            </v-avatar>
           </div>
         </div>
-      </div>
+      </v-container>
     </v-app>
   </div>
 </template>
@@ -351,6 +333,12 @@ export default {
       this.time = hours + ':' + minutes + ':' + seconds
       // console.log(this.time)
     },
+    moveListDetail() {
+      this.$router.push('/recipelist/detail')
+    },
+    moveDetail() {
+      this.$router.push('/recipe/detail')
+    },
   },
 }
 </script>
@@ -372,8 +360,9 @@ export default {
 .main-container {
   height: 100%;
   padding: 10%;
-  background-image: url('/bg/bg_img.png');
+  /* background-image: url('/bg/bg_img.png'); */
   background-repeat: repeat;
+  background-color: white;
   /* background-color: rgba(255, 255, 221, 0.771); */
   color: black;
   margin-top: 70px;
