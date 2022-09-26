@@ -8,7 +8,6 @@ import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
 import com.ssafy.letcipe.domain.recipeList.RecipeList;
 import com.ssafy.letcipe.domain.recipeListBookmark.RecipeListBookmark;
 import com.ssafy.letcipe.domain.type.StatusType;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import static javax.persistence.FetchType.LAZY;

@@ -2,7 +2,6 @@ package com.ssafy.letcipe.domain.recipeListBookmark;
 
 import com.ssafy.letcipe.domain.recipeList.RecipeList;
 import com.ssafy.letcipe.domain.user.User;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,9 +25,4 @@ public class RecipeListBookmark {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @Builder
-    public RecipeListBookmark(User user, RecipeList recipeList){
-        this.user = user;
-        this.recipeList = recipeList;
-    }
 }

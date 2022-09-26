@@ -1,8 +1,8 @@
-package com.ssafy.letcipe.domain.recipeLike;
+package com.ssafy.letcipe.domain.measure;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RecipeLikeRepository extends JpaRepository<RecipeLike, Long> {
+public interface MeasureRepository extends JpaRepository<Measure, Long> {
 }
