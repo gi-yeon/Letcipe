@@ -36,7 +36,7 @@ public class Recipe {
     @Column(name = "title", length = 30, nullable = false)
     private String title;
 
-    @Column(name = "content", length = 100, nullable = false)
+    @Column(name = "content", nullable = false)
     private String content;
 
     @Column(name = "cooking_time")
@@ -52,7 +52,7 @@ public class Recipe {
     private LocalDateTime modTime;
 
     @Column(name = "is_deleted", nullable = false)
-    private StatusType statusType;
+    private StatusType isDeleted;
 
     @Column(name = "category", nullable = false)
     private String category;
