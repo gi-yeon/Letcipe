@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @Getter
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "history_id", "ingredient_id" }) })
 public class HistoryIngredient {
 
     @Id

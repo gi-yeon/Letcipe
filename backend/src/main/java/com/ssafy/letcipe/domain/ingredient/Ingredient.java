@@ -16,7 +16,7 @@ public class Ingredient {
     @Column(name = "id", unique = true)
     private Long id;
 
-    @Column(name = "name", length = 50, nullable = false)
+    @Column(name = "name", unique = true, length = 50, nullable = false)
     private String name;
 
     @Column(name = "category")

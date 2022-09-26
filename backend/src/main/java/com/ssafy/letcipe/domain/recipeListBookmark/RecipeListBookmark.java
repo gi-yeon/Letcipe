@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @Getter
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "recipe_list_id" }) })
 public class RecipeListBookmark {
 
     @Id

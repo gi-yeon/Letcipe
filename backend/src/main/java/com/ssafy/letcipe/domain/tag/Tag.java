@@ -16,7 +16,7 @@ public class Tag {
     @Column(name = "id", unique = true)
     private Long id;
 
-    @Column(name = "name", length = 50)
+    @Column(name = "name", unique = true, length = 50)
     private String name;
 
     @Builder

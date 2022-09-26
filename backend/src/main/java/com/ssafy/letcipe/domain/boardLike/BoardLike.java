@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "board_id" }) })
 public class BoardLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
