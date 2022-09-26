@@ -283,6 +283,9 @@ public class RecipeService {
             if (recipeContainsIngredient.get(i).getCount() != token.length)
                 recipeContainsIngredient.remove(i--);
         }
+        recipeContainsIngredient.forEach(i -> {
+            result.add(getRecipeDto(i.getRecipe()));
+        });
 
         return result;
     }
