@@ -17,6 +17,7 @@ public class JwtService {
 
     private final String secretKey = "ssafySecret";
     private final int EXPIRE_MINUTES = 60 * 24;
+    private final int REFRESH_MINUTES = 60 * 24 * 7;
 
     /**
      * request header에서 token을 가져오는 함수
@@ -45,6 +46,15 @@ public class JwtService {
         return jwt;
     }
 
+    public String createRefreshToken() {
+        String jwt = Jwts.builder()
+                .setHeaderParam("typ", "JWT")
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * REFRESH_MINUTES))
+                .signWith(SignatureAlgorithm.HS256, generateKey()).compact();
+        return jwt;
+    }
+
     /**
      * swcretkey를 기반으로 key를 생성함
      *
@@ -69,7 +79,7 @@ public class JwtService {
         try {
             return getClaims(jwt).getExpiration().after(new Date());
         } catch (Exception e) {
-            throw new AuthorityViolationException("다시 로그인 하십시오");
+            throw new AuthorityViolationException("잘못된 토큰입니다.");
         }
     }
 
@@ -88,12 +98,20 @@ public class JwtService {
         }
     }
 
-    /**
-     * jwt token에서 claim을 구함
-     * 
-     * @param jwt jwt token
-     * @return claims
-     */
+    public Long getUserId(String jwtToken) {
+        try {
+            return Long.parseLong(String.valueOf(getClaims(jwtToken).get("userId")));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AuthorityViolationException("권한 없음");
+        }
+    }
+        /**
+         * jwt token에서 claim을 구함
+         *
+         * @param jwt jwt token
+         * @return claims
+         */
     private Claims getClaims(String jwt) {
         try {
             Jws<Claims> claims = Jwts.parser()

@@ -1,5 +1,6 @@
 package com.ssafy.letcipe.api.dto.recipeListItem;
 
+import com.ssafy.letcipe.api.dto.recipe.ResGetRecipeDto;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipeListItem.RecipeListItem;
 import lombok.AllArgsConstructor;
@@ -10,11 +11,11 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 public class ResGetRecipeListItemDto {
-    private Recipe recipe;
+    private ResGetRecipeDto recipe;
     private Integer amount;
 
     public ResGetRecipeListItemDto(RecipeListItem recipeListItem){
-        this.recipe = ResGetRecipeDto.createDto(recipeListItem.getRecipe());
+        this.recipe = new ResGetRecipeDto(recipeListItem.getRecipe(),null);
         this.amount = recipeListItem.getAmount();
     }
 }

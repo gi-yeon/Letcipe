@@ -30,4 +30,8 @@ public class HistoryIngredient {
 
     @Column(name = "is_purchased", nullable = false)
     private PurchaseType purchaseType;
+
+    public void updateHistoryIngredient(PurchaseType purchaseType){
+        this.purchaseType = purchaseType;
+    }
 }

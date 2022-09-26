@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestControllerAdvice
 public class ExceptionAdvice {
@@ -26,10 +27,16 @@ public class ExceptionAdvice {
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(NullPointerException.class)
-    public ResponseEntity NFEHandler(NullPointerException e) {
+    @ExceptionHandler({NullPointerException.class,IllegalArgumentException.class})
+    public ResponseEntity handleNPE(Exception e) {
         printLog(e);
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
 
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public  ResponseEntity duplicatedException(Exception e) {
+        printLog(e);
+        return new ResponseEntity(HttpStatus.CONFLICT);
     }
 }
