@@ -1,6 +1,8 @@
 package com.ssafy.letcipe.domain.recipeStep;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.letcipe.domain.recipe.Recipe;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +19,7 @@ public class RecipeStep {
 
     @ManyToOne(targetEntity = Recipe.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id",  referencedColumnName = "id")
+    @JsonIgnore
     private Recipe recipe;
 
     @Column(name = "step", nullable = false)
@@ -27,4 +30,12 @@ public class RecipeStep {
 
     @Column(name = "img")
     private String img;
+
+    @Builder
+    public RecipeStep(Recipe recipe, Integer step, String content, String img) {
+        this.recipe = recipe;
+        this.step = step;
+        this.content = content;
+        this.img = img;
+    }
 }
