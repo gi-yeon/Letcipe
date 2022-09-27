@@ -19,7 +19,7 @@ import java.io.OutputStream;
 @RequestMapping("/hadoop")
 public class HadoopController {
     @GetMapping("/test")
-    public ResponseEntity test(@PathVariable Long testId){
+    public ResponseEntity test(){
         HttpStatus status=HttpStatus.OK;
         String msg="테스트 성공";
         try {
