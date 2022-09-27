@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.data.domain.Pageable;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -34,13 +36,14 @@ public class UserController {
 
     @PostMapping("login")
     public ResponseEntity loginUser(@RequestBody ReqLoginUserDto requestDto) throws NoSuchAlgorithmException {
-        User user = userService.loginUser(requestDto);
-        String token = jwtService.createToken(user);
+        return ResponseEntity.ok(userService.loginUser(requestDto));
+    }
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("access-token", token);
-
-        return ResponseEntity.ok(resultMap);
+    @PostMapping("token")
+    public ResponseEntity updateToken(HttpServletRequest request){
+        String token = request.getHeader("access-token");
+        String refreshToken = request.getHeader("refresh-token");
+        return ResponseEntity.ok(userService.updateToken(token, refreshToken));
     }
 
     @GetMapping("")

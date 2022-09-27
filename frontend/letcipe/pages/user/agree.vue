@@ -890,7 +890,7 @@
           </section>
         </div>
         <div>
-          <v-row justify="center pa-8">
+          <v-row class="justify-center pa-8">
             <v-btn color="#aac821" dark @click="check()">동의 및 시작</v-btn>
 
             <v-dialog v-model="dialog" max-width="290">

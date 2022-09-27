@@ -1,3 +1,5 @@
-// const API_BASE_URL = 'https://i7a705.p.ssafy.io:8080'
+// const API_BASE_URL = 'https://j7a705.q.ssafy.io/'
 const API_BASE_URL = 'http://localhost:8888'
-export { API_BASE_URL }
+
+const HADOOP_BASE_URL = 'https://j7a705.q.ssafy.io/hadoop/test'
+export { API_BASE_URL, HADOOP_BASE_URL }

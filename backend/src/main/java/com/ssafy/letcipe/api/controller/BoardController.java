@@ -1,19 +1,17 @@
 package com.ssafy.letcipe.api.controller;
 
-import com.ssafy.letcipe.api.dto.*;
+import com.ssafy.letcipe.api.dto.board.ReqPostBoardDto;
+import com.ssafy.letcipe.api.dto.board.ResGetBoardDto;
+import com.ssafy.letcipe.api.dto.board.ResGetBoardListDto;
 import com.ssafy.letcipe.api.service.BoardService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/board")
@@ -30,15 +28,7 @@ public class BoardController {
 
     @GetMapping("/{board_id}")
     public ResponseEntity<ResGetBoardDto> getBoard(@PathVariable("board_id") Long boardId) {
-        Long userId = 1L;
-        return new ResponseEntity<>(boardService.getBoard(boardId, userId), HttpStatus.OK);
-    }
-
-    @PostMapping("/{board_id}/comment")
-    public ResponseEntity postBoardComment(@PathVariable("board_id") Long boardId, @RequestBody ReqPostBoardCommentDto boardCommentDto) {
-        Long userId = 1L;
-        boardService.postBoardComment(boardId, boardCommentDto, userId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(boardService.getBoard(boardId), HttpStatus.OK);
     }
 
     @PostMapping("")
@@ -63,17 +53,5 @@ public class BoardController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/comment/{board_comment_id}")
-    public ResponseEntity putBoardComment(@PathVariable("board_comment_id") Long boardCommentId, @RequestBody  ReqPutBoardCommentDto boardCommentDto) throws Exception {
-        Long userId  = 1L;
-        boardService.putBoardComment(boardCommentId, boardCommentDto, userId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
-    @PatchMapping("/comment/{board_comment_id}")
-    public ResponseEntity patchBoardComment(@PathVariable("board_comment_id") Long boardCommentId) throws Exception {
-        Long userId = 1L;
-        boardService.patchBoardComment(boardCommentId, userId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 }
