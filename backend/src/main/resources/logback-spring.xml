@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 로그파일 저장 경로 -->
+    <property name="LOG_DIR" value="./var/letcipe/log"/>
+
+    <!-- CONSOLE LOG -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [traceId=%X{traceId}] %-5level %logger{36}.%M - %msg%n-->
+            <pattern>
+                [%-5level] [%d{yyyy-MM-dd HH:mm:ss}] [%logger{36}.%M] [%msg]%n
+            </pattern>
+        </encoder>
+    </appender>
+    <!-- SYSLOG -->
+    <appender name="SYSLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/syslog.log</file>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                [%-5level] [%d{yyyy-MM-dd HH:mm:ss}] [%msg]%n
+            </Pattern>
+        </layout>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/syslog/syslog.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+    <!-- // SYSLOG -->
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+    <logger name="com.ssafy.letcipe.api.aop.LoggerAspect" level="info" additivity="false">
+        <appender-ref ref="SYSLOG" />
+    </logger>
+
+</configuration>
