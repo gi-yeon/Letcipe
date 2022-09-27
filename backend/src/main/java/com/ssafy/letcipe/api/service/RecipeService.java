@@ -11,25 +11,24 @@ import com.ssafy.letcipe.api.dto.recipeLike.ReqPostRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqDeleteRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeStep.ReqPostRecipeStepDto;
 import com.ssafy.letcipe.domain.ingredient.Ingredient;
-import com.ssafy.letcipe.domain.ingredient.IngredientRepository;
 import com.ssafy.letcipe.domain.recipe.Recipe;
+import com.ssafy.letcipe.domain.recipe.RecipeIngredientCountDto;
 import com.ssafy.letcipe.domain.recipe.RecipeRepository;
+import com.ssafy.letcipe.domain.recipe.RecipeRepositoryCustomImpl;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmarkRepository;
 import com.ssafy.letcipe.domain.recipeComment.RecipeComment;
 import com.ssafy.letcipe.domain.recipeComment.RecipeCommentRepository;
+import com.ssafy.letcipe.domain.recipeIngredient.IngredientDetailAmount;
 import com.ssafy.letcipe.domain.recipeIngredient.RecipeIngredient;
-import com.ssafy.letcipe.domain.recipeIngredient.RecipeIngredientRepository;
 import com.ssafy.letcipe.domain.recipeLike.RecipeLike;
 import com.ssafy.letcipe.domain.recipeLike.RecipeLikeRepository;
-import com.ssafy.letcipe.domain.recipeStep.RecipeStep;
-import com.ssafy.letcipe.domain.recipeStep.RecipeStepRepository;
 import com.ssafy.letcipe.domain.tag.Tag;
 import com.ssafy.letcipe.domain.user.User;
-import com.ssafy.letcipe.domain.user.UserRepository;
 import com.ssafy.letcipe.exception.AuthorityViolationException;
 import com.ssafy.letcipe.util.FileHandler;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Log4j2
 @RequiredArgsConstructor
 public class RecipeService {
     private final RecipeRepository recipeRepository;
@@ -54,6 +54,8 @@ public class RecipeService {
     private final RecipeTagService recipeTagService;
     private final RecipeStepService recipeStepService;
     private final RecipeIngredientService recipeIngredientService;
+    private final RecipeRepositoryCustomImpl customRepository;
+
     public Recipe getRecipe(long recipeId) throws NullPointerException {
         return recipeRepository.findById(recipeId).orElseThrow(() -> new NullPointerException("레시피를 찾을 수 없습니다."));
     }
@@ -68,7 +70,7 @@ public class RecipeService {
         // 응답용 객체로 변환(DetailCode -> CategoryName)
         for (RecipeIngredient ri : recipe.getIngredients()) {
             ResGetIngredientDto ing = ingredientService.getIngredientResponse(ri.getIngredient());
-            ingredientResponses.add(new ResGetRecipeIngredientDto(ing,ri.getAmount()));
+            ingredientResponses.add(new ResGetRecipeIngredientDto(ing, ri.getAmount()));
         }
         return new ResGetDetailRecipeDto(recipe, userId, ingredientResponses);
     }
@@ -95,13 +97,13 @@ public class RecipeService {
 
         // 스텝 만들기
         for (ReqPostRecipeStepDto step : dto.getStepDtoList()) {
-            recipeStepService.createRecipeStep(recipe,step);
+            recipeStepService.createRecipeStep(recipe, step);
         }
 
         // 재료 추가하기
         for (ReqPostRecipeIngredientDto i : dto.getIngredients()) {
             Ingredient ingredient = ingredientService.getIngredient(i.getId());
-            recipeIngredientService.createRecipeIngredient(recipe,ingredient,i.getAmount());
+            recipeIngredientService.createRecipeIngredient(recipe, ingredient, i.getAmount());
         }
 
         // 태그 추가하기
@@ -132,7 +134,7 @@ public class RecipeService {
 
         // 새로운 스텝 추가
         for (ReqPostRecipeStepDto step : updateDto.getStepDtoList()) {
-            recipeStepService.createRecipeStep(recipe,step);
+            recipeStepService.createRecipeStep(recipe, step);
         }
 
         // 기존 레시피 재료 삭제
@@ -143,7 +145,7 @@ public class RecipeService {
             // 재료 찾기
             Ingredient ingredient = ingredientService.getIngredient(ingredientDto.getId());
             // 레시피에 재료 매핑
-            recipeIngredientService.createRecipeIngredient(recipe,ingredient,ingredientDto.getAmount());
+            recipeIngredientService.createRecipeIngredient(recipe, ingredient, ingredientDto.getAmount());
         }
 
         // 기존 태그 삭제
@@ -250,7 +252,7 @@ public class RecipeService {
     }
 
     @Transactional
-    public List<ResGetRecipeDto> searchRecipe(Pageable pageable, String keyword) throws SQLException {
+    public List<ResGetRecipeDto> searchRecipeByKeyword(Pageable pageable, String keyword) throws SQLException {
         // 레시피 엔티티 검색 결과
         List<Recipe> searched = recipeRepository.findByKeyword(pageable, keyword);
         // 응답용 검색 결과 리스트
@@ -263,21 +265,45 @@ public class RecipeService {
 
         return result;
     }
+
+    @Transactional
+    public List<ResGetRecipeDto> searchRecipeByIngredients(Pageable pageable, String ingCSV) throws SQLException {
+        // 응답용 검색 결과 리스트
+        List<ResGetRecipeDto> result = new ArrayList<>();
+
+        // 재료목록 파싱
+        String[] token = ingCSV.split(",");
+        if (token.length == 0)
+            return result;
+
+        // 재료를 1개 이상 포함하는 레시피 목록
+        List<RecipeIngredientCountDto> recipeContainsIngredient = customRepository.findRecipeContains(pageable,token);
+        // 재료를 모두 포함하는 리스트만 추리기
+        for (int i= 0 ;i<recipeContainsIngredient.size();i++) {
+            if (recipeContainsIngredient.get(i).getCount() != token.length)
+                recipeContainsIngredient.remove(i--);
+        }
+        recipeContainsIngredient.forEach(i -> {
+            result.add(getRecipeDto(i.getRecipe()));
+        });
+
+        return result;
+    }
+
     public ResGetRecipeDto getRecipeDto(Recipe recipe) {
         List<ResGetRecipeIngredientDto> recipeIngredientResponses = new ArrayList<>();
         // 응답용 재료 객체로 변환
-        for (RecipeIngredient ri : recipe.getIngredients()) {
+        List<RecipeIngredient> recipeIngredients = recipeIngredientService.findRecipeIngredients(recipe);
+        for (RecipeIngredient ri : recipeIngredients) {
             ResGetIngredientDto ing = ingredientService.getIngredientResponse(ri.getIngredient());
-            recipeIngredientResponses.add(new ResGetRecipeIngredientDto(ing,ri.getAmount()));
+            recipeIngredientResponses.add(new ResGetRecipeIngredientDto(ing, ri.getAmount()));
         }
-
-        return new ResGetRecipeDto(recipe,recipeIngredientResponses);
+        return new ResGetRecipeDto(recipe, recipeIngredientResponses);
     }
 
     @Transactional
     public List<ResGetRecipeDto> getBestRecipes(Pageable pageable) throws SQLException {
         List<Recipe> recipes = recipeRepository.findBestRecipes(pageable);
-//        List<Recipe> recipes = null;
         List<ResGetRecipeDto> result = new ArrayList<>();
         for (Recipe recipe : recipes) {
             result.add(getRecipeDto(recipe));

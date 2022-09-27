@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-btn @click="testReadDetail()"> testReadDetail </v-btn>
-    <v-btn @click="testCreate()"> testCreate </v-btn>
+    <v-btn @click="testHadoop()"> HadoopTest </v-btn>
     <v-btn @click="test()"> testIngredient </v-btn>
     <v-file-input
       v-model="fileImg"
@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import { mapActions, mapState } from 'vuex'
 export default {
   name: 'DataTest',
@@ -69,6 +70,11 @@ export default {
       const keyword = '양파'
       this.searchIngredient(keyword)
       console.log(this.ingredientsList)
+    },
+    testHadoop() {
+      axios.get('https://j7a705.q.ssafy.io/hadoop/test').then((res) => {
+        console.log(res.data)
+      })
     },
   },
 }

@@ -1,6 +1,5 @@
 package com.ssafy.letcipe.domain.board;
 
-import com.ssafy.letcipe.domain.boardComment.BoardComment;
 import com.ssafy.letcipe.domain.type.StatusType;
 import com.ssafy.letcipe.domain.user.User;
 import lombok.Builder;
@@ -8,12 +7,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
+
 
 @Entity
 @NoArgsConstructor
@@ -30,8 +28,6 @@ public class Board {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToMany(mappedBy = "board")
-    private List<BoardComment> boardCommentList;
 
     @Column(name = "title", nullable = false)
     private String title;

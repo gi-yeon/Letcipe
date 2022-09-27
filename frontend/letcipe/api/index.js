@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { API_BASE_URL } from '../config'
+import { API_BASE_URL, HADOOP_BASE_URL } from '../config'
 
 function apiInstance() {
   const instance = axios.create({
@@ -19,4 +19,10 @@ function fileInstance() {
   })
   return instance
 }
-export { apiInstance, fileInstance }
+function hadoopInstance() {
+  const instance = axios.create({
+    baseURL: HADOOP_BASE_URL,
+  })
+  return instance
+}
+export { apiInstance, fileInstance, hadoopInstance }

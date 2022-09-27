@@ -27,6 +27,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private final JwtService jwtService;
     private final UserRepository userRepository;
     private final RecipeRepository recipeRepository;
     private final RecipeListRepository recipeListRepository;
@@ -61,7 +62,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User loginUser(ReqLoginUserDto requestDto) throws NoSuchAlgorithmException {
+    public ResLoginUserDto loginUser(ReqLoginUserDto requestDto) throws NoSuchAlgorithmException {
         StringBuilder sb = new StringBuilder();
 
         String salt = encryptUtils.getSalt(requestDto.getUserId());
@@ -71,7 +72,13 @@ public class UserService {
         User user = userRepository.findByUserIdAndPassword(requestDto.getUserId(), password)
                 .orElseThrow(() -> new NullPointerException());
 
-        return user;
+        String token = jwtService.createToken(user);
+        String refreshToken = jwtService.createRefreshToken();
+        user.updateRefreshToken(refreshToken);
+        return new ResLoginUserDto().builder()
+                .accessToken(token)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     public ResGetUserDto readUser(Long userId) {
@@ -173,5 +180,24 @@ public class UserService {
         } else {
             throw new AuthorityViolationException("비밀번호를 변경할 수 없습니다.");
         }
+    }
+
+    public ResLoginUserDto updateToken(String token, String refreshToken) {
+        if(jwtService.checkJwtToken(token)){
+            throw new AuthorityViolationException("접근할 수 없음");
+        }
+        User user = userRepository.findById(jwtService.getUserId(token))
+                .orElseThrow(() -> new NullPointerException());
+        if(!jwtService.checkJwtToken(refreshToken) || !user.getRefreshToken().equals(refreshToken)){
+            throw new AuthorityViolationException("접근할 수 없음");
+        }
+
+        String newToken = jwtService.createToken(user);
+        String newRefreshToken = jwtService.createRefreshToken();
+
+        return new ResLoginUserDto().builder()
+                .accessToken(newToken)
+                .refreshToken(newRefreshToken)
+                .build();
     }
 }

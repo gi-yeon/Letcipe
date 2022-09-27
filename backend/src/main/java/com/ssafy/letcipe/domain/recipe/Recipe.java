@@ -52,7 +52,7 @@ public class Recipe {
     private LocalDateTime modTime;
 
     @Column(name = "is_deleted", nullable = false)
-    private StatusType isDeleted;
+    private StatusType statusType;
 
     @Column(name = "category", nullable = false)
     private String category;
@@ -87,7 +87,7 @@ public class Recipe {
         this.serving = serving;
         this.category = category;
         this.repImg = repImg;
-        this.isDeleted = StatusType.N;
+        this.statusType = StatusType.N;
         this.regTime = LocalDateTime.now();
     }
 
@@ -102,6 +102,6 @@ public class Recipe {
     }
 
     public void delete() {
-        this.isDeleted = StatusType.Y;
+        this.statusType = StatusType.Y;
     }
 }

@@ -1,5 +1,18 @@
 version: "3.8"
 services:
+    nuxt:
+        depends_on:
+            - deployback
+        build:
+            context: ./
+            dockerfile: ./frontend/letcipe/Dockerfile
+            network: my_net
+        container_name: nuxt
+        user: root
+        ports: 
+            - 4000:4000
+            - 3000:3000
+        
     deployback:
         depends_on:
             - mysql

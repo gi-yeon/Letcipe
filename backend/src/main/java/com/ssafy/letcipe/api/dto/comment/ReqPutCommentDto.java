@@ -1,4 +1,5 @@
-package com.ssafy.letcipe.api.dto.board;
+
+package com.ssafy.letcipe.api.dto.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReqPostBoardCommentDto {
-    private Long boardId;              //content만 있어도 될듯..?
+public class ReqPutCommentDto {
+    private Long id;
     private String content;
 }
