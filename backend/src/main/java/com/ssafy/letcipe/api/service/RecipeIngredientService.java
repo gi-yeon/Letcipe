@@ -2,11 +2,15 @@ package com.ssafy.letcipe.api.service;
 
 import com.ssafy.letcipe.domain.ingredient.Ingredient;
 import com.ssafy.letcipe.domain.recipe.Recipe;
+import com.ssafy.letcipe.domain.recipeIngredient.IngredientDetailAmount;
 import com.ssafy.letcipe.domain.recipeIngredient.RecipeIngredient;
 import com.ssafy.letcipe.domain.recipeIngredient.RecipeIngredientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.SQLException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,5 +33,9 @@ public class RecipeIngredientService {
     @Transactional
     public void deleteRecipeIngredient(RecipeIngredient recipeIngredient) {
         recipeIngredientRepository.deleteById(recipeIngredient.getId());
+    }
+
+    public List<RecipeIngredient> findRecipeIngredients(Recipe recipe){
+        return recipeIngredientRepository.findRecipeIngredientsByRecipe(recipe);
     }
 }
