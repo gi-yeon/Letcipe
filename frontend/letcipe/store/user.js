@@ -1,7 +1,8 @@
 import {
   login,
+  idCheck,
+  nicknameCheck,
   signup,
-  //   check,
   mypage,
   modifyMember,
   deleteMember,
@@ -30,6 +31,28 @@ export const actions = {
       }
     )
   },
+  async idCheck({ commit }, userid) {
+    await idCheck(
+      userid,
+      ({ data }) => {
+        console.log(data)
+      },
+      (error) => {
+        console.log(error.response.status)
+      }
+    )
+  },
+  async nicknameCheck({ commit }, nickname) {
+    await nicknameCheck(
+      nickname,
+      ({ data }) => {
+        commit('')
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  },
   async signup({ commit }, user) {
     await signup(
       user,
@@ -41,17 +64,6 @@ export const actions = {
       }
     )
   },
-  //   async check({ commit }, userid) {
-  //     await check(
-  //       userid,
-  //       ({ data }) => {
-  //         commit('')
-  //       },
-  //       (error) => {
-  //         console.log(error)
-  //       }
-  //     )
-  //   },
   async mypage({ commit }, userid) {
     await mypage(
       userid,

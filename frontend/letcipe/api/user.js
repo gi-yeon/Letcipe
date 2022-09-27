@@ -16,9 +16,16 @@ async function signup(user, success, fail) {
 }
 
 // 사용자 정보 조회 ??
-// async function check(userid, success, fail) {
-//   await api.get(`/api/user/${userid}`).then(success).catch(fail)
-// }
+async function idCheck(userid, success, fail) {
+  await api.get(`/user/id/${userid}/exists`).then(success).catch(fail)
+}
+
+async function nicknameCheck(nickname, success, fail) {
+  await api
+    .get(`/api/user/nickname/${nickname}/exists`)
+    .then(success)
+    .catch(fail)
+}
 
 // 사용자 정보 조회??
 async function mypage(userid, success, fail) {
@@ -56,8 +63,9 @@ async function myrecipeList(userid, success, fail) {
 
 export {
   login,
+  idCheck,
+  nicknameCheck,
   signup,
-  //   check,
   mypage,
   modifyMember,
   deleteMember,
