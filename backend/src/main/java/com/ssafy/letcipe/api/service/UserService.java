@@ -13,6 +13,7 @@ import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.domain.user.UserRepository;
 import com.ssafy.letcipe.domain.user.UserType;
 import com.ssafy.letcipe.exception.AuthorityViolationException;
+import com.ssafy.letcipe.exception.BadRequestException;
 import com.ssafy.letcipe.util.EncryptUtils;
 import com.ssafy.letcipe.util.StringUtils;
 import lombok.RequiredArgsConstructor;
@@ -200,4 +201,12 @@ public class UserService {
                 .refreshToken(newRefreshToken)
                 .build();
     }
+    public void checkDuplicationId(String userId) {
+        if (userRepository.existsByUserId(userId)) throw new BadRequestException("이미 사용중인 아이디 입니다.");
+    }
+
+    public void checkDuplicationNickname(String nickname) {
+        if (userRepository.existsByNickname(nickname)) throw new BadRequestException("이미 사용중인 닉네임 입니다.");
+    }
+
 }

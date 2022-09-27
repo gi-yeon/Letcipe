@@ -31,6 +31,17 @@ public class UserController {
         userService.createUser(requestDto);
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/id/{userId}/exists")
+    public ResponseEntity<?> checkIdDuplicate(@PathVariable String userId) {
+        userService.checkDuplicationId(userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/nickname/{nickname}/exists")
+    public ResponseEntity<?> checkNicknameDuplicate(@PathVariable String nickname) {
+        userService.checkDuplicationNickname(nickname);
+        return ResponseEntity.ok().build();
+    }
 
     @PostMapping("login")
     public ResponseEntity loginUser(@RequestBody ReqLoginUserDto requestDto) throws NoSuchAlgorithmException {
