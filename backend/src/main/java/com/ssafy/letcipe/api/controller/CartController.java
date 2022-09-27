@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLException;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,7 +38,7 @@ public class CartController {
 
     @GetMapping("cart")
     //TODO: 추가재료 수량까지 계산해서 재료도 보내주기
-    public ResponseEntity readCart(HttpServletRequest request) {
+    public ResponseEntity readCart(HttpServletRequest request) throws SQLException {
         Long userId = jwtService.getUserId(request);
         return ResponseEntity.ok(cartService.getCart(userId));
     }

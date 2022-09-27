@@ -1,4 +1,4 @@
-package com.ssafy.letcipe.domain.boardComment;
+package com.ssafy.letcipe.domain.comment;
 
 import com.ssafy.letcipe.domain.board.Board;
 import com.ssafy.letcipe.domain.type.StatusType;
@@ -10,11 +10,12 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+
 @Entity
 @NoArgsConstructor
 @Getter
-public class BoardComment {
 
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -23,10 +24,6 @@ public class BoardComment {
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-
-    @ManyToOne(targetEntity = Board.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id", referencedColumnName = "id")
-    private Board board;
 
     @Column(name = "content", nullable = false)
     private String content;
@@ -37,21 +34,33 @@ public class BoardComment {
     @Column(name = "mod_time")
     private LocalDateTime modTime;
 
+
+    @Column(name = "board_id", nullable = false)
+    private Long boardId;
+
+    @Column(name = "board_type", nullable = false)
+    private BoardType boardType;
+
     @Column(name = "is_deleted", nullable = false)
     private StatusType statusType;
 
-
     @Builder
-    public BoardComment(User user, Board board, String content, LocalDateTime regTime, LocalDateTime modTime, StatusType statusType){
+    public Comment(User user, String content, Long boardId, BoardType boardType, StatusType statusType) {
         this.user = user;
-        this.board = board;
         this.content = content;
-        this.regTime = regTime;
-        this.modTime = modTime;
+        this.regTime = LocalDateTime.now();
+        this.modTime = LocalDateTime.now();
+        this.boardId = boardId;
+        this.boardType = boardType;
         this.statusType = statusType;
     }
 
-    public void putBoardComment(String content){
+
+    public void patchComment() {
+        this.statusType = StatusType.Y;
+    }
+
+    public void putComment(String content) {
         this.content = content;
         this.modTime = LocalDateTime.now();
     }
