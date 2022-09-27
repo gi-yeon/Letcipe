@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class CartService {
     }
 
     @Transactional
-    public ResGetCartDto getCart(Long userId) {
+    public ResGetCartDto getCart(Long userId) throws SQLException {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
         List<ResGetCartItemDto> cartDtos = new ArrayList<>();
         for (Cart cart : user.getCarts()) {
