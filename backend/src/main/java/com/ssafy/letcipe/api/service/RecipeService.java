@@ -2,31 +2,22 @@ package com.ssafy.letcipe.api.service;
 
 import com.ssafy.letcipe.api.dto.ingredient.ResGetIngredientDto;
 import com.ssafy.letcipe.api.dto.recipe.*;
-import com.ssafy.letcipe.api.dto.recipeBookmark.ReqPostRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqDeleteRecipeBookmarkDto;
-import com.ssafy.letcipe.api.dto.recipeComment.ReqPostRecipeCommentDto;
-import com.ssafy.letcipe.api.dto.recipeComment.ReqPutRecipeCommentDto;
+import com.ssafy.letcipe.api.dto.recipeBookmark.ReqPostRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeIngredient.ResGetRecipeIngredientDto;
-import com.ssafy.letcipe.api.dto.recipeLike.ReqPostRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqDeleteRecipeLikeDto;
+import com.ssafy.letcipe.api.dto.recipeLike.ReqPostRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeStep.ReqPostRecipeStepDto;
 import com.ssafy.letcipe.domain.ingredient.Ingredient;
-import com.ssafy.letcipe.domain.ingredient.IngredientRepository;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipe.RecipeRepository;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmarkRepository;
-import com.ssafy.letcipe.domain.recipeComment.RecipeComment;
-import com.ssafy.letcipe.domain.recipeComment.RecipeCommentRepository;
 import com.ssafy.letcipe.domain.recipeIngredient.RecipeIngredient;
-import com.ssafy.letcipe.domain.recipeIngredient.RecipeIngredientRepository;
 import com.ssafy.letcipe.domain.recipeLike.RecipeLike;
 import com.ssafy.letcipe.domain.recipeLike.RecipeLikeRepository;
-import com.ssafy.letcipe.domain.recipeStep.RecipeStep;
-import com.ssafy.letcipe.domain.recipeStep.RecipeStepRepository;
 import com.ssafy.letcipe.domain.tag.Tag;
 import com.ssafy.letcipe.domain.user.User;
-import com.ssafy.letcipe.domain.user.UserRepository;
 import com.ssafy.letcipe.exception.AuthorityViolationException;
 import com.ssafy.letcipe.util.FileHandler;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +37,6 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final FileHandler fileHandler;
     private final UserService userService;
-    private final RecipeCommentRepository recipeCommentRepository;
     private final RecipeBookmarkRepository recipeBookmarkRepository;
     private final RecipeLikeRepository recipeLikeRepository;
     private final IngredientService ingredientService;
@@ -54,6 +44,7 @@ public class RecipeService {
     private final RecipeTagService recipeTagService;
     private final RecipeStepService recipeStepService;
     private final RecipeIngredientService recipeIngredientService;
+
     public Recipe getRecipe(long recipeId) throws NullPointerException {
         return recipeRepository.findById(recipeId).orElseThrow(() -> new NullPointerException("레시피를 찾을 수 없습니다."));
     }
@@ -68,7 +59,7 @@ public class RecipeService {
         // 응답용 객체로 변환(DetailCode -> CategoryName)
         for (RecipeIngredient ri : recipe.getIngredients()) {
             ResGetIngredientDto ing = ingredientService.getIngredientResponse(ri.getIngredient());
-            ingredientResponses.add(new ResGetRecipeIngredientDto(ing,ri.getAmount()));
+            ingredientResponses.add(new ResGetRecipeIngredientDto(ing, ri.getAmount()));
         }
         return new ResGetDetailRecipeDto(recipe, userId, ingredientResponses);
     }
@@ -95,13 +86,13 @@ public class RecipeService {
 
         // 스텝 만들기
         for (ReqPostRecipeStepDto step : dto.getStepDtoList()) {
-            recipeStepService.createRecipeStep(recipe,step);
+            recipeStepService.createRecipeStep(recipe, step);
         }
 
         // 재료 추가하기
         for (ReqPostRecipeIngredientDto i : dto.getIngredients()) {
             Ingredient ingredient = ingredientService.getIngredient(i.getId());
-            recipeIngredientService.createRecipeIngredient(recipe,ingredient,i.getAmount());
+            recipeIngredientService.createRecipeIngredient(recipe, ingredient, i.getAmount());
         }
 
         // 태그 추가하기
@@ -132,7 +123,7 @@ public class RecipeService {
 
         // 새로운 스텝 추가
         for (ReqPostRecipeStepDto step : updateDto.getStepDtoList()) {
-            recipeStepService.createRecipeStep(recipe,step);
+            recipeStepService.createRecipeStep(recipe, step);
         }
 
         // 기존 레시피 재료 삭제
@@ -143,7 +134,7 @@ public class RecipeService {
             // 재료 찾기
             Ingredient ingredient = ingredientService.getIngredient(ingredientDto.getId());
             // 레시피에 재료 매핑
-            recipeIngredientService.createRecipeIngredient(recipe,ingredient,ingredientDto.getAmount());
+            recipeIngredientService.createRecipeIngredient(recipe, ingredient, ingredientDto.getAmount());
         }
 
         // 기존 태그 삭제
@@ -167,37 +158,37 @@ public class RecipeService {
     }
 
 
-    @Transactional
-    public void deleteComment(Long recipeCommentId) throws SQLException {
-        RecipeComment comment = recipeCommentRepository
-                .findById(recipeCommentId)
-                .orElseThrow(() -> new NullPointerException());
-        recipeCommentRepository.delete(comment);
-    }
-
-    @Transactional
-    public void updateComment(ReqPutRecipeCommentDto requestDto) throws SQLException {
-        RecipeComment comment = recipeCommentRepository
-                .findById(requestDto.getRecipeCommentId())
-                .orElseThrow(() -> new NullPointerException());
-        comment.updateRecipeComment(requestDto.getContent());
-    }
-
-    @Transactional
-    public void createComment(ReqPostRecipeCommentDto requestDto, Long userId) throws SQLException {
-        System.out.println("recipe id : " + requestDto.getRecipeId());
-        System.out.println("content: " + requestDto.getContent());
-        User user = userService.findUser(userId);
-        Recipe recipe = recipeRepository
-                .findById(requestDto.getRecipeId())
-                .orElseThrow(() -> new NullPointerException());
-        recipeCommentRepository.save(
-                RecipeComment.builder()
-                        .recipe(recipe)
-                        .content(requestDto.getContent())
-                        .user(user)
-                        .build());
-    }
+//    @Transactional
+//    public void deleteComment(Long recipeCommentId) throws SQLException {
+//        RecipeComment comment = recipeCommentRepository
+//                .findById(recipeCommentId)
+//                .orElseThrow(() -> new NullPointerException());
+//        recipeCommentRepository.delete(comment);
+//    }
+//
+//    @Transactional
+//    public void updateComment(ReqPutRecipeCommentDto requestDto) throws SQLException {
+//        RecipeComment comment = recipeCommentRepository
+//                .findById(requestDto.getRecipeCommentId())
+//                .orElseThrow(() -> new NullPointerException());
+//        comment.updateRecipeComment(requestDto.getContent());
+//    }
+//
+//    @Transactional
+//    public void createComment(ReqPostRecipeCommentDto requestDto, Long userId) throws SQLException {
+//        System.out.println("recipe id : " + requestDto.getRecipeId());
+//        System.out.println("content: " + requestDto.getContent());
+//        User user = userService.findUser(userId);
+//        Recipe recipe = recipeRepository
+//                .findById(requestDto.getRecipeId())
+//                .orElseThrow(() -> new NullPointerException());
+//        recipeCommentRepository.save(
+//                RecipeComment.builder()
+//                        .recipe(recipe)
+//                        .content(requestDto.getContent())
+//                        .user(user)
+//                        .build());
+//    }
 
     @Transactional
     public void createBookmark(ReqPostRecipeBookmarkDto requestDto, Long userId) throws SQLException {
@@ -263,15 +254,16 @@ public class RecipeService {
 
         return result;
     }
+
     public ResGetRecipeDto getRecipeDto(Recipe recipe) {
         List<ResGetRecipeIngredientDto> recipeIngredientResponses = new ArrayList<>();
         // 응답용 재료 객체로 변환
         for (RecipeIngredient ri : recipe.getIngredients()) {
             ResGetIngredientDto ing = ingredientService.getIngredientResponse(ri.getIngredient());
-            recipeIngredientResponses.add(new ResGetRecipeIngredientDto(ing,ri.getAmount()));
+            recipeIngredientResponses.add(new ResGetRecipeIngredientDto(ing, ri.getAmount()));
         }
 
-        return new ResGetRecipeDto(recipe,recipeIngredientResponses);
+        return new ResGetRecipeDto(recipe, recipeIngredientResponses);
     }
 
     @Transactional

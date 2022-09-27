@@ -2,7 +2,6 @@ package com.ssafy.letcipe.domain.recipe;
 
 import com.ssafy.letcipe.api.dto.recipe.ReqPutRecipeDto;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
-import com.ssafy.letcipe.domain.recipeComment.RecipeComment;
 import com.ssafy.letcipe.domain.recipeIngredient.RecipeIngredient;
 import com.ssafy.letcipe.domain.recipeLike.RecipeLike;
 import com.ssafy.letcipe.domain.recipeStep.RecipeStep;
@@ -66,8 +65,8 @@ public class Recipe {
     @OneToMany(fetch = LAZY, mappedBy = "recipe")
     private List<RecipeIngredient> ingredients = new ArrayList<>();
 
-    @OneToMany(fetch = LAZY, mappedBy = "recipe")
-    private List<RecipeComment> comments = new ArrayList<>();
+//    @OneToMany(fetch = LAZY, mappedBy = "recipe")
+//    private List<RecipeComment> comments = new ArrayList<>();
 
     @OneToMany(fetch = LAZY, mappedBy = "recipe")
     private List<RecipeTag> tags = new ArrayList<>();

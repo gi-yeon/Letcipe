@@ -90,23 +90,23 @@ public class RecipeController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/comment")
-    ResponseEntity createRecipeComment(@RequestBody ReqPostRecipeCommentDto requestDto) throws SQLException {
-        recipeService.createComment(requestDto, 1L);
-        return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/comment")
-    ResponseEntity updateRecipeComment(@RequestBody ReqPutRecipeCommentDto requestDto) throws SQLException {
-        recipeService.updateComment(requestDto);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/comment/{recipeCommentId}")
-    ResponseEntity deleteRecipeComment(@PathVariable Long recipeCommentId) throws SQLException {
-        recipeService.deleteComment(recipeCommentId);
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping("/comment")
+//    ResponseEntity createRecipeComment(@RequestBody ReqPostRecipeCommentDto requestDto) throws SQLException {
+//        recipeService.createComment(requestDto, 1L);
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @PutMapping("/comment")
+//    ResponseEntity updateRecipeComment(@RequestBody ReqPutRecipeCommentDto requestDto) throws SQLException {
+//        recipeService.updateComment(requestDto);
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @DeleteMapping("/comment/{recipeCommentId}")
+//    ResponseEntity deleteRecipeComment(@PathVariable Long recipeCommentId) throws SQLException {
+//        recipeService.deleteComment(recipeCommentId);
+//        return ResponseEntity.ok().build();
+//    }
 
     @GetMapping("")
     ResponseEntity searchRecipe(@RequestParam String keyword, Pageable pageable) throws SQLException {

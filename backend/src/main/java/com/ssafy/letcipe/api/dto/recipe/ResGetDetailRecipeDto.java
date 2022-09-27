@@ -50,10 +50,6 @@ public class ResGetDetailRecipeDto {
         this.category = recipe.getCategory();
         this.recipeLike = recipe.getLikes().size();
         this.recipeBookmark = recipe.getBookmarks().size();
-        this.recipeComment = new ArrayList<>();
-        for (RecipeComment comment : recipe.getComments()) {
-            recipeComment.add(ResGetRecipeCommentDto.createDto(comment));
-        }
 
         this.tags = new ArrayList<>();
         for (RecipeTag tag : recipe.getTags()) {
