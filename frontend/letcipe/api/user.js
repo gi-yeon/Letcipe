@@ -1,8 +1,8 @@
-// import interceptor from '../config/interceptor'
-import { apiInstance, interceptorInstance } from '.'
+import interceptor from '../config/interceptor'
+import { apiInstance } from '.'
 
 const api = apiInstance()
-const interceptor = interceptorInstance()
+// const interceptor = interceptorInstance()
 
 // 사용자 로그인
 async function login(user, success, fail) {

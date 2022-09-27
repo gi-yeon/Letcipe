@@ -13,6 +13,7 @@ instance.interceptors.request.use(
   function (config) {
     config.headers['Content-Type'] = 'application/json'
     config.headers['access-token'] = localStorage.getItem('access-token')
+    return config
   },
   function (error) {
     return Promise.reject(error)
