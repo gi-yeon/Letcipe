@@ -45,7 +45,7 @@ services:
 volumes:
     mysql:
         name: mysql
-    spring:
+    back:
         name: back
 networks:
     default:
