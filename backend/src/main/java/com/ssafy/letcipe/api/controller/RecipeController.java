@@ -6,8 +6,6 @@ import com.ssafy.letcipe.api.dto.recipe.ReqPutRecipeDto;
 import com.ssafy.letcipe.api.dto.recipe.ResGetDetailRecipeDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqPostRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqDeleteRecipeBookmarkDto;
-import com.ssafy.letcipe.api.dto.recipeComment.ReqPostRecipeCommentDto;
-import com.ssafy.letcipe.api.dto.recipeComment.ReqPutRecipeCommentDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqPostRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqDeleteRecipeLikeDto;
 import com.ssafy.letcipe.api.service.RecipeService;

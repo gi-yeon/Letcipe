@@ -105,11 +105,15 @@ public class RecipeListService {
 
     @Transactional
     public List<ResSearchRecipeListDto> searchRecipeList(Pageable pageable, String keyword) {
+        System.out.println(pageable);
+        System.out.println(keyword);
         List<RecipeList> searched = recipeListRepository.findByNameContaining(pageable, keyword);
+        System.out.println(searched);
         List<ResSearchRecipeListDto> result = new ArrayList<>();
         for (RecipeList recipeList : searched) {
             result.add(new ResSearchRecipeListDto(recipeList));
         }
+        System.out.println(result);
         return result;
     }
 }

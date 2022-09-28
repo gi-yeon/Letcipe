@@ -281,7 +281,7 @@ public class RecipeService {
         recipeContainsIngredient.forEach(i -> {
             result.add(getRecipeDto(i.getRecipe()));
         });
-
+        System.out.println(result);
         return result;
     }
 
