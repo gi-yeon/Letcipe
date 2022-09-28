@@ -1,7 +1,9 @@
-import { NuxtCookies } from 'vue-cookies'
-import { apiInstance, interceptorInstance } from '.'
+import Vue from 'vue'
+import VueCookies from 'vue-cookies'
+import { apiInstance } from '.'
+Vue.use(VueCookies)
 const api = apiInstance()
-const interceptor = interceptorInstance()
+
 // const interceptor = interceptorInstance()
 
 // 사용자 로그인
@@ -19,9 +21,8 @@ async function readUser(success, fail) {
   //   method: 'get',
   // })
   // console.log(document.cookie.split('access-token=')[1])
-  console.log(NuxtCookies + 'ssssssssssss')
-  console.log(interceptor)
-  await this.$interceptor.get(`/api/user`).then(success).catch(fail)
+  console.log(VueCookies.get('access-token') + 'ssssssssssss')
+  await api.get(`/api/user`).then(success).catch(fail)
 }
 
 // 사용자 등록

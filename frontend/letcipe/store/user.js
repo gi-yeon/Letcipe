@@ -38,6 +38,8 @@ export const actions = {
         commit('SET_TOKEN', data)
         this.$cookies.set('access-token', data.accessToken)
         localStorage.setItem('access-token', data.accessToken)
+        console.log(data.accessToken, data)
+        console.log(this.$cookies.get('access-token'))
       },
       (error) => {
         console.log(error)
