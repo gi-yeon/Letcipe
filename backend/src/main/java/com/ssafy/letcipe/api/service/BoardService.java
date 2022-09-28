@@ -1,10 +1,10 @@
 package com.ssafy.letcipe.api.service;
 
+
 import com.ssafy.letcipe.api.dto.board.ResGetBoardDto;
 import com.ssafy.letcipe.api.dto.board.ResGetBoardListDto;
 import com.ssafy.letcipe.domain.board.Board;
 import com.ssafy.letcipe.domain.board.BoardRepository;
-import com.ssafy.letcipe.domain.boardComment.BoardCommentRepository;
 import com.ssafy.letcipe.domain.comment.BoardType;
 import com.ssafy.letcipe.domain.comment.CommentRepository;
 import com.ssafy.letcipe.domain.type.StatusType;
@@ -62,6 +62,9 @@ public class BoardService {
         return ResGetBoardDto.createDto(board);
     }
 
+
+
+
     @Transactional
     public void postBoard(String title, String content, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
@@ -106,7 +109,5 @@ public class BoardService {
         board.patchBoard();
         boardRepository.save(board);
     }
-
-
 
 }

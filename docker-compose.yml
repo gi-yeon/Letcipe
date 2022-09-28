@@ -1,5 +1,18 @@
 version: "3.8"
 services:
+    nuxt:
+        depends_on:
+            - deployback
+        build:
+            context: ./
+            dockerfile: ./frontend/letcipe/Dockerfile
+            network: my_net
+        container_name: nuxt
+        user: root
+        ports: 
+            - 4000:4000
+            - 3000:3000
+        
     deployback:
         depends_on:
             - mysql
@@ -9,6 +22,8 @@ services:
             network: my_net
         container_name: back
         user: root
+        volumes:
+            - back:/var/letcipe
         environment:
             SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ssafy
             SPRING_DATASOURCE_USERNAME: root
@@ -30,6 +45,8 @@ services:
 volumes:
     mysql:
         name: mysql
+    back:
+        name: back
 networks:
     default:
         external:

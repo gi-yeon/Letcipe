@@ -47,7 +47,7 @@ public class LoggerAspect {
             } catch (Exception e) {
                 log.error("LoggerAspect error", e);
             }
-            log.info("params : {}", params); // param에 담긴 정보들을 한번에 로깅한다.
+            log.info("REQUEST:{}", params); // param에 담긴 정보들을 한번에 로깅한다.
 
             return result;
 
