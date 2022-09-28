@@ -26,7 +26,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CartService {
-
     private final UserRepository userRepository;
     private final RecipeRepository recipeRepository;
     private final RecipeService recipeService;
@@ -36,9 +35,9 @@ public class CartService {
     private final IngredientService ingredientService;
 
     @Transactional
-    public void createCart(ReqPostCartDto requestDto, Long userId) {
+    public void createCart(Long recipe_id, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
-        Recipe recipe = recipeRepository.findById(requestDto.getRecipeId())
+        Recipe recipe = recipeRepository.findById(recipe_id)
                 .orElseThrow(() -> new NullPointerException("레시피를 찾을 수 없습니다."));;
 
         cartRepository.save(new Cart(user, recipe, 1));
@@ -104,5 +103,12 @@ public class CartService {
         CartIngredient cartIngredient = cartIngredientRepository.findByUserAndIngredient(user, ingredient)
                 .orElseThrow(() -> new NullPointerException("수정한 적 없습니다."));
         cartIngredientRepository.delete(cartIngredient);
+    }
+
+    @Transactional
+    public void createCarts(ReqPostCartDto requestDto, Long userId) {
+        for(Long recipeId: requestDto.getList()){
+            createCart(recipeId, userId);
+        }
     }
 }

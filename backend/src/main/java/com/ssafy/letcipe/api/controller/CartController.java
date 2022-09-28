@@ -24,7 +24,7 @@ public class CartController {
     @PostMapping("cart")
     public ResponseEntity createCart(@RequestBody ReqPostCartDto requestDto, HttpServletRequest request) {
         Long userId = jwtService.getUserId(request);
-        cartService.createCart(requestDto, userId);
+        cartService.createCarts(requestDto, userId);
         return ResponseEntity.ok().build();
     }
 
