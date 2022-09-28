@@ -57,6 +57,7 @@ export const actions = {
     await signup(
       user,
       ({ data }) => {
+        console.log(data)
         commit('')
       },
       (error) => {

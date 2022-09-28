@@ -326,38 +326,6 @@
                 <div class="signup-subtitle">선택정보</div>
               </div>
               <div class="d-flex flex-column">
-                <div>주소</div>
-                <div class="d-flex">
-                  <v-text-field
-                    id="postal-code"
-                    v-model="postalcode"
-                    placeholder="우편번호"
-                    solo
-                    style="width: 20px"
-                    @click="find_Postcode()"
-                  ></v-text-field>
-                  <v-btn
-                    height="48px"
-                    class="ml-3"
-                    color="letcipe"
-                    @click="find_Postcode()"
-                    >주소검색</v-btn
-                  >
-                </div>
-                <v-text-field
-                  id="address"
-                  v-model="mainAddress"
-                  placeholder="주소"
-                  solo
-                ></v-text-field>
-                <v-text-field
-                  id="address-detail"
-                  v-model="detailsAddress"
-                  placeholder="상세주소"
-                  solo
-                ></v-text-field>
-              </div>
-              <div class="d-flex flex-column">
                 <div>직업</div>
                 <v-select
                   v-model="job"
@@ -377,6 +345,16 @@
               </div>
             </div>
           </v-form>
+          <v-btn
+                  :loading="isLoading"
+                  class="white--text"
+                  color="letcipe"
+                  depressed
+                  v-bind="attrs"
+                  @click="userJoin()"
+                  v-on="on"
+                  >가입</v-btn
+                >
           <v-card-actions>
             <v-btn text @click="clearForm">지우기</v-btn>
             <v-spacer></v-spacer>
@@ -389,7 +367,7 @@
                   color="letcipe"
                   depressed
                   v-bind="attrs"
-                  @click="signUp()"
+                  @click="userJoin()"
                   v-on="on"
                   >가입</v-btn
                 >
@@ -449,6 +427,8 @@ export default {
       job: '',
       familymember: 1,
       isLoading: false,
+      file: '',
+      gender: '',
       rules: {
         id_rule: [
           (v) => !!v || '아이디는 필수 입력사항입니다.',
@@ -507,7 +487,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('user', ['idCheck', 'nicknameCheck']),
+    ...mapActions('user', ['idCheck', 'nicknameCheck', 'signup']),
     clearForm() {
       this.$refs.form.reset()
     },
@@ -565,6 +545,7 @@ export default {
       console.log(this.profile_img)
     },
     previewFile(file) {
+      console.log(file)
       if (file) {
         const fileData = (data) => {
           this.preview_profile = data
@@ -610,8 +591,21 @@ export default {
     varification(validNum) {
       console.log(validNum)
     },
-    signUp() {
-      console.log('가입')
+    userJoin() {
+      console.log(this.file)
+      const formData = new FormData();
+      formData.append('name',"오성준")
+      formData.append('userId',"osj2387")
+      formData.append('password',"wldPgm7845!")
+      formData.append('email',"osj2387@naver.com")
+      formData.append('nickname',"keeve")
+      formData.append('phone',"010-1234-1234")
+      formData.append('family',4)
+      formData.append('birth',"1997-03-17")
+      formData.append('gender','M')
+      formData.append('job', 'WORKER')
+      formData.append('profileImg',this.file)
+      this.signup(formData)
     },
   },
 }

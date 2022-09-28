@@ -12,12 +12,12 @@ async function login(user, success, fail) {
 
 // 사용자 등록
 async function signup(user, success, fail) {
-  await api.post(`/api/user`, JSON.stringify(user)).then(success).catch(fail)
+  await api.post(`/api/user`, user).then(success).catch(fail)
 }
 
-// 사용자 정보 조회 ??
+// 사용자 정보 조회
 async function idCheck(userid, success, fail) {
-  await api.get(`/user/id/${userid}/exists`).then(success).catch(fail)
+  await api.get(`/api/user/id/${userid}/exists`).then(success).catch(fail)
 }
 
 async function nicknameCheck(nickname, success, fail) {
@@ -53,12 +53,12 @@ async function deleteMember(userid, success, fail) {
 
 // 내 레시피 조회
 async function myrecipe(userid, success, fail) {
-  await api.get(`/api/use/recipe/${userid}`).then(success).catch(fail)
+  await api.get(`/api/user/recipe/${userid}`).then(success).catch(fail)
 }
 
 // 내 레시피리스트 조회
 async function myrecipeList(userid, success, fail) {
-  await api.get(`/api/use/recipeList/${userid}`).then(success).catch(fail)
+  await api.get(`/api/user/recipeList/${userid}`).then(success).catch(fail)
 }
 
 export {
