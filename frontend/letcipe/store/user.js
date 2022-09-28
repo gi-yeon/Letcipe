@@ -11,17 +11,11 @@ import {
 } from '@/api/user'
 
 export const state = () => ({
-  accessToken: '',
-  refreshToken: '',
   userId: 0,
   nickname: '',
 })
 
 export const mutations = {
-  SET_TOKEN(state, data) {
-    state.accessToken = data.accessToken
-    state.refreshToken = data.refreshToken
-  },
   SET_USER(state, data) {
     state.userId = data.id
     state.nickname = data.nickname
@@ -35,7 +29,6 @@ export const actions = {
     await login(
       user,
       ({ data }) => {
-        commit('SET_TOKEN', data)
         this.$cookies.set('access-token', data.accessToken)
       },
       (error) => {
