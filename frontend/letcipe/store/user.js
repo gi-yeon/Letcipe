@@ -37,9 +37,6 @@ export const actions = {
       ({ data }) => {
         commit('SET_TOKEN', data)
         this.$cookies.set('access-token', data.accessToken)
-        localStorage.setItem('access-token', data.accessToken)
-        console.log(data.accessToken, data)
-        console.log(this.$cookies.get('access-token'))
       },
       (error) => {
         console.log(error)
@@ -48,13 +45,8 @@ export const actions = {
   },
   async readUser({ commit }) {
     await readUser(({ data }) => {
-      console.log('-------------------------------')
       commit('SET_USER', data)
-      console.log(data)
     })
-    // await this.$interceptor.get(`/user`).then(({ data }) => {
-    //   commit('SET_USER', data)
-    // })
   },
   async signup({ commit }, user) {
     await signup(

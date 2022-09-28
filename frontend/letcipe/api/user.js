@@ -1,10 +1,6 @@
-import Vue from 'vue'
-import VueCookies from 'vue-cookies'
+import interceptor from '../config/interceptor'
 import { apiInstance } from '.'
-Vue.use(VueCookies)
 const api = apiInstance()
-
-// const interceptor = interceptorInstance()
 
 // 사용자 로그인
 async function login(user, success, fail) {
@@ -16,13 +12,7 @@ async function login(user, success, fail) {
 
 // 사용자 id, nickname 얻어오기
 async function readUser(success, fail) {
-  // await interceptor({
-  //   url: `/user`,
-  //   method: 'get',
-  // })
-  // console.log(document.cookie.split('access-token=')[1])
-  console.log(VueCookies.get('access-token') + 'ssssssssssss')
-  await api.get(`/api/user`).then(success).catch(fail)
+  await interceptor.get(`/api/user`).then(success).catch(fail)
 }
 
 // 사용자 등록

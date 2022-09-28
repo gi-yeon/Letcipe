@@ -71,14 +71,7 @@ export default {
         userId: this.id,
         password: this.pw,
       }
-      this.login(user)
-        .then(this.readUser)
-        .then(
-          // console.log(this.$cookies.get('access-token'))
-          console.log(
-            'userId : ' + this.userId + '   nickname : ' + this.nickname
-          )
-        )
+      this.login(user).then(this.readUser).then(this.moveMain)
     },
     moveMain() {
       this.$router.push('/main')

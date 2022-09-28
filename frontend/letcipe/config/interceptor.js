@@ -12,7 +12,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
   function (config) {
     config.headers['Content-Type'] = 'application/json'
-    config.headers['access-token'] = VueCookies.getItem('access-token')
+    config.headers['access-token'] = VueCookies.get('access-token')
     return config
   },
   function (error) {
