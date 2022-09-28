@@ -4,8 +4,7 @@ import com.ssafy.letcipe.domain.historyIngredient.HistoryIngredient;
 import com.ssafy.letcipe.domain.historyItem.HistoryItem;
 import com.ssafy.letcipe.domain.type.StatusType;
 import com.ssafy.letcipe.domain.user.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.util.Lazy;
 
 import javax.persistence.*;
@@ -15,7 +14,10 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
+@Builder
+@ToString
 public class History {
 
     @Id

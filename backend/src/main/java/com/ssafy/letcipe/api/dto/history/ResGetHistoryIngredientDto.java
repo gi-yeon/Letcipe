@@ -7,7 +7,7 @@ import com.ssafy.letcipe.domain.ingredient.Ingredient;
 
 public class ResGetHistoryIngredientDto {
     private String name;
-    private Integer amount;
+    private Double amount;
     private PurchaseType isPurchased;
 
     public ResGetHistoryIngredientDto(HistoryIngredient historyIngredient) {
