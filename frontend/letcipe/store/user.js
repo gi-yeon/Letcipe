@@ -37,9 +37,15 @@ export const actions = {
     )
   },
   async readUser({ commit }) {
-    await readUser(({ data }) => {
-      commit('SET_USER', data)
-    })
+    await readUser(
+      ({ data }) => {
+        console.log(data)
+        commit('SET_USER', data)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
   },
   async signup({ commit }, user) {
     await signup(
