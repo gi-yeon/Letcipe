@@ -5,6 +5,7 @@ import com.ssafy.letcipe.api.service.JwtService;
 import com.ssafy.letcipe.api.service.UserService;
 import com.ssafy.letcipe.domain.user.User;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +30,30 @@ public class UserController {
     private final Logger logger = LoggerFactory.getLogger(RecipeController.class);
 
     @PostMapping("")
-    public ResponseEntity createUser(@RequestBody ReqPostUserDto requestDto) throws NoSuchAlgorithmException {
+    public ResponseEntity createUser(@ModelAttribute ReqPostUserDto requestDto) throws NoSuchAlgorithmException, FileUploadException {
         userService.createUser(requestDto);
+        return ResponseEntity.ok().build();
+    }
+    @GetMapping("/id/{userId}/exists")
+    public ResponseEntity<?> checkIdDuplicate(@PathVariable String userId) {
+        userService.checkDuplicationId(userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/nickname/{nickname}/exists")
+    public ResponseEntity<?> checkNicknameDuplicate(@PathVariable String nickname) {
+        userService.checkDuplicationNickname(nickname);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("login")
     public ResponseEntity loginUser(@RequestBody ReqLoginUserDto requestDto) throws NoSuchAlgorithmException {
         return ResponseEntity.ok(userService.loginUser(requestDto));
+    }
+
+    @PostMapping("login/admin")
+    public ResponseEntity loginAdmin(@RequestBody ReqLoginUserDto requestDto) throws NoSuchAlgorithmException {
+        return ResponseEntity.ok(userService.loginAdmin(requestDto));
     }
 
     @PostMapping("token")
