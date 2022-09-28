@@ -50,6 +50,9 @@ export const actions = {
       commit('SET_USER', data)
       console.log(data)
     })
+    // await this.$interceptor.get(`/user`).then(({ data }) => {
+    //   commit('SET_USER', data)
+    // })
   },
   async signup({ commit }, user) {
     await signup(

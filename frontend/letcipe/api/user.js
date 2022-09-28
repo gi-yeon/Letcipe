@@ -1,12 +1,15 @@
-import interceptor from '../config/interceptor'
-import { apiInstance } from '.'
-
+import { NuxtCookies } from 'vue-cookies'
+import { apiInstance, interceptorInstance } from '.'
 const api = apiInstance()
+const interceptor = interceptorInstance()
 // const interceptor = interceptorInstance()
 
 // 사용자 로그인
 async function login(user, success, fail) {
-  await api.post(`/user/login`, JSON.stringify(user)).then(success).catch(fail)
+  await api
+    .post(`/api/user/login`, JSON.stringify(user))
+    .then(success)
+    .catch(fail)
 }
 
 // 사용자 id, nickname 얻어오기
@@ -15,8 +18,10 @@ async function readUser(success, fail) {
   //   url: `/user`,
   //   method: 'get',
   // })
-  console.log(document.cookie.split('access-token=')[1])
-  await interceptor.get(`/user`).then(success).catch(fail)
+  // console.log(document.cookie.split('access-token=')[1])
+  console.log(NuxtCookies + 'ssssssssssss')
+  console.log(interceptor)
+  await this.$interceptor.get(`/api/user`).then(success).catch(fail)
 }
 
 // 사용자 등록
