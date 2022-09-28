@@ -86,6 +86,7 @@ public class User {
         this.job = job;
         this.family = family;
         this.userType = userType;
+        this.profileImage = profileImage;
     }
 
     public void delete(){

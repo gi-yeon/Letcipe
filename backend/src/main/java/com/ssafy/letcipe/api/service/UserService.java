@@ -15,9 +15,11 @@ import com.ssafy.letcipe.domain.user.UserType;
 import com.ssafy.letcipe.exception.AuthorityViolationException;
 import com.ssafy.letcipe.exception.BadRequestException;
 import com.ssafy.letcipe.util.EncryptUtils;
+import com.ssafy.letcipe.util.FileHandler;
 import com.ssafy.letcipe.util.StringUtils;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,15 +40,22 @@ public class UserService {
     private final EncryptUtils encryptUtils;
     private final StringUtils stringUtils;
 
+    private final FileHandler fileHandler;
+
     @Transactional
-    public void createUser(ReqPostUserDto requestDto) throws NoSuchAlgorithmException {
+    public void createUser(ReqPostUserDto requestDto) throws NoSuchAlgorithmException, FileUploadException {
 
         StringBuilder sb = new StringBuilder();
 
+        // 비밀번호 암호화
         String salt = encryptUtils.getSalt(requestDto.getUserId());
         sb.append(salt).append(requestDto.getPassword());
         String password = encryptUtils.encrypt(sb.toString());
+
+        // 생일 처리
         LocalDate localDate = LocalDate.parse(requestDto.getBirth());
+
+        String profileImgUrl = fileHandler.uploadImage(requestDto.getProfileImg());
 
         // 유저 엔티티 생성
         User user = User.builder()
@@ -61,6 +70,7 @@ public class UserService {
                 .nickname(requestDto.getNickname())
                 .password(password)
                 .phone(requestDto.getPhone())
+                .profileImage(profileImgUrl)
                 .build();
         userRepository.save(user);
     }
