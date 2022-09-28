@@ -24,7 +24,7 @@ public class HadoopController {
         String msg="테스트 성공";
         try {
             String makeJar= new ProcessExecutor()
-                    .command("sh", "/hadoop/dfs/data/make_jar.sh")
+                    .command("bash", "/hadoop/dfs/data/make_jar.sh")
                     .readOutput(true)
                     .execute()
                     .outputUTF8();
