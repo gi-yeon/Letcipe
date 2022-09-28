@@ -12,27 +12,47 @@
             </pattern>
         </encoder>
     </appender>
-    <!-- SYSLOG -->
-    <appender name="SYSLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_DIR}/syslog.log</file>
+    <!-- APILOG -->
+    <appender name="API_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/api/apilog.log</file>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
                 [%-5level] [%d{yyyy-MM-dd HH:mm:ss}] [%msg]%n
             </Pattern>
         </layout>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_DIR}/syslog/syslog.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_DIR}/api/%d{yyyy-MM-dd,aux}/apilog.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
     </appender>
-    <!-- // SYSLOG -->
+    <!-- // APILOG -->
+    <!-- CARTLOG -->
+    <appender name="CART_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/cart/cartlog.log</file>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                [%-5level] [%d{yyyy-MM-dd HH:mm:ss}] [%msg]%n
+            </Pattern>
+        </layout>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/cart/%d{yyyy-MM-dd,aux}/cartlog.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+    <!-- // CARTLOG -->
     <root level="info">
         <appender-ref ref="CONSOLE"/>
     </root>
     <logger name="com.ssafy.letcipe.api.aop.LoggerAspect" level="info" additivity="false">
-        <appender-ref ref="SYSLOG" />
+        <appender-ref ref="API_LOG" />
     </logger>
+    <logger name="com.ssafy.letcipe.api.service.CartService" level="info" additivity="false">
+        <appender-ref ref="CART_LOG" />
+    </logger>
+
 
 </configuration>
