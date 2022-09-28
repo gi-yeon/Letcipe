@@ -27,8 +27,8 @@ public class UserController {
     private final Logger logger = LoggerFactory.getLogger(RecipeController.class);
 
     @PostMapping("")
-    public ResponseEntity createUser(@RequestBody ReqPostUserDto requestDto) throws NoSuchAlgorithmException {
-        userService.createUser(requestDto);
+    public ResponseEntity createUser(@ModelAttribute ReqPostUserDto requestDto) throws NoSuchAlgorithmException {
+        System.out.println(requestDto);
         return ResponseEntity.ok().build();
     }
     @GetMapping("/id/{userId}/exists")

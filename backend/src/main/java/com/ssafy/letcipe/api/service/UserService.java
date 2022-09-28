@@ -16,6 +16,7 @@ import com.ssafy.letcipe.exception.AuthorityViolationException;
 import com.ssafy.letcipe.exception.BadRequestException;
 import com.ssafy.letcipe.util.EncryptUtils;
 import com.ssafy.letcipe.util.StringUtils;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,12 +46,13 @@ public class UserService {
         String salt = encryptUtils.getSalt(requestDto.getUserId());
         sb.append(salt).append(requestDto.getPassword());
         String password = encryptUtils.encrypt(sb.toString());
+        LocalDate localDate = LocalDate.parse(requestDto.getBirth());
 
         // 유저 엔티티 생성
         User user = User.builder()
                 .userId(requestDto.getUserId())
                 .userType(UserType.USER)
-                .birth(requestDto.getBirth())
+                .birth(localDate)
                 .email(requestDto.getEmail())
                 .family(requestDto.getFamily())
                 .gender(requestDto.getGender())
