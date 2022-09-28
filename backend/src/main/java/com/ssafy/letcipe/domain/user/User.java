@@ -1,13 +1,8 @@
 package com.ssafy.letcipe.domain.user;
 
 import com.ssafy.letcipe.api.dto.user.ReqPutUserDto;
-import com.ssafy.letcipe.domain.board.Board;
 import com.ssafy.letcipe.domain.cart.Cart;
 import com.ssafy.letcipe.domain.cartIngredient.CartIngredient;
-import com.ssafy.letcipe.domain.recipe.Recipe;
-import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
-import com.ssafy.letcipe.domain.recipeList.RecipeList;
-import com.ssafy.letcipe.domain.recipeListBookmark.RecipeListBookmark;
 import com.ssafy.letcipe.domain.type.StatusType;
 import lombok.Builder;
 import lombok.Getter;
@@ -91,6 +86,7 @@ public class User {
         this.job = job;
         this.family = family;
         this.userType = userType;
+        this.profileImage = profileImage;
     }
 
     public void delete(){
