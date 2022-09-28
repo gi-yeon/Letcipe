@@ -4,6 +4,8 @@ import com.ssafy.letcipe.api.dto.cart.*;
 import com.ssafy.letcipe.api.dto.ingredient.ResGetIngredientDto;
 import com.ssafy.letcipe.api.dto.recipe.ResGetRecipeDto;
 import com.ssafy.letcipe.api.dto.recipeIngredient.ResGetRecipeIngredientDto;
+import com.ssafy.letcipe.api.dto.user.LogUserDto;
+import com.ssafy.letcipe.api.dto.user.ResGetUserDto;
 import com.ssafy.letcipe.domain.cart.Cart;
 import com.ssafy.letcipe.domain.cart.CartRepository;
 import com.ssafy.letcipe.domain.cartIngredient.CartIngredient;
@@ -16,15 +18,20 @@ import com.ssafy.letcipe.domain.recipeIngredient.RecipeIngredient;
 import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class CartService {
 
     private final UserRepository userRepository;
@@ -40,6 +47,14 @@ public class CartService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
         Recipe recipe = recipeRepository.findById(requestDto.getRecipeId())
                 .orElseThrow(() -> new NullPointerException("레시피를 찾을 수 없습니다."));;
+
+        // 유저 로그 찍기
+        JSONObject json = new JSONObject();
+        json.put("USER",new LogUserDto(user).toJsonMap());
+        // 레시피 로그 찍기
+        ResGetRecipeDto recipeDto = recipeService.getRecipeDto(recipe);
+        json.put("RECIPE",recipeDto.toJsonMap());
+        log.info("{}", json.toString());
 
         cartRepository.save(new Cart(user, recipe, 1));
     }
