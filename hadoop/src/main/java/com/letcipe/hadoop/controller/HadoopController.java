@@ -23,18 +23,12 @@ public class HadoopController {
         HttpStatus status=HttpStatus.OK;
         String msg="테스트 성공";
         try {
-            String mapreduce= new ProcessExecutor()
-                    .command("sh", "/home/letcipe/mapreduce.sh")
+            String makeJar= new ProcessExecutor()
+                    .command("sh", "/hadoop/dfs/make_jar.sh")
                     .readOutput(true)
                     .execute()
                     .outputUTF8();
-            String copyToLocal = new ProcessExecutor()
-                    .command("sh", "/home/letcipe/copy_to_local.sh")
-                    .readOutput(true)
-                    .execute()
-                    .outputUTF8();
-            System.out.println("mapreduce = "+mapreduce);
-            System.out.println("copy to local = "+copyToLocal);
+            System.out.println("make_jar = "+makeJar);
         }catch(Exception e){
             status=HttpStatus.BAD_REQUEST;
             msg=e.getMessage();
