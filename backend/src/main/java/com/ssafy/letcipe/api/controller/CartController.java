@@ -70,5 +70,12 @@ public class CartController {
         cartService.deleteCartIngredient(requestDto, userId);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("cart-history")
+    public ResponseEntity createCartHistory(HttpServletRequest request){
+        Long userId = jwtService.getUserId(request);
+        cartService.createCartHistory(userId);
+        return ResponseEntity.ok().build();
+    }
 }
 

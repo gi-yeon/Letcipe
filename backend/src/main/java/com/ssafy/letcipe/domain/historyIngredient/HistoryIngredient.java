@@ -2,6 +2,8 @@ package com.ssafy.letcipe.domain.historyIngredient;
 
 import com.ssafy.letcipe.domain.history.History;
 import com.ssafy.letcipe.domain.ingredient.Ingredient;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +11,9 @@ import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
+@Builder
 public class HistoryIngredient {
 
     @Id
@@ -26,7 +30,7 @@ public class HistoryIngredient {
     private Ingredient ingredient;
 
     @Column(name = "amount", nullable = false)
-    private int amount;
+    private double amount;
 
     @Column(name = "is_purchased", nullable = false)
     private PurchaseType purchaseType;
