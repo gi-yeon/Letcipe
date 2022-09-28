@@ -3,6 +3,7 @@ package com.ssafy.letcipe.domain.user;
 import com.ssafy.letcipe.api.dto.user.ReqPutUserDto;
 import com.ssafy.letcipe.domain.board.Board;
 import com.ssafy.letcipe.domain.cart.Cart;
+import com.ssafy.letcipe.domain.cartIngredient.CartIngredient;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
 import com.ssafy.letcipe.domain.recipeList.RecipeList;
@@ -72,6 +73,9 @@ public class User {
 
     @OneToMany(fetch = LAZY, mappedBy = "user")
     private List<Cart> carts = new ArrayList<>();
+
+    @OneToMany(fetch = LAZY, mappedBy = "user")
+    private List<CartIngredient> cartIngredients = new ArrayList<>();
 
     @Builder
     public User(String name, String userId, String email, String password, String nickname, String phone, String profileImage, LocalDate birth, GenderType gender, JobType job, Integer family, UserType userType) {

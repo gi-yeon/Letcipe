@@ -24,7 +24,7 @@ public class CartController {
     @PostMapping("cart")
     public ResponseEntity createCart(@RequestBody ReqPostCartDto requestDto, HttpServletRequest request) {
         Long userId = jwtService.getUserId(request);
-        cartService.createCart(requestDto, userId);
+        cartService.createCarts(requestDto, userId);
         return ResponseEntity.ok().build();
     }
 
@@ -69,6 +69,13 @@ public class CartController {
         Long userId = jwtService.getUserId(request);
         cartService.deleteCartIngredient(requestDto, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("cart-history")
+    public ResponseEntity createCartHistory(HttpServletRequest request){
+        Long userId = jwtService.getUserId(request);
+        cartService.createCartHistory(userId);
+        return ResponseEntity.ok().build();
     }
 }
 
