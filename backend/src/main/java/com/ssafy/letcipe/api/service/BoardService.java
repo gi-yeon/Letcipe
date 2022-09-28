@@ -1,6 +1,6 @@
 package com.ssafy.letcipe.api.service;
 
-import com.ssafy.letcipe.api.dto.*;
+import com.ssafy.letcipe.api.dto.board.*;
 import com.ssafy.letcipe.domain.board.Board;
 import com.ssafy.letcipe.domain.board.BoardRepository;
 import com.ssafy.letcipe.domain.boardComment.BoardComment;
@@ -9,8 +9,6 @@ import com.ssafy.letcipe.domain.type.StatusType;
 import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.websocket.AuthenticationException;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
