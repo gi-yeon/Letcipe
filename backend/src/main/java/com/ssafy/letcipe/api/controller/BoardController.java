@@ -1,6 +1,8 @@
 package com.ssafy.letcipe.api.controller;
 
-import com.ssafy.letcipe.api.dto.board.*;
+import com.ssafy.letcipe.api.dto.board.ReqPostBoardDto;
+import com.ssafy.letcipe.api.dto.board.ResGetBoardDto;
+import com.ssafy.letcipe.api.dto.board.ResGetBoardListDto;
 import com.ssafy.letcipe.api.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -8,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 
