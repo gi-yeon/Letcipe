@@ -94,6 +94,25 @@ public class UserService {
                 .build();
     }
 
+    public ResLoginUserDto loginAdmin(ReqLoginUserDto requestDto) throws NoSuchAlgorithmException {
+        StringBuilder sb = new StringBuilder();
+
+        String salt = encryptUtils.getSalt(requestDto.getUserId());
+        sb.append(salt).append(requestDto.getPassword());
+        String password = encryptUtils.encrypt(sb.toString());
+
+        User user = userRepository.findByUserIdAndPasswordAndUserType(requestDto.getUserId(), password, UserType.ADMIN)
+                .orElseThrow(() -> new NullPointerException());
+
+        String token = jwtService.createToken(user);
+        String refreshToken = jwtService.createRefreshToken();
+        user.updateRefreshToken(refreshToken);
+        return new ResLoginUserDto().builder()
+                .accessToken(token)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
     public ResGetUserDto readUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
         return new ResGetUserDto(user);

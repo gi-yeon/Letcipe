@@ -49,6 +49,11 @@ public class UserController {
         return ResponseEntity.ok(userService.loginUser(requestDto));
     }
 
+    @PostMapping("login/admin")
+    public ResponseEntity loginAdmin(@RequestBody ReqLoginUserDto requestDto) throws NoSuchAlgorithmException {
+        return ResponseEntity.ok(userService.loginAdmin(requestDto));
+    }
+
     @PostMapping("token")
     public ResponseEntity updateToken(HttpServletRequest request){
         String token = request.getHeader("access-token");
