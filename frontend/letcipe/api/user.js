@@ -1,3 +1,4 @@
+import interceptor from '../config/interceptor'
 import { apiInstance } from '.'
 
 const api = apiInstance()
@@ -8,6 +9,11 @@ async function login(user, success, fail) {
     .post(`/api/user/login`, JSON.stringify(user))
     .then(success)
     .catch(fail)
+}
+
+// 사용자 id, nickname 얻어오기
+async function readUser(success, fail) {
+  await interceptor.get(`/api/user`).then(success).catch(fail)
 }
 
 // 사용자 등록
@@ -57,6 +63,7 @@ async function myrecipeList(userid, success, fail) {
 export {
   login,
   signup,
+  readUser,
   //   check,
   mypage,
   modifyMember,

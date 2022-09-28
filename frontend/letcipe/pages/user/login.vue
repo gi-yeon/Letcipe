@@ -7,10 +7,20 @@
           <div>
             <div>
               <div class="login-input">
-                <v-text-field label="아이디" :rules="rules" hide-details="auto"></v-text-field>
+                <v-text-field
+                  v-model="id"
+                  label="아이디"
+                  :rules="rules"
+                  hide-details="auto"
+                ></v-text-field>
               </div>
               <div class="login-input">
-                <v-text-field label="비밀번호" :rules="rules" hide-details="auto"></v-text-field>
+                <v-text-field
+                  v-model="pw"
+                  label="비밀번호"
+                  :rules="rules"
+                  hide-details="auto"
+                ></v-text-field>
               </div>
             </div>
             <div class="find-wrap" @click="moveFindIdPW">
@@ -20,8 +30,12 @@
           </div>
           <div>
             <div class="btn-wrap">
-              <v-btn class="btn" color="#AAC821" @click="moveMain">로그인</v-btn>
-              <v-btn class="btn" color="#AAC821" @click="moveAgree">회원가입</v-btn>
+              <v-btn class="btn" color="#AAC821" @click="loginTemp"
+                >로그인</v-btn
+              >
+              <v-btn class="btn" color="#AAC821" @click="moveAgree"
+                >회원가입</v-btn
+              >
             </div>
           </div>
         </div>
@@ -31,19 +45,33 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 export default {
   name: 'LoginPage',
   data() {
     return {
+      id: null,
+      pw: null,
       rules: [
         (value) => !!value || 'Required.',
         (value) => (value && value.length >= 3) || 'Min 3 characters',
       ],
     }
   },
+  computed: {
+    ...mapState('user', ['accessToken', 'refreshToken', 'userId', 'nickname']),
+  },
   methods: {
+    ...mapActions('user', ['login', 'readUser']),
     moveAgree() {
       this.$router.push('/user/agree')
+    },
+    loginTemp() {
+      const user = {
+        userId: this.id,
+        password: this.pw,
+      }
+      this.login(user).then(this.readUser).then(this.moveMain)
     },
     moveMain() {
       this.$router.push('/main')

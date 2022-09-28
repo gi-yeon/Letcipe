@@ -1,5 +1,6 @@
 import {
   login,
+  readUser,
   signup,
   //   check,
   mypage,
@@ -9,26 +10,36 @@ import {
   myrecipeList,
 } from '@/api/user'
 
-export const state = () => ({})
+export const state = () => ({
+  userId: 0,
+  nickname: '',
+})
 
-export const mutations = {}
+export const mutations = {
+  SET_USER(state, data) {
+    state.userId = data.id
+    state.nickname = data.nickname
+  },
+}
 
 export const getters = {}
 
 export const actions = {
-  async login({ commit }, object) {
+  async login({ commit }, user) {
     await login(
-      {
-        username: object.id,
-        password: object.password,
-      },
+      user,
       ({ data }) => {
-        commit('')
+        this.$cookies.set('access-token', data.accessToken)
       },
       (error) => {
         console.log(error)
       }
     )
+  },
+  async readUser({ commit }) {
+    await readUser(({ data }) => {
+      commit('SET_USER', data)
+    })
   },
   async signup({ commit }, user) {
     await signup(
