@@ -40,7 +40,7 @@
               <v-img
                 v-if="url != null"
                 max-width="50%"
-                :src="image"
+                :src="url"
                 class="d-flex justify-center"
               ></v-img>
             </div>
@@ -411,6 +411,7 @@ export default {
     Preview_image() {
       if (this.image != null) {
         this.url = URL.createObjectURL(this.image)
+        console.log(this.url)
       } else {
         this.url = null
       }

@@ -6,7 +6,7 @@
           <v-card-title
             class="justify-center"
             style="background-color: white; font-size: 1.7rem"
-            >레시피 등록</v-card-title
+            >레시피 수정</v-card-title
           >
           <v-divider></v-divider>
           <v-card>
@@ -40,7 +40,7 @@
               <v-img
                 v-if="url != null"
                 max-width="50%"
-                :src="`localhost:8888/api/image/f9857c80-eb10-4431-a087-7a4393265749.png`"
+                :src="url"
                 class="d-flex justify-center"
               ></v-img>
             </div>
@@ -246,9 +246,9 @@
               </div>
               <div class="d-flex justify-center">
                 <v-img
-                  v-if="step.imageUrl != null"
+                  v-if="step.url != null"
                   max-width="50%"
-                  :src="step.img"
+                  :src="step.url"
                   class="d-flex justify-center"
                 ></v-img>
               </div>
@@ -285,7 +285,7 @@
             </div>
             <div class="d-flex justify-center">
               <v-input>
-                <hash-tags @setTags="setTags"></hash-tags>
+                <hash-tags @setTags="setTags"> </hash-tags>
               </v-input>
             </div>
             <br />
@@ -411,19 +411,25 @@ export default {
       console.log(this.recipeDetail)
       if (this.recipeDetail !== null) {
         this.title = this.recipeDetail.title
-        this.image = this.recipeDetail.repImg
+        this.url = this.recipeDetail.repImg
         this.content = this.recipeDetail.content
         this.category = this.recipeDetail.category
         this.cookingTime = this.recipeDetail.cookingTime
         this.serving = this.recipeDetail.serving
-        this.steps = this.recipeDetail.recipeSteps
+        // this.steps = this.recipeDetail.recipeSteps
+
+        this.recipeDetail.recipeSteps.forEach((rs) => {
+          const step = {
+            step: rs.step,
+            img: '',
+            url: rs.img,
+            content: rs.content,
+          }
+          this.steps.push(step)
+        })
 
         for (let i = 0; i < this.recipeDetails.ingredients.length; i++) {
-          this.set$(
-            this.ingredients,
-            i,
-            this.recipeDetail.ingredients[i].ingredient
-          )
+          this.ingredients.push(this.recipeDetails.ingredients[i])
         }
 
         this.recipeDetail.tags?.forEach((t) => {
