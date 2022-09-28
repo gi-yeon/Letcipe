@@ -10,9 +10,28 @@ import {
   myrecipeList,
 } from '@/api/user'
 
-export const state = () => ({})
+export const state = () => ({
+  idcheck: true,
+  nickCheck: true,
+})
 
-export const mutations = {}
+export const mutations = {
+  SET_IDCHECK_TRUE(state) {
+    state.idcheck = true
+  },
+
+  SET_IDCHECK_FALSE(state) {
+    state.idcheck = false
+  },
+
+  SET_NICKCHECK_TRUE(state) {
+    state.nickCheck = true
+  },
+
+  SET_NICKCHECK_FALSE(state) {
+    state.nickCheck = false
+  },
+}
 
 export const getters = {}
 
@@ -32,24 +51,26 @@ export const actions = {
     )
   },
   async idCheck({ commit }, userid) {
-    await idCheck(
-      userid,
-      ({ data }) => {
-        console.log(data)
+    await idCheck(userid, 
+      (res) => {
+        console.log(res.status)
+        commit('SET_IDCHECK_FALSE')
       },
       (error) => {
-        console.log(error.response.status)
-      }
-    )
+        console.log(error.status)
+        commit('SET_IDCHECK_TRUE')
+      })
   },
   async nicknameCheck({ commit }, nickname) {
     await nicknameCheck(
       nickname,
-      ({ data }) => {
-        commit('')
+      (res) => {
+        console.log(res.status)
+        commit('SET_NICKCHECK_FALSE')
       },
       (error) => {
         console.log(error)
+        commit('SET_NICKCHECK_TRUE')
       }
     )
   },

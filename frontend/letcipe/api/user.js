@@ -1,6 +1,7 @@
-import { apiInstance } from '.'
+import { apiInstance, fileInstance } from '.'
 
 const api = apiInstance()
+const fileApi = fileInstance()
 
 // 사용자 로그인
 async function login(user, success, fail) {
@@ -12,12 +13,15 @@ async function login(user, success, fail) {
 
 // 사용자 등록
 async function signup(user, success, fail) {
-  await api.post(`/api/user`, user).then(success).catch(fail)
+  await fileApi.post(`/api/user`, user).then(success).catch(fail)
 }
 
 // 사용자 정보 조회
 async function idCheck(userid, success, fail) {
-  await api.get(`/api/user/id/${userid}/exists`).then(success).catch(fail)
+  await api
+    .get(`/api/user/id/${userid}/exists`)
+    .then(success)
+    .catch(fail)
 }
 
 async function nicknameCheck(nickname, success, fail) {

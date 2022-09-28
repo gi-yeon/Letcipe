@@ -21,6 +21,7 @@
                   <v-dialog v-model="dialogId" persistent max-width="290">
                     <template #activator="{ on, attrs }">
                       <v-btn
+                        :disabled="id.length < 6"
                         color="letcipe"
                         height="48px"
                         style="color: white"
@@ -30,7 +31,7 @@
                         >중복확인</v-btn
                       >
                     </template>
-                    <v-card v-if="checkId === true">
+                    <v-card v-if="idcheck === true">
                       <v-card-title class="text-h5">Caution</v-card-title>
                       <v-card-text
                         >중복되는 아이디가 있습니다. 다른 아이디를
@@ -46,7 +47,7 @@
                         >
                       </v-card-actions>
                     </v-card>
-                    <v-card v-if="checkId === false">
+                    <v-card v-if="idcheck === false">
                       <v-card-title class="text-h5">Caution</v-card-title>
                       <v-card-text>사용가능한 아이디입니다.</v-card-text>
                       <v-card-actions>
@@ -134,6 +135,7 @@
                   <v-dialog v-model="dialogNick" persistent max-width="290">
                     <template #activator="{ on, attrs }">
                       <v-btn
+                        :disabled="nickNm.length < 2"
                         color="letcipe"
                         height="48px"
                         style="color: white"
@@ -143,7 +145,7 @@
                         >중복확인</v-btn
                       >
                     </template>
-                    <v-card v-if="checkNick === true">
+                    <v-card v-if="nickCheck === true">
                       <v-card-title class="text-h5">Caution</v-card-title>
                       <v-card-text
                         >중복되는 닉네임이 있습니다. 다른 닉네임을
@@ -159,7 +161,7 @@
                         >
                       </v-card-actions>
                     </v-card>
-                    <v-card v-if="checkNick === false">
+                    <v-card v-if="nickCheck === false">
                       <v-card-title class="text-h5">Caution</v-card-title>
                       <v-card-text>사용가능한 닉네임입니다.</v-card-text>
                       <v-card-actions>
@@ -191,7 +193,6 @@
                   ></v-file-input>
                 </div>
               </div>
-
               <div class="d-flex flex-column">
                 <div>성별</div>
                 <div class="d-flex justify-space-between mb-4">
@@ -345,16 +346,6 @@
               </div>
             </div>
           </v-form>
-          <v-btn
-                  :loading="isLoading"
-                  class="white--text"
-                  color="letcipe"
-                  depressed
-                  v-bind="attrs"
-                  @click="userJoin()"
-                  v-on="on"
-                  >가입</v-btn
-                >
           <v-card-actions>
             <v-btn text @click="clearForm">지우기</v-btn>
             <v-spacer></v-spacer>
@@ -396,7 +387,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
   name: 'SignupPage',
   data() {
@@ -476,15 +467,16 @@ export default {
       famCnt: [1, 2, 3, 4, '5인 이상'],
       preview_profile: null,
       dialogId: false,
-      checkId: true,
       dialogNick: false,
-      checkNick: true,
       dialogCode: false,
       checkCode: true,
       dialogCode2: false,
       checkValidNum: true,
       dialogSignup: false,
     }
+  },
+  computed: {
+    ...mapState('user', ['idcheck', 'nickCheck']),
   },
   methods: {
     ...mapActions('user', ['idCheck', 'nicknameCheck', 'signup']),
@@ -583,7 +575,7 @@ export default {
       this.idCheck(id)
     },
     nicknameDupCheck(nickNm) {
-      console.log(nickNm)
+      this.nicknameCheck(nickNm)
     },
     CodeCheck(phoneRef, phoneFirst, phoneSecond) {
       console.log(phoneRef, phoneFirst, phoneSecond)
@@ -592,13 +584,12 @@ export default {
       console.log(validNum)
     },
     userJoin() {
-      console.log(this.file)
       const formData = new FormData();
-      formData.append('name',"오성준")
-      formData.append('userId',"osj2387")
-      formData.append('password',"wldPgm7845!")
+      formData.append('name',this.userNm)
+      formData.append('userId',this.id)
+      formData.append('password',this.pw)
       formData.append('email',"osj2387@naver.com")
-      formData.append('nickname',"keeve")
+      formData.append('nickname',this.nickNm)
       formData.append('phone',"010-1234-1234")
       formData.append('family',4)
       formData.append('birth',"1997-03-17")
