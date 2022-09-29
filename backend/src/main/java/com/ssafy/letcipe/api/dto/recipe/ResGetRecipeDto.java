@@ -11,7 +11,9 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Builder
@@ -49,5 +51,12 @@ public class ResGetRecipeDto {
         }
         this.ingredients = ingredients;
 
+    }
+
+    public Map<String,Object> toJsonMap() {
+        Map<String,Object> map = new HashMap<>();
+        map.put("id",id);
+        map.put("category",category);
+        return map;
     }
 }

@@ -34,20 +34,20 @@ public class LoggerAspect {
             String methodName = proceedingJoinPoint.getSignature().getName();
 
             Map<String, Object> params = new HashMap<>();
-
+            JSONObject jsonObject = new JSONObject();
             try {
                 String token = request.getHeader("access-token"); // TODO 토큰으로부터 user id 추출해야 함
                 // TODO 유저 id 존재 시 유저 정보 파싱하여 넣어줌
                 params.put("controller", controllerName);
                 params.put("method", methodName);
                 params.put("params", getParams(request));
-                params.put("log_time", LocalDateTime.now());
                 params.put("request_uri", request.getRequestURI());
                 params.put("http_method", request.getMethod());
+                jsonObject.put("REQUEST",params);
             } catch (Exception e) {
                 log.error("LoggerAspect error", e);
             }
-            log.info("REQUEST:{}", params); // param에 담긴 정보들을 한번에 로깅한다.
+            log.info("{}", jsonObject.toString()); // param에 담긴 정보들을 한번에 로깅한다.
 
             return result;
 
