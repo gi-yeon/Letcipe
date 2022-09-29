@@ -1,14 +1,12 @@
 package com.ssafy.letcipe.api.dto.recipe;
 
-import com.ssafy.letcipe.api.dto.ingredient.ResGetIngredientDto;
-import com.ssafy.letcipe.api.dto.recipeComment.ResGetRecipeCommentDto;
 import com.ssafy.letcipe.api.dto.recipeIngredient.ResGetRecipeIngredientDto;
 import com.ssafy.letcipe.api.dto.recipeStep.ResGetRecipeStepDto;
 import com.ssafy.letcipe.api.dto.recipeTag.ResGetRecipeTagDto;
 import com.ssafy.letcipe.api.dto.user.ResGetUserDto;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
-import com.ssafy.letcipe.domain.recipeComment.RecipeComment;
+
 import com.ssafy.letcipe.domain.recipeLike.RecipeLike;
 import com.ssafy.letcipe.domain.recipeStep.RecipeStep;
 import com.ssafy.letcipe.domain.recipeTag.RecipeTag;
@@ -35,7 +33,6 @@ public class ResGetDetailRecipeDto {
     boolean isLike;
     int recipeBookmark;
     boolean isBookmark;
-    List<ResGetRecipeCommentDto> recipeComment;
     List<ResGetRecipeTagDto> tags;
     List<ResGetRecipeStepDto> recipeSteps;
     List<ResGetRecipeIngredientDto> ingredients;
@@ -50,10 +47,6 @@ public class ResGetDetailRecipeDto {
         this.category = recipe.getCategory();
         this.recipeLike = recipe.getLikes().size();
         this.recipeBookmark = recipe.getBookmarks().size();
-        this.recipeComment = new ArrayList<>();
-        for (RecipeComment comment : recipe.getComments()) {
-            recipeComment.add(ResGetRecipeCommentDto.createDto(comment));
-        }
 
         this.tags = new ArrayList<>();
         for (RecipeTag tag : recipe.getTags()) {

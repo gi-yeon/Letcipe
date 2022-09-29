@@ -6,8 +6,6 @@ import com.ssafy.letcipe.api.dto.recipe.ReqPutRecipeDto;
 import com.ssafy.letcipe.api.dto.recipe.ResGetDetailRecipeDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqPostRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqDeleteRecipeBookmarkDto;
-import com.ssafy.letcipe.api.dto.recipeComment.ReqPostRecipeCommentDto;
-import com.ssafy.letcipe.api.dto.recipeComment.ReqPutRecipeCommentDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqPostRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqDeleteRecipeLikeDto;
 import com.ssafy.letcipe.api.service.RecipeService;
@@ -89,24 +87,6 @@ public class RecipeController {
     @DeleteMapping("/mark")
     ResponseEntity deleteRecipeBookmark(@RequestBody ReqDeleteRecipeBookmarkDto requestDto) throws SQLException {
         recipeService.deleteBookmark(requestDto, 1L);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/comment")
-    ResponseEntity createRecipeComment(@RequestBody ReqPostRecipeCommentDto requestDto) throws SQLException {
-        recipeService.createComment(requestDto, 1L);
-        return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/comment")
-    ResponseEntity updateRecipeComment(@RequestBody ReqPutRecipeCommentDto requestDto) throws SQLException {
-        recipeService.updateComment(requestDto);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/comment/{recipeCommentId}")
-    ResponseEntity deleteRecipeComment(@PathVariable Long recipeCommentId) throws SQLException {
-        recipeService.deleteComment(recipeCommentId);
         return ResponseEntity.ok().build();
     }
 
