@@ -32,7 +32,7 @@ public class IngredientService {
         return ingredientRepository.findById(id).orElseThrow(() -> new NullPointerException("재료를 찾을 수 없습니다."));
     }
 
-    public Map<String,Object> searchIngredient(String keyword) {
+    public   List<ResGetIngredientDto>  searchIngredient(String keyword) {
         List<Ingredient> searched = ingredientRepository.searchIngredient(keyword);
 
         // 검색 결과 리스트
@@ -51,10 +51,7 @@ public class IngredientService {
             else
                 return similarity1-similarity2;
         });
-        Map<String,Object> map = new LinkedHashMap<>();
-        for (int i = 0; i<dtos.size() && map.size() <= 10; i++) {
-            map.putIfAbsent(dtos.get(i).getName(),dtos.get(i));
-        }
-        return map;
+
+        return dtos;
     }
 }

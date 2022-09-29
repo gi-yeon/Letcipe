@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReqPostCartIngredientDto {
-    Long IngredientId;
+    Long ingredientId;
     char operator;
 }
