@@ -1,9 +1,22 @@
 <template>
   <div id="app">
     <v-app id="inspire">
-      <div class="search-container">
-        <v-container style="padding: 0%">
-          <v-tabs v-model="tab" centered icons-and-text color="red accent-3" hide-slider>
+      <div class="search-page">
+        <v-container class="search-container d-flex-row">
+          <div class="search-head-wrap">
+            <div class="d-flex justify-space-between pb-3">
+              <v-icon>mdi-window-close</v-icon>
+              <div style="font-size: x-large">검색하기</div>
+              <v-icon>mdi-blank</v-icon>
+            </div>
+          </div>
+          <v-tabs
+            v-model="tab"
+            centered
+            icons-and-text
+            color="red accent-3"
+            hide-slider
+          >
             <v-tabs-slider></v-tabs-slider>
 
             <v-tab href="#tab-1" style="width: 50%">
@@ -30,7 +43,8 @@
                       small
                       class="pt-0 pb-0"
                       @click="byRecipe = true"
-                    >레시피</v-btn>
+                      >레시피</v-btn
+                    >
                     <v-btn
                       style="width: 90%"
                       :color="byRecipe ? 'black' : 'red accent-3'"
@@ -38,7 +52,8 @@
                       small
                       class="pt-0 pb-0"
                       @click="byRecipe = false"
-                    >레시피 리스트</v-btn>
+                      >레시피 리스트</v-btn
+                    >
                   </v-row>
                 </v-col>
                 <v-col class="d-flex pr-0 pl-0" align="center">
@@ -47,43 +62,98 @@
                     label="이름으로 검색"
                     outlined
                     class="pt-3 pb-3"
-                    color="black"
+                    color="letcipe"
+                    append-outer-icon="mdi-magnify"
+                    @click:append-outer="searchByName()"
                     @keyup.enter="searchByName"
                   ></v-text-field>
                 </v-col>
               </v-row>
               <v-divider></v-divider>
-              <div v-if="recipebyName != null && recipebyName.length > 0">
-                <v-card-subtitle>"{{ byname }}" 검색 결과</v-card-subtitle>
-                <div v-for="(recipeInfo, i) in recipebyName" :key="i">
-                  <v-list-item three-line style="background-color: white">
+              <div v-if="recipes != null && recipes.length > 0">
+                <v-card-subtitle
+                  >"{{ searchedName }}" 검색 결과</v-card-subtitle
+                >
+                <div v-for="(recipeInfo, i) in recipes" :key="i">
+                  <v-list-item three-line>
                     <v-list-item-avatar tile size="100">
-                      <v-img src="https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg"></v-img>
+                      <v-img :src="recipeInfo['repImg']"></v-img>
                     </v-list-item-avatar>
                     <v-list-item-content>
                       <v-list-item-title>
-                        {{
-                        recipeInfo.recipe.title
-                        }}
+                        {{ recipeInfo['title'] }}
                       </v-list-item-title>
 
                       <v-list-item-subtitle>
-                        {{
-                        recipeInfo.recipe.content
-                        }}
+                        {{ recipeInfo['content'] }}
                       </v-list-item-subtitle>
                       <div class="d-flex justify-space-between">
                         <v-list-item-subtitle>
-                          <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
-                          {{ recipeInfo.recipe.recipeLike }}
+                          <v-icon small color="pink lighten-1"
+                            >mdi-cards-heart</v-icon
+                          >
+                          {{ recipeInfo['recipeLike'] }}
                         </v-list-item-subtitle>
                         <v-list-item-subtitle style="text-align: right">
-                          <v-btn small dark>+담기</v-btn>
+                          <v-btn small color="letcipe">+담기</v-btn>
                         </v-list-item-subtitle>
                       </div>
                     </v-list-item-content>
                   </v-list-item>
                   <v-divider></v-divider>
+                </div>
+                <div class="text-center">
+                  <v-pagination
+                    v-model="Page"
+                    color="letcipe"
+                    :length="TotalPage"
+                    prev-icon="mdi-menu-left"
+                    next-icon="mdi-menu-right"
+                    @input="handlePage"
+                  ></v-pagination>
+                </div>
+              </div>
+              <div v-if="recipeLists != null && recipeLists.length > 0">
+                <v-card-subtitle
+                  >"{{ searchedName }}" 검색 결과</v-card-subtitle
+                >
+                <div v-for="(recipeInfo, i) in recipeLists" :key="i">
+                  <v-list-item three-line>
+                    <v-list-item-avatar tile size="100">
+                      <v-img :src="recipeInfo['repImg']"></v-img>
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-list-item-title>
+                        {{ recipeInfo['name'] }}
+                      </v-list-item-title>
+
+                      <v-list-item-subtitle>
+                        {{ recipeInfo['content'] }}
+                      </v-list-item-subtitle>
+                      <div class="d-flex justify-space-between">
+                        <v-list-item-subtitle>
+                          <v-icon small color="pink lighten-1"
+                            >mdi-cards-heart</v-icon
+                          >
+                          {{ recipeInfo['recipeLike'] }}
+                        </v-list-item-subtitle>
+                        <v-list-item-subtitle style="text-align: right">
+                          <v-btn small color="letcipe">+담기</v-btn>
+                        </v-list-item-subtitle>
+                      </div>
+                    </v-list-item-content>
+                  </v-list-item>
+                  <v-divider></v-divider>
+                </div>
+                <div class="text-center">
+                  <v-pagination
+                    v-model="commentPage"
+                    color="letcipe"
+                    :length="commentTotalPage"
+                    prev-icon="mdi-menu-left"
+                    next-icon="mdi-menu-right"
+                    @input="handlePage"
+                  ></v-pagination>
                 </div>
               </div>
             </v-tab-item>
@@ -91,8 +161,8 @@
               <v-row>
                 <v-col align="center">
                   <v-autocomplete
-                    v-model="model"
-                    :items="items"
+                    v-model="keyword"
+                    :items="ingredientsList"
                     :loading="isLoading"
                     :search-input.sync="search"
                     clearable
@@ -104,23 +174,27 @@
                     label="재료로 검색"
                     outlined
                     class="pt-3 pb-3"
-                    color="black"
+                    color="letcipe"
                     style="width: 90%"
+                    append-outer-icon="mdi-magnify"
+                    @keyup="ingre(search)"
                   >
                     <template #no-data>
                       <v-list-item>
-                        <v-list-item-title>일치하는 재료가 없습니다.</v-list-item-title>
+                        <v-list-item-title
+                          >일치하는 재료가 없습니다.</v-list-item-title
+                        >
                       </v-list-item>
                     </template>
                     <template #item="{ item }">
                       <v-list-item-content @click="selectIngre(item)">
-                        <v-list-item-title v-text="item.name"></v-list-item-title>
+                        <v-list-item-title
+                          v-text="item.name"
+                        ></v-list-item-title>
                       </v-list-item-content>
                       <v-list-item-action @click="selectIngre(item)">
                         <v-chip :color="colors[item.category]" label>
-                          {{
-                          item.category
-                          }}
+                          {{ item.category }}
                         </v-chip>
                       </v-list-item-action>
                     </template>
@@ -128,66 +202,100 @@
                 </v-col>
               </v-row>
 
-              <v-card-subtitle v-if="isSelected.length != 0">선택한 재료 목록</v-card-subtitle>
+              <v-card-subtitle v-if="isSelected.length != 0"
+                >선택한 재료 목록</v-card-subtitle
+              >
               <div align="center">
                 <v-row class="pb-5" style="width: 90%">
                   <div v-for="(item, i) in isSelected" :key="i">
                     <v-col>
-                      <v-chip label :color="colors[item.category]">
-                        {{
-                        item.name
-                        }}
+                      <v-chip
+                        label
+                        :color="colors[item.category]"
+                        @click="deleteIngre(i)"
+                      >
+                        {{ item.name }}<v-icon small>mdi-window-close</v-icon>
                       </v-chip>
                     </v-col>
                   </div>
                 </v-row>
               </div>
               <v-divider></v-divider>
-              <div v-if="recipebyIngre != null && recipebyIngre.length > 0">
+              <div
+                v-if="
+                  isSelected.length > 0 &&
+                  recipesIngre != null &&
+                  recipesIngre.length > 0
+                "
+              >
                 <v-card-subtitle>재료 기반 추천 레시피</v-card-subtitle>
-                <div v-for="(recipeInfo, i) in recipebyIngre" :key="i">
+                <div v-for="(recipeInfo, i) in recipesIngre" :key="i">
                   <v-list-item three-line style="background-color: white">
                     <v-list-item-avatar tile size="100">
-                      <v-img src="https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg"></v-img>
+                      <v-img :src="recipeInfo['repImg']"></v-img>
                     </v-list-item-avatar>
                     <v-list-item-content>
                       <v-list-item-title>
-                        {{
-                        recipeInfo.recipe.title
-                        }}
+                        {{ recipeInfo['title'] }}
                       </v-list-item-title>
 
                       <v-list-item-subtitle>
-                        {{
-                        recipeInfo.recipe.content
-                        }}
+                        {{ recipeInfo['content'] }}
                       </v-list-item-subtitle>
                       <div class="d-flex justify-space-between">
                         <v-list-item-subtitle>
-                          <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
-                          {{ recipeInfo.recipe.recipeLike }}
+                          <v-icon small color="pink lighten-1"
+                            >mdi-cards-heart</v-icon
+                          >
+                          {{ recipeInfo['recipeLike'] }}
                         </v-list-item-subtitle>
+
                         <v-list-item-subtitle style="text-align: right">
-                          선택한 재료 4개를 포함하고
-                          있어요.
+                          <v-btn small color="letcipe">+담기</v-btn>
                         </v-list-item-subtitle>
                       </div>
                     </v-list-item-content>
                   </v-list-item>
                   <v-divider></v-divider>
                 </div>
+                <div class="text-center">
+                  <v-pagination
+                    v-model="currentPage"
+                    color="letcipe"
+                    :length="TotalPage"
+                    prev-icon="mdi-menu-left"
+                    next-icon="mdi-menu-right"
+                    @input="handlePage"
+                  ></v-pagination>
+                </div>
               </div>
               <div
                 v-if="
                   isSelected.length == 0 ||
-                  recipebyIngre == null ||
-                  recipebyIngre.length == 0
+                  recipesIngre == null ||
+                  recipesIngre.length == 0
                 "
               >
                 <v-img src="/img/noSearchIngre.png"></v-img>
               </div>
             </v-tab-item>
           </v-tabs-items>
+
+          <v-dialog v-model="dialogSameIngre" persistent max-width="290">
+            <v-card>
+              <v-card-title>Caution</v-card-title>
+              <v-card-text>이미 추가된 재료입니다.</v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="green darken-1"
+                  text
+                  @click="dialogSameIngre = false"
+                  >확인</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-container>
       </div>
     </v-app>
@@ -195,144 +303,148 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 export default {
   name: 'SearchMain',
   data() {
     return {
-      byname: null,
-
+      TotalPage: 1,
+      currentPage: 1,
+      byname: '',
+      searchedName: '',
+      dialogSameIngre: false,
       byRecipe: true,
       scroll: 0,
-      scrollTarget: null,
-      colors: { 채소: 'light-green', '콩 견과류': 'yellow' },
+      scrollTarget: '',
+      colors: {
+        '가루 분말': 'purple',
+        '감자 고구마': 'pink',
+        고기: 'pink darken-3',
+        곡류: 'purple lighten-1',
+        과일: 'red lighten-5',
+        과자: 'green lighten-3',
+        '국물 육수': 'green',
+        기름: 'yellow darken-4',
+        기타: 'blue lighten-3',
+        달걀: 'blue darken-4',
+        '떡 면': 'red',
+        '묵 두부': 'purple darken-3',
+        빵: 'red lighten-2',
+        어패류: 'yellow lighten-1',
+        '유제품 치즈': 'blue darken-2',
+        '음료 주류': 'green lighten-1',
+        '음식 식품': 'pink lighten-3',
+        절임류: 'light-green darken-4',
+        '조미료 향신료 소스': 'blue',
+        채소: 'light-green',
+        '초콜릿 사탕': 'light-green lighten-2',
+        '콩 견과류': 'yellow',
+        해조류: 'grey',
+        '햄 소시지': 'black',
+      },
       isLoading: false,
       items: [],
-      model: null,
+      keyword: '',
       search: null,
       tab: null,
       isSelected: [],
-      recipebyName: null,
-      recipebyIngre: null,
+      selectedIngre: '',
     }
   },
-  computed: {},
-  watch: {
-    search(val) {
-      if (this.items.length > 0) return
-
-      this.isLoading = true
-      // 데이터 받아와서 넣는 작업 필요
-      this.items = [
-        {
-          id: 943,
-          name: '양파',
-          category: '채소',
-          measure: '개',
-          gml: 300.0,
-        },
-        {
-          id: 567,
-          name: '양파즙',
-          category: '콩 견과류',
-          measure: 'ml',
-          gml: 1.0,
-        },
-      ]
-      this.isLoading = false
-    },
+  computed: {
+    ...mapState('ingredients', ['ingredientsList']),
+    ...mapState('search', ['recipes', 'recipesIngre', 'recipeLists']),
   },
+  watch: {},
   methods: {
-    selectIngre(item) {
-      if (!this.isSelected.includes(item)) this.isSelected.push(item)
-      else {
-        alert('이미 추가된 재료입니다.')
+    ...mapActions('ingredients', ['searchIngredient']),
+    ...mapActions('search', ['getRecipes', 'getRecipesIngre', 'getRecipeList']),
+    ingre(keyword) {
+      if (keyword != null && keyword.length > 0) {
+        keyword = keyword.trim()
+        if (keyword.length > 0 && keyword != null) {
+          this.searchIngredient(keyword)
+        }
       }
-      // 재로를 추가할 때마다 axio요청 넣는 함수 작성
-      this.recipebyIngre = [
-        {
-          recipe: {
-            id: 1,
-            nickname: '싸피10기',
-            title: '고르곤졸라피자',
-            content: `만만치 않은 가격에도 도우 반죽 때문에 집에서 만들기 영 꺼려졌던 피자.
-						토르티야로 간편하게 해결하세요!
-						꼬릿하지만 묘한 매력이 있는 고르곤졸라치즈를 얹으면
-						10분 만에 풍미 가득한 피자가 완성되죠. 꿀에 찍어 먹으면 더 맛있어요.`,
-            cookingTime: 10,
-            serving: 4,
-            repImg: 'adsasdasd',
-            recipeLike: 21,
-            recipeBookmark: 16,
-          },
-          amount: 3,
-        },
-        {
-          recipe: {
-            id: 4,
-            nickname: '싸피7기',
-            title: '시카고피자',
-            content: '만만치 않은 가격!',
-            cookingTime: 2,
-            serving: 2,
-            repImg: 'fsdfadasd',
-            recipeLike: 21,
-            recipeBookmark: 16,
-          },
-          amount: 1,
-        },
-      ]
+    },
+    selectIngre(item) {
+      if (!String(this.selectedIngre).includes(String(item.id))) {
+        this.isSelected.push(item)
+        if (this.selectedIngre.length === 0) {
+          this.selectedIngre = item.id
+        } else {
+          this.selectedIngre = this.selectedIngre + ',' + item.id
+        }
+      } else {
+        this.dialogSameIngre = true
+      }
 
-      console.log(item)
+      if (this.selectedIngre !== '') {
+        const searchObject = {
+          ingredients: this.selectedIngre,
+          size: 5,
+          page: 0,
+        }
+        this.getRecipesIngre(searchObject)
+      }
+    },
+    deleteIngre(index) {
+      if (this.isSelected.length === 1) {
+        this.selectedIngre = ''
+      } else {
+        this.selectedIngre = this.selectedIngre
+          .toString()
+          .replace(`,${this.isSelected[index].id}`, '')
+      }
+      this.isSelected.splice(index, 1)
+      if (this.selectedIngre !== '') {
+        const searchObject = {
+          ingredients: this.selectedIngre,
+          size: 5,
+          page: 0,
+        }
+        this.getRecipesIngre(searchObject)
+      }
     },
     searchByName() {
-      // this.byname을 보내서 검색 결과 가져오는 함수 작성
-      this.recipebyName = [
-        {
-          recipe: {
-            id: 1,
-            nickname: '싸피10기',
-            title: '고르곤졸라피자',
-            content: `만만치 않은 가격에도 도우 반죽 때문에 집에서 만들기 영 꺼려졌던 피자.
-						토르티야로 간편하게 해결하세요!
-						꼬릿하지만 묘한 매력이 있는 고르곤졸라치즈를 얹으면
-						10분 만에 풍미 가득한 피자가 완성되죠. 꿀에 찍어 먹으면 더 맛있어요.`,
-            cookingTime: 10,
-            serving: 4,
-            repImg: 'adsasdasd',
-            recipeLike: 21,
-            recipeBookmark: 16,
-          },
-          amount: 3,
-        },
-        {
-          recipe: {
-            id: 4,
-            nickname: '싸피7기',
-            title: '시카고피자',
-            content: '만만치 않은 가격!',
-            cookingTime: 2,
-            serving: 2,
-            repImg: 'fsdfadasd',
-            recipeLike: 21,
-            recipeBookmark: 16,
-          },
-          amount: 1,
-        },
-      ]
+      if (this.byRecipe) {
+        const searchObject = {
+          keyword: this.byname,
+          size: 5,
+          page: 0,
+        }
+        this.getRecipes(searchObject)
+      } else {
+        const searchObject = {
+          keyword: this.byname,
+          size: 5,
+          page: 0,
+        }
+        this.getRecipeList(searchObject)
+      }
+      this.searchedName = this.byname
     },
   },
 }
 </script>
 
 <style scoped>
+.search-page {
+  /* padding-top: 70px; */
+  padding-bottom: 70px;
+  padding: 4%;
+}
+.search-page-head {
+  padding: 4%;
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  /* border: 1px solid gray; */
+}
 .search-container {
   position: sticky;
   height: 100%;
-
-  background-image: url('/bg/bg_img.png');
-  background-repeat: repeat;
-
   color: black;
+
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }
 :deep(.v-input__icon.v-input__icon--append) {
   display: none;

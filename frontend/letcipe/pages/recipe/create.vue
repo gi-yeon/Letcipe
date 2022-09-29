@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <v-app id="inspire">
-      <div class="makerecipe-container">
+      <div class="create-container">
         <v-container style="padding: 0%">
           <v-card-title
             class="justify-center"
@@ -73,7 +73,7 @@
             <v-card-title class="recipe-component">추가 정보</v-card-title>
             <div class="d-flex justify-center mr-5 ml-5">
               <v-card-subtitle class="d-flex justify-left align-center">
-                조리 시간&nbsp;&nbsp;&nbsp;
+                조리 시간&nbsp;&nbsp;
                 <v-text-field
                   v-model="cookingTime"
                   class="recipe-input-content text-md-h6"
@@ -85,7 +85,7 @@
                 >&nbsp;분
               </v-card-subtitle>
               <v-card-subtitle class="d-flex justify-left align-center">
-                요리량&nbsp;&nbsp;&nbsp;
+                요리량&nbsp;&nbsp;
                 <v-text-field
                   v-model="serving"
                   class="recipe-input-content text-md-h6"
@@ -117,8 +117,10 @@
                     <td class="text-center">{{ item.unit }}</td>
 
                     <th class="text-center">
-                      <v-icon @click="editItem(item)">mdi-pencil</v-icon>
-                      <v-icon @click="deleteItem(item)">mdi-delete</v-icon>
+                      <v-icon small @click="editItem(item)">mdi-pencil</v-icon>
+                      <v-icon small @click="deleteItem(item)"
+                        >mdi-delete</v-icon
+                      >
                     </th>
                   </tr>
                 </tbody>
@@ -139,7 +141,7 @@
 
                 <v-card>
                   <v-card-title>
-                    <span class="text-h5">{{ formTitle }}</span>
+                    <span>{{ formTitle }}</span>
                   </v-card-title>
 
                   <v-card-text>
@@ -608,13 +610,12 @@ export default {
 </script>
 
 <style scoped>
-.makerecipe-container {
+.create-container {
   position: sticky;
   height: 100%;
 
-  padding: 8% 0% 0% 0%;
-  background-image: url('/bg/bg_img.png');
-  background-repeat: repeat;
+  padding: 4%;
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 
   color: black;
 }
