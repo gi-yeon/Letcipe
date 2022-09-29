@@ -12,6 +12,7 @@
                   label="아이디"
                   :rules="rules"
                   hide-details="auto"
+                  @keyup.enter="loginTemp"
                 ></v-text-field>
               </div>
               <div class="login-input">
@@ -20,6 +21,7 @@
                   label="비밀번호"
                   :rules="rules"
                   hide-details="auto"
+                  @keyup.enter="loginTemp"
                 ></v-text-field>
               </div>
             </div>
@@ -39,6 +41,16 @@
             </div>
           </div>
         </div>
+        <v-card v-if="checkLogin === true" class="fadeInUp">
+          <v-card-title class="text-h5">Caution</v-card-title>
+          <v-card-text>아이디 또는 비밀번호가 일치하지 않습니다.</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="green darken-1" text @click="checkLogin = false"
+              >확인</v-btn
+            >
+          </v-card-actions>
+        </v-card>
       </v-container>
     </v-app>
   </div>
@@ -52,6 +64,7 @@ export default {
     return {
       id: null,
       pw: null,
+      checkLogin: false,
       rules: [
         (value) => !!value || 'Required.',
         (value) => (value && value.length >= 3) || 'Min 3 characters',
@@ -59,19 +72,26 @@ export default {
     }
   },
   computed: {
-    ...mapState('user', ['accessToken', 'refreshToken', 'userId', 'nickname']),
+    ...mapState('user', ['userId', 'nickname']),
   },
   methods: {
     ...mapActions('user', ['login', 'readUser']),
     moveAgree() {
       this.$router.push('/user/agree')
     },
-    loginTemp() {
+    async loginTemp() {
       const user = {
         userId: this.id,
         password: this.pw,
       }
-      this.login(user).then(this.readUser).then(this.moveMain)
+      this.$cookies.remove('access-token')
+      await this.login(user)
+      await this.readUser()
+      if (this.userId !== 0) {
+        this.$router.push('/main')
+      } else {
+        this.checkLogin = true
+      }
     },
     moveMain() {
       this.$router.push('/main')
