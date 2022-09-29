@@ -5,3 +5,4 @@
 [INFO ] [2022-09-28 11:38:55] [REQUEST:{controller=CartController, http_method=POST, method=createCartHistory, params={}, log_time=2022-09-28T11:38:55.471485, request_uri=/api/cart-history}]
 [INFO ] [2022-09-28 11:40:57] [REQUEST:{controller=CartController, http_method=POST, method=createCart, params={}, log_time=2022-09-28T11:40:57.380345400, request_uri=/api/cart}]
 [INFO ] [2022-09-28 11:41:37] [REQUEST:{controller=CartController, http_method=POST, method=createCartHistory, params={}, log_time=2022-09-28T11:41:37.380014400, request_uri=/api/cart-history}]
+[INFO ] [2022-09-28 11:44:43] [REQUEST:{controller=CartController, http_method=POST, method=createCartHistory, params={}, log_time=2022-09-28T11:44:43.284157600, request_uri=/api/cart-history}]

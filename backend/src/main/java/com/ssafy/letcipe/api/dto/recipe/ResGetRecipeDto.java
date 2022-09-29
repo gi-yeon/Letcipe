@@ -39,7 +39,6 @@ public class ResGetRecipeDto {
         this.title = recipe.getTitle();
         this.serving = recipe.getServing();
         this.content = recipe.getContent();
-        this.cookingTime = recipe.getCookingTime();
         this.repImg = recipe.getRepImg();
         this.category = recipe.getCategory();
         this.recipeLike = recipe.getLikes().size();
