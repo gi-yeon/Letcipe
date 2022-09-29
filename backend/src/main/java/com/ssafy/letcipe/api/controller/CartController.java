@@ -57,6 +57,13 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("cart-ingredient")
+    public ResponseEntity getCartIngredient(HttpServletRequest request){
+        Long userId = jwtService.getUserId(request);
+        userId = 1L;
+        return ResponseEntity.ok(cartService.getCartIngredient(userId));
+    }
+
     @PatchMapping("cart-ingredient")
     public ResponseEntity patchCartIngredient(@RequestBody ReqPatchCartIngredientDto requestDto, HttpServletRequest request) {
         Long userId = jwtService.getUserId(request);

@@ -1,11 +1,10 @@
 package com.ssafy.letcipe.api.service;
 
+import com.ssafy.letcipe.api.dto.cart.ResGetCartIngredientListDto;
 import com.ssafy.letcipe.api.dto.cart.*;
 import com.ssafy.letcipe.api.dto.ingredient.ResGetIngredientDto;
 import com.ssafy.letcipe.api.dto.recipe.ResGetRecipeDto;
-import com.ssafy.letcipe.api.dto.recipeIngredient.ResGetRecipeIngredientDto;
 import com.ssafy.letcipe.api.dto.user.LogUserDto;
-import com.ssafy.letcipe.api.dto.user.ResGetUserDto;
 import com.ssafy.letcipe.domain.cart.Cart;
 import com.ssafy.letcipe.domain.cart.CartRepository;
 import com.ssafy.letcipe.domain.cartIngredient.CartIngredient;
@@ -27,7 +26,6 @@ import com.ssafy.letcipe.domain.type.StatusType;
 import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.domain.user.UserRepository;
 import com.ssafy.letcipe.exception.BadRequestException;
-import kotlinx.datetime.LocalDate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.json.simple.JSONObject;
@@ -47,12 +45,9 @@ public class CartService {
     private final RecipeService recipeService;
     private final CartRepository cartRepository;
     private final IngredientRepository ingredientRepository;
-
     private final HistoryRepository historyRepository;
     private final CartIngredientRepository cartIngredientRepository;
-
     private final HistoryIngredientRepository historyIngredientRepository;
-
     private final HistoryItemRepository historyItemRepository;
 
     @Transactional
@@ -217,5 +212,57 @@ public class CartService {
         for(CartIngredient cartIngredient: user.getCartIngredients()) {
             cartIngredientRepository.delete(cartIngredient);
         }
+    }
+
+    @Transactional
+    public ResGetCartIngredientListDto getCartIngredient(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
+        Map<Long, Double> ingredientMap = new HashMap<>();
+        Map<Long, Ingredient> ingredientObjectMap = new HashMap<>();
+
+        for(Cart cart:user.getCarts()) {
+            Recipe recipe = cart.getRecipe();
+            List<RecipeIngredient> recipeIngredients = recipe.getIngredients();
+
+            for(RecipeIngredient recipeIngredient:recipeIngredients) {
+                Ingredient ingredient = recipeIngredient.getIngredient();
+                Long ingredientId = ingredient.getId();
+                if(!ingredientMap.containsKey(ingredientId)) {
+                    ingredientMap.put(ingredientId, 0.);
+                    ingredientObjectMap.put(ingredientId, ingredient);
+                }
+                ingredientMap.put(ingredientId, ingredientMap.get(ingredientId) + recipeIngredient.getAmount()* cart.getAmount());
+            }
+        }
+
+        for(CartIngredient cartIngredient: user.getCartIngredients()){
+            Ingredient ingredient = cartIngredient.getIngredient();
+            Long ingredientId = ingredient.getId();
+            if(!ingredientMap.containsKey(ingredientId)) {
+                ingredientMap.put(ingredientId, 0.);
+                ingredientObjectMap.put(ingredientId, ingredient);
+            }
+            ingredientMap.put(ingredientId, ingredientMap.get(ingredientId) + cartIngredient.getAmount());
+        }
+
+        List<ResGetCartIngredientDto> list = new ArrayList<>();
+        Iterator<Long> keys = ingredientMap.keySet().iterator();
+        while(keys.hasNext()) {
+            Long id = keys.next();
+            Ingredient ingredient = ingredientObjectMap.get(id);
+            ResGetCartIngredientDto dto = ResGetCartIngredientDto.builder()
+                    .ingredient(ResGetIngredientDto.builder()
+                            .id(ingredient.getId())
+                            .category(ingredient.getCategory())
+                            .name(ingredient.getName())
+                            .measure(ingredient.getMeasure())
+                            .gml(ingredient.getGml())
+                            .build())
+                    .amount(ingredientMap.get(id))
+                    .build();
+            list.add(dto);
+        }
+        System.out.println(list);
+        return new ResGetCartIngredientListDto(list);
     }
 }
