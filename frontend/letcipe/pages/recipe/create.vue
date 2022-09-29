@@ -194,6 +194,7 @@
                         <v-col cols="12" sm="6" md="4">
                           <v-text-field
                             v-model="editedItem.amount"
+                            :rules="ingre_rule"
                             placeholder="0"
                             color="letcipe"
                             label="재료량"
@@ -215,7 +216,10 @@
                     <v-btn color="blue darken-1" text @click="close"
                       >취소</v-btn
                     >
-                    <v-btn color="blue darken-1" text @click="saveIngre"
+                    <v-btn
+                      color="blue darken-1"
+                      text
+                      @click:ingre_rule="saveIngre"
                       >재료 저장</v-btn
                     >
                   </v-card-actions>
@@ -315,6 +319,11 @@ export default {
       cookingTime: '',
       serving: '',
       rules: [(value) => !!value || 'Required.'],
+      ingre_rule: [
+        (v) => !!v || '재료량은 필수 입력사항입니다.',
+        (v) => /^[0-9]*$/.test(v) || '재료량은 숫자만 입력 가능합니다.',
+        (v) => !(v <= 0) || '재료량은 0 이상이어야 합니다.',
+      ],
       stepUrl: [],
       stepImage: [],
       steps: [{ no: 1, image: null, imageUrl: null, content: '' }],
@@ -375,6 +384,7 @@ export default {
         unit: 'g',
       },
       stepNum: 1,
+      IngreValid: false,
     }
   },
   computed: {
@@ -392,13 +402,6 @@ export default {
   },
   created() {
     this.initialize()
-    const promise = new Promise((resolve, reject) => {
-      resolve()
-    })
-    promise.then(async () => {
-      await this.RecipeDetail(1591)
-      console.log(this.recipeDetail)
-    })
   },
   methods: {
     ...mapActions('ingredients', ['searchIngredient']),
@@ -517,11 +520,31 @@ export default {
       })
     },
     saveIngre() {
+      this.IngreValid = false
+      this.ingredients?.forEach((ingre) => {
+        if (this.editedItem.name === ingre.name) {
+          ingre.amount =
+            parseInt(ingre.amount) + parseInt(this.editedItem.amount)
+          this.IngreValid = true
+        }
+      })
+      if (this.IngreValid === false) {
+        if (this.editedIndex > -1) {
+          Object.assign(this.ingredients[this.editedIndex], this.editedItem)
+        } else {
+          this.ingredients.push(this.editedItem)
+        }
+      }
+
       if (this.editedIndex > -1) {
         Object.assign(this.ingredients[this.editedIndex], this.editedItem)
-      } else {
-        this.ingredients.push(this.editedItem)
       }
+      // if (this.editedIndex > -1) {
+      //   Object.assign(this.ingredients[this.editedIndex], this.editedItem)
+      // } else {
+      //   this.ingredients.push(this.editedItem)
+      // }
+
       this.close()
     },
     setTags(tags) {
@@ -543,7 +566,7 @@ export default {
       this.editedItem.unit = item.measure
     },
     saveRecipe() {
-      console.log(this.ingredients)
+      // console.log(this.ingredients)
       const formdata = new FormData()
       formdata.append('title', this.title)
       formdata.append('content', this.content)
@@ -556,19 +579,26 @@ export default {
         formdata.append(`stepDtoList[${i}].content`, this.steps[i].content)
         formdata.append(`stepDtoList[${i}].img`, this.steps[i].image)
       }
-      for (let i = 0; i < this.steps.length; i++) {
+      for (let i = 0; i < this.ingredients.length; i++) {
         formdata.append(`ingredients[${i}].id`, this.ingredients[i].id)
         formdata.append(`ingredients[${i}].amount`, this.ingredients[i].amount)
       }
+      console.log('이거슨' + this.ingredients.length)
+      console.log('이거슨' + this.ingredients)
+      const ingreVal = []
+      const keys = Object.keys(this.tags)
+      // console.log(keys)
+      for (let i = 0; i < keys.length; i++) {
+        ingreVal.push(this.tags[keys[i]].value)
+      }
       for (let i = 0; i < this.tags.length; i++) {
-        formdata.append(`tagList[${i}]`, this.tags[i])
+        formdata.append(`tagList[${i}]`, ingreVal[i])
       }
       for (const p of formdata.entries()) {
         console.log(p[0] + ',' + p[1])
       }
       console.log(formdata)
-
-      this.createRecipeDetail(formdata)
+      // this.createRecipeDetail(formdata)
     },
     moveBack() {
       this.$router.push('/main')

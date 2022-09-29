@@ -228,7 +228,7 @@
             <div v-for="(step, i) in steps" :key="i">
               <div class="d-flex justify-space-between">
                 <v-card-title class="text-subtitle-2 recipe-component"
-                  >Step {{ step.step }}</v-card-title
+                  >Step {{ step.no }}</v-card-title
                 >
                 <v-icon class="mr-5" color="red" @click="deleteStep(i)"
                   >mdi-minus-circle</v-icon
@@ -236,7 +236,7 @@
               </div>
               <div class="recipe-input d-flex justify-center">
                 <v-file-input
-                  v-model="step.img"
+                  v-model="step.image"
                   outlined
                   accept="image/png, image/jpeg, image/bmp"
                   placeholder="단계 사진 업로드"
@@ -246,9 +246,9 @@
               </div>
               <div class="d-flex justify-center">
                 <v-img
-                  v-if="step.url != null"
+                  v-if="step.imageUrl != null"
                   max-width="50%"
-                  :src="step.url"
+                  :src="step.imageUrl"
                   class="d-flex justify-center"
                 ></v-img>
               </div>
@@ -327,7 +327,7 @@ export default {
       rules: [(value) => !!value || 'Required.'],
       stepUrl: [],
       stepImage: [],
-      steps: [{ no: 1, image: null, imageUrl: null, content: '' }],
+      steps: [],
       tags: ['바부'],
       focusIndex: null,
       dialog: false,
@@ -407,7 +407,8 @@ export default {
       resolve()
     })
     promise.then(async () => {
-      await this.RecipeDetail(1591) // 1591 자리에 recipelist id 넘겨 받으면 돼.
+      // 1793
+      await this.RecipeDetail(1798) // 1591 자리에 recipelist id 넘겨 받으면 돼.
       console.log(this.recipeDetail)
       if (this.recipeDetail !== null) {
         this.title = this.recipeDetail.title
@@ -417,20 +418,31 @@ export default {
         this.cookingTime = this.recipeDetail.cookingTime
         this.serving = this.recipeDetail.serving
         // this.steps = this.recipeDetail.recipeSteps
-
+        // console.log(this.steps)
         this.recipeDetail.recipeSteps.forEach((rs) => {
+          // console.log(JSON.stringify(rs))
           const step = {
-            step: rs.step,
-            img: '',
-            url: rs.img,
+            no: rs.step,
+            image: null,
+            imageUrl: rs.img,
             content: rs.content,
           }
           this.steps.push(step)
         })
+        // console.log(this.steps)
+        // console.log(this.recipeDetail.ingredients.length)
+        // console.log(this.recipeDetail.ingredients[0])
 
-        for (let i = 0; i < this.recipeDetails.ingredients.length; i++) {
-          this.ingredients.push(this.recipeDetails.ingredients[i])
+        for (let i = 0; i < this.recipeDetail.ingredients.length; i++) {
+          const ingre = {
+            name: this.recipeDetail.ingredients[i].ingredient.name,
+            id: this.recipeDetail.ingredients[i].ingredient.id,
+            amount: this.recipeDetail.ingredients[i].amount,
+            unit: this.recipeDetail.ingredients[i].ingredient.measure,
+          }
+          this.ingredients.push(ingre)
         }
+        console.log(this.ingredients)
 
         this.recipeDetail.tags?.forEach((t) => {
           this.tags.push(t)
@@ -527,8 +539,10 @@ export default {
     },
     clearItem() {
       this.keyword = null
+      this.search = null
     },
     editItem(item) {
+      console.log(item)
       this.search = item.name
       this.editedIndex = this.ingredients.indexOf(item)
       this.editedItem = Object.assign({}, item)
@@ -598,13 +612,38 @@ export default {
       formdata.append('content', this.content)
       formdata.append('cookingTime', this.cookingTime)
       formdata.append('serving', this.serving)
-      formdata.append('repImg', this.image)
+      if (this.image === null) {
+        formdata.append('repImg', this.url)
+      } else if (this.image != null) {
+        formdata.append('repImg', this.image)
+      }
       for (let i = 0; i < this.steps.length; i++) {
-        formdata.append(`stepDtoList[${i}].step[${i}].img`, this.steps[i].image)
+        if (this.step[i].image === null) {
+          formdata.append(
+            `stepDtoList[${i}].step[${i}].img`,
+            this.steps[i].image
+          )
+        } else if (this.step[i].image != null) {
+          formdata.append(`stepDtoList[${i}].step[${i}].img`, this.steps[i].img)
+        }
         formdata.append(
           `stepDtoList[${i}].step[${i}].content`,
           this.steps[i].content
         )
+      }
+      for (let i = 0; i < this.ingredients.length; i++) {
+        formdata.append(`ingredients[${i}].id`, this.ingredients[i].id)
+        formdata.append(`ingredients[${i}].amount`, this.ingredients[i].amount)
+      }
+
+      const ingreVal = []
+      const keys = Object.keys(this.tags)
+      // console.log(keys)
+      for (let i = 0; i < keys.length; i++) {
+        ingreVal.push(this.tags[keys[i]].value)
+      }
+      for (let i = 0; i < this.tags.length; i++) {
+        formdata.append(`tagList[${i}]`, ingreVal[i])
       }
 
       for (const p of formdata.entries()) {
@@ -612,7 +651,7 @@ export default {
       }
       console.log(formdata)
 
-      this.createRecipeDetail(formdata)
+      // this.updateRecipeDetail(formdata)
     },
     moveBack() {
       this.$router.push('/main')
