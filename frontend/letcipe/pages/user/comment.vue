@@ -1,11 +1,16 @@
 <template>
   <div id="app">
     <v-app id="inspire">
-      <div class="mycomment-container">
-        <v-container style="background-color: white; padding: 0%"
-          ><v-card-title class="justify-center" style="font-size: 1.7rem"
-            >댓글 관리</v-card-title
-          ><v-divider></v-divider>
+      <div class="mycomment-page">
+        <v-container class="mycomment-container d-flex-row">
+          <div class="mycomment-head-wrap">
+            <div class="d-flex justify-space-between pb-3">
+              <v-icon>mdi-window-close</v-icon>
+              <div style="font-size: x-large">댓글 관리</div>
+              <v-icon>mdi-blank</v-icon>
+            </div>
+          </div>
+
           <div>
             <v-card-subtitle>
               <v-row
@@ -66,9 +71,16 @@
                         "
                       > -->
 
-                      <v-list-item-title style="font-size: 1.2rem">
+                      <v-list-item-content
+                        style="
+                          display: inline-block;
+                          text-overflow: ellipsis;
+                          white-space: nowrap;
+                          overflow: hidden;
+                        "
+                      >
                         {{ comment.content }}
-                      </v-list-item-title>
+                      </v-list-item-content>
                       <v-row
                         ><v-col align="right">
                           <v-icon @click="deleteComment()"
@@ -164,7 +176,7 @@ export default {
           user: '나야나',
           board: '1',
           content:
-            '밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.',
+            '밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.',
           regTime: '2022-09-08',
         },
         {
@@ -246,14 +258,21 @@ export default {
 </script>
 
 <style scoped>
+.mycomment-page {
+  /* padding-top: 70px; */
+  padding-bottom: 70px;
+  padding: 4%;
+}
+.mycomment-page-head {
+  padding: 4%;
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  /* border: 1px solid gray; */
+}
 .mycomment-container {
   position: sticky;
   height: 100%;
-
-  padding: 8% 0% 0% 0%;
-  background-image: url('/bg/bg_img.png');
-  background-repeat: repeat;
-
   color: black;
+
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }
 </style>
