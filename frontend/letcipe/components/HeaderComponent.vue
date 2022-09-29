@@ -21,30 +21,44 @@
           @click="moveMain"
         />
       </div>
-      <div v-if="user === null || user === ''">
-        <v-icon size="3rem" color="black" class="mr-2" @click="moveLogin">mdi-login-variant</v-icon>
+      <div v-if="userId === 0 || userId === ''">
+        <v-icon size="3rem" color="black" class="mr-2" @click="moveLogin"
+          >mdi-login-variant</v-icon
+        >
       </div>
       <div v-else>
-        <v-icon size="3rem" color="black" class="mr-2">mdi-account-circle</v-icon>
+        <v-icon size="3rem" color="black" class="mr-2" @click="logOut"
+          >mdi-logout-variant</v-icon
+        >
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 export default {
   name: 'HeaderComponent',
   data() {
-    return {
-      user: '',
-    }
+    return {}
+  },
+  computed: {
+    ...mapState('user', ['userId', 'nickname']),
   },
   methods: {
+    ...mapActions('user', ['logout']),
     moveLogin() {
       this.$router.push('/user/login')
     },
     moveMain() {
       this.$router.push('/main')
+    },
+    moveMypage() {
+      this.$router.push('/user/mypage')
+    },
+    logOut() {
+      this.logout()
+      this.moveMain()
     },
   },
 }
