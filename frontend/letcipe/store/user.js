@@ -20,6 +20,10 @@ export const mutations = {
     state.userId = data.id
     state.nickname = data.nickname
   },
+  CLEAR_USER(state) {
+    state.userId = 0
+    state.nickname = ''
+  },
 }
 
 export const getters = {}
@@ -30,6 +34,7 @@ export const actions = {
       user,
       ({ data }) => {
         this.$cookies.set('access-token', data.accessToken)
+        this.$cookies.set('refresh-token', data.refreshToken)
       },
       (error) => {
         console.log(error)
@@ -46,6 +51,11 @@ export const actions = {
         console.log(error)
       }
     )
+  },
+  logout({ commit }) {
+    commit('CLEAR_USER')
+    this.$cookies.remove('access-token')
+    this.$cookies.remove('refresh-token')
   },
   async signup({ commit }, user) {
     await signup(

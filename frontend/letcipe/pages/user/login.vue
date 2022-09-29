@@ -41,7 +41,7 @@
             </div>
           </div>
         </div>
-        <v-card v-if="checkLogin === true">
+        <v-card v-if="checkLogin === true" class="fadeInUp">
           <v-card-title class="text-h5">Caution</v-card-title>
           <v-card-text>아이디 또는 비밀번호가 일치하지 않습니다.</v-card-text>
           <v-card-actions>
