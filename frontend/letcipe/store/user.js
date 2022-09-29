@@ -2,7 +2,6 @@ import {
   login,
   idCheck,
   nicknameCheck,
-  readUser,
   signup,
   mypage,
   modifyMember,
@@ -18,8 +17,6 @@ export const state = () => ({
   codeCheck: false,
   code: '',
   userJoinCheck: false,
-  userId: 0,
-  nickname: '',
 })
 
 export const mutations = {
@@ -58,27 +55,19 @@ export const mutations = {
   SET_CODE(state, code) {
     state.code = code
   },
-
-  SET_USER(state, data) {
-    state.userId = data.id
-    state.nickname = data.nickname
-  },
-  CLEAR_USER(state) {
-    state.userId = 0
-    state.nickname = ''
-
-  },
 }
 
 export const getters = {}
 
 export const actions = {
-  async login({ commit }, user) {
+  async login({ commit }, object) {
     await login(
-      user,
+      {
+        username: object.id,
+        password: object.password,
+      },
       ({ data }) => {
-        this.$cookies.set('access-token', data.accessToken)
-        this.$cookies.set('refresh-token', data.refreshToken)
+        commit('')
       },
       (error) => {
         console.log(error)
@@ -111,22 +100,6 @@ export const actions = {
         commit('SET_NICKCHECK_TRUE')
       }
     )
-  },
-  async readUser({ commit }) {
-    await readUser(
-      ({ data }) => {
-        console.log(data)
-        commit('SET_USER', data)
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
-  },
-  logout({ commit }) {
-    commit('CLEAR_USER')
-    this.$cookies.remove('access-token')
-    this.$cookies.remove('refresh-token')
   },
   async signup({ commit }, user) {
     await signup(
@@ -215,4 +188,11 @@ export const actions = {
       }
     )
   },
+  async resetSatus({ commit }) {
+    await commit('SET_IDCHECK_TRUE')
+    await commit('SET_NICKCHECK_TRUE')
+    await commit('SET_CODECHECK_FALSE')
+    await commit('SET_USERJOINCHECK_FALSE')
+    await commit('SET_CODE', '')
+  }
 }

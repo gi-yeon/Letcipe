@@ -1,4 +1,3 @@
-import interceptor from '../config/interceptor'
 import { apiInstance, fileInstance } from '.'
 
 const api = apiInstance()
@@ -10,11 +9,6 @@ async function login(user, success, fail) {
     .post(`/api/user/login`, JSON.stringify(user))
     .then(success)
     .catch(fail)
-}
-
-// 사용자 id, nickname 얻어오기
-async function readUser(success, fail) {
-  await interceptor.get(`/api/user`).then(success).catch(fail)
 }
 
 // 사용자 등록
@@ -81,7 +75,6 @@ export {
   idCheck,
   nicknameCheck,
   signup,
-  readUser,
   mypage,
   modifyMember,
   deleteMember,
