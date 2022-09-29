@@ -1,9 +1,8 @@
 package com.ssafy.letcipe.api.controller;
 
-import com.ssafy.letcipe.api.dto.*;
+import com.ssafy.letcipe.api.dto.board.*;
 import com.ssafy.letcipe.api.service.BoardService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/board")
@@ -64,7 +61,7 @@ public class BoardController {
     }
 
     @PutMapping("/comment/{board_comment_id}")
-    public ResponseEntity putBoardComment(@PathVariable("board_comment_id") Long boardCommentId, @RequestBody  ReqPutBoardCommentDto boardCommentDto) throws Exception {
+    public ResponseEntity putBoardComment(@PathVariable("board_comment_id") Long boardCommentId, @RequestBody ReqPutBoardCommentDto boardCommentDto) throws Exception {
         Long userId  = 1L;
         boardService.putBoardComment(boardCommentId, boardCommentDto, userId);
         return new ResponseEntity<>(HttpStatus.OK);
