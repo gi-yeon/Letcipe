@@ -65,6 +65,11 @@ async function myrecipeList(userid, success, fail) {
   await api.get(`/api/user/recipeList/${userid}`).then(success).catch(fail)
 }
 
+// 핸드폰 인증
+async function createCode(phoneNo, success, fail) {
+  await api.post(`/api/sms`, phoneNo).then(success).catch(fail)
+}
+
 export {
   login,
   idCheck,
@@ -75,4 +80,5 @@ export {
   deleteMember,
   myrecipe,
   myrecipeList,
+  createCode
 }
