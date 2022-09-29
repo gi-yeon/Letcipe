@@ -1,8 +1,0 @@
-[INFO ] [2022-09-28 10:21:57] [REQUEST:{controller=UserController, http_method=POST, method=loginUser, params={}, log_time=2022-09-28T10:21:57.866612900, request_uri=/api/user/login}]
-[INFO ] [2022-09-28 10:22:45] [REQUEST:{controller=CartController, http_method=POST, method=createCart, params={}, log_time=2022-09-28T10:22:45.098578, request_uri=/api/cart}]
-[INFO ] [2022-09-28 10:46:11] [REQUEST:{controller=CartController, http_method=POST, method=createCartHistory, params={}, log_time=2022-09-28T10:46:11.702302100, request_uri=/api/cart-history}]
-[INFO ] [2022-09-28 11:36:33] [REQUEST:{controller=CartController, http_method=POST, method=createCartHistory, params={}, log_time=2022-09-28T11:36:33.166258, request_uri=/api/cart-history}]
-[INFO ] [2022-09-28 11:38:55] [REQUEST:{controller=CartController, http_method=POST, method=createCartHistory, params={}, log_time=2022-09-28T11:38:55.471485, request_uri=/api/cart-history}]
-[INFO ] [2022-09-28 11:40:57] [REQUEST:{controller=CartController, http_method=POST, method=createCart, params={}, log_time=2022-09-28T11:40:57.380345400, request_uri=/api/cart}]
-[INFO ] [2022-09-28 11:41:37] [REQUEST:{controller=CartController, http_method=POST, method=createCartHistory, params={}, log_time=2022-09-28T11:41:37.380014400, request_uri=/api/cart-history}]
-[INFO ] [2022-09-28 11:44:43] [REQUEST:{controller=CartController, http_method=POST, method=createCartHistory, params={}, log_time=2022-09-28T11:44:43.284157600, request_uri=/api/cart-history}]

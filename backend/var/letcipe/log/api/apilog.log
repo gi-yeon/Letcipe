@@ -1,6 +1,0 @@
-[INFO ] [2022-09-28 13:27:29] [{"REQUEST":{"controller":"CartController","http_method":"POST","method":"createCart","params":{},"request_uri":"\/api\/cart"}}]
-[INFO ] [2022-09-28 13:27:34] [{"REQUEST":{"controller":"CartController","http_method":"POST","method":"createCart","params":{},"request_uri":"\/api\/cart"}}]
-[INFO ] [2022-09-28 13:27:39] [{"REQUEST":{"controller":"CartController","http_method":"POST","method":"createCart","params":{},"request_uri":"\/api\/cart"}}]
-[INFO ] [2022-09-28 13:27:46] [{"REQUEST":{"controller":"CartController","http_method":"POST","method":"createCart","params":{},"request_uri":"\/api\/cart"}}]
-[INFO ] [2022-09-28 13:27:48] [{"REQUEST":{"controller":"CartController","http_method":"POST","method":"createCart","params":{},"request_uri":"\/api\/cart"}}]
-[INFO ] [2022-09-28 13:27:51] [{"REQUEST":{"controller":"CartController","http_method":"POST","method":"createCart","params":{},"request_uri":"\/api\/cart"}}]

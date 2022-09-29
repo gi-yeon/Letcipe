@@ -1,7 +1,0 @@
-[INFO ] [2022-09-28 13:26:31] [{"REQUEST":{"controller":"RecipeController","http_method":"GET","method":"readRecipe","params":{},"request_uri":"\/api\/recipe\/1794"}}]
-[INFO ] [2022-09-28 13:26:32] [{"REQUEST":{"controller":"RecipeController","http_method":"GET","method":"readRecipe","params":{},"request_uri":"\/api\/recipe\/1794"}}]
-[INFO ] [2022-09-28 13:26:32] [{"REQUEST":{"controller":"RecipeController","http_method":"GET","method":"readRecipe","params":{},"request_uri":"\/api\/recipe\/1794"}}]
-[INFO ] [2022-09-28 13:26:33] [{"REQUEST":{"controller":"RecipeController","http_method":"GET","method":"readRecipe","params":{},"request_uri":"\/api\/recipe\/1794"}}]
-[INFO ] [2022-09-28 13:27:13] [{"REQUEST":{"controller":"CartController","http_method":"POST","method":"createCart","params":{},"request_uri":"\/api\/cart"}}]
-[INFO ] [2022-09-28 13:27:19] [{"REQUEST":{"controller":"CartController","http_method":"POST","method":"createCart","params":{},"request_uri":"\/api\/cart"}}]
-[INFO ] [2022-09-28 13:27:23] [{"REQUEST":{"controller":"CartController","http_method":"POST","method":"createCart","params":{},"request_uri":"\/api\/cart"}}]
