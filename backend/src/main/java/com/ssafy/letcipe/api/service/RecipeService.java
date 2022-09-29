@@ -163,39 +163,6 @@ public class RecipeService {
         recipe.delete();
     }
 
-
-//    @Transactional
-//    public void deleteComment(Long recipeCommentId) throws SQLException {
-//        RecipeComment comment = recipeCommentRepository
-//                .findById(recipeCommentId)
-//                .orElseThrow(() -> new NullPointerException());
-//        recipeCommentRepository.delete(comment);
-//    }
-//
-//    @Transactional
-//    public void updateComment(ReqPutRecipeCommentDto requestDto) throws SQLException {
-//        RecipeComment comment = recipeCommentRepository
-//                .findById(requestDto.getRecipeCommentId())
-//                .orElseThrow(() -> new NullPointerException());
-//        comment.updateRecipeComment(requestDto.getContent());
-//    }
-//
-//    @Transactional
-//    public void createComment(ReqPostRecipeCommentDto requestDto, Long userId) throws SQLException {
-//        System.out.println("recipe id : " + requestDto.getRecipeId());
-//        System.out.println("content: " + requestDto.getContent());
-//        User user = userService.findUser(userId);
-//        Recipe recipe = recipeRepository
-//                .findById(requestDto.getRecipeId())
-//                .orElseThrow(() -> new NullPointerException());
-//        recipeCommentRepository.save(
-//                RecipeComment.builder()
-//                        .recipe(recipe)
-//                        .content(requestDto.getContent())
-//                        .user(user)
-//                        .build());
-//    }
-
     @Transactional
     public void createBookmark(ReqPostRecipeBookmarkDto requestDto, Long userId) throws SQLException {
         User user = userService.findUser(userId);

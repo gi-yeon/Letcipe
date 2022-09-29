@@ -34,8 +34,6 @@ public class BoardService {
         if(pageable.getPageNumber() == 0) throw new Exception("잘못된 요청입니다.");
         PageRequest pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize());
 
-//      int firstP = pageRequest.getPageNumber()-1;
-//      PageRequest P = PageRequest.of(firstP, pageRequest.getPageSize());
         List<Board> boardList = boardRepository.findByStatusType(StatusType.N, pageRequest)
                 .stream()
                 .collect(Collectors.toList());
@@ -54,7 +52,6 @@ public class BoardService {
         }
         return boardListRes;
     }
-
 
 
     @Transactional(readOnly = true)
