@@ -18,6 +18,7 @@ export const getters = {}
 
 export const actions = {
   async searchIngredient({ commit }, keyword) {
+    
     await searchIngredient(
       keyword,
       ({ data }) => {

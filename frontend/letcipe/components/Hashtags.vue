@@ -20,7 +20,7 @@
     </div>
     <!--// Hashtags -->
 
-    <div v-show="!helpVisible" class="inp">
+    <div v-show="!helpVisible" class="inp mt-1">
       <input
         ref="input"
         v-model.trim="value"
@@ -157,6 +157,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@font-face {
+  font-family: 'LeeSeoyun';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2202-2@1.0/LeeSeoyun.woff')
+    format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+* {
+  font-family: 'LeeSeoyun';
+}
 .comp_hashtag {
   position: relative;
   width: 100%;
@@ -190,14 +200,14 @@ export default {
     font-weight: 300;
     font-size: 14px;
     color: white;
-    vertical-align: top;
+    vertical-align: middle;
   }
 
   .tags {
     position: relative;
     overflow: hidden;
     display: inline-block;
-    vertical-align: top;
+    vertical-align: middle;
     margin-bottom: -6px;
 
     .fake {
@@ -215,12 +225,12 @@ export default {
     .tag {
       display: inline-block;
       position: relative;
-      margin: 0 5px 6px 0;
+      margin: 0;
       padding: 0 5px;
       line-height: 30px;
-      border-radius: 5px;
-      background-color: black;
-      vertical-align: top;
+      border-radius: 5px solid black;
+
+      vertical-align: middle;
       word-wrap: break-word;
       word-break: break-all;
       font-size: 13px;
@@ -258,9 +268,8 @@ export default {
     overflow: hidden;
     height: 30px;
     width: 150px;
-    vertical-align: top;
-    font-family: 'Noto Sans KR', 'Malgun Gothic', '굴림', Gulim, '돋움', Dotum,
-      Sans-serif;
+    vertical-align: middle;
+    font-family: 'LeeSeoyun';
 
     &:before {
       display: inline;
@@ -269,23 +278,21 @@ export default {
       content: '#';
       color: #3e3e3e;
       margin-right: 2px;
-      vertical-align: top;
+      vertical-align: middle;
       line-height: 30px;
     }
 
     input {
       width: 135px;
       height: 28px;
-      vertical-align: top;
+      vertical-align: middle;
       color: #3e3e3e;
       -webkit-appearance: none;
       -webkit-text-size-adjust: none;
       padding: 0;
       border: 0;
       outline: none;
-      vertical-align: top;
-      font-family: 'Noto Sans KR', 'Malgun Gothic', '굴림', Gulim, '돋움', Dotum,
-        Sans-serif;
+      font-family: 'LeeSeoyun';
     }
   }
 }

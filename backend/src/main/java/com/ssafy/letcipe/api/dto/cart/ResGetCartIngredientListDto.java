@@ -1,14 +1,16 @@
 package com.ssafy.letcipe.api.dto.cart;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReqPostCartDto {
-    List<Long> list;
+@Builder
+public class ResGetCartIngredientListDto {
+    List<ResGetCartIngredientDto> list;
 }

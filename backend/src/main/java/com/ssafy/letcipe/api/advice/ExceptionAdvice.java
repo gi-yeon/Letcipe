@@ -1,6 +1,7 @@
 package com.ssafy.letcipe.api.advice;
 
 import com.ssafy.letcipe.exception.AuthorityViolationException;
+import com.ssafy.letcipe.exception.BadRequestException;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,5 +54,12 @@ public class ExceptionAdvice {
     public  ResponseEntity duplicatedException(Exception e) {
         printLog(e);
         return new ResponseEntity(HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity BadRequestException(Exception e) {
+        logger.warn("이미 존재하는데 시도");
+        printLog(e);
+        return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 }
