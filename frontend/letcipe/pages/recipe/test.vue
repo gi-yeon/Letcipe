@@ -3,7 +3,6 @@
     <v-btn @click="testReadDetail()"> testReadDetail </v-btn>
     <v-btn @click="testHadoop()"> HadoopTest </v-btn>
     <v-btn @click="test()"> testIngredient </v-btn>
-    <v-btn @click="testRes()"> testHadoopRes </v-btn>
     <v-file-input
       v-model="fileImg"
       width="50%"
@@ -71,11 +70,6 @@ export default {
       const keyword = '양파'
       this.searchIngredient(keyword)
       console.log(this.ingredientsList)
-    },
-    testRes(){
-      axios.get('https://j7a705.q.ssafy.io/api/admin/test').then((res) => {
-        console.log(res.data)
-      })
     },
     testHadoop() {
       axios.get('https://j7a705.q.ssafy.io/hadoop/test').then((res) => {

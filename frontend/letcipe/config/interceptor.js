@@ -9,7 +9,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
     function (config) {
         config.headers["Content-Type"] = "application/json";
-        config.headers["accessToken"] = null;
+        config.headers["access-token"] = null;
         return config;
     }, 
     function (error) {

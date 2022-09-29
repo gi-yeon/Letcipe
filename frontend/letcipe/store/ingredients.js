@@ -17,12 +17,13 @@ export const getters = {}
 
 export const actions = {
   async searchIngredient({ commit }, keyword) {
+    
     await searchIngredient(
       keyword,
       ({ data }) => {
         commit('SET_INGREDIENTS_LIST', data)
         // console.log('재료가져오기 성공!')
-        // console.log(data)
+         console.log(data)
       },
       (error) => {
         console.log(error)
