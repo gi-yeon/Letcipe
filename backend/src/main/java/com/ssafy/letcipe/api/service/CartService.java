@@ -110,13 +110,19 @@ public class CartService {
 
     @Transactional
     public void patchCartIngredient(ReqPatchCartIngredientDto requestDto, Long userId) {
-
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
         Ingredient ingredient = ingredientRepository.findById(requestDto.getIngredientId())
                 .orElseThrow(() -> new NullPointerException("재료를 찾을 수 없습니다."));
-        CartIngredient cartIngredient = cartIngredientRepository.findByUserAndIngredient(user, ingredient)
-                .orElseThrow(() -> new NullPointerException("수정한 적 없습니다."));
-        cartIngredient.update(requestDto.getOperator());
+
+
+        if(cartIngredientRepository.findByUserAndIngredient(user, ingredient).isPresent()){
+            CartIngredient cartIngredient = cartIngredientRepository.findByUserAndIngredient(user, ingredient).get();
+            cartIngredient.update(requestDto.getOperator());
+        }else{
+            cartIngredientRepository.save(new CartIngredient(user, ingredient, requestDto.getOperator()));
+        }
+
+
     }
 
     @Transactional
