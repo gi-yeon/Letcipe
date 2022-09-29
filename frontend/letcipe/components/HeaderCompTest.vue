@@ -24,10 +24,14 @@
             />
           </v-col>
           <v-col v-if="user === null || user === ''">
-            <v-icon size="3rem" color="black" class="mr-2" @click="moveLogin">mdi-login-variant</v-icon>
+            <v-icon size="3rem" color="black" class="mr-2" @click="moveLogin"
+              >mdi-login-variant</v-icon
+            >
           </v-col>
           <v-col v-else>
-            <v-icon size="3rem" color="black" class="mr-2">mdi-account-circle</v-icon>
+            <v-icon size="3rem" color="black" class="mr-2"
+              >mdi-account-circle</v-icon
+            >
           </v-col>
         </v-row>
       </v-app-bar>
@@ -47,7 +51,10 @@
         </div>
       </v-col>
       <v-list nav dense>
-        <v-list-item-group v-model="group" active-class="deep-purple--text text--accent-4">
+        <v-list-item-group
+          v-model="group"
+          active-class="deep-purple--text text--accent-4"
+        >
           <v-list-item>
             <v-list-item-title>Foo</v-list-item-title>
           </v-list-item>
@@ -94,8 +101,8 @@ export default {
   },
 }
 </script>
-    
-    <style scoped>
+
+<style scoped>
 * {
   color: black;
 }
@@ -186,4 +193,3 @@ export default {
   height: 8vh;
 }
 </style>
-    
