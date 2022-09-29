@@ -32,6 +32,10 @@ public class FileHandler {
      */
     public String uploadImage(MultipartFile imgFile) throws FileUploadException {
         // 유효성 검사
+        System.out.println("와아아ㅏㅈ아ㅏㄹ;ㅈ얄;");
+
+        System.out.println(imgFile.getOriginalFilename());
+
         if (imgFile == null || imgFile.isEmpty())
             throw new FileUploadException("업로드하려는 파일이 없습니다.");
 
@@ -85,6 +89,18 @@ public class FileHandler {
 
     public File getImageFile(String fileName) throws FileNotFoundException {
         String path = new String(BASE_PATH+sep+fileName);
+        File file;
+        try {
+            file = new File(path);
+            if (!file.exists()) throw new FileNotFoundException("파일을 찾을 수 없습니다.");
+        } catch (Exception e) {
+            throw new FileNotFoundException("파일을 찾을 수 없습니다.");
+        }
+        return file;
+    }
+
+    public File getReport(String fileName) throws  FileNotFoundException {
+        String path = "./var/letcipe/repo_WordCount/"+fileName;
         File file;
         try {
             file = new File(path);

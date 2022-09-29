@@ -5,12 +5,15 @@ import com.ssafy.letcipe.api.service.JwtService;
 import com.ssafy.letcipe.api.service.UserService;
 import com.ssafy.letcipe.domain.user.User;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.data.domain.Pageable;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -27,20 +30,37 @@ public class UserController {
     private final Logger logger = LoggerFactory.getLogger(RecipeController.class);
 
     @PostMapping("")
-    public ResponseEntity createUser(@RequestBody ReqPostUserDto requestDto) throws NoSuchAlgorithmException {
+    public ResponseEntity createUser(@ModelAttribute ReqPostUserDto requestDto) throws NoSuchAlgorithmException, FileUploadException {
         userService.createUser(requestDto);
+        return ResponseEntity.ok().build();
+    }
+    @GetMapping("/id/{userId}/exists")
+    public ResponseEntity<?> checkIdDuplicate(@PathVariable String userId) {
+        userService.checkDuplicationId(userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/nickname/{nickname}/exists")
+    public ResponseEntity<?> checkNicknameDuplicate(@PathVariable String nickname) {
+        userService.checkDuplicationNickname(nickname);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("login")
     public ResponseEntity loginUser(@RequestBody ReqLoginUserDto requestDto) throws NoSuchAlgorithmException {
-        User user = userService.loginUser(requestDto);
-        String token = jwtService.createToken(user);
+        return ResponseEntity.ok(userService.loginUser(requestDto));
+    }
 
-        Map<String, String> resultMap = new HashMap<>();
-        resultMap.put("access-token", token);
+    @PostMapping("login/admin")
+    public ResponseEntity loginAdmin(@RequestBody ReqLoginUserDto requestDto) throws NoSuchAlgorithmException {
+        return ResponseEntity.ok(userService.loginAdmin(requestDto));
+    }
 
-        return ResponseEntity.ok(resultMap);
+    @PostMapping("token")
+    public ResponseEntity updateToken(HttpServletRequest request){
+        String token = request.getHeader("access-token");
+        String refreshToken = request.getHeader("refresh-token");
+        return ResponseEntity.ok(userService.updateToken(token, refreshToken));
     }
 
     @GetMapping("")

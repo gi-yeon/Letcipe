@@ -11,6 +11,8 @@ import com.ssafy.letcipe.api.dto.recipeComment.ReqPutRecipeCommentDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqPostRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqDeleteRecipeLikeDto;
 import com.ssafy.letcipe.api.service.RecipeService;
+import com.ssafy.letcipe.util.StringUtils;
+import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -109,8 +111,13 @@ public class RecipeController {
     }
 
     @GetMapping("")
-    ResponseEntity searchRecipe(@RequestParam String keyword, Pageable pageable) throws SQLException {
-        return ResponseEntity.ok(recipeService.searchRecipe(pageable,keyword));
+    ResponseEntity searchRecipe(@RequestParam(required = false) String keyword,@RequestParam(required = false) String ingredients, Pageable pageable) throws SQLException {
+        log.info(keyword);
+        log.info(ingredients);
+        if (!StringUtil.isNullOrEmpty(keyword))
+            return ResponseEntity.ok(recipeService.searchRecipeByKeyword(pageable, keyword));
+        else
+            return ResponseEntity.ok(recipeService.searchRecipeByIngredients(pageable, ingredients));
     }
 
     @GetMapping("/best")

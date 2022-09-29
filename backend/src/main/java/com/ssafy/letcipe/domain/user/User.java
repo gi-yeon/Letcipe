@@ -1,12 +1,8 @@
 package com.ssafy.letcipe.domain.user;
 
 import com.ssafy.letcipe.api.dto.user.ReqPutUserDto;
-import com.ssafy.letcipe.domain.board.Board;
 import com.ssafy.letcipe.domain.cart.Cart;
-import com.ssafy.letcipe.domain.recipe.Recipe;
-import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
-import com.ssafy.letcipe.domain.recipeList.RecipeList;
-import com.ssafy.letcipe.domain.recipeListBookmark.RecipeListBookmark;
+import com.ssafy.letcipe.domain.cartIngredient.CartIngredient;
 import com.ssafy.letcipe.domain.type.StatusType;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,19 +27,19 @@ public class User {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "user_id", nullable = false, length = 30)
+    @Column(name = "user_id", nullable = false, unique = true, length = 30)
     private String userId;
 
-    @Column(name = "email", nullable = false, length = 40)
+    @Column(name = "email", nullable = false, unique = true, length = 40)
     private String email;
 
     @Column(name = "password", nullable = false, length = 100)
     private String password;
 
-    @Column(name = "nickname", nullable = false, length = 20)
+    @Column(name = "nickname", nullable = false, unique = true, length = 20)
     private String nickname;
 
-    @Column(name = "phone", length = 100)
+    @Column(name = "phone", unique = true, length = 100)
     private String phone;
 
     @Column(name = "profile_image")
@@ -67,8 +63,14 @@ public class User {
     @Column(name = "user_type", nullable = false)
     private UserType userType;
 
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
     @OneToMany(fetch = LAZY, mappedBy = "user")
     private List<Cart> carts = new ArrayList<>();
+
+    @OneToMany(fetch = LAZY, mappedBy = "user")
+    private List<CartIngredient> cartIngredients = new ArrayList<>();
 
     @Builder
     public User(String name, String userId, String email, String password, String nickname, String phone, String profileImage, LocalDate birth, GenderType gender, JobType job, Integer family, UserType userType) {
@@ -84,6 +86,7 @@ public class User {
         this.job = job;
         this.family = family;
         this.userType = userType;
+        this.profileImage = profileImage;
     }
 
     public void delete(){
@@ -99,5 +102,9 @@ public class User {
 
     public void updatePassword(String password) {
         this.password = password;
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

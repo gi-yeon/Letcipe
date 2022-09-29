@@ -4,7 +4,7 @@ import { apiInstance, fileInstance } from '.'
 const api = apiInstance()
 const file = fileInstance()
 
-// 레시피리스트 검색
+// 레시피리스트 목록 검색
 async function searchRecipeList(query, page, size, success, fail) {
   await api
     .get(`/api/recipelist?query=${query}&page=${page}&size=${size}`)

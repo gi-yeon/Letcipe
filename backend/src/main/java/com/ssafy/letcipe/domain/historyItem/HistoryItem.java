@@ -2,14 +2,18 @@ package com.ssafy.letcipe.domain.historyItem;
 
 import com.ssafy.letcipe.domain.history.History;
 import com.ssafy.letcipe.domain.recipe.Recipe;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 public class HistoryItem {
 
     @Id

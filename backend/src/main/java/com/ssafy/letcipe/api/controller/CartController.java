@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLException;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +24,7 @@ public class CartController {
     @PostMapping("cart")
     public ResponseEntity createCart(@RequestBody ReqPostCartDto requestDto, HttpServletRequest request) {
         Long userId = jwtService.getUserId(request);
-        cartService.createCart(requestDto, userId);
+        cartService.createCarts(requestDto, userId);
         return ResponseEntity.ok().build();
     }
 
@@ -37,7 +38,7 @@ public class CartController {
 
     @GetMapping("cart")
     //TODO: 추가재료 수량까지 계산해서 재료도 보내주기
-    public ResponseEntity readCart(HttpServletRequest request) {
+    public ResponseEntity readCart(HttpServletRequest request) throws SQLException {
         Long userId = jwtService.getUserId(request);
         return ResponseEntity.ok(cartService.getCart(userId));
     }
@@ -56,6 +57,13 @@ public class CartController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("cart-ingredient")
+    public ResponseEntity getCartIngredient(HttpServletRequest request){
+        Long userId = jwtService.getUserId(request);
+        userId = 1L;
+        return ResponseEntity.ok(cartService.getCartIngredient(userId));
+    }
+
     @PatchMapping("cart-ingredient")
     public ResponseEntity patchCartIngredient(@RequestBody ReqPatchCartIngredientDto requestDto, HttpServletRequest request) {
         Long userId = jwtService.getUserId(request);
@@ -68,6 +76,13 @@ public class CartController {
         Long userId = jwtService.getUserId(request);
         cartService.deleteCartIngredient(requestDto, userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("cart-history")
+    public ResponseEntity createCartHistory(HttpServletRequest request){
+        Long userId = jwtService.getUserId(request);
+        cartService.createCartHistory(userId);
+        return ResponseEntity.ok().build();
     }
 }
 
