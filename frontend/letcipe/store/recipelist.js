@@ -12,11 +12,20 @@ import {
 
 export const state = () => ({
   recipeListRes: [],
+  recipeListUser: {},
+  recipeListItems: [],
+  recipeListRepImg: '',
 })
 
 export const mutations = {
   SET_RECIPELIST(state, recipeListRes) {
     state.recipeListRes = recipeListRes
+    state.recipeListUser = recipeListRes.user
+    recipeListRes.recipeListItems.forEach((element) => {
+      element.recipe.content = element.recipe.content.replaceAll('<br>', '  ')
+    })
+    state.recipeListItems = recipeListRes.recipeListItems
+    state.recipeListRepImg = recipeListRes.recipeListItems[0].recipe.repImg
   },
 }
 
@@ -50,11 +59,11 @@ export const actions = {
       }
     )
   },
-  async getRecipeList({ commit }, recipeListId, updateRL) {
+  async getRecipeList({ commit }, recipeListId) {
     await getRecipeList(
       recipeListId,
-      updateRL,
       ({ data }) => {
+        commit('SET_RECIPELIST', data)
         // console.log(data)
         // console.log('레시피리스트 하나 검색 성공!')
       },
@@ -63,9 +72,10 @@ export const actions = {
       }
     )
   },
-  async updateRecipeList({ commit }, recipeListId) {
+  async updateRecipeList({ commit }, recipeListId, updateRL) {
     await updateRecipeList(
       recipeListId,
+      updateRL,
       ({ data }) => {
         // console.log(data)
         // console.log('레시피리스트 하나 수정 성공!')

@@ -10,7 +10,7 @@
                 <v-text-field
                   v-model="id"
                   label="아이디"
-                  :rules="rules"
+                  :rules="rules.id_rule"
                   hide-details="auto"
                   @keyup.enter="loginTemp"
                 ></v-text-field>
@@ -19,8 +19,11 @@
                 <v-text-field
                   v-model="pw"
                   label="비밀번호"
-                  :rules="rules"
+                  :rules="rules.pw_rule"
+                  :append-icon="showPW ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="showPW ? 'text' : 'password'"
                   hide-details="auto"
+                  @click:append="showPW = !showPW"
                   @keyup.enter="loginTemp"
                 ></v-text-field>
               </div>
@@ -64,11 +67,25 @@ export default {
     return {
       id: null,
       pw: null,
+      showPW: false,
       checkLogin: false,
-      rules: [
-        (value) => !!value || 'Required.',
-        (value) => (value && value.length >= 3) || 'Min 3 characters',
-      ],
+      rules: {
+        id_rule: [
+          (v) => !!v || '아이디는 필수 입력사항입니다.',
+          (v) => /^[a-zA-Z0-9]*$/.test(v) || '영문+숫자만 입력 가능합니다.',
+          (v) => !(v && v.length >= 30) || '30자 이상 입력할 수 없습니다.',
+          (v) => !(v && v.length <= 5) || '5자 이상으로 이루어져야 합니다.',
+        ],
+        pw_rule: [
+          (v) => !!v || '비밀번호는 필수 입력사항입니다.',
+          (v) => !(v && v.length < 8) || '8자 이상이어야합니다.',
+          (v) => !(v && v.length >= 30) || '20자 이상 입력할 수 없습니다.',
+          (v) =>
+            /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/.test(
+              v
+            ) || '영문, 숫자, 특수문자를 모두 포함해야합니다.',
+        ],
+      },
     }
   },
   computed: {
