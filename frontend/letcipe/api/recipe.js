@@ -15,8 +15,8 @@ async function createRecipeDetail(formData, success, fail) {
 }
 
 // 레시피 수정
-async function updateRecipeDetail(recipeId, success, fail) {
-  await api.put(`/api/recipe/${recipeId}`).then(success).catch(fail)
+async function updateRecipeDetail(recipeId, formData, success, fail) {
+  await api.put(`/api/recipe/${recipeId}`, formData).then(success).catch(fail)
 }
 
 // 레시피 삭제

@@ -32,8 +32,7 @@ public class FileHandler {
      */
     public String uploadImage(MultipartFile imgFile) throws FileUploadException {
         // 유효성 검사
-        System.out.println("와아아ㅏㅈ아ㅏㄹ;ㅈ얄;");
-
+        System.out.println("와가가가얌ㄴ;ㅣ아ㅓㄹ;ㅐㅑㅓㅈㄷ");
         System.out.println(imgFile.getOriginalFilename());
 
         if (imgFile == null || imgFile.isEmpty())
