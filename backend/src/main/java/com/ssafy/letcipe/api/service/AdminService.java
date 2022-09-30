@@ -1,5 +1,6 @@
 package com.ssafy.letcipe.api.service;
 
+import com.ssafy.letcipe.api.dto.report.JPQLApiReportDto;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.report.ApiReport;
 import com.ssafy.letcipe.domain.report.ApiReportRepository;
@@ -85,15 +86,10 @@ public class AdminService {
         }
     }
 
-    public List<ApiReport> getApiReport(LocalDate beginDate, LocalDate endDate) {
-        List<ApiReport> apiReports = apiReportRepository.rangeSearch(beginDate, endDate);
-        apiReports.sort(Comparator.comparing(ApiReport::getCount).reversed());
+    @Transactional
+    public List<JPQLApiReportDto> getApiReport(LocalDate beginDate, LocalDate endDate) {
+        List<JPQLApiReportDto> apiReports = apiReportRepository.rangeSearch(beginDate, endDate);
+        apiReports.sort(Comparator.comparing(JPQLApiReportDto::getCount).reversed());
         return apiReports;
-    }
-
-    public List<CartReport> getCartReport(String attributes, LocalDate beginDate, LocalDate endDate) {
-        List<CartReport> cartReports = cartReportRepository.findAllByAttr(attributes, beginDate, endDate);
-        cartReports.sort(Comparator.comparing(CartReport::getCount).reversed());
-        return cartReports;
     }
 }
