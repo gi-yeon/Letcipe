@@ -14,15 +14,22 @@ import {
 
 export const state = () => ({
   recipeDetail: {},
+  recipeID: null,
 })
 
 export const mutations = {
   SET_RECIPE_DETAIL(state, recipeDetail) {
     state.recipeDetail = recipeDetail
   },
+  SET_RECIPE_ID(state, id) {
+    state.recipeID = id
+  },
 
   CLEAR_RECIPE_DETAIL(state) {
     state.recipeDetail = {}
+  },
+  CLEAR_RECIPE_ID(state, id) {
+    state.recipeID = null
   },
 }
 
@@ -53,11 +60,13 @@ export const actions = {
       }
     )
   },
-  async updateRecipeDetail({ commit }, recipeId) {
+  async updateRecipeDetail({ commit }, recipeId, formData) {
     await updateRecipeDetail(
       recipeId,
+      formData,
       ({ data }) => {
         commit('')
+        console.log('수정 성공!')
       },
       (error) => {
         console.log(error)

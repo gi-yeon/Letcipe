@@ -13,44 +13,88 @@
 
           <v-card class="mx-auto my-5">
             <div class="recipe-img-wrap" align="center">
-              <v-img
-                class="recipe-imgs"
-                src="https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg"
-              >
+              <v-img class="recipe-imgs" :src="recipeDetail.repImg">
                 <div class="ref-wrap">
-                  <v-card-title class="text-h6 ref-title">
-                    {{ title }}
-                  </v-card-title>
+                  <v-card-title class="text-h6 ref-title">{{ recipeDetail.title }}</v-card-title>
 
                   <!-- 레시피도 서브타이틀 넣을지? 현재 erd에 작성 안되어있음 -->
                   <!-- <v-card-subtitle class="text-md-h3 ref-subtitle"
-                  >맛있겠다!</v-card-subtitle
-                > -->
+                    >맛있겠다!</v-card-subtitle
+                  >-->
                 </div>
               </v-img>
             </div>
 
-            <v-card-title class="text-md-h3">{{ title }}</v-card-title>
-            <!-- <v-card-subtitle class="text-md-h5">맛있겠다!</v-card-subtitle> -->
+            <v-card-title class="text-md-h3">
+              {{
+              recipeDetail.title
+              }}
+            </v-card-title>
+            <v-card-subtitle class="text-md-h5">맛있겠다!</v-card-subtitle>
 
             <v-card-text>
-              <v-row align="center" class="mx-0">
-                <v-icon small color="blue lighten-1">mdi-thumb-up</v-icon>
-                &nbsp;{{ recipeLike }}&nbsp;&nbsp;
-                <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
-                &nbsp;{{ recipeBookmark }}
+              <v-row align="center" class="d-flex mx-0">
+                <v-icon
+                  v-if="recipeDetail.like === true"
+                  small
+                  color="pink lighten-1"
+                  @click="deleteLikes()"
+                >mdi-heart</v-icon>
+                <v-icon
+                  v-else-if="recipeDetail.like === false"
+                  small
+                  color="grey"
+                  @click="countLikes()"
+                >mdi-heart-outline</v-icon>
+                &nbsp;{{ recipeDetail.recipeLike }}&nbsp;&nbsp;
+                <v-icon
+                  v-if="recipeDetail.bookmark === true"
+                  small
+                  color="yellow lighten-1"
+                  @click="deleteBookmark()"
+                >mdi-bookmark</v-icon>
+                <v-icon
+                  v-if="recipeDetail.bookmark === false"
+                  small
+                  color="grey"
+                  @click="saveBookmark()"
+                >mdi-bookmark-outline</v-icon>
+                &nbsp;{{ recipeDetail.recipeBookmark }}
               </v-row>
+
               <v-row align="center" class="mx-0">등록일자 : 2022-09-18</v-row>
-              <v-card-text style="padding: 4% 0% 0% 0%">
-                Chef&nbsp;&nbsp;{{ nickname }}
-              </v-card-text>
+              <div class="my-4 text-subtitle-1">
+                <!-- <v-avatar
+                  v-if="profileImg !== null || profileImg !== ''"
+                  size="36px"
+                >
+                  <img alt="Avatar" :src="profileImg" />
+                </v-avatar>-->
+                <v-avatar size="27px" color="letcipe">
+                  <v-icon dark>mdi-account-circle</v-icon>
+                </v-avatar>
+                <span style="color: #ffa500">Chef</span>
+                &nbsp;&nbsp;{{ writer }}
+              </div>
             </v-card-text>
 
             <v-divider class="mx-4"></v-divider>
 
             <div>
-              <v-card-text>{{ content }}</v-card-text>
-              <v-card-title class="text-md-h4">재료</v-card-title>
+              <v-card-text>{{ recipeDetail.content }}</v-card-text>
+              <v-card-title class="d-flex text-md-h4">
+                <div>재료</div>
+                <div class="ml-3" style="font-size: small; color: #ffa500">
+                  <div v-if="recipeDetail.cookingTime != -1">
+                    <v-icon small color="letcipe">mdi-timer</v-icon>
+                    {{ recipeDetail.cookingTime }}분
+                  </div>
+                  <div v-if="recipeDetail.serving != 0">
+                    <v-icon small color="letcipe">mdi-account</v-icon>
+                    {{ recipeDetail.serving }}인분
+                  </div>
+                </div>
+              </v-card-title>
               <v-simple-table>
                 <template #default>
                   <thead>
@@ -62,24 +106,20 @@
                   </thead>
                   <tbody>
                     <tr v-for="(item, i) in recipeIngredient" :key="i">
-                      <td>{{ item.name }}</td>
+                      <td>{{ item.ingredient.name }}</td>
                       <td>{{ item.amount }}</td>
-                      <td>{{ item.unit }}</td>
+                      <td>{{ item.ingredient.measure }}</td>
                     </tr>
                   </tbody>
                 </template>
               </v-simple-table>
               <v-card-title class="text-md-h4">레시피</v-card-title>
-              <div
-                v-for="(stepInfo, i) in recipeSteps"
-                :key="i"
-                style="width: 80%; margin: auto"
-              >
+              <div v-for="(stepInfo, i) in recipeSteps" :key="i" style="width: 80%; margin: auto">
                 <div class="stepDetail">
-                  <div class="recipe-img-wrap" align="center">
-                    <v-img :src="stepInfo.img" class="recipe-imgs"></v-img>
-                  </div>
-                  <h2 style="display: inline">{{ stepInfo.step }}</h2>
+                  <v-img :src="stepInfo.img"></v-img>
+                  <h2
+                    style="display: inline; color: #ffa500; font-size: xx-large"
+                  >{{ stepInfo.step }}</h2>
                   {{ stepInfo.content }}
                 </div>
               </div>
@@ -90,20 +130,22 @@
 
             <v-card-text>
               <v-chip-group column>
-                <v-chip v-for="(tag, i) in tags" :key="i">{{
+                <v-chip v-for="(tag, i) in recipeDetail.tags" :key="i">
+                  {{
                   tag.name
-                }}</v-chip>
+                  }}
+                </v-chip>
               </v-chip-group>
             </v-card-text>
 
             <div align="center">
-              <v-row class="d-flex justify-center"
-                ><v-btn color="letcipe">+ 담기</v-btn></v-row
-              >
-              <v-row align="center"
-                ><v-col cols="1"></v-col
-                ><v-col cols="10" class="pr-0 pl-0"
-                  ><v-text-field
+              <v-row class="d-flex justify-center">
+                <v-btn color="letcipe">+ 담기</v-btn>
+              </v-row>
+              <v-row align="center">
+                <v-col cols="1"></v-col>
+                <v-col cols="10" class="pr-0 pl-0">
+                  <v-text-field
                     v-model="enterComment"
                     color="letcipe"
                     solo
@@ -111,17 +153,14 @@
                     append-icon="mdi-arrow-left-bottom"
                     @click:append="addComment()"
                     @keyup.enter="addComment()"
-                  ></v-text-field></v-col
-                ><v-col cols="1"></v-col
-              ></v-row>
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="1"></v-col>
+              </v-row>
 
               <v-row>
                 <v-col align="center">
-                  <div
-                    v-for="(comment, i) in comments"
-                    :key="i"
-                    style="width: 80%"
-                  >
+                  <div v-for="(comment, i) in comments" :key="i" style="width: 80%">
                     <div class="mx-auto pt-2 pb-2 d-flex align-center">
                       <v-list-item
                         three-line
@@ -131,20 +170,20 @@
                         <v-list-item-content>
                           <v-row>
                             <v-col>
-                              <v-list-item-subtitle class="recipe-comment">{{
+                              <v-list-item-subtitle class="recipe-comment">
+                                {{
                                 comment.nickName
-                              }}</v-list-item-subtitle>
+                                }}
+                              </v-list-item-subtitle>
                             </v-col>
                             <v-col align="right">
-                              <v-list-item-subtitle class="recipe-comment">
-                                {{ comment.regTime.split('T')[0] }}
-                              </v-list-item-subtitle>
+                              <v-list-item-subtitle
+                                class="recipe-comment"
+                              >{{ comment.regTime.split('T')[0] }}</v-list-item-subtitle>
                             </v-col>
                           </v-row>
 
-                          <v-list-item-content class="recipe-comment">
-                            {{ comment.content }}
-                          </v-list-item-content>
+                          <v-list-item-content class="recipe-comment">{{ comment.content }}</v-list-item-content>
                         </v-list-item-content>
                       </v-list-item>
                     </div>
@@ -179,82 +218,83 @@ export default {
       TotalPage: 1,
       currentPage: 1,
       enterComment: null,
-      id: 1,
-      nickname: '싸피10기',
-      title: '고르곤졸라피자',
-      content: `만만치 않은 가격에도 도우 반죽 때문에 집에서 만들기 영 꺼려졌던 피자.
-토르티야로 간편하게 해결하세요!
-꼬릿하지만 묘한 매력이 있는 고르곤졸라치즈를 얹으면
-10분 만에 풍미 가득한 피자가 완성되죠. 꿀에 찍어 먹으면 더 맛있어요.`,
+      writer: '',
+      content: '',
       cookingTime: 10,
       serving: 4,
       repImg: 'adsasdasd',
       recipeLike: 21,
       recipeBookmark: 16,
-      recipeSteps: [
+      recipeSteps: [],
+      recipeComment: [
         {
-          step: 1,
-          img: 'https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg',
-          content:
-            '오이는 길게 2등분해서 씨를 제거한 뒤 한입 크기로 썰고, 감자와 당근, 양파, 닭다릿살도 한입 크기로',
+          nickname: '수리수리마수리',
+          content: 'asd맛나는 레시피일까요아닐까요',
+          reg_time: '2022-09-24',
+          mod_time: '',
         },
         {
-          step: 2,
-          img: 'https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg',
-          content:
-            '오이는 길게 2등분해서 씨를 제거한 뒤 한입 크기로 썰고, 감자와 당근, 양파, 닭다릿살도 한입 크기로오이는 길게 2등분해서 씨를 제거한 뒤 한입 크기로 썰고, 감자와 당근, 양파, 닭다릿살도 한입 크기로오이는 길게 2등분해서 씨를 제거한 뒤 한입 크기로 썰고, 감자와 당근, 양파, 닭다릿살도 한입 크기로',
-        },
-      ],
-
-      recipeIngredient: [
-        {
-          name: '치즈',
-          unit: 'g',
-          category: 1,
-          amount: 500,
-        },
-        {
-          name: '치즈',
-          unit: 'g',
-          category: 1,
-          amount: 500,
+          nickname: '수리수리마수리',
+          content: 'asd맛나는 레시피일까요아닐까요',
+          reg_time: '2022-09-24',
+          mod_time: '',
         },
       ],
-      tags: [
-        {
-          name: '피자',
-        },
-        {
-          name: '꿀',
-        },
-      ],
+      recipeIngredient: [],
+      ingredient: [],
+      profileImg: '',
     }
   },
   computed: {
     ...mapState('comment', ['comments', 'commentNum']),
+    ...mapState('recipe', ['recipeDetail', 'recipeID']),
   },
+
   created() {
-    this.recipeInfo = {
-      boardType: 'RECIPE',
-      boardId: '1',
-    }
     const promise = new Promise((resolve, reject) => {
       resolve()
     })
+    this.recipeInfo = {
+      boardType: 'RECIPE',
+      boadrId: this.recipeID,
+    }
     promise.then(async () => {
+      // 레시피 디테일 불러오는 부분
+      this.recipeSteps = []
+      await this.RecipeDetail(this.recipeID)
+      console.log(this.recipeDetail)
+      console.log(this.recipeDetail.user.nickname)
+      this.recipeSteps = this.recipeDetail.recipeSteps
+      this.recipeIngredient = this.recipeDetail.ingredients
+      this.writer = this.recipeDetail.user.nickname
+      console.log(this.writer)
+
+      console.log('f레시피 인포' + JSON.stringify(this.recipeInfo))
+      // 레시피 코멘트 불러오는 부분
       await this.getCommentNum(this.recipeInfo)
+      console.log('코멘트 넘버요' + this.commentNum)
       this.TotalPage = Math.ceil(this.commentNum / 5)
+      console.log('토탈' + this.TotalPage)
       this.recipeInfo = {
         boardType: 'RECIPE',
-        boardId: '1',
+        boardId: this.recipeDetail.id,
         size: 5,
         page: this.currentPage,
       }
+      console.log('레시피 인포' + this.recipeInfo)
       await this.getComment(this.recipeInfo)
     })
   },
   methods: {
     ...mapActions('comment', ['getComment', 'postComment', 'getCommentNum']),
+    ...mapActions('recipe', [
+      'RecipeDetail',
+      'createRecipeDetail',
+      'selectBookmarks',
+      'deleteBookmarks',
+      'countRecipeLikes',
+      'decountRecipeLikes',
+    ]),
     handlePage(page) {
       this.recipeInfo = {
         boardType: 'RECIPE',
@@ -262,7 +302,6 @@ export default {
         size: 5,
         page: this.currentPage,
       }
-
       const promise = new Promise((resolve, reject) => {
         resolve()
       })
@@ -270,17 +309,31 @@ export default {
         await this.getComment(this.recipeInfo)
       })
     },
-  },
-  addComment() {
-    console.log(this.enterComment)
-    const comment = {
-      content: this.enterComment,
-      boardId: 1,
-      boardType: 'RECIPE',
-    }
-    this.postComment(comment)
-    this.enterComment = null
-    this.$router.go()
+    saveBookmark() {
+      this.selectBookmarks(1798)
+      this.RecipeDetail(1798)
+    },
+    deleteBookmark() {
+      this.deleteBookmarks(1798)
+      //   this.RecipeDetail(1)
+    },
+    deleteLikes() {
+      this.decountRecipeLikes(1798)
+    },
+    countLikes() {
+      this.countRecipeLikes(1798)
+    },
+    addComment() {
+      console.log(this.enterComment)
+      const comment = {
+        content: this.enterComment,
+        boardId: 1798,
+        boardType: 'RECIPE',
+      }
+      this.postComment(comment)
+      this.enterComment = null
+      this.$router.go()
+    },
   },
 }
 </script>
@@ -318,7 +371,7 @@ export default {
 
 .ref-wrap {
   width: 100%;
-  height: 30%;
+  height: 35%;
   /* width: 150px;
   height: 80px; */
   background-color: rgba(49, 49, 49, 0.422);
