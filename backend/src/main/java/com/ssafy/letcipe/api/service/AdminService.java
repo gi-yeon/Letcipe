@@ -84,16 +84,4 @@ public class AdminService {
             apiReportRepository.save(apiReport);
         }
     }
-
-    public List<ApiReport> getApiReport(LocalDate beginDate, LocalDate endDate) {
-        List<ApiReport> apiReports = apiReportRepository.rangeSearch(beginDate, endDate);
-        apiReports.sort(Comparator.comparing(ApiReport::getCount).reversed());
-        return apiReports;
-    }
-
-    public List<CartReport> getCartReport(String attributes, LocalDate beginDate, LocalDate endDate) {
-        List<CartReport> cartReports = cartReportRepository.findAllByAttr(attributes, beginDate, endDate);
-        cartReports.sort(Comparator.comparing(CartReport::getCount).reversed());
-        return cartReports;
-    }
 }
