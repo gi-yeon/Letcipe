@@ -26,4 +26,3 @@ function hadoopInstance() {
   return instance
 }
 export { apiInstance, fileInstance, hadoopInstance }
- 

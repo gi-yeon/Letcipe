@@ -80,7 +80,7 @@ export default {
     width: 20%;
   }
 }
- 
+
 .logo-horizontal {
   animation: slide-in-right 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards,
     logo-jello 0.9s linear 1.2s;

@@ -1,5 +1,5 @@
 <template>
-  <div id="app"> 
+  <div id="app">
     <v-app id="inspire">
       <div id="recipedetail-container">
         <v-container style="width: 100%">
@@ -28,38 +28,38 @@
             <v-card-subtitle class="text-md-h5">맛있겠다!</v-card-subtitle>
 
             <v-card-text>
-              <v-row align="center" class="d-flex mx-0">
+              <v-row align="center" class="mx-0">
                 <v-icon
                   v-if="recipeDetail.like === true"
                   small
-                  color="pink lighten-1"
+                  color="blue lighten-1"
                   @click="deleteLikes"
-                  >mdi-heart</v-icon
-                ><v-icon
+                  >mdi-thumb-up</v-icon
+                >
+                <v-icon
                   v-else-if="recipeDetail.like === false"
                   small
                   color="grey"
                   @click="countLikes"
-                  >mdi-heart-outline</v-icon
+                  >mdi-thumb-up</v-icon
                 >
                 &nbsp;{{ recipeDetail.recipeLike }}&nbsp;&nbsp;
                 <v-icon
                   v-if="recipeDetail.bookmark === true"
                   small
-                  color="yellow lighten-1"
+                  color="pink lighten-1"
                   @click="deleteBookmark"
-                  >mdi-bookmark</v-icon
+                  >mdi-cards-heart</v-icon
                 >
                 <v-icon
                   v-if="recipeDetail.bookmark === false"
                   small
                   color="grey"
                   @click="saveBookmark"
-                  >mdi-bookmark-outline</v-icon
+                  >mdi-cards-heart</v-icon
                 >
                 &nbsp;{{ recipeDetail.recipeBookmark }}
               </v-row>
-
               <v-row align="center" class="mx-0">등록일자 : 2022-09-18</v-row>
               <div class="my-4 text-subtitle-1">
                 Chef&nbsp;&nbsp;{{ writer.nickname }}
@@ -71,26 +71,7 @@
             <v-divider class="mx-4"></v-divider>
             <div>
               <v-card-text>{{ recipeDetail.content }}</v-card-text>
-              <v-card-title class="d-flex text-md-h4">
-                <div>재료</div>
-                <div class="ml-3" style="font-size: small; color: #ffa500">
-                  <v-icon
-                    v-if="recipeDetail.cookingTime != -1"
-                    small
-                    color="letcipe"
-                    >mdi-timer</v-icon
-                  >
-                  {{ recipeDetail.cookingTime }}분
-
-                  <v-icon
-                    v-if="recipeDetail.serving != -1"
-                    small
-                    color="letcipe"
-                    >mdi-account</v-icon
-                  >
-                  {{ recipeDetail.serving }}인분
-                </div>
-              </v-card-title>
+              <v-card-title class="text-md-h4">재료</v-card-title>
               <v-simple-table>
                 <template #default>
                   <thead>
@@ -117,11 +98,7 @@
               >
                 <div class="stepDetail">
                   <v-img :src="stepInfo.img"></v-img>
-                  <h2
-                    style="display: inline; color: #ffa500; font-size: xx-large"
-                  >
-                    {{ stepInfo.step }}
-                  </h2>
+                  <h2 style="display: inline">{{ stepInfo.step }}</h2>
                   {{ stepInfo.content }}
                 </div>
               </div>
@@ -216,13 +193,13 @@ export default {
     ...mapState('recipe', ['recipeDetail']),
   },
   created() {
+    // recipeId 받아와서 넣어야함
     const promise = new Promise((resolve, reject) => {
       resolve()
     })
     promise.then(async () => {
       this.recipeSteps = []
-      // recipeId 받아와서 넣어야함
-      await this.RecipeDetail(1798)
+      await this.RecipeDetail(1)
       console.log(this.recipeDetail)
       //   console.log(this.recipeDetail.ingredients)
       this.recipeSteps = this.recipeDetail.recipeSteps
@@ -242,18 +219,18 @@ export default {
       'decountRecipeLikes',
     ]),
     saveBookmark() {
-      this.selectBookmarks(1798)
-      this.RecipeDetail(1798)
+      this.selectBookmarks(1)
+      this.RecipeDetail(1)
     },
     deleteBookmark() {
-      this.deleteBookmarks(1798)
+      this.deleteBookmarks(1)
       //   this.RecipeDetail(1)
     },
     deleteLikes() {
-      this.decountRecipeLikes(1798)
+      this.decountRecipeLikes(1)
     },
     countLikes() {
-      this.countRecipeLikes(1798)
+      this.countRecipeLikes(1)
     },
   },
 }
