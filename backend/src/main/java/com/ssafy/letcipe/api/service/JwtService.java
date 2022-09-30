@@ -42,6 +42,7 @@ public class JwtService {
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * EXPIRE_MINUTES))
                 .claim("userId", user.getId())
+                .claim("status", user.getStatusType())
                 .signWith(SignatureAlgorithm.HS256, generateKey()).compact();
         return jwt;
     }
@@ -92,6 +93,15 @@ public class JwtService {
     public Long getUserId(HttpServletRequest request){
         try {
             return Long.parseLong(String.valueOf(getClaims(getJwtToken(request)).get("userId")));
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new AuthorityViolationException("권한 없음");
+        }
+    }
+
+    public Long getStatus(HttpServletRequest request){
+        try {
+            return Long.parseLong(String.valueOf(getClaims(getJwtToken(request)).get("status")));
         } catch (Exception e){
             e.printStackTrace();
             throw new AuthorityViolationException("권한 없음");
