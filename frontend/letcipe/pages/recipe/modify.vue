@@ -1,12 +1,12 @@
 <template>
   <div id="app">
     <v-app id="inspire">
-      <div class="create-container">
+      <div class="makerecipe-container">
         <v-container style="padding: 0%">
           <v-card-title
             class="justify-center"
             style="background-color: white; font-size: 1.7rem"
-            >레시피 등록</v-card-title
+            >레시피 수정</v-card-title
           >
           <v-divider></v-divider>
           <v-card>
@@ -73,7 +73,7 @@
             <v-card-title class="recipe-component">추가 정보</v-card-title>
             <div class="d-flex justify-center mr-5 ml-5">
               <v-card-subtitle class="d-flex justify-left align-center">
-                조리 시간&nbsp;&nbsp;
+                조리 시간&nbsp;&nbsp;&nbsp;
                 <v-text-field
                   v-model="cookingTime"
                   class="recipe-input-content text-md-h6"
@@ -85,7 +85,7 @@
                 >&nbsp;분
               </v-card-subtitle>
               <v-card-subtitle class="d-flex justify-left align-center">
-                요리량&nbsp;&nbsp;
+                요리량&nbsp;&nbsp;&nbsp;
                 <v-text-field
                   v-model="serving"
                   class="recipe-input-content text-md-h6"
@@ -117,10 +117,8 @@
                     <td class="text-center">{{ item.unit }}</td>
 
                     <th class="text-center">
-                      <v-icon small @click="editItem(item)">mdi-pencil</v-icon>
-                      <v-icon small @click="deleteItem(item)"
-                        >mdi-delete</v-icon
-                      >
+                      <v-icon @click="editItem(item)">mdi-pencil</v-icon>
+                      <v-icon @click="deleteItem(item)">mdi-delete</v-icon>
                     </th>
                   </tr>
                 </tbody>
@@ -141,7 +139,7 @@
 
                 <v-card>
                   <v-card-title>
-                    <span>{{ formTitle }}</span>
+                    <span class="text-h5">{{ formTitle }}</span>
                   </v-card-title>
 
                   <v-card-text>
@@ -149,9 +147,9 @@
                       <v-row>
                         <v-col cols="12" sm="6" md="4">
                           <!-- <v-text-field
-                            v-model="editedItem.name"
-                            label="재료명"
-                          ></v-text-field> -->
+                              v-model="editedItem.name"
+                              label="재료명"
+                            ></v-text-field> -->
                           <v-autocomplete
                             v-model="keyword"
                             :items="ingredientsList"
@@ -196,7 +194,6 @@
                         <v-col cols="12" sm="6" md="4">
                           <v-text-field
                             v-model="editedItem.amount"
-                            :rules="ingre_rule"
                             placeholder="0"
                             color="letcipe"
                             label="재료량"
@@ -218,10 +215,7 @@
                     <v-btn color="blue darken-1" text @click="close"
                       >취소</v-btn
                     >
-                    <v-btn
-                      color="blue darken-1"
-                      text
-                      @click:ingre_rule="saveIngre"
+                    <v-btn color="blue darken-1" text @click="saveIngre"
                       >재료 저장</v-btn
                     >
                   </v-card-actions>
@@ -278,9 +272,20 @@
             <v-divider></v-divider>
             <v-divider></v-divider>
             <v-card-title class="recipe-component">태그</v-card-title>
+            <div class="d-flex ma-5">
+              <div v-if="tags.length > 0" class="tags">
+                <input ref="fake" type="text" class="fake" />
+                <span v-for="(t, index) in tags" :key="index" class="tag active"
+                  >{{ t
+                  }}<v-icon size="small" color="white" @click="deleteTag(index)"
+                    >mdi-close</v-icon
+                  ></span
+                >
+              </div>
+            </div>
             <div class="d-flex justify-center">
               <v-input>
-                <hash-tags @setTags="setTags"></hash-tags>
+                <hash-tags @setTags="setTags"> </hash-tags>
               </v-input>
             </div>
             <br />
@@ -303,13 +308,12 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
+
 import HashTags from '@/components/Hashtags.vue'
 
 export default {
-  name: 'CreateRecipe',
-  components: {
-    HashTags,
-  },
+  name: 'ModifyRecipe',
+  components: { HashTags },
   data() {
     return {
       title: '',
@@ -321,15 +325,11 @@ export default {
       cookingTime: '',
       serving: '',
       rules: [(value) => !!value || 'Required.'],
-      ingre_rule: [
-        (v) => !!v || '재료량은 필수 입력사항입니다.',
-        (v) => /^[0-9]*$/.test(v) || '재료량은 숫자만 입력 가능합니다.',
-        (v) => !(v <= 0) || '재료량은 0 이상이어야 합니다.',
-      ],
       stepUrl: [],
       stepImage: [],
-      steps: [{ no: 1, image: null, imageUrl: null, content: '' }],
+      steps: [],
       tags: ['바부'],
+      focusIndex: null,
       dialog: false,
       isLoading: false,
       keyword: null,
@@ -386,7 +386,6 @@ export default {
         unit: 'g',
       },
       stepNum: 1,
-      IngreValid: false,
     }
   },
   computed: {
@@ -404,6 +403,54 @@ export default {
   },
   created() {
     this.initialize()
+    const promise = new Promise((resolve, reject) => {
+      resolve()
+    })
+    promise.then(async () => {
+      // 1793
+      await this.RecipeDetail(1798) // 1591 자리에 recipelist id 넘겨 받으면 돼.
+      console.log(this.recipeDetail)
+      if (this.recipeDetail !== null) {
+        this.title = this.recipeDetail.title
+        this.url = this.recipeDetail.repImg
+        this.content = this.recipeDetail.content
+        this.category = this.recipeDetail.category
+        this.cookingTime = this.recipeDetail.cookingTime
+        this.serving = this.recipeDetail.serving
+        // this.steps = this.recipeDetail.recipeSteps
+        // console.log(this.steps)
+        this.recipeDetail.recipeSteps.forEach((rs) => {
+          // console.log(JSON.stringify(rs))
+          const step = {
+            no: rs.step,
+            image: null,
+            imageUrl: rs.img,
+            content: rs.content,
+          }
+          this.steps.push(step)
+        })
+        // console.log(this.steps)
+        // console.log(this.recipeDetail.ingredients.length)
+        // console.log(this.recipeDetail.ingredients[0])
+
+        for (let i = 0; i < this.recipeDetail.ingredients.length; i++) {
+          const ingre = {
+            name: this.recipeDetail.ingredients[i].ingredient.name,
+            id: this.recipeDetail.ingredients[i].ingredient.id,
+            amount: this.recipeDetail.ingredients[i].amount,
+            unit: this.recipeDetail.ingredients[i].ingredient.measure,
+          }
+          this.ingredients.push(ingre)
+        }
+        console.log(this.ingredients)
+
+        this.recipeDetail.tags?.forEach((t) => {
+          this.tags.push(t)
+        })
+        console.log(JSON.stringify(this.recipeDetail.tags))
+        console.log(this.tags)
+      }
+    })
   },
   methods: {
     ...mapActions('ingredients', ['searchIngredient']),
@@ -416,7 +463,6 @@ export default {
     Preview_image() {
       if (this.image != null) {
         this.url = URL.createObjectURL(this.image)
-        console.log(this.url)
       } else {
         this.url = null
       }
@@ -493,8 +539,10 @@ export default {
     },
     clearItem() {
       this.keyword = null
+      this.search = null
     },
     editItem(item) {
+      console.log(item)
       this.search = item.name
       this.editedIndex = this.ingredients.indexOf(item)
       this.editedItem = Object.assign({}, item)
@@ -522,36 +570,16 @@ export default {
       })
     },
     saveIngre() {
-      this.IngreValid = false
-      this.ingredients?.forEach((ingre) => {
-        if (this.editedItem.name === ingre.name) {
-          ingre.amount =
-            parseInt(ingre.amount) + parseInt(this.editedItem.amount)
-          this.IngreValid = true
-        }
-      })
-      if (this.IngreValid === false) {
-        if (this.editedIndex > -1) {
-          Object.assign(this.ingredients[this.editedIndex], this.editedItem)
-        } else {
-          this.ingredients.push(this.editedItem)
-        }
-      }
-
       if (this.editedIndex > -1) {
         Object.assign(this.ingredients[this.editedIndex], this.editedItem)
+      } else {
+        this.ingredients.push(this.editedItem)
       }
-      // if (this.editedIndex > -1) {
-      //   Object.assign(this.ingredients[this.editedIndex], this.editedItem)
-      // } else {
-      //   this.ingredients.push(this.editedItem)
-      // }
-
       this.close()
     },
     setTags(tags) {
-      this.tags = tags
-      console.log(this.tags)
+      console.log(tags)
+      this.tags.push(tags[0].value)
     },
     ingre(keyword) {
       if (keyword != null && keyword.length > 0) {
@@ -567,26 +595,47 @@ export default {
       this.editedItem.id = item.id
       this.editedItem.unit = item.measure
     },
+    deleteTag(idx) {
+      if (idx === null) {
+        return
+      }
+      this.initSelectIndex()
+      this.tags.splice(idx, 1)
+    },
+    initSelectIndex() {
+      this.focusIndex = null
+    },
     saveRecipe() {
-      // console.log(this.ingredients)
+      console.log(this.ingredients)
       const formdata = new FormData()
       formdata.append('title', this.title)
       formdata.append('content', this.content)
-      formdata.append('category', this.category)
       formdata.append('cookingTime', this.cookingTime)
       formdata.append('serving', this.serving)
-      formdata.append('repImg', this.image)
+      if (this.image === null) {
+        formdata.append('repImg', this.url)
+      } else if (this.image != null) {
+        formdata.append('repImg', this.image)
+      }
       for (let i = 0; i < this.steps.length; i++) {
-        formdata.append(`stepDtoList[${i}].step`, this.steps[i].no)
-        formdata.append(`stepDtoList[${i}].content`, this.steps[i].content)
-        formdata.append(`stepDtoList[${i}].img`, this.steps[i].image)
+        if (this.step[i].image === null) {
+          formdata.append(
+            `stepDtoList[${i}].step[${i}].img`,
+            this.steps[i].image
+          )
+        } else if (this.step[i].image != null) {
+          formdata.append(`stepDtoList[${i}].step[${i}].img`, this.steps[i].img)
+        }
+        formdata.append(
+          `stepDtoList[${i}].step[${i}].content`,
+          this.steps[i].content
+        )
       }
       for (let i = 0; i < this.ingredients.length; i++) {
         formdata.append(`ingredients[${i}].id`, this.ingredients[i].id)
         formdata.append(`ingredients[${i}].amount`, this.ingredients[i].amount)
       }
-      console.log('이거슨' + this.ingredients.length)
-      console.log('이거슨' + this.ingredients)
+
       const ingreVal = []
       const keys = Object.keys(this.tags)
       // console.log(keys)
@@ -596,11 +645,13 @@ export default {
       for (let i = 0; i < this.tags.length; i++) {
         formdata.append(`tagList[${i}]`, ingreVal[i])
       }
+
       for (const p of formdata.entries()) {
         console.log(p[0] + ',' + p[1])
       }
       console.log(formdata)
-      // this.createRecipeDetail(formdata)
+
+      // this.updateRecipeDetail(formdata)
     },
     moveBack() {
       this.$router.push('/main')
@@ -609,13 +660,14 @@ export default {
 }
 </script>
 
-<style scoped>
-.create-container {
+<style lang="scss" scoped>
+.modify-container {
   position: sticky;
   height: 100%;
 
-  padding: 4%;
-  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  padding: 8% 0% 0% 0%;
+  background-image: url('/bg/bg_img.png');
+  background-repeat: repeat;
 
   color: black;
 }
@@ -634,5 +686,65 @@ export default {
 }
 .recipe-input-content {
   max-width: 40% !important;
+}
+
+.tags {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: top;
+  margin-bottom: -6px;
+
+  .fake {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    left: -1px;
+    right: -1px;
+    padding: 0;
+    border: 0;
+    outline: none;
+    -webkit-appearance: none;
+    -webkit-text-size-adjust: none;
+  }
+  .tag {
+    display: inline-block;
+    position: relative;
+    margin: 0 5px 6px 0;
+    padding: 0 5px;
+    line-height: 30px;
+    border-radius: 5px;
+    background-color: black;
+    vertical-align: top;
+    word-wrap: break-word;
+    word-break: break-all;
+    font-size: 13px;
+    text-align: left;
+    &:hover:after {
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      border: 1px solid black;
+      content: '';
+      border-radius: 5px;
+    }
+
+    &:before {
+      display: inline;
+      content: '#';
+    }
+
+    &.active {
+      background-color: #656565;
+      color: #fff;
+      &:hover:after {
+        display: none;
+      }
+    }
+  }
 }
 </style>
