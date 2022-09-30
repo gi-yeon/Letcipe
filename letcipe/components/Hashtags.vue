@@ -11,13 +11,11 @@
         @keydown.backspace.prevent="deleteTag(focusIndex)"
         @keydown.delete.prevent="deleteTag(focusIndex)"
       />
-      <span
-        v-for="(row, index) in tags"
-        :key="index"
-        class="tag"
-        :class="{ active: row.select }"
-        @click="selectTag(index)"
-        >{{ row.value }}</span
+      <span v-for="(row, index) in tags" :key="index" class="tag active"
+        >{{ row.value
+        }}<v-icon size="small" color="white" @click="deleteTag(index)"
+          >mdi-close</v-icon
+        ></span
       >
     </div>
     <!--// Hashtags -->
@@ -172,7 +170,7 @@ export default {
 .comp_hashtag {
   position: relative;
   width: 100%;
-  padding: 0px;
+  padding: 3px;
   border: 1px solid black;
   border-radius: 4px;
   min-height: 40px;

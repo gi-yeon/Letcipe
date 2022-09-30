@@ -47,7 +47,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [{ src: '~/plugins/persistedState.js' }],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -64,6 +64,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    'cookie-universal-nuxt',
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -86,7 +87,7 @@ export default {
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
           success: colors.green.accent3,
-          letcipe: '#aac821',
+          letcipe: '#FFA500',
         },
       },
     },

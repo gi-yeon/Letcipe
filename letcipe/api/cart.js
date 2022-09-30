@@ -1,6 +1,8 @@
-import { apiInstance } from '.'
+import api from '../config/interceptor'
 
-const api = apiInstance()
+// import { apiInstance } from '.'
+
+// const api = apiInstance()
 
 // 장바구니 조회
 async function readCart(success, fail) {
@@ -10,12 +12,12 @@ async function readCart(success, fail) {
 
 
 // 장바구니에 레시피 등록 -- still ing
-// async function createCart(recipeId, success, fail) {
-//   await file
-//     .post(`/api/cart`, recipeId)
-//     .then(success)
-//     .catch(fail)
-// }
+async function createCart(addrecipes, success, fail) {
+  await api
+    .post(`/api/cart`, addrecipes)
+    .then(success)
+    .catch(fail)
+}
 
 // 장바구니 레시피 삭제
 async function deleteCart(id, success, fail) {
@@ -66,12 +68,12 @@ async function patchCartIngredient(updateObject, success, fail) {
 }
 
 // 장바구니 실행 -- still ing
-// async function startCart(calRecipeAmt, success, fail) {
-//   await api
-//     .patch(`/api/cart-history`, JSON.stringify(calRecipeAmt))
-//     .then(success)
-//     .catch(fail)
-// }
+async function startCart( success, fail) {
+  await api
+    .post(`/api/cart-history`)
+    .then(success)
+    .catch(fail)
+}
 
 export {
   readCart,
@@ -80,8 +82,8 @@ export {
   createCartIngredient,
   deleteCartIngredient,
   patchCartIngredient,
-  getCartIngredient
+  getCartIngredient,
+  createCart,
+  startCart,
 
-  // startCart,
-  // createCart,
 }

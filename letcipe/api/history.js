@@ -1,6 +1,7 @@
-import { apiInstance } from '.'
+import api from '../config/interceptor'
+// import { apiInstance } from '.'
 
-const api = apiInstance()
+// const api = apiInstance()
 
 // 히스토리 목록 조회
 async function getHistoryList(success, fail) {

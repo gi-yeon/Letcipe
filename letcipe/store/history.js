@@ -14,6 +14,7 @@ export const state = () => ({
 export const mutations = {
   SET_HISTORY_LIST(state, historyList) {
     state.historyList = historyList
+    console.log(state.historyList)
   },
   SET_HISTORY(state, history) {
     state.history = history
@@ -33,8 +34,10 @@ export const actions = {
     await getHistoryList(
       ({ data }) => {
         commit('SET_HISTORY_LIST', data)
-        // console.log('히스토리목록가져오기 성공!')
-        // console.log(data)
+        console.log('히스토리목록가져오기 성공!')
+        console.log(data)
+        
+  
       },
       (error) => {
         console.log(error)
@@ -46,8 +49,9 @@ export const actions = {
       historyId,
       ({ data }) => {
         commit('SET_HISTORY', data)
-        // console.log(data)
-        // console.log('히스토리한개가져오기 성공!')
+        console.log(data)
+        console.log('히스토리한개가져오기 성공!')
+      
       },
       (error) => {
         console.log(error)

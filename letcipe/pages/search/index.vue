@@ -95,7 +95,12 @@
                           {{ recipeInfo['recipeLike'] }}
                         </v-list-item-subtitle>
                         <v-list-item-subtitle style="text-align: right">
-                          <v-btn small color="letcipe">+담기</v-btn>
+                          <v-btn
+                            small
+                            color="letcipe"
+                            @click="addRecipe(recipeInfo['id'])"
+                            >+담기</v-btn
+                          >
                         </v-list-item-subtitle>
                       </div>
                     </v-list-item-content>
@@ -117,35 +122,40 @@
                 <v-card-subtitle
                   >"{{ searchedName }}" 검색 결과</v-card-subtitle
                 >
-                <div v-for="(recipeInfo, i) in recipeLists" :key="i">
+                <div v-for="(recipeListInfo, i) in recipeLists" :key="i">
                   <v-list-item three-line>
                     <v-list-item-avatar tile size="100">
-                      <v-img :src="recipeInfo['repImg']"></v-img>
+                      <v-img
+                        :src="recipeListInfo.recipeListItems[0].repImg"
+                      ></v-img>
                     </v-list-item-avatar>
                     <v-list-item-content>
                       <v-list-item-title>
-                        {{ recipeInfo['name'] }}
+                        {{ recipeListInfo['name'] }}
                       </v-list-item-title>
 
                       <v-list-item-subtitle>
-                        {{ recipeInfo['content'] }}
+                        {{ recipeListInfo['description'] }}
                       </v-list-item-subtitle>
                       <div class="d-flex justify-space-between">
-                        <v-list-item-subtitle>
-                          <v-icon small color="pink lighten-1"
-                            >mdi-cards-heart</v-icon
-                          >
-                          {{ recipeInfo['recipeLike'] }}
+                        <v-list-item-subtitle style="margin: auto">
+                          by
+                          {{ recipeListInfo['nickname'] }}
                         </v-list-item-subtitle>
                         <v-list-item-subtitle style="text-align: right">
-                          <v-btn small color="letcipe">+담기</v-btn>
+                          <v-btn
+                            small
+                            color="letcipe"
+                            @click="addRecipeList(recipeListInfo)"
+                            >+전체담기</v-btn
+                          >
                         </v-list-item-subtitle>
                       </div>
                     </v-list-item-content>
                   </v-list-item>
                   <v-divider></v-divider>
                 </div>
-                <div class="text-center">
+                <!-- <div class="text-center">
                   <v-pagination
                     v-model="commentPage"
                     color="letcipe"
@@ -154,7 +164,7 @@
                     next-icon="mdi-menu-right"
                     @input="handlePage"
                   ></v-pagination>
-                </div>
+                </div> -->
               </div>
             </v-tab-item>
             <v-tab-item :value="`tab-2`">
@@ -251,7 +261,12 @@
                         </v-list-item-subtitle>
 
                         <v-list-item-subtitle style="text-align: right">
-                          <v-btn small color="letcipe">+담기</v-btn>
+                          <v-btn
+                            small
+                            color="letcipe"
+                            @click="addRecipe(recipeInfo['id'])"
+                            >+담기</v-btn
+                          >
                         </v-list-item-subtitle>
                       </div>
                     </v-list-item-content>
@@ -354,11 +369,22 @@ export default {
   computed: {
     ...mapState('ingredients', ['ingredientsList']),
     ...mapState('search', ['recipes', 'recipesIngre', 'recipeLists']),
+    ...mapState('cart', ['cart', 'ingreList', 'amountByRecipe']),
   },
+
   watch: {},
+  created() {
+    const promise = new Promise((resolve, reject) => {
+      resolve()
+    })
+    promise.then(async () => {
+      await this.readCart()
+    })
+  },
   methods: {
     ...mapActions('ingredients', ['searchIngredient']),
     ...mapActions('search', ['getRecipes', 'getRecipesIngre', 'getRecipeList']),
+    ...mapActions('cart', ['createCart', 'readCart']),
     ingre(keyword) {
       if (keyword != null && keyword.length > 0) {
         keyword = keyword.trim()
@@ -423,6 +449,25 @@ export default {
         this.getRecipeList(searchObject)
       }
       this.searchedName = this.byname
+    },
+    addRecipe(recipeId) {
+      const recipeList = []
+      recipeList.push(recipeId)
+      const addrecipes = {
+        list: recipeList,
+      }
+      this.createCart(addrecipes)
+    },
+    addRecipeList(recipeListInfo) {
+      const recipeList = []
+      for (let i = 0; i < recipeListInfo.recipeListItems.length; i++) {
+        for (let j = 0; j < recipeListInfo.recipeListItems[i].amount; j++)
+          recipeList.push(recipeListInfo.recipeListItems[i].recipeId)
+      }
+      const addrecipes = {
+        list: recipeList,
+      }
+      this.createCart(addrecipes)
     },
   },
 }

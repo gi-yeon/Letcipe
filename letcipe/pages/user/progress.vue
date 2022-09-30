@@ -3,42 +3,41 @@
   <!-- 여기서의 레시피 리스트는 히스토리에서 가져오는건지,,!  -->
   <div id="app">
     <v-app id="inspire">
-      <div class="progressrecipelist-container">
-        <v-container style="padding: 0%">
-          <v-card-title
-            class="justify-center"
-            style="background-color: white; font-size: 1.7rem"
-          >진행중인 레시피리스트</v-card-title>
+      <div class="progressrecipelist-page">
+        <v-container class="progressrecipelist-container d-flex-row">
+          <div class="progressrecipelist-head-wrap">
+            <div class="d-flex justify-space-between pb-3">
+              <v-icon>mdi-window-close</v-icon>
+              <div style="font-size: x-large">진행중인 레시피리스트</div>
+              <v-icon>mdi-blank</v-icon>
+            </div>
+          </div>
           <v-divider></v-divider>
           <!-- <div v-for="(recipeList, i) in letcipeList" :key="i"> -->
           <v-list-item three-line style="background-color: white">
             <v-list-item-avatar tile size="100">
-              <v-img src="https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg"></v-img>
+              <v-img
+                src="https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg"
+              ></v-img>
             </v-list-item-avatar>
             <v-list-item-content>
-              <!-- 레시피리스트에도 서브 타이틀 넣을지? -->
-              <!-- <div
-                class="text-overline mb-4"
-                style="margin-bottom: 0% !important"
-              >
-                OVERLINE
-              </div>-->
-              <v-list-item-title style="display: inline; font-size: 1.4rem; float: left">
-                {{ letcipeList.name }}
-                <span style="font-size: 1rem; color: green; float: right">진행중</span>
+              <v-list-item-title style="display: inline; float: left"
+                >{{ historyInfo[0]['regTime'] }}
+                <span style="font-size: 1rem; color: green; float: right"
+                  >진행중</span
+                >
               </v-list-item-title>
 
               <br />
-              <v-list-item-subtitle>
-                {{
-                letcipeList.description
-                }}
-              </v-list-item-subtitle>
 
-              <v-list-item-subtitle>생성일 : {{ letcipeList.reg_time }}</v-list-item-subtitle>
+              <!-- <v-list-item-subtitle
+                >생성일 : {{ letcipeList.reg_time }}</v-list-item-subtitle
+              > -->
               <v-list-item-subtitle style="text-align: right">
-                총 17개의 재료를 포함하고 있어요&nbsp;&nbsp;
-                <v-icon v-if="!isShow" @click="showRecipes">mdi-chevron-down</v-icon>
+                총 17개의 재료를 포함&nbsp;
+                <v-icon v-if="!isShow" @click="showRecipes"
+                  >mdi-chevron-down</v-icon
+                >
                 <v-icon v-else @click="hideRecipes">mdi-chevron-up</v-icon>
               </v-list-item-subtitle>
             </v-list-item-content>
@@ -49,31 +48,34 @@
             <v-card-title
               class="justify-center"
               style="background-color: white; color: #7cb342"
-            >포함된 레시피 목록</v-card-title>
+              >포함된 레시피 목록</v-card-title
+            >
             <v-divider></v-divider>
             <div v-for="(recipeInfo, i) in letcipeList.recipeListItem" :key="i">
               <v-list-item three-line style="background-color: white">
                 <v-list-item-avatar tile size="100">
-                  <v-img src="https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg"></v-img>
+                  <v-img
+                    src="https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg"
+                  ></v-img>
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title>
-                    {{
-                    recipeInfo.recipe.title
-                    }}
+                    {{ recipeInfo.recipe.title }}
                   </v-list-item-title>
 
                   <v-list-item-subtitle>
-                    {{
-                    recipeInfo.recipe.content
-                    }}
+                    {{ recipeInfo.recipe.content }}
                   </v-list-item-subtitle>
                   <div class="d-flex justify-space-between">
                     <v-list-item-subtitle>
-                      <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
+                      <v-icon small color="pink lighten-1"
+                        >mdi-cards-heart</v-icon
+                      >
                       {{ recipeInfo.recipe.recipeLike }}
                     </v-list-item-subtitle>
-                    <v-list-item-subtitle style="text-align: right">선택한 재료 4개를 포함하고 있어요.</v-list-item-subtitle>
+                    <v-list-item-subtitle style="text-align: right"
+                      >선택한 재료 4개를 포함하고 있어요.</v-list-item-subtitle
+                    >
                   </div>
                 </v-list-item-content>
               </v-list-item>
@@ -91,16 +93,19 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 export default {
   name: 'ProgressPage',
   data() {
     return {
+      status: '진행 예정',
+      historyInfo: {},
       letcipeList: {
         id: 3,
         nickname: 'jgy',
         name: '정기연의 면요리',
         description: '가성비 버전',
-        reg_time: '2022-09-13',
+        reg_time: '',
         is_shared: 'private',
         recipeListItem: [
           {
@@ -139,7 +144,41 @@ export default {
       isShow: false,
     }
   },
+  // async fetch() {
+  //   await this.getHistoryList()
+  //   console.log(this.historyList)
+  // },
+  computed: {
+    ...mapState('history', ['historyList']),
+  },
+
+  created() {
+    // this.getHistoryList()
+    const promise = new Promise((resolve, reject) => {
+      resolve()
+    })
+    promise.then(async () => {
+      await this.getHistoryList()
+      console.log(this.historyList)
+      this.historyInfo = this.historyList
+
+      console.log(this.historyList[0].regTime)
+      this.letcipeList.reg_time = this.historyList[0].regTime.split('T')[0]
+      for (let i = 0; i < this.historyList.length; i++) {
+        if (this.historyList[i].process === 'READY') {
+          this.status = '진행예정'
+        } else if (this.historList[i].process === 'EATING') {
+          this.status = '진행중'
+        } else {
+          this.status = '종료'
+        }
+      }
+      this.historyInfo = this.historyList
+      console.log(this.historyInfo)
+    })
+  },
   methods: {
+    ...mapActions('history', ['getHistoryList']),
     showRecipes() {
       this.isShow = true
     },
@@ -151,14 +190,21 @@ export default {
 </script>
 
 <style scoped>
+.progressrecipelist-page {
+  /* padding-top: 70px; */
+  padding-bottom: 70px;
+  padding: 4%;
+}
+.progressrecipelist-page-head {
+  padding: 4%;
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  /* border: 1px solid gray; */
+}
 .progressrecipelist-container {
   position: sticky;
   height: 100%;
-
-  padding: 8% 0% 0% 0%;
-  background-image: url('/bg/bg_img.png');
-  background-repeat: repeat;
-
   color: black;
+
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }
 </style>
