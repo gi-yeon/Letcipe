@@ -92,7 +92,7 @@ public class RecipeController {
         recipeService.deleteBookmark(requestDto, jwtService.getUserId(request));
         return ResponseEntity.ok().build();
     }
-    
+
 
     @GetMapping("")
     ResponseEntity searchRecipe(@RequestParam(required = false) String keyword,@RequestParam(required = false) String ingredients, Pageable pageable) throws SQLException {
