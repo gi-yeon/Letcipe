@@ -75,8 +75,8 @@ export const actions = {
     await updateHistory(
       history,
       ({ data }) => {
-        // console.log(data)
-        // console.log('히스토리 프로세스 변경 성공!')
+        console.log(data)
+        console.log('히스토리 프로세스 변경 성공!')
       },
       (error) => {
         console.log(error)

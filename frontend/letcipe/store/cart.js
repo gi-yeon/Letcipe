@@ -13,8 +13,8 @@ import {
 export const state = () => ({
   cart: [],     // 레시피 정보들
   ingreList : [],       // 전부 계산된 재료들
-  // ingreAmountByRecipe : new Map(),
-  amountByRecipe : {}
+  amountByRecipe : {},
+  isSucceededtoHistory : false
 })
 
 export const mutations = {
@@ -45,31 +45,16 @@ export const mutations = {
     state.amountByRecipe[updateAmountObject.ingreId] = updateAmountObject.updateAmount
     
   },
-  // CLEAR_INGRE_AMOUNT(state){
-  //   state.ingreAmountByRecipe = new Map()
-  // },
+
   SET_RECIPE_INGRE(state, amountByRecipe){
     state.amountByRecipe = amountByRecipe
   },
-  // CALC_INGRE_AMOUNT(state){
-  //     for (let i = 0; i < state.cart.length; i++) {
-  //       const ingreList = state.cart[i].recipe.ingredients
-  //       for (let j = 0; j < ingreList.length; j++) {
-  //         if (state.ingreAmountByRecipe.has(ingreList[j].ingredient.name)) {
-  //           state.ingreAmountByRecipe.get(ingreList[j].ingredient.name).amount +=
-  //             ingreList[j].amount * state.cart[i].amount
-  //         } else {
-  //           state.ingreAmountByRecipe.set(ingreList[j].ingredient.name, {
-  //             name: ingreList[j].ingredient.name,
-  //             amount: ingreList[j].amount * state.cart[i].amount,
-  //           })
-  //         }
-  //       }
-  //     }
-  //     console.log(state.ingreAmountByRecipe.get('달걀').amount + '---------------------------------')
-  // }
-  
-  
+  CLEAR_ISSUCCEEDEDTOHISTORY(){
+    state.isSucceededtoHistory = true
+  },
+  SET_ISSUCCEEDEDTOHISTORY(state, isSucceededtoHistory){
+   state.isSucceededtoHistory = isSucceededtoHistory
+  }
 }
 
 export const getters = {}
@@ -78,11 +63,9 @@ export const actions = {
 
   async readCart({ commit }) {
     commit('CLEAR_CART')
-    // commit('CLEAR_INGRE_AMOUNT')
     await readCart(
       ({ data }) => {
         commit('SET_CART', data.cartItems)
-        // commit('CALC_INGRE_AMOUNT')
         console.log(data)
       
       },
@@ -183,11 +166,13 @@ export const actions = {
     )
   },
     async startCart({ commit }) {
+      commit('CLEAR_ISSUCCEEDEDTOHISTORY')
       await startCart(
           
         ({ data }) => {
           // console.log(data)
           // console.log('장바구니 실행 성공!')
+          commit('SET_ISSUCCEEDEDTOHISTORY', true)
         },
         (error) => {
           console.log(error)

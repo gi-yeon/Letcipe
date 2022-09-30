@@ -211,7 +211,7 @@
             large
             color="#aac821"
             class="white--text"
-            @click="clictStartCart"
+            @click="clickStartCart"
             >장보기</v-btn
           >
         </div>
@@ -293,6 +293,21 @@
             </v-card>
           </v-dialog>
         </div>
+        <v-dialog v-model="dialogStartCartError" persistent max-width="290">
+          <v-card>
+            <v-card-title>Caution</v-card-title>
+            <v-card-text>{{ errorMsg }} </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="green darken-1"
+                text
+                @click="dialogStartCartError = false"
+                >확인</v-btn
+              >
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-container>
     </v-app>
   </div>
@@ -304,7 +319,9 @@ export default {
   name: 'CartIndex',
   data() {
     return {
+      errorMsg: '',
       totalAmount: 0,
+      dialogStartCartError: false,
       isAllCheck: false,
       checked: [],
       checkedRecipe: [], // 체크된 재료를 구분 false 체크 x
@@ -320,7 +337,12 @@ export default {
     }
   },
   computed: {
-    ...mapState('cart', ['cart', 'ingreList', 'amountByRecipe']),
+    ...mapState('cart', [
+      'cart',
+      'ingreList',
+      'amountByRecipe',
+      'isSucceededtoHistory',
+    ]),
   },
   created() {
     const promise = new Promise((resolve, reject) => {
@@ -544,6 +566,7 @@ export default {
       // 원래있던 재료에서더한 경우
       console.log(ingredientInfo.amount)
       console.log(this.amountByRecipe[ingredientInfo.ingredient.id])
+      console.log(this.amountByRecipe)
       if (
         ingredientInfo.amount !==
         this.amountByRecipe[ingredientInfo.ingredient.id]
@@ -556,70 +579,38 @@ export default {
             0
           ) {
             this.deleteCartIngredient(ingredientInfo.ingredient.id)
-            // console.log('11111111111111111111111111111111')
+            this.CALC_SUB_INGRE(index)
+            console.log('11111111111111111111111111111111')
           } else {
-            // console.log('222222222222222222')
+            console.log('222222222222222222')
             const updateObject = {
               ingredientId: this.ingreList[index].ingredient.id,
               operator: '-',
             }
             this.patchCartIngredient(updateObject)
+            this.CALC_SUB_INGRE(index)
           }
         } else if (
           !(ingredientInfo.ingredient.id in this.amountByRecipe) &&
           ingredientInfo.amount - 1 === 0
         ) {
-          // console.log('3333333333333333333333333')
+          console.log('3333333333333333333333333')
           // 원래 없는 재료를 더해줬는데 0보다 더 줄이려고 할때
           this.deleteCartIngredient(ingredientInfo.ingredient.id)
+          this.CALC_SUB_INGRE(index)
         } else if (
           !(ingredientInfo.ingredient.id in this.amountByRecipe) &&
           ingredientInfo.amount - 1 > 0
         ) {
-          // console.log('4444444444444444444444444')
+          console.log('4444444444444444444444444')
           const updateObject = {
             ingredientId: this.ingreList[index].ingredient.id,
             operator: '-',
           }
           this.patchCartIngredient(updateObject)
+          this.CALC_SUB_INGRE(index)
         }
-        this.CALC_SUB_INGRE(index)
       }
-      // if (this.ingreList[index].amount - 1 > 0) {
-      //   this.CALC_SUB_INGRE(index) // 추가한 재료보다 더 삭제하려고 할때 처리 필요
-      //   // 원래 있던 재료에서 추가하는 거랑 없던 재료를 추가하는 거를 구분
-      //   console.log(this.ingreList[index])
-
-      //   const updateObject = {
-      //     ingredientId: this.ingreList[index].ingredient.id,
-
-      //     operator: '-',
-      //   }
-      //   this.patchCartIngredient(updateObject)
-      // }
-      // console.log(id + '=======' + index)
-      // console.log(this.subIngreCheck[index])
-      // if (this.subIngreCheck[index] - 1 === 0) {
-      //   this.deleteCartIngredient(id)
-      //   this.subIngreCheck[index]--
-      // } else if (
-      //   this.subIngreCheck[index] > 0 ||
-      //   this.subIngreCheck[index] < 0
-      // ) {
-      //   const updateObject = {
-      //     ingredientId: id,
-      //     operator: '-',
-      //   }
-      //   this.patchCartIngredient(updateObject)
-      // } else if (this.subIngreCheck[index] === 0) {
-      //   const createObject = {
-      //     ingredientId: id,
-      //     operator: '-',
-      //   }
-      //   this.createCartIngredient(createObject)
-      // }
-
-      // console.log(id)
     },
     plusIngreAmount(index) {
       this.CALC_PLUS_INGRE(index)
@@ -633,8 +624,19 @@ export default {
     deleteIngre(item) {
       this.deleteCartIngredient(item.id)
     },
-    clictStartCart() {
-      this.startCart()
+    clickStartCart() {
+      if (this.checked.length > 0) {
+        this.startCart()
+        if (!this.isSucceededtoHistory) {
+          this.errorMsg =
+            '이미 진행 예정이거나 진행 중인 레시피 리스트가 있습니다.'
+          this.dialogStartCartError = true
+        }
+        this.$router.go()
+      } else {
+        this.errorMsg = '하나 이상의 레시피를 담아주세요.'
+        this.dialogStartCartError = true
+      }
     },
   },
 }
