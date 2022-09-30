@@ -1,6 +1,7 @@
 import { apiInstance } from '.'
 
 const api = apiInstance()
+const fileApi = fileInstance() 
 
 // 사용자 로그인
 async function login(user, success, fail) {
