@@ -1,5 +1,5 @@
 <template>
-  <div id="app"> 
+  <div id="app">
     <v-app id="inspire">
       <div id="recipedetail-container">
         <v-container>
@@ -87,7 +87,10 @@
               <v-card-text>{{ recipeDetail.content }}</v-card-text>
               <v-card-title class="d-flex text-md-h4">
                 <div>재료</div>
-                <div class="ml-3" style="font-size: small; color: #ffa500">
+                <div
+                  class="d-flex ml-3"
+                  style="font-size: small; color: #ffa500"
+                >
                   <div v-if="recipeDetail.cookingTime != -1">
                     <v-icon small color="letcipe">mdi-timer</v-icon>
                     {{ recipeDetail.cookingTime }}분
