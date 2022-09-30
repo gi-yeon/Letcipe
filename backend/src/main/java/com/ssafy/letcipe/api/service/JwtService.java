@@ -1,6 +1,8 @@
 package com.ssafy.letcipe.api.service;
 
+import com.ssafy.letcipe.domain.type.StatusType;
 import com.ssafy.letcipe.domain.user.User;
+import com.ssafy.letcipe.domain.user.UserType;
 import com.ssafy.letcipe.exception.AuthorityViolationException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -42,7 +44,7 @@ public class JwtService {
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * EXPIRE_MINUTES))
                 .claim("userId", user.getId())
-                .claim("status", user.getStatusType())
+                .claim("status", user.getUserType().getDesc())
                 .signWith(SignatureAlgorithm.HS256, generateKey()).compact();
         return jwt;
     }
@@ -99,20 +101,24 @@ public class JwtService {
         }
     }
 
-    public Long getStatus(HttpServletRequest request){
+    public String getUserType(HttpServletRequest request){
         try {
-            return Long.parseLong(String.valueOf(getClaims(getJwtToken(request)).get("status")));
+            String type = (String) getClaims(getJwtToken(request)).get("status");
+            return type;
         } catch (Exception e){
             e.printStackTrace();
             throw new AuthorityViolationException("권한 없음");
         }
     }
 
+    public boolean isAdmin(HttpServletRequest request){
+        return getUserType(request).equals("admin");
+    }
+
     public Long getUserId(String jwtToken) {
         try {
             return Long.parseLong(String.valueOf(getClaims(jwtToken).get("userId")));
         } catch (Exception e) {
-            e.printStackTrace();
             throw new AuthorityViolationException("권한 없음");
         }
     }
