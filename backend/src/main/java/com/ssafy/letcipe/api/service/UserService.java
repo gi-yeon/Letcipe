@@ -13,9 +13,13 @@ import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.domain.user.UserRepository;
 import com.ssafy.letcipe.domain.user.UserType;
 import com.ssafy.letcipe.exception.AuthorityViolationException;
+import com.ssafy.letcipe.exception.BadRequestException;
 import com.ssafy.letcipe.util.EncryptUtils;
+import com.ssafy.letcipe.util.FileHandler;
 import com.ssafy.letcipe.util.StringUtils;
+import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +31,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private final JwtService jwtService;
     private final UserRepository userRepository;
     private final RecipeRepository recipeRepository;
     private final RecipeListRepository recipeListRepository;
@@ -35,20 +40,28 @@ public class UserService {
     private final EncryptUtils encryptUtils;
     private final StringUtils stringUtils;
 
+    private final FileHandler fileHandler;
+
     @Transactional
-    public void createUser(ReqPostUserDto requestDto) throws NoSuchAlgorithmException {
+    public void createUser(ReqPostUserDto requestDto) throws NoSuchAlgorithmException, FileUploadException {
 
         StringBuilder sb = new StringBuilder();
 
+        // 비밀번호 암호화
         String salt = encryptUtils.getSalt(requestDto.getUserId());
         sb.append(salt).append(requestDto.getPassword());
         String password = encryptUtils.encrypt(sb.toString());
+
+        // 생일 처리
+        LocalDate localDate = LocalDate.parse(requestDto.getBirth());
+
+        String profileImgUrl = fileHandler.uploadImage(requestDto.getProfileImg());
 
         // 유저 엔티티 생성
         User user = User.builder()
                 .userId(requestDto.getUserId())
                 .userType(UserType.USER)
-                .birth(requestDto.getBirth())
+                .birth(localDate)
                 .email(requestDto.getEmail())
                 .family(requestDto.getFamily())
                 .gender(requestDto.getGender())
@@ -57,11 +70,12 @@ public class UserService {
                 .nickname(requestDto.getNickname())
                 .password(password)
                 .phone(requestDto.getPhone())
+                .profileImage(profileImgUrl)
                 .build();
         userRepository.save(user);
     }
 
-    public User loginUser(ReqLoginUserDto requestDto) throws NoSuchAlgorithmException {
+    public ResLoginUserDto loginUser(ReqLoginUserDto requestDto) throws NoSuchAlgorithmException {
         StringBuilder sb = new StringBuilder();
 
         String salt = encryptUtils.getSalt(requestDto.getUserId());
@@ -71,7 +85,32 @@ public class UserService {
         User user = userRepository.findByUserIdAndPassword(requestDto.getUserId(), password)
                 .orElseThrow(() -> new NullPointerException());
 
-        return user;
+        String token = jwtService.createToken(user);
+        String refreshToken = jwtService.createRefreshToken();
+        user.updateRefreshToken(refreshToken);
+        return new ResLoginUserDto().builder()
+                .accessToken(token)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    public ResLoginUserDto loginAdmin(ReqLoginUserDto requestDto) throws NoSuchAlgorithmException {
+        StringBuilder sb = new StringBuilder();
+
+        String salt = encryptUtils.getSalt(requestDto.getUserId());
+        sb.append(salt).append(requestDto.getPassword());
+        String password = encryptUtils.encrypt(sb.toString());
+
+        User user = userRepository.findByUserIdAndPasswordAndUserType(requestDto.getUserId(), password, UserType.ADMIN)
+                .orElseThrow(() -> new NullPointerException());
+
+        String token = jwtService.createToken(user);
+        String refreshToken = jwtService.createRefreshToken();
+        user.updateRefreshToken(refreshToken);
+        return new ResLoginUserDto().builder()
+                .accessToken(token)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     public ResGetUserDto readUser(Long userId) {
@@ -174,4 +213,31 @@ public class UserService {
             throw new AuthorityViolationException("비밀번호를 변경할 수 없습니다.");
         }
     }
+
+    public ResLoginUserDto updateToken(String token, String refreshToken) {
+        if(jwtService.checkJwtToken(token)){
+            throw new AuthorityViolationException("접근할 수 없음");
+        }
+        User user = userRepository.findById(jwtService.getUserId(token))
+                .orElseThrow(() -> new NullPointerException());
+        if(!jwtService.checkJwtToken(refreshToken) || !user.getRefreshToken().equals(refreshToken)){
+            throw new AuthorityViolationException("접근할 수 없음");
+        }
+
+        String newToken = jwtService.createToken(user);
+        String newRefreshToken = jwtService.createRefreshToken();
+
+        return new ResLoginUserDto().builder()
+                .accessToken(newToken)
+                .refreshToken(newRefreshToken)
+                .build();
+    }
+    public void checkDuplicationId(String userId) {
+        if (userRepository.existsByUserId(userId)) throw new BadRequestException("이미 사용중인 아이디 입니다.");
+    }
+
+    public void checkDuplicationNickname(String nickname) {
+        if (userRepository.existsByNickname(nickname)) throw new BadRequestException("이미 사용중인 닉네임 입니다.");
+    }
+
 }

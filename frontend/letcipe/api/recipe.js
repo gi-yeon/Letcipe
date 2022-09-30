@@ -10,13 +10,13 @@ async function RecipeDetail(recipeId, success, fail) {
 }
 
 // 레시피 등록
-async function selectRecipeDetail(formData, success, fail) {
+async function createRecipeDetail(formData, success, fail) {
   await fileapi.post(`/api/recipe`, formData).then(success).catch(fail)
 }
 
 // 레시피 수정
-async function updateRecipeDetail(recipeId, success, fail) {
-  await api.put(`/api/recipe/${recipeId}`).then(success).catch(fail)
+async function updateRecipeDetail(recipeId, formData, success, fail) {
+  await api.put(`/api/recipe/${recipeId}`, formData).then(success).catch(fail)
 }
 
 // 레시피 삭제
@@ -30,23 +30,37 @@ async function patchRecipeDetail(recipeId, success, fail) {
 //   }
 
 // 레시피 좋아요
-async function countRecipeLikes(success, fail) {
-  await api.post(`/api/recipe/like`).then(success).catch(fail)
+async function countRecipeLikes(recipeId, success, fail) {
+  await api.post(`/api/recipe/like`, recipeId).then(success).catch(fail)
 }
 
 // 레시피 좋아요 해제
-async function decountRecipeLikes(success, fail) {
-  await api.delete(`/api/recipe/like`).then(success).catch(fail)
+async function decountRecipeLikes(id, success, fail) {
+  await api
+    .delete(`/api/recipe/like`, {
+      data: {
+        recipeId: id,
+      },
+    })
+    .then(success)
+    .catch(fail)
 }
 
 // 레시피 북마크 설정
-async function selectBookmarks(success, fail) {
-  await api.post(`/api/recipe/mark`).then(success).catch(fail)
+async function selectBookmarks(recipeId, success, fail) {
+  await api.post(`/api/recipe/mark`, recipeId).then(success).catch(fail)
 }
 
 // 레시피 북마크 해제
-async function deleteBookmarks(success, fail) {
-  await api.delete(`/api/recipe/mark`).then(success).catch(fail)
+async function deleteBookmarks(id, success, fail) {
+  await api
+    .delete(`/api/recipe/mark`, {
+      data: {
+        recipeId: id,
+      },
+    })
+    .then(success)
+    .catch(fail)
 }
 
 // 레시피 댓글 등록
@@ -72,7 +86,7 @@ async function deleteComment(recipeCommentId, success, fail) {
 
 export {
   RecipeDetail,
-  selectRecipeDetail,
+  createRecipeDetail,
   updateRecipeDetail,
   patchRecipeDetail,
   countRecipeLikes,
