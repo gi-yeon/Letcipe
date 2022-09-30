@@ -29,8 +29,14 @@ public class RecipeListController {
     }
 
     @GetMapping("/{recipe_list_id}")
-    public ResponseEntity<?> getRecipeList(@PathVariable("recipe_list_id") Long recipeListId) {
-        return ResponseEntity.ok(recipeListService.getRecipeList(recipeListId));
+    public ResponseEntity<?> getRecipeList(@PathVariable("recipe_list_id") Long recipeListId, HttpServletRequest request) {
+        Long userId;
+        try {
+            userId = jwtService.getUserId(request);
+        }catch (Exception e){
+            userId = -1L;
+        }
+        return ResponseEntity.ok(recipeListService.getRecipeList(userId, recipeListId));
     }
 
     @PutMapping("/{recipe_list_id}")
