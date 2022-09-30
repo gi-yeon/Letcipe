@@ -43,6 +43,7 @@ public class ResGetRecipeDto {
         this.category = recipe.getCategory();
         this.recipeLike = recipe.getLikes().size();
         this.recipeBookmark = recipe.getBookmarks().size();
+        this.recipeComment = recipe.getComments().size();
         this.tags = new ArrayList<>();
         for (RecipeTag tag : recipe.getTags()) {
             tags.add(new ResGetRecipeTagDto(tag));

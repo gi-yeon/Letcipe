@@ -1,5 +1,6 @@
 package com.ssafy.letcipe.api.service;
 
+import com.ssafy.letcipe.api.dto.cart.ResGetCartIngredientListDto;
 import com.ssafy.letcipe.api.dto.cart.*;
 import com.ssafy.letcipe.api.dto.ingredient.ResGetIngredientDto;
 import com.ssafy.letcipe.api.dto.recipe.ResGetRecipeDto;
@@ -53,22 +54,17 @@ public class CartService {
     public void createCart(Long recipe_id, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
         Recipe recipe = recipeRepository.findById(recipe_id)
-                .orElseThrow(() -> new NullPointerException("레시피를 찾을 수 없습니다."));
-        ;
+                .orElseThrow(() -> new NullPointerException("레시피를 찾을 수 없습니다."));;
 
         // 유저 로그 찍기
         JSONObject json = new JSONObject();
-        json.put("USER", new LogUserDto(user).toJsonMap());
+        json.put("USER",new LogUserDto(user).toJsonMap());
         // 레시피 로그 찍기
         ResGetRecipeDto recipeDto = recipeService.getRecipeDto(recipe);
-        json.put("RECIPE", recipeDto.toJsonMap());
+        json.put("RECIPE",recipeDto.toJsonMap());
         log.info("{}", json.toString());
-        if (cartRepository.findByUserAndRecipe(user, recipe).isPresent()) {
-            Cart cart = cartRepository.findByUserAndRecipe(user, recipe).get();
-            cart.update('+');
-        } else {
-            cartRepository.save(new Cart(user, recipe, 1));
-        }
+
+        cartRepository.save(new Cart(user, recipe, 1));
     }
 
     @Transactional
@@ -86,7 +82,7 @@ public class CartService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
         List<ResGetCartItemDto> cartDtos = new ArrayList<>();
         for (Cart cart : user.getCarts()) {
-            ResGetCartItemDto cartItemDto = new ResGetCartItemDto(recipeService.getRecipeDto(cart.getRecipe()), cart.getAmount());
+            ResGetCartItemDto cartItemDto = new ResGetCartItemDto(recipeService.getRecipeDto(cart.getRecipe()),cart.getAmount());
             cartDtos.add(cartItemDto);
         }
 
@@ -119,10 +115,10 @@ public class CartService {
                 .orElseThrow(() -> new NullPointerException("재료를 찾을 수 없습니다."));
 
 
-        if (cartIngredientRepository.findByUserAndIngredient(user, ingredient).isPresent()) {
+        if(cartIngredientRepository.findByUserAndIngredient(user, ingredient).isPresent()){
             CartIngredient cartIngredient = cartIngredientRepository.findByUserAndIngredient(user, ingredient).get();
             cartIngredient.update(requestDto.getOperator());
-        } else {
+        }else{
             cartIngredientRepository.save(new CartIngredient(user, ingredient, requestDto.getOperator()));
         }
 
@@ -134,17 +130,14 @@ public class CartService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
         Ingredient ingredient = ingredientRepository.findById(requestDto.getIngredientId())
                 .orElseThrow(() -> new NullPointerException("재료를 찾을 수 없습니다."));
-        if (cartIngredientRepository.findByUserAndIngredient(user, ingredient).isPresent()) {
-            CartIngredient cartIngredient = cartIngredientRepository.findByUserAndIngredient(user, ingredient).get();
-            cartIngredientRepository.delete(cartIngredient);
-        }
-
-
+        CartIngredient cartIngredient = cartIngredientRepository.findByUserAndIngredient(user, ingredient)
+                .orElseThrow(() -> new NullPointerException("수정한 적 없습니다."));
+        cartIngredientRepository.delete(cartIngredient);
     }
 
     @Transactional
     public void createCarts(ReqPostCartDto requestDto, Long userId) {
-        for (Long recipeId : requestDto.getList()) {
+        for(Long recipeId: requestDto.getList()){
             createCart(recipeId, userId);
         }
     }
@@ -154,7 +147,7 @@ public class CartService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
         History alreadyHistory = historyRepository.findByUserAndProcessAndIsDeleted(user, ProcessType.READY, StatusType.N).orElse(null);
 
-        if (alreadyHistory != null) {
+        if(alreadyHistory != null) {
             throw new BadRequestException("이미 실행중인 이력이 있습니다.");
         }
 
@@ -172,34 +165,34 @@ public class CartService {
         Map<Long, Double> ingredientMap = new HashMap<>();
         Map<Long, Ingredient> ingredientObjectMap = new HashMap<>();
 
-        for (Cart cart : user.getCarts()) {
-            Recipe recipe = cart.getRecipe();
+        for(Cart cart:user.getCarts()) {
+          Recipe recipe = cart.getRecipe();
 
-            HistoryItem historyItem = HistoryItem.builder()
-                    .history(readyHistory)
-                    .recipe(recipe)
-                    .amount(cart.getAmount())
-                    .build();
+          HistoryItem historyItem = HistoryItem.builder()
+                  .history(readyHistory)
+                  .recipe(recipe)
+                  .amount(cart.getAmount())
+                  .build();
 
-            historyItemRepository.save(historyItem);
+          historyItemRepository.save(historyItem);
 
-            List<RecipeIngredient> recipeIngredients = recipe.getIngredients();
+          List<RecipeIngredient> recipeIngredients = recipe.getIngredients();
 
-            for (RecipeIngredient recipeIngredient : recipeIngredients) {
-                Ingredient ingredient = recipeIngredient.getIngredient();
-                Long ingredientId = ingredient.getId();
-                if (!ingredientMap.containsKey(ingredientId)) {
-                    ingredientMap.put(ingredientId, 0.);
-                    ingredientObjectMap.put(ingredientId, ingredient);
-                }
-                ingredientMap.put(ingredientId, ingredientMap.get(ingredientId) + recipeIngredient.getAmount() * cart.getAmount());
-            }
+          for(RecipeIngredient recipeIngredient:recipeIngredients) {
+              Ingredient ingredient = recipeIngredient.getIngredient();
+              Long ingredientId = ingredient.getId();
+              if(!ingredientMap.containsKey(ingredientId)) {
+                  ingredientMap.put(ingredientId, 0.);
+                  ingredientObjectMap.put(ingredientId, ingredient);
+              }
+              ingredientMap.put(ingredientId, ingredientMap.get(ingredientId) + recipeIngredient.getAmount()* cart.getAmount());
+          }
         }
 
-        for (CartIngredient cartIngredient : user.getCartIngredients()) {
+        for(CartIngredient cartIngredient: user.getCartIngredients()){
             Ingredient ingredient = cartIngredient.getIngredient();
             Long ingredientId = ingredient.getId();
-            if (!ingredientMap.containsKey(ingredientId)) {
+            if(!ingredientMap.containsKey(ingredientId)) {
                 ingredientMap.put(ingredientId, 0.);
                 ingredientObjectMap.put(ingredientId, ingredient);
             }
@@ -207,7 +200,7 @@ public class CartService {
         }
 
         Iterator<Long> keys = ingredientMap.keySet().iterator();
-        while (keys.hasNext()) {
+        while(keys.hasNext()) {
             Long id = keys.next();
             HistoryIngredient historyIngredient = HistoryIngredient.builder()
                     .history(readyHistory)
@@ -218,11 +211,11 @@ public class CartService {
             historyIngredientRepository.save(historyIngredient);
         }
 
-        for (Cart cart : user.getCarts()) {
+        for(Cart cart: user.getCarts()){
             cartRepository.delete(cart);
         }
 
-        for (CartIngredient cartIngredient : user.getCartIngredients()) {
+        for(CartIngredient cartIngredient: user.getCartIngredients()) {
             cartIngredientRepository.delete(cartIngredient);
         }
     }
@@ -233,35 +226,34 @@ public class CartService {
         Map<Long, Double> ingredientMap = new HashMap<>();
         Map<Long, Ingredient> ingredientObjectMap = new HashMap<>();
 
-        for (Cart cart : user.getCarts()) {
+        for(Cart cart:user.getCarts()) {
             Recipe recipe = cart.getRecipe();
             List<RecipeIngredient> recipeIngredients = recipe.getIngredients();
 
-            for (RecipeIngredient recipeIngredient : recipeIngredients) {
+            for(RecipeIngredient recipeIngredient:recipeIngredients) {
                 Ingredient ingredient = recipeIngredient.getIngredient();
                 Long ingredientId = ingredient.getId();
-                if (!ingredientMap.containsKey(ingredientId)) {
+                if(!ingredientMap.containsKey(ingredientId)) {
                     ingredientMap.put(ingredientId, 0.);
                     ingredientObjectMap.put(ingredientId, ingredient);
                 }
-                ingredientMap.put(ingredientId, ingredientMap.get(ingredientId) + recipeIngredient.getAmount() * cart.getAmount());
+                ingredientMap.put(ingredientId, ingredientMap.get(ingredientId) + recipeIngredient.getAmount()* cart.getAmount());
             }
         }
-        //레시피로만 된 재료 양
-        Map<Long, Double> recipeIngre = new HashMap<>(ingredientMap);
 
-        for (CartIngredient cartIngredient : user.getCartIngredients()) {
+        for(CartIngredient cartIngredient: user.getCartIngredients()){
             Ingredient ingredient = cartIngredient.getIngredient();
             Long ingredientId = ingredient.getId();
-            if (!ingredientMap.containsKey(ingredientId)) {
+            if(!ingredientMap.containsKey(ingredientId)) {
                 ingredientMap.put(ingredientId, 0.);
                 ingredientObjectMap.put(ingredientId, ingredient);
             }
             ingredientMap.put(ingredientId, ingredientMap.get(ingredientId) + cartIngredient.getAmount());
         }
+
         List<ResGetCartIngredientDto> list = new ArrayList<>();
         Iterator<Long> keys = ingredientMap.keySet().iterator();
-        while (keys.hasNext()) {
+        while(keys.hasNext()) {
             Long id = keys.next();
             Ingredient ingredient = ingredientObjectMap.get(id);
             ResGetCartIngredientDto dto = ResGetCartIngredientDto.builder()
@@ -273,11 +265,10 @@ public class CartService {
                             .gml(ingredient.getGml())
                             .build())
                     .amount(ingredientMap.get(id))
-
                     .build();
             list.add(dto);
         }
         System.out.println(list);
-        return new ResGetCartIngredientListDto(list, recipeIngre);
+        return new ResGetCartIngredientListDto(list);
     }
 }

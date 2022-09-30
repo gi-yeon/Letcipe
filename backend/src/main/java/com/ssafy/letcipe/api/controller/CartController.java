@@ -23,8 +23,7 @@ public class CartController {
 
     @PostMapping("cart")
     public ResponseEntity createCart(@RequestBody ReqPostCartDto requestDto, HttpServletRequest request) {
-        Long userId = 1L;
-        System.out.println("=================================================================" + requestDto);
+        Long userId = jwtService.getUserId(request);
         cartService.createCarts(requestDto, userId);
         return ResponseEntity.ok().build();
     }
@@ -32,7 +31,7 @@ public class CartController {
     @DeleteMapping("cart")
     //TODO: 추가재료도 삭제해주기
     public ResponseEntity deleteCart(@RequestBody ReqDeleteCartDto requestDto, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = jwtService.getUserId(request);
         cartService.deleteCart(requestDto, userId);
         return ResponseEntity.noContent().build();
     }
@@ -40,49 +39,47 @@ public class CartController {
     @GetMapping("cart")
     //TODO: 추가재료 수량까지 계산해서 재료도 보내주기
     public ResponseEntity readCart(HttpServletRequest request) throws SQLException {
-        Long userId = 1L;
+        Long userId = jwtService.getUserId(request);
         return ResponseEntity.ok(cartService.getCart(userId));
     }
 
     @PatchMapping("cart-recipe")
     public ResponseEntity updateCartRecipe(@RequestBody ReqPatchCartDto requestDto, HttpServletRequest request){
-        Long userId = 1L;
+        Long userId = jwtService.getUserId(request);
         cartService.updateCartRecipe(requestDto, userId);
         return ResponseEntity.ok().build();
     }
     
     @PostMapping("cart-ingredient")
     public ResponseEntity createCartIngredient(@RequestBody ReqPostCartIngredientDto requestDto, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = jwtService.getUserId(request);
         cartService.createCartIngredient(requestDto, userId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("cart-ingredient")
     public ResponseEntity getCartIngredient(HttpServletRequest request){
-        Long userId = 1L;
-        userId = 1L;
-
+        Long userId = jwtService.getUserId(request);
         return ResponseEntity.ok(cartService.getCartIngredient(userId));
     }
 
     @PatchMapping("cart-ingredient")
     public ResponseEntity patchCartIngredient(@RequestBody ReqPatchCartIngredientDto requestDto, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = jwtService.getUserId(request);
         cartService.patchCartIngredient(requestDto, userId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("cart-ingredient")
     public ResponseEntity deleteCartIngredient(@RequestBody ReqDeleteCartIngredientDto requestDto, HttpServletRequest request) {
-        Long userId = 1L;
+        Long userId = jwtService.getUserId(request);
         cartService.deleteCartIngredient(requestDto, userId);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("cart-history")
     public ResponseEntity createCartHistory(HttpServletRequest request){
-        Long userId = 1L;
+        Long userId = jwtService.getUserId(request);
         cartService.createCartHistory(userId);
         return ResponseEntity.ok().build();
     }
