@@ -2,7 +2,7 @@ import interceptor from '../config/interceptor'
 import { apiInstance, fileInstance } from '.'
 
 const api = apiInstance()
-const fileApi = fileInstance()
+const fileApi = fileInstance() 
 
 // 사용자 로그인
 async function login(user, success, fail) {
