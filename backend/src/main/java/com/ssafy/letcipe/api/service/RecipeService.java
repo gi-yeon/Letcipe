@@ -19,7 +19,6 @@ import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmarkRepository;
 import com.ssafy.letcipe.domain.recipeComment.RecipeComment;
 import com.ssafy.letcipe.domain.recipeComment.RecipeCommentRepository;
-import com.ssafy.letcipe.domain.recipeIngredient.IngredientDetailAmount;
 import com.ssafy.letcipe.domain.recipeIngredient.RecipeIngredient;
 import com.ssafy.letcipe.domain.recipeLike.RecipeLike;
 import com.ssafy.letcipe.domain.recipeLike.RecipeLikeRepository;

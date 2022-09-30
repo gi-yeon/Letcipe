@@ -1,6 +1,6 @@
 import {
   RecipeDetail,
-  createRecipeDetail,
+  selectRecipeDetail,
   updateRecipeDetail,
   patchRecipeDetail,
   countRecipeLikes,
@@ -41,9 +41,11 @@ export const actions = {
       }
     )
   },
-  async createRecipeDetail({ commit }, formData) {
-    await createRecipeDetail(
-      formData,
+  async selectRecipeDetail({ commit }, formData) {
+    await selectRecipeDetail(
+      console.log(formData),
+
+      JSON.stringify(formData),
       ({ data }) => {
         commit('')
         console.log('등록 성공!')
@@ -75,9 +77,8 @@ export const actions = {
       }
     )
   },
-  async countRecipeLikes({ commit }, recipeId) {
+  async countRecipeLikes({ commit }) {
     await countRecipeLikes(
-      recipeId,
       ({ data }) => {
         commit('')
       },
@@ -86,9 +87,8 @@ export const actions = {
       }
     )
   },
-  async decountRecipeLikes({ commit }, id) {
+  async decountRecipeLikes({ commit }) {
     await decountRecipeLikes(
-      id,
       ({ data }) => {
         commit('')
       },
@@ -97,24 +97,20 @@ export const actions = {
       }
     )
   },
-  async selectBookmarks({ commit }, recipeId) {
+  async selectBookmarks({ commit }) {
     await selectBookmarks(
-      recipeId,
-      commit,
       ({ data }) => {
-        console.log('북마크 등록 성공!')
+        commit('')
       },
       (error) => {
         console.log(error)
       }
     )
   },
-  async deleteBookmarks({ commit }, id) {
+  async deleteBookmarks({ commit }) {
     await deleteBookmarks(
-      id,
       ({ data }) => {
         commit('')
-        console.log('북마크 해제 성공!')
       },
       (error) => {
         console.log(error)

@@ -12,5 +12,7 @@ import java.util.Optional;
 public interface RecipeListBookmarkRepository extends JpaRepository<RecipeListBookmark, Long> {
     Optional<RecipeListBookmark> findByUserIdAndRecipeListId(Long userId, Long recipeListId);
 
+    boolean existsByUserIdAndRecipeListId(Long userId, Long recipeListId);
+
     List<RecipeListBookmark> findAllByUser(Pageable pageable, User user);
 }

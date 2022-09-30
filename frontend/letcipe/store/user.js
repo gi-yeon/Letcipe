@@ -1,17 +1,19 @@
 import {
   login,
-  idCheck,
-  nicknameCheck,
-  readUser,
   signup,
+  //   check,
   mypage,
   modifyMember,
   deleteMember,
   myrecipe,
   myrecipeList,
-  createCode
 } from '@/api/user'
 
+<<<<<<< HEAD
+export const state = () => ({})
+
+export const mutations = {}
+=======
 export const state = () => ({
   idcheck: true,
   nickCheck: true,
@@ -69,78 +71,47 @@ export const mutations = {
 
   },
 }
+>>>>>>> frontend
 
 export const getters = {}
 
 export const actions = {
-  async login({ commit }, user) {
+  async login({ commit }, object) {
     await login(
-      user,
+      {
+        username: object.id,
+        password: object.password,
+      },
       ({ data }) => {
-        this.$cookies.set('access-token', data.accessToken)
-        this.$cookies.set('refresh-token', data.refreshToken)
+        commit('')
       },
       (error) => {
         console.log(error)
       }
     )
-  },
-  async idCheck({ commit }, userid) {
-    await idCheck(userid, 
-      (res) => {
-        console.log(res.status)
-        commit('SET_IDCHECK_FALSE')
-      },
-      (error) => {
-        console.log(error.status)
-        commit('SET_IDCHECK_TRUE')
-      })
-  },
-  idCheckReset({ commit }) {
-    commit('SET_IDCHECK_TRUE')
-  },
-  async nicknameCheck({ commit }, nickname) {
-    await nicknameCheck(
-      nickname,
-      (res) => {
-        console.log(res.status)
-        commit('SET_NICKCHECK_FALSE')
-      },
-      (error) => {
-        console.log(error)
-        commit('SET_NICKCHECK_TRUE')
-      }
-    )
-  },
-  async readUser({ commit }) {
-    await readUser(
-      ({ data }) => {
-        console.log(data)
-        commit('SET_USER', data)
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
-  },
-  logout({ commit }) {
-    commit('CLEAR_USER')
-    this.$cookies.remove('access-token')
-    this.$cookies.remove('refresh-token')
   },
   async signup({ commit }, user) {
     await signup(
       user,
       ({ data }) => {
-        console.log(data)
-        commit('SET_USERJOINCHECK_TRUE')
+        commit('')
       },
       (error) => {
         console.log(error)
-        commit('SET_USERJOINCHECK_FALSE')
       }
     )
   },
+  //   async check({ commit }, userid) {
+  //     await check(
+  //       userid,
+  //       ({ data }) => {
+  //         commit('')
+  //       },
+  //       (error) => {
+  //         console.log(error)
+  //       }
+  //     )
+  //   },
   async mypage({ commit }, userid) {
     await mypage(
       userid,
@@ -184,25 +155,6 @@ export const actions = {
         console.log(error)
       }
     )
-  },
-  async createCode({ commit }, phone) {
-    await createCode(
-      phone,
-      (res) => {
-        console.log(res.data.code)
-        commit('SET_CODE', res.data.code)
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
-  },
-  checkCodeEq({ commit, state }, code) {
-    if(state.code === code) {
-      commit('SET_CODECHECK_TRUE')
-    } else {
-      commit('SET_CODECHECK_FALSE')
-    }
   },
   modifyMember({ commit }, userObject) {
     modifyMember(
