@@ -12,7 +12,7 @@ import {
 export const state = () => ({
   cart: [],
 })
-
+ 
 export const mutations = {
   SET_CART(state, cart) {
     state.cart = cart

@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app"> 
     <v-app id="inspire">
       <v-container class="main-container">
         <div class="title-wrap">

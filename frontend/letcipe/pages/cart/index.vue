@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app"> 
     <v-app class="cart-page">
       <v-container class="cart-container d-flex-row">
         <div class="cart-head-wrap">

@@ -120,3 +120,4 @@ export default {
   name: 'NuxtTutorial',
 }
 </script>
+ 

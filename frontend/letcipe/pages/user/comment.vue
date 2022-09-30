@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app"> 
     <v-app id="inspire">
       <div class="mycomment-container">
         <v-container style="background-color: white; padding: 0%"

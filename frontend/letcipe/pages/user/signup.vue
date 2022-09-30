@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-app>
+    <v-app> 
       <v-container class="signup-container">
         <div class="signup-title">회원가입</div>
         <div class="signup-wrap fadeInUp">

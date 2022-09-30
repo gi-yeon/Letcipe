@@ -9,7 +9,7 @@ export default {
   name: 'DefaultLayout',
 }
 </script>
-
+ 
 <style>
 @font-face {
   font-family: 'LeeSeoyun';

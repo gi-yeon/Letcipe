@@ -12,7 +12,7 @@ export const mutations = {
     state.ingredientsList = []
   },
 }
-
+ 
 export const getters = {}
 
 export const actions = {

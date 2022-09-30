@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div> 
     <v-btn @click="testReadDetail()"> testReadDetail </v-btn>
     <v-btn @click="testHadoop()"> HadoopTest </v-btn>
     <v-btn @click="test()"> testIngredient </v-btn>

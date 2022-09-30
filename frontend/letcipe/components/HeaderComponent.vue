@@ -126,3 +126,4 @@ export default {
   height: 8vh;
 }
 </style>
+ 

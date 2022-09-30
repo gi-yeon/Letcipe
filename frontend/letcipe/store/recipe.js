@@ -15,7 +15,7 @@ import {
 export const state = () => ({
   recipeDetail: {},
 })
-
+ 
 export const mutations = {
   SET_RECIPE_DETAIL(state, recipeDetail) {
     state.recipeDetail = recipeDetail

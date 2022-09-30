@@ -4,41 +4,73 @@
       <div id="recipedetail-container">
         <v-container style="width: 100%">
           <v-row>
-            <v-col style="text-align: center; font-size: xx-large">레시피</v-col>
+            <v-col style="text-align: center; font-size: xx-large"
+              >레시피</v-col
+            >
           </v-row>
           <v-card class="mx-auto my-5">
-            <v-img src="https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg">
+            <v-img :src="recipeDetail.repImg">
               <div class="ref-wrap">
                 <v-card-title class="text-md-h1 ref-title">
-                  {{
-                  title
-                  }}
+                  {{ recipeDetail.title }}
                 </v-card-title>
 
                 <!-- 레시피도 서브타이틀 넣을지? 현재 erd에 작성 안되어있음 -->
-                <v-card-subtitle class="text-md-h3 ref-subtitle">맛있겠다!</v-card-subtitle>
+                <v-card-subtitle class="text-md-h3 ref-subtitle"
+                  >맛있겠다!</v-card-subtitle
+                >
               </div>
             </v-img>
 
-            <v-card-title class="text-md-h3">{{ title }}</v-card-title>
+            <v-card-title class="text-md-h3">{{
+              recipeDetail.title
+            }}</v-card-title>
             <v-card-subtitle class="text-md-h5">맛있겠다!</v-card-subtitle>
 
             <v-card-text>
               <v-row align="center" class="mx-0">
-                <v-icon small color="blue lighten-1">mdi-thumb-up</v-icon>
-                &nbsp;{{ recipeLike }}&nbsp;&nbsp;
-                <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
-                &nbsp;{{ recipeBookmark }}
+                <v-icon
+                  v-if="recipeDetail.like === true"
+                  small
+                  color="blue lighten-1"
+                  @click="deleteLikes"
+                  >mdi-thumb-up</v-icon
+                >
+                <v-icon
+                  v-else-if="recipeDetail.like === false"
+                  small
+                  color="grey"
+                  @click="countLikes"
+                  >mdi-thumb-up</v-icon
+                >
+                &nbsp;{{ recipeDetail.recipeLike }}&nbsp;&nbsp;
+                <v-icon
+                  v-if="recipeDetail.bookmark === true"
+                  small
+                  color="pink lighten-1"
+                  @click="deleteBookmark"
+                  >mdi-cards-heart</v-icon
+                >
+                <v-icon
+                  v-if="recipeDetail.bookmark === false"
+                  small
+                  color="grey"
+                  @click="saveBookmark"
+                  >mdi-cards-heart</v-icon
+                >
+                &nbsp;{{ recipeDetail.recipeBookmark }}
               </v-row>
               <v-row align="center" class="mx-0">등록일자 : 2022-09-18</v-row>
-              <div class="my-4 text-subtitle-1">Chef&nbsp;&nbsp;{{ nickname }}</div>
+              <div class="my-4 text-subtitle-1">
+                Chef&nbsp;&nbsp;{{ writer.nickname }}
+              </div>
             </v-card-text>
 
             <v-divider class="mx-4"></v-divider>
             <v-divider class="mx-4"></v-divider>
             <v-divider class="mx-4"></v-divider>
             <div>
-              <v-card-text>{{ content }}</v-card-text>
+              <v-card-text>{{ recipeDetail.content }}</v-card-text>
               <v-card-title class="text-md-h4">재료</v-card-title>
               <v-simple-table>
                 <template #default>
@@ -51,15 +83,19 @@
                   </thead>
                   <tbody>
                     <tr v-for="(item, i) in recipeIngredient" :key="i">
-                      <td>{{ item.name }}</td>
+                      <td>{{ item.ingredient.name }}</td>
                       <td>{{ item.amount }}</td>
-                      <td>{{ item.unit }}</td>
+                      <td>{{ item.ingredient.measure }}</td>
                     </tr>
                   </tbody>
                 </template>
               </v-simple-table>
               <v-card-title class="text-md-h4">레시피</v-card-title>
-              <div v-for="(stepInfo, i) in recipeSteps" :key="i" style="width: 80%; margin: auto">
+              <div
+                v-for="(stepInfo, i) in recipeSteps"
+                :key="i"
+                style="width: 80%; margin: auto"
+              >
                 <div class="stepDetail">
                   <v-img :src="stepInfo.img"></v-img>
                   <h2 style="display: inline">{{ stepInfo.step }}</h2>
@@ -73,29 +109,41 @@
 
             <v-card-text>
               <v-chip-group column>
-                <v-chip v-for="(tag, i) in tags" :key="i">{{ tag.name }}</v-chip>
+                <v-chip v-for="(tag, i) in recipeDetail.tags" :key="i">{{
+                  tag.name
+                }}</v-chip>
               </v-chip-group>
             </v-card-text>
             <v-row>
               <v-col align="center">
-                <div v-for="(comment, i) in recipeComment" :key="i" style="width: 80%">
+                <div
+                  v-for="(comment, i) in recipeComment"
+                  :key="i"
+                  style="width: 80%"
+                >
                   <div class="mx-auto pt-2 pb-2 d-flex align-center">
-                    <v-list-item three-line style="border: 1px solid black !important" align="left">
+                    <v-list-item
+                      three-line
+                      style="border: 1px solid black !important"
+                      align="left"
+                    >
                       <v-list-item-content>
                         <v-row>
                           <v-col>
-                            <v-list-item-subtitle class="recipe-comment">{{ comment.nickname }}</v-list-item-subtitle>
+                            <v-list-item-subtitle class="recipe-comment">
+                              {{ comment.nickname }}
+                            </v-list-item-subtitle>
                           </v-col>
                           <v-col align="right">
                             <v-list-item-subtitle class="recipe-comment">
-                              {{
-                              comment.reg_time
-                              }}
+                              {{ comment.reg_time }}
                             </v-list-item-subtitle>
                           </v-col>
                         </v-row>
 
-                        <v-list-item-subtitle class="recipe-comment">{{ comment.content }}</v-list-item-subtitle>
+                        <v-list-item-subtitle class="recipe-comment">
+                          {{ comment.content }}</v-list-item-subtitle
+                        >
                       </v-list-item-content>
                     </v-list-item>
                   </div>
@@ -110,36 +158,19 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 export default {
-  name: 'RecipeDetail',
+  name: 'RecipeDetailTest',
   data() {
     return {
-      id: 1,
-      nickname: '싸피10기',
-      title: '고르곤졸라피자',
-      content: `만만치 않은 가격에도 도우 반죽 때문에 집에서 만들기 영 꺼려졌던 피자.
-토르티야로 간편하게 해결하세요!
-꼬릿하지만 묘한 매력이 있는 고르곤졸라치즈를 얹으면
-10분 만에 풍미 가득한 피자가 완성되죠. 꿀에 찍어 먹으면 더 맛있어요.`,
+      writer: '',
+      content: '',
       cookingTime: 10,
       serving: 4,
       repImg: 'adsasdasd',
       recipeLike: 21,
       recipeBookmark: 16,
-      recipeSteps: [
-        {
-          step: 1,
-          img: 'https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg',
-          content:
-            '오이는 길게 2등분해서 씨를 제거한 뒤 한입 크기로 썰고, 감자와 당근, 양파, 닭다릿살도 한입 크기로',
-        },
-        {
-          step: 2,
-          img: 'https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg',
-          content:
-            '오이는 길게 2등분해서 씨를 제거한 뒤 한입 크기로 썰고, 감자와 당근, 양파, 닭다릿살도 한입 크기로',
-        },
-      ],
+      recipeSteps: [],
       recipeComment: [
         {
           nickname: '수리수리마수리',
@@ -147,30 +178,60 @@ export default {
           reg_time: '2022-09-24',
           mod_time: '',
         },
-      ],
-      recipeIngredient: [
         {
-          name: '치즈',
-          unit: 'g',
-          category: 1,
-          amount: 500,
-        },
-        {
-          name: '치즈',
-          unit: 'g',
-          category: 1,
-          amount: 500,
+          nickname: '수리수리마수리',
+          content: 'asd맛나는 레시피일까요아닐까요',
+          reg_time: '2022-09-24',
+          mod_time: '',
         },
       ],
-      tags: [
-        {
-          name: '피자',
-        },
-        {
-          name: '꿀',
-        },
-      ],
+      recipeIngredient: [],
+      ingredient: [],
     }
+  },
+  computed: {
+    ...mapState('recipe', ['recipeDetail']),
+  },
+  created() {
+    // recipeId 받아와서 넣어야함
+    const promise = new Promise((resolve, reject) => {
+      resolve()
+    })
+    promise.then(async () => {
+      this.recipeSteps = []
+      await this.RecipeDetail(1)
+      console.log(this.recipeDetail)
+      //   console.log(this.recipeDetail.ingredients)
+      this.recipeSteps = this.recipeDetail.recipeSteps
+      this.recipeIngredient = this.recipeDetail.ingredients
+      this.writer = this.recipeDetail.user
+    })
+  },
+  methods: {
+    // 필요한거 레시피 좋아요, 레시피 좋아요 해제
+    // 레시피 북마크 설정, 북마크 해제
+    ...mapActions('recipe', [
+      'RecipeDetail',
+      'createRecipeDetail',
+      'selectBookmarks',
+      'deleteBookmarks',
+      'countRecipeLikes',
+      'decountRecipeLikes',
+    ]),
+    saveBookmark() {
+      this.selectBookmarks(1)
+      this.RecipeDetail(1)
+    },
+    deleteBookmark() {
+      this.deleteBookmarks(1)
+      //   this.RecipeDetail(1)
+    },
+    deleteLikes() {
+      this.decountRecipeLikes(1)
+    },
+    countLikes() {
+      this.countRecipeLikes(1)
+    },
   },
 }
 </script>
@@ -193,7 +254,7 @@ export default {
   width: 100%;
 
   /*  width: 150px;
-  height: 150px !important;  */
+    height: 150px !important;  */
   cursor: pointer;
 }
 
@@ -201,7 +262,7 @@ export default {
   width: 100%;
   height: 35%;
   /* width: 150px;
-  height: 80px; */
+    height: 80px; */
   background-color: rgba(49, 49, 49, 0.422);
 }
 .ref-title {

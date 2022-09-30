@@ -10,7 +10,7 @@ export const state = () => ({
   historyList: [],
   history: {},
 })
-
+ 
 export const mutations = {
   SET_HISTORY_LIST(state, historyList) {
     state.historyList = historyList
