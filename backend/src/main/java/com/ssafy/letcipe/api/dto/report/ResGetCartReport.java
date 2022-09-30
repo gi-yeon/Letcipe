@@ -12,6 +12,5 @@ import java.time.LocalDate;
 @Builder
 public class ResGetCartReport {
     private ResGetRecipeDto recipe;
-    private LocalDate date;
-    private Integer count;
+    private long count;
 }

@@ -10,8 +10,11 @@ import com.ssafy.letcipe.api.dto.recipeComment.ReqPostRecipeCommentDto;
 import com.ssafy.letcipe.api.dto.recipeComment.ReqPutRecipeCommentDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqPostRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqDeleteRecipeLikeDto;
+import com.ssafy.letcipe.api.dto.report.ReqGetCartReport;
+import com.ssafy.letcipe.api.dto.report.ResGetCartReport;
 import com.ssafy.letcipe.api.service.JwtService;
 import com.ssafy.letcipe.api.service.RecipeService;
+import com.ssafy.letcipe.api.service.ReportService;
 import com.ssafy.letcipe.util.StringUtils;
 import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/recipe")
@@ -32,6 +37,7 @@ import java.sql.SQLException;
 @Log4j2
 public class RecipeController {
     private final RecipeService recipeService;
+    private final ReportService reportService;
     private final JwtService jwtService;
 
     @GetMapping("/{recipe_id}")
@@ -126,6 +132,12 @@ public class RecipeController {
     @GetMapping("/best")
     ResponseEntity getBestRecipes(Pageable pageable) throws SQLException {
         return ResponseEntity.ok(recipeService.getBestRecipes(pageable));
+    }
+
+    @GetMapping("/recommend")
+    public ResponseEntity getCartReport(@RequestBody ReqGetCartReport reqDto, Pageable pageable) {
+        List<ResGetCartReport> cartReport = reportService.getCartReport(reqDto.getAttributes(), LocalDate.parse(reqDto.getBeginDate()), LocalDate.parse(reqDto.getEndDate()),pageable);
+        return ResponseEntity.ok(cartReport);
     }
 
 }
