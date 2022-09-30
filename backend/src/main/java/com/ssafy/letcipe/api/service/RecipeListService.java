@@ -38,9 +38,10 @@ public class RecipeListService {
     }
 
     @Transactional
-    public ResGetRecipeListDto getRecipeList(Long recipeListId) {
+    public ResGetRecipeListDto getRecipeList(Long userId, Long recipeListId) {
         RecipeList recipeList = findRecipeList(recipeListId);
-        return new ResGetRecipeListDto(recipeList);
+        boolean isBookmark = recipeListBookmarkRepository.existsByUserIdAndRecipeListId(userId, recipeListId);
+        return new ResGetRecipeListDto(recipeList, isBookmark);
     }
 
     public void createRecipeList(Long userId, ReqCreateRecipeListDto reqCreateRecipeListDto) {
@@ -68,10 +69,11 @@ public class RecipeListService {
         recipeListRepository.save(recipeList);
     }
 
+    @Transactional
     public void createRecipeListBookmark(Long userId, Long recipeListId) {
         User user = userService.findUser(userId);
         RecipeList recipeList = findRecipeList(recipeListId);
-        if (!userId.equals(recipeList.getUser().getId())) throw new AuthorityViolationException("접근 권한이 없습니다.");
+        if (recipeListBookmarkRepository.existsByUserIdAndRecipeListId(userId, recipeListId)) return;
         RecipeListBookmark recipeListBookmark = RecipeListBookmark.builder()
                 .user(user)
                 .recipeList(recipeList)
@@ -79,9 +81,9 @@ public class RecipeListService {
         recipeListBookmarkRepository.save(recipeListBookmark);
     }
 
+    @Transactional
     public void deleteRecipeListBookmark(Long userId, Long recipeListId) {
-        RecipeListBookmark recipeListBookmark = recipeListBookmarkRepository.findByUserIdAndRecipeListId(userId, recipeListId).orElseThrow();
-        if (!userId.equals(recipeListBookmark.getUser().getId())) throw new AuthorityViolationException("접근 권한이 없습니다.");
+        RecipeListBookmark recipeListBookmark = recipeListBookmarkRepository.findByUserIdAndRecipeListId(userId, recipeListId).orElseThrow(()->new NullPointerException());
         recipeListBookmarkRepository.delete(recipeListBookmark);
     }
 
