@@ -3,18 +3,22 @@
     <v-app id="inspire">
       <v-container class="main-container">
         <div class="title-wrap">
-          <div class="title">{{ nickname }}님이 좋아할 레시피</div>
+          <div class="title">{{ user }}님이 좋아할 레시피</div>
           <div class="title-imgs">
             <div v-for="(ref, i) in refImg" :key="i" class="card">
-              <div>{{ nickname }}맞춤 추천</div>
+              <div>{{ user }}맞춤 추천</div>
               <v-card>
                 <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
                   <div class="ref-wrap">
                     <v-card-title class="ref-title">
-                      {{ ref.title }}
+                      {{
+                      ref.title
+                      }}
                     </v-card-title>
                     <v-card-subtitle class="ref-subtitle">
-                      {{ ref.sub_title }}
+                      {{
+                      ref.sub_title
+                      }}
                     </v-card-subtitle>
                   </div>
                 </v-img>
@@ -23,7 +27,7 @@
           </div>
         </div>
         <div class="my-container">
-          <div>{{ nickname }}님의 현재 진행중인 레시피리스트</div>
+          <div>{{ user }}님의 현재 진행중인 레시피리스트</div>
           <v-carousel height="100%" style="border-radius: 30px">
             <v-carousel-item v-for="(item, i) in userPlayList" :key="i">
               <v-container>
@@ -40,20 +44,13 @@
                             <div>
                               <div class="my-lecipe">
                                 <v-avatar class="ma-3" size="100">
-                                  <v-img
-                                    :src="'https://2bob.co.kr/' + item.url"
-                                  >
+                                  <v-img :src="'https://2bob.co.kr/' + item.url">
                                     <v-icon x-large>mdi-play</v-icon>
                                   </v-img>
                                 </v-avatar>
                               </div>
-                              <v-card-title
-                                class="my-title text-h5"
-                                v-text="item.title"
-                              ></v-card-title>
-                              <v-card-subtitle
-                                v-text="item.sub_title"
-                              ></v-card-subtitle>
+                              <v-card-title class="my-title text-h5" v-text="item.title"></v-card-title>
+                              <v-card-subtitle v-text="item.sub_title"></v-card-subtitle>
                             </div>
                           </div>
                         </v-card>
@@ -66,7 +63,7 @@
           </v-carousel>
         </div>
         <div class="cart-group">
-          <div>{{ nickname }}님의 장보기 리스트</div>
+          <div>{{ user }}님의 장보기 리스트</div>
           <v-card
             flat
             color="green lighten-2"
@@ -107,42 +104,21 @@
         <div class="btn-group">
           <v-hover>
             <template #default="{ hover }">
-              <v-btn
-                :elevation="hover ? 24 : 6"
-                class="mx-2"
-                fab
-                dark
-                x-large
-                color="amber"
-              >
+              <v-btn :elevation="hover ? 24 : 6" class="mx-2" fab dark x-large color="amber">
                 <v-icon dark>mdi-android</v-icon>
               </v-btn>
             </template>
           </v-hover>
           <v-hover>
             <template #default="{ hover }">
-              <v-btn
-                :elevation="hover ? 24 : 6"
-                class="mx-2"
-                fab
-                dark
-                x-large
-                color="amber"
-              >
+              <v-btn :elevation="hover ? 24 : 6" class="mx-2" fab dark x-large color="amber">
                 <v-icon dark>mdi-android</v-icon>
               </v-btn>
             </template>
           </v-hover>
           <v-hover>
             <template #default="{ hover }">
-              <v-btn
-                :elevation="hover ? 24 : 6"
-                class="mx-2"
-                fab
-                dark
-                x-large
-                color="amber"
-              >
+              <v-btn :elevation="hover ? 24 : 6" class="mx-2" fab dark x-large color="amber">
                 <v-icon dark>mdi-android</v-icon>
               </v-btn>
             </template>
@@ -162,8 +138,7 @@
               close
               color="green"
               outlined
-              >{{ tag }}</v-chip
-            >
+            >{{ tag }}</v-chip>
           </div>
           <v-row>
             <v-col>
@@ -187,11 +162,11 @@
                         ></v-img>
                       </v-list-item-avatar>
                       <v-list-item-content>
-                        <v-list-item-title class="mb-1">{{
-                          data.title
-                        }}</v-list-item-title>
+                        <v-list-item-title class="mb-1">{{ data.title }}</v-list-item-title>
                         <v-list-item-subtitle>
-                          {{ data.sub_title }}
+                          {{
+                          data.sub_title
+                          }}
                         </v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
@@ -223,7 +198,9 @@
                 <div class="ref-wrap">
                   <v-card-title class="ref-title">{{ ref.title }}</v-card-title>
                   <v-card-subtitle class="ref-subtitle">
-                    {{ ref.sub_title }}
+                    {{
+                    ref.sub_title
+                    }}
                   </v-card-subtitle>
                 </div>
               </v-img>
@@ -233,7 +210,7 @@
         <div class="lecipe-base-group mt-3 mb-2">
           <div>이런 레시피리스트 어때요?</div>
           <div class="chart-header">
-            <div>{{ nickname }}님 맞춤 추천</div>
+            <div>{{ user }}님 맞춤 추천</div>
             <div>전체보기</div>
           </div>
           <div class="rec-imgs-group d-flex justify-space-between">
@@ -249,7 +226,9 @@
                 <div class="ref-wrap">
                   <v-card-title class="ref-title">{{ ref.title }}</v-card-title>
                   <v-card-subtitle class="ref-subtitle">
-                    {{ ref.sub_title }}
+                    {{
+                    ref.sub_title
+                    }}
                   </v-card-subtitle>
                 </div>
               </v-img>
@@ -262,11 +241,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 export default {
   name: 'MainPage',
   data() {
     return {
+      user: '렛싸피',
       userPlayList: [
         {
           url: 'data/recipe/20191212142613-HV8JG.jpg',
@@ -341,9 +320,6 @@ export default {
       checklist: ['양파', '오이', '토마토', '대파', '쪽마늘'],
       time: '',
     }
-  },
-  computed: {
-    ...mapState('user', ['userId', 'nickname']),
   },
   created() {
     setInterval(this.findnow.bind(this), 1000)
