@@ -1,6 +1,5 @@
 package com.ssafy.letcipe.domain.recipeList;
 
-import com.ssafy.letcipe.domain.recipeListBookmark.RecipeListBookmark;
 import com.ssafy.letcipe.domain.recipeListItem.RecipeListItem;
 import com.ssafy.letcipe.domain.type.StatusType;
 import com.ssafy.letcipe.domain.user.User;
@@ -47,9 +46,6 @@ public class RecipeList {
 
     @OneToMany(targetEntity = RecipeListItem.class, mappedBy = "recipeList", fetch = FetchType.LAZY)
     private List<RecipeListItem> recipeListItems = new ArrayList<>();
-
-    @OneToMany(mappedBy = "recipeList", fetch=FetchType.LAZY)
-    private List<RecipeListBookmark> bookmarks = new ArrayList<>();
 
     @Builder
     public RecipeList(User user, String name, String description, SharedType isShared) {

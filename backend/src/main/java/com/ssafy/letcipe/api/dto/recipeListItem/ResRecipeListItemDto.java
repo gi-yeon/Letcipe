@@ -7,11 +7,9 @@ import lombok.Getter;
 public class ResRecipeListItemDto {
     private Long recipeId;
     private Integer amount;
-    private String repImg;
 
     public ResRecipeListItemDto(RecipeListItem recipeListItem) {
         this.recipeId = recipeListItem.getRecipe().getId();
         this.amount = recipeListItem.getAmount();
-        this.repImg = recipeListItem.getRecipe().getRepImg();
     }
 }

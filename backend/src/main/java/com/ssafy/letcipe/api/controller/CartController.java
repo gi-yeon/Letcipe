@@ -60,6 +60,7 @@ public class CartController {
     @GetMapping("cart-ingredient")
     public ResponseEntity getCartIngredient(HttpServletRequest request){
         Long userId = jwtService.getUserId(request);
+        userId = 1L;
         return ResponseEntity.ok(cartService.getCartIngredient(userId));
     }
 

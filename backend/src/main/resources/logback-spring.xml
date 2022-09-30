@@ -17,11 +17,11 @@
         <file>${LOG_DIR}/api/apilog.log</file>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
-                [%-5level] [%d{yyyy-MM-dd HH:mm:ss,${logback.timezone:-Asia/Seoul}}] [%msg]%n
+                [%-5level] [%d{yyyy-MM-dd HH:mm:ss}] [%msg]%n
             </Pattern>
         </layout>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_DIR}/api/%d{yyyy-MM-dd,aux}/apilog.%d{yyyy-MM-dd-HH,${logback.timezone:-Asia/Seoul}}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_DIR}/api/%d{yyyy-MM-dd,aux}/apilog.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
@@ -33,11 +33,11 @@
         <file>${LOG_DIR}/cart/cartlog.log</file>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
-                [%-5level] [%d{yyyy-MM-dd HH:mm:ss,${logback.timezone:-Asia/Seoul}}] [%msg]%n
+                [%-5level] [%d{yyyy-MM-dd HH:mm:ss}] [%msg]%n
             </Pattern>
         </layout>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_DIR}/cart/%d{yyyy-MM-dd,aux}/cartlog.%d{yyyy-MM-dd-HH,${logback.timezone:-Asia/Seoul}}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_DIR}/cart/%d{yyyy-MM-dd,aux}/cartlog.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>10MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>

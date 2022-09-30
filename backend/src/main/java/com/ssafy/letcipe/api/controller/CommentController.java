@@ -5,7 +5,6 @@ import com.ssafy.letcipe.api.dto.comment.ReqPostCommentDto;
 import com.ssafy.letcipe.api.dto.comment.ReqPutCommentDto;
 import com.ssafy.letcipe.api.dto.comment.ResGetCommentDto;
 import com.ssafy.letcipe.api.service.CommentService;
-import com.ssafy.letcipe.api.service.JwtService;
 import com.ssafy.letcipe.domain.comment.BoardType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -21,8 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
-
-    private final JwtService jwtService;
 
     @GetMapping("/{board_type}/{board_id}")
     public ResponseEntity<List<ResGetCommentDto>> getComment(@PathVariable("board_type") BoardType boardType
@@ -32,22 +28,22 @@ public class CommentController {
 
 
     @PutMapping("")
-    public ResponseEntity putComment(@RequestBody ReqPutCommentDto commentDto, HttpServletRequest request) throws Exception {
-        Long userId = jwtService.getUserId(request);;
+    public ResponseEntity putComment(@RequestBody ReqPutCommentDto commentDto) throws Exception {
+        Long userId = 1L;
         commentService.putComment(commentDto, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PatchMapping("")
-    public ResponseEntity patchBoardComment(@RequestBody ReqPatchCommentDto commentDto, HttpServletRequest request) throws Exception {
-        Long userId = jwtService.getUserId(request);;
+    public ResponseEntity patchBoardComment(@RequestBody ReqPatchCommentDto commentDto) throws Exception {
+        Long userId = 1L;
         commentService.patchComment(commentDto, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("")
-    public ResponseEntity postComment(@RequestBody ReqPostCommentDto commentDto, HttpServletRequest request){
-        Long userId = jwtService.getUserId(request);;
+    public ResponseEntity postComment(@RequestBody ReqPostCommentDto commentDto){
+        Long userId = 1L;
         commentService.postComment(commentDto, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
