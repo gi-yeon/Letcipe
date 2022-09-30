@@ -1,5 +1,5 @@
 <template>
-  <div id="app"> 
+  <div id="app">
     <v-app>
       <v-container class="login-container">
         <div class="login-title">로그인</div>

@@ -1,8 +1,7 @@
-import api from '../config/interceptor'
-// import { apiInstance, fileInstance } from '.'
-import { fileInstance } from '.'
+import { apiInstance, fileInstance } from '.'
+// import { fileInstance } from './multipart'
 
-// const api = apiInstance()
+const api = apiInstance()
 const file = fileInstance()
 
 // 레시피리스트 목록 검색
@@ -21,17 +20,17 @@ async function createRecipeList(recipelist, success, fail) {
     .catch(fail)
 }
 
-// 레시피리스트 상세보기
-async function getRecipeList(recipeListId, success, fail) {
-  await api.get(`/api/recipelist/${recipeListId}`).then(success).catch(fail)
+// 레시피리스트 검색
+async function getRecipeList(recipeListId, updateRL, success, fail) {
+  await api
+    .get(`/api/recipelist/${recipeListId}`, JSON.stringify(updateRL))
+    .then(success)
+    .catch(fail)
 }
 
 // 레시피리스트 수정
-async function updateRecipeList(recipeListId, updateRL, success, fail) {
-  await api
-    .put(`/api/recipe/${recipeListId}`, JSON.stringify(updateRL))
-    .then(success)
-    .catch(fail)
+async function updateRecipeList(recipeListId, success, fail) {
+  await api.put(`/api/recipe/${recipeListId}`).then(success).catch(fail)
 }
 
 // 레시피리스트 삭제
@@ -81,4 +80,3 @@ export {
   createRecipeListBookmark,
   deleteRecipeListBookmark,
 }
- 

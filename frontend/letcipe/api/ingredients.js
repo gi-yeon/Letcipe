@@ -13,4 +13,3 @@ async function searchIngredient(keyword, success, fail) {
 //   }
 
 export { searchIngredient }
- 

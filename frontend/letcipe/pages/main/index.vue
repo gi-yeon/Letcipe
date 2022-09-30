@@ -1,14 +1,9 @@
 <template>
-  <div id="app"> 
+  <div id="app">
     <v-app id="inspire">
       <v-container class="main-container">
         <div class="title-wrap">
-          <div v-if="nickname == null" class="title">
-            {{ nickname }}님이 좋아할 레시피
-          </div>
-          <div v-if="nickname != null" class="title">
-            {{ nickname }}님이 좋아할 레시피
-          </div>
+          <div class="title">{{ nickname }}님이 좋아할 레시피</div>
           <div class="title-imgs">
             <div v-for="(ref, i) in refImg" :key="i" class="card">
               <div>{{ nickname }}맞춤 추천</div>
@@ -164,6 +159,7 @@
               v-for="(tag, i) in tag_set"
               :key="i"
               class="tag-set ma-1"
+              close
               color="green"
               outlined
               >{{ tag }}</v-chip
@@ -179,14 +175,14 @@
                       hover ? 'light-green lighten-3' : 'light-green lighten-2'
                     "
                     class="lecipe-list-group mx-auto mt-2 mb-2 d-flex align-center"
-                    @click="moveDetail(data)"
+                    @click="moveDetail"
                   >
                     <div class="ml-4">{{ i }}</div>
                     <v-list-item three-line>
                       <v-list-item-avatar tile size="57">
                         <v-img
                           elevation="10"
-                          :src="data.imgUrl"
+                          src="https://2bob.co.kr/data/recipe/20191212142613-HV8JG.jpg"
                           style="border-radius: 5px"
                         ></v-img>
                       </v-list-item-avatar>
@@ -266,7 +262,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   name: 'MainPage',
   data() {
@@ -325,49 +321,34 @@ export default {
         },
       ],
       tag_set: ['Now', '최신', '추석', '쉐프의리스트', '더보기'],
-      lecipeData: [],
+      lecipeData: [
+        {
+          url: '',
+          sub_title: '다이어터를 위한 후식냉면',
+          title: '오이냉면',
+        },
+        {
+          url: '',
+          sub_title: '다이어터를 위한 후식냉면',
+          title: '오이냉면',
+        },
+        {
+          url: '',
+          sub_title: '다이어터를 위한 후식냉면',
+          title: '오이냉면',
+        },
+      ],
       checklist: ['양파', '오이', '토마토', '대파', '쪽마늘'],
       time: '',
     }
   },
   computed: {
     ...mapState('user', ['userId', 'nickname']),
-    ...mapState('search', ['recipes', 'recipeLists']),
   },
   created() {
     setInterval(this.findnow.bind(this), 1000)
-    const seraching = {
-      keyword: '감자',
-      size: 3,
-      page: 0,
-    }
-    const promise = new Promise((resolve, reject) => {
-      resolve()
-    })
-    promise.then(async () => {
-      this.lecipeData = []
-      await this.getRecipeList(seraching)
-      await this.getRecipes(seraching)
-      // console.log('이거슨감자' + this.recipes[0].id)
-      // console.log('이거슨 타이틀' + this.recipes[0].title)
-      // console.log('이거슨 타이틀' + this.recipes[0].content)
-      // console.log('이거슨 카테고리' + this.recipes[0].category)
-
-      this.recipes.forEach((r) => {
-        const chartData = {
-          recipeId: r.id,
-          imgUrl: r.repImg,
-          sub_title: r.content,
-          title: r.title,
-        }
-        this.lecipeData.push(chartData)
-      })
-      console.log('이거슨감자' + this.recipeLists)
-    })
   },
   methods: {
-    ...mapActions('search', ['getRecipes', 'getRecipeList']),
-    ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     findnow() {
       const today = new Date()
       const hours = ('0' + today.getHours()).slice(-2)
@@ -379,9 +360,7 @@ export default {
     moveListDetail() {
       this.$router.push('/recipelist/detail')
     },
-    moveDetail(data) {
-      this.CLEAR_RECIPE_ID()
-      this.SET_RECIPE_ID(data.recipeId)
+    moveDetail() {
       this.$router.push('/recipe/detail')
     },
   },

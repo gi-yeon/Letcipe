@@ -1,5 +1,5 @@
 <template>
-  <div id="app"> 
+  <div id="app">
     <v-app class="check-page">
       <v-container class="check-container">
         <div class="check-head-wrap">

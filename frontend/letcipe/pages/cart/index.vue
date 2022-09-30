@@ -1,5 +1,5 @@
 <template>
-  <div id="app"> 
+  <div id="app">
     <v-app class="cart-page">
       <v-container class="cart-container d-flex-row">
         <div class="cart-head-wrap">
@@ -130,7 +130,10 @@
           <v-divider></v-divider>
 
           <div v-for="(item, index) in ingreList" :key="index">
-            <div class="d-flex justify-space-between pa-2">
+            <div
+              v-if="item.amount > 0"
+              class="d-flex justify-space-between pa-2"
+            >
               <!-- <div style="font-size: x-large"> -->
               <div>
                 {{ item.ingredient.name }}
@@ -159,7 +162,6 @@
                   >
                     <v-icon dark>mdi-plus</v-icon>
                   </v-btn>
-                  <v-icon @click="deleteIngre(item)">mdi-close</v-icon>
                 </div>
                 <div style="float: right">
                   {{ Math.ceil(item.amount * item.ingredient.gml)
@@ -167,10 +169,15 @@
                   <span v-else>g</span>
                   <!-- {{ cartIngre.get(key).amount
                   }}{{ cartIngre.get(key).measure }} -->
+                  <!-- <v-icon
+                    v-if="!(item.ingredient.id in amountByRecipe)"
+                    @click="deleteIngre(item)"
+                    >mdi-close</v-icon
+                  ><v-icon v-else color="white">mdi-close</v-icon> -->
                 </div>
               </div>
             </div>
-            <v-divider></v-divider>
+            <v-divider v-if="item.amount > 0"></v-divider>
           </div>
           <div class="d-flex justify-center align-center pa-2">
             <v-btn
@@ -194,7 +201,7 @@
           <v-divider></v-divider>
           <div class="d-flex justify-space-between ma-2">
             <div>총 재료 수</div>
-            <div>{{ requiredList.size }}</div>
+            <div>{{ totalAmount }}</div>
           </div>
         </div>
         <div class="cart-btn-wrap pt-3 fadeInUp">
@@ -204,16 +211,13 @@
             large
             color="#aac821"
             class="white--text"
+            @click="clictStartCart"
             >장보기</v-btn
           >
         </div>
         <div class="d-flex justify-center">
           <v-dialog v-model="addIngreDialog" max-width="500px">
             <v-card>
-              <v-card-title>
-                <span class="text-h5">{{ formTitle }}</span>
-              </v-card-title>
-
               <v-card-text>
                 <v-container>
                   <v-row>
@@ -223,9 +227,6 @@
                               label="재료명"
                             ></v-text-field> -->
                       <v-autocomplete
-                        :items="ingredientsList"
-                        :loading="isLoading"
-                        :search-input.sync="search"
                         cache-items
                         clearable
                         hide-details
@@ -303,15 +304,14 @@ export default {
   name: 'CartIndex',
   data() {
     return {
+      totalAmount: 0,
       isAllCheck: false,
       checked: [],
       checkedRecipe: [], // 체크된 재료를 구분 false 체크 x
       cartCategory: [],
       cartKeyList: [],
-      requiredList: new Map(),
-      subIngreCheck: [],
-      plusIngreCheck: [],
       addIngreDialog: false,
+      ingreIndexList: {}, // ingreList에 저장된 재료들의 인덱스를 저장하는 객체
       ingre_rule: [
         (v) => !!v || '재료량은 필수 입력사항입니다.',
         (v) => /^[0-9]*$/.test(v) || '재료량은 숫자만 입력 가능합니다.',
@@ -320,7 +320,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('cart', ['cart', 'ingreList']),
+    ...mapState('cart', ['cart', 'ingreList', 'amountByRecipe']),
   },
   created() {
     const promise = new Promise((resolve, reject) => {
@@ -329,24 +329,30 @@ export default {
     promise.then(async () => {
       await this.readCart()
       this.initCart()
-      this.getCartIngredient()
+      await this.getCartIngredient()
       this.allCheck()
-      this.calRequiredList()
+      this.isAllCheck = true
       console.log(this.ingreList)
-      // for (let i = 0; i < this.requiredList.size; i++) {
-      //   this.subIngreCheck.push(0)
-      //   this.plusIngreCheck.push(0)
-      // }
-      // console.log(this.subIngreCheck)
+      for (let i = 0; i < this.ingreList.length; i++) {
+        // 각 재료의 인덱스 저장
+
+        this.ingreIndexList[this.ingreList[i].ingredient.id] = i
+      }
+      console.log(this.ingreIndexList)
     })
   },
   methods: {
     initCart() {
       for (let i = 0; i < this.cart.length; i++) {
-        this.checkedRecipe.push(false)
+        this.checkedRecipe.push(true)
       }
     },
-    ...mapMutations('cart', ['CALC_PLUS_INGRE', 'CALC_SUB_INGRE']),
+    ...mapMutations('cart', [
+      'CALC_PLUS_INGRE',
+      'CALC_SUB_INGRE',
+      'SET_INGRELIST_AMOUNT',
+      'SET_BYRECIPE_AMOUNT',
+    ]),
     ...mapActions('cart', [
       'readCart',
       'updateCartRecipe',
@@ -356,6 +362,7 @@ export default {
       'deleteCartIngredient',
       'getCartIngredient',
       'deleteCartIngredient',
+      'startCart',
     ]),
     minusNum() {},
     addNum() {},
@@ -401,25 +408,86 @@ export default {
     initSelectIndex() {
       this.focusIndex = null
     },
+    totalIngreAmount() {
+      this.totalAmount = 0
+      for (let i = 0; i < this.ingreList.length; i++) {
+        if (this.ingreList[i].amount > 0) this.totalAmount++
+      }
+    },
     allCheck() {
+      console.log(this.isAllCheck)
+
       if (!this.isAllCheck) {
         this.isAllCheck = true
         this.checked = []
         for (let i = 0; i < this.cart.length; i++) {
           this.checked.push(this.cart[i])
+          console.log(this.checked)
         }
 
         for (let i = 0; i < this.checked.length; i++) {
-          this.checkedRecipe[i] = true
+          if (!this.checkedRecipe[i]) {
+            this.checkedRecipe[i] = true
+            this.pressIngreAmount(i)
+          }
         }
       } else {
         this.isAllCheck = false
         this.checked = []
         for (let i = 0; i < this.checkedRecipe.length; i++) {
-          this.checkedRecipe[i] = false
+          if (this.checkedRecipe[i]) {
+            this.checkedRecipe[i] = false
+            this.noPressIngreAmount(i)
+          }
         }
       }
-      this.calRequiredList()
+      this.totalIngreAmount()
+    },
+    pressIngreAmount(index) {
+      for (let i = 0; i < this.cart[index].recipe.ingredients.length; i++) {
+        const ingreIndex =
+          this.ingreIndexList[
+            this.cart[index].recipe.ingredients[i].ingredient.id
+          ]
+        const addAmount =
+          this.cart[index].recipe.ingredients[i].amount *
+          this.cart[index].amount
+        console.log(this.ingreList[ingreIndex].amount + addAmount)
+        let updateAmountObject = {
+          index: ingreIndex,
+          updateAmount: this.ingreList[ingreIndex].amount + addAmount,
+        }
+        this.SET_INGRELIST_AMOUNT(updateAmountObject)
+        updateAmountObject = {
+          ingreId: this.cart[index].recipe.ingredients[i].ingredient.id,
+          updateAmount:
+            this.cart[index].recipe.ingredients[i].ingredient.id - addAmount,
+        }
+        this.SET_BYRECIPE_AMOUNT(updateAmountObject)
+      }
+    },
+    noPressIngreAmount(index) {
+      for (let i = 0; i < this.cart[index].recipe.ingredients.length; i++) {
+        const ingreIndex =
+          this.ingreIndexList[
+            this.cart[index].recipe.ingredients[i].ingredient.id
+          ]
+        const subAmount =
+          this.cart[index].recipe.ingredients[i].amount *
+          this.cart[index].amount
+        console.log(this.ingreList[ingreIndex].amount - subAmount)
+        let updateAmountObject = {
+          index: ingreIndex,
+          updateAmount: this.ingreList[ingreIndex].amount - subAmount,
+        }
+        this.SET_INGRELIST_AMOUNT(updateAmountObject)
+        updateAmountObject = {
+          ingreId: this.cart[index].recipe.ingredients[i].ingredient.id,
+          updateAmount:
+            this.cart[index].recipe.ingredients[i].ingredient.id - subAmount,
+        }
+        this.SET_BYRECIPE_AMOUNT(updateAmountObject)
+      }
     },
     addRecipe(index) {
       this.checked = []
@@ -428,8 +496,10 @@ export default {
       }
       if (!this.checkedRecipe[index]) {
         this.checkedRecipe[index] = true
+        this.pressIngreAmount(index)
       } else {
         this.checkedRecipe[index] = false
+        this.noPressIngreAmount(index)
       }
       for (let i = 0; i < this.checkedRecipe.length; i++) {
         if (this.checkedRecipe[i]) {
@@ -439,29 +509,7 @@ export default {
       if (this.checked.length === this.cart.length) {
         this.isAllCheck = true
       }
-      this.calRequiredList()
-    },
-    calRequiredList() {
-      this.requiredList = new Map()
-
-      for (let i = 0; i < this.checked.length; i++) {
-        const ingreList = this.checked[i].recipe.ingredients
-        for (let j = 0; j < ingreList.length; j++) {
-          if (this.requiredList.has(ingreList[j].ingredient.name)) {
-            this.requiredList.get(ingreList[j].ingredient.name).amount +=
-              ingreList[j].amount * this.checked[i].amount
-          } else {
-            this.requiredList.set(ingreList[j].ingredient.name, {
-              name: ingreList[j].ingredient.name,
-              category: ingreList[j].ingredient.category,
-              measure: ingreList[j].ingredient.measure,
-              toGram: ingreList[j].ingredient.gml,
-              id: ingreList[j].ingredient.id,
-              amount: ingreList[j].amount * this.checked[i].amount,
-            })
-          }
-        }
-      }
+      this.totalIngreAmount()
     },
     subRecipeAmount(id) {
       const updateObject = {
@@ -492,14 +540,63 @@ export default {
       }
     },
     subIngreAmount(index) {
-      this.CALC_SUB_INGRE(index)
-      console.log(this.ingreList[index])
-
-      const createObject = {
-        ingredientId: this.ingreList[index].ingredient.id,
-        operator: '-',
+      const ingredientInfo = this.ingreList[index]
+      // 원래있던 재료에서더한 경우
+      console.log(ingredientInfo.amount)
+      console.log(this.amountByRecipe[ingredientInfo.ingredient.id])
+      if (
+        ingredientInfo.amount !==
+        this.amountByRecipe[ingredientInfo.ingredient.id]
+      ) {
+        if (ingredientInfo.ingredient.id in this.amountByRecipe) {
+          if (
+            ingredientInfo.amount -
+              this.amountByRecipe[ingredientInfo.ingredient.id] -
+              1 ===
+            0
+          ) {
+            this.deleteCartIngredient(ingredientInfo.ingredient.id)
+            // console.log('11111111111111111111111111111111')
+          } else {
+            // console.log('222222222222222222')
+            const updateObject = {
+              ingredientId: this.ingreList[index].ingredient.id,
+              operator: '-',
+            }
+            this.patchCartIngredient(updateObject)
+          }
+        } else if (
+          !(ingredientInfo.ingredient.id in this.amountByRecipe) &&
+          ingredientInfo.amount - 1 === 0
+        ) {
+          // console.log('3333333333333333333333333')
+          // 원래 없는 재료를 더해줬는데 0보다 더 줄이려고 할때
+          this.deleteCartIngredient(ingredientInfo.ingredient.id)
+        } else if (
+          !(ingredientInfo.ingredient.id in this.amountByRecipe) &&
+          ingredientInfo.amount - 1 > 0
+        ) {
+          // console.log('4444444444444444444444444')
+          const updateObject = {
+            ingredientId: this.ingreList[index].ingredient.id,
+            operator: '-',
+          }
+          this.patchCartIngredient(updateObject)
+        }
+        this.CALC_SUB_INGRE(index)
       }
-      this.patchCartIngredient(createObject)
+      // if (this.ingreList[index].amount - 1 > 0) {
+      //   this.CALC_SUB_INGRE(index) // 추가한 재료보다 더 삭제하려고 할때 처리 필요
+      //   // 원래 있던 재료에서 추가하는 거랑 없던 재료를 추가하는 거를 구분
+      //   console.log(this.ingreList[index])
+
+      //   const updateObject = {
+      //     ingredientId: this.ingreList[index].ingredient.id,
+
+      //     operator: '-',
+      //   }
+      //   this.patchCartIngredient(updateObject)
+      // }
       // console.log(id + '=======' + index)
       // console.log(this.subIngreCheck[index])
       // if (this.subIngreCheck[index] - 1 === 0) {
@@ -526,7 +623,6 @@ export default {
     },
     plusIngreAmount(index) {
       this.CALC_PLUS_INGRE(index)
-      // this.$store.commit('SET_PLUS_INGRE', index)
       console.log(this.ingreList[index])
       const createObject = {
         ingredientId: this.ingreList[index].ingredient.id,
@@ -536,6 +632,9 @@ export default {
     },
     deleteIngre(item) {
       this.deleteCartIngredient(item.id)
+    },
+    clictStartCart() {
+      this.startCart()
     },
   },
 }
