@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-app> 
+    <v-app>
       <v-container class="find-user">
         <div class="find-title">아이디/비밀번호 찾기</div>
         <div class="find-wrap">

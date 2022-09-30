@@ -1,5 +1,5 @@
 <template>
-  <div id="app"> 
+  <div id="app">
     <v-app id="inspire">
       <div id="recipedetail-container">
         <v-container style="width: 100%">
@@ -22,13 +22,15 @@
               <v-row align="center" class="mx-0">{{
                 recipeListRes.description
               }}</v-row>
-              <v-row v-if="isBookmark" align="center" class="mx-0">
-                <v-icon small color="letcipe" @click="bookmark"
+              <v-row align="center" class="mx-0">
+                <v-icon
+                  v-if="isBookmark"
+                  small
+                  color="letcipe"
+                  @click="bookmark"
                   >mdi-bookmark</v-icon
-                >&nbsp;{{ Bookmarks }}&nbsp;&nbsp;
-              </v-row>
-              <v-row v-else align="center" class="mx-0">
-                <v-icon small color="letcipe" @click="bookmark"
+                >
+                <v-icon v-else small color="letcipe" @click="bookmark"
                   >mdi-bookmark-outline</v-icon
                 >&nbsp;{{ Bookmarks }}&nbsp;&nbsp;
               </v-row>
@@ -175,8 +177,6 @@ export default {
       if (this.isAllCheck) {
         this.isAllCheck = false
       }
-      // if (!this.checkedRecipe[index]) {
-      //   this.checkedRecipe[index] = true
       this.checkedRecipe[index] = !this.checkedRecipe[index]
       // this.cart.push(this.recipeListItems[index])
       // this.cart.splice(index, 1)

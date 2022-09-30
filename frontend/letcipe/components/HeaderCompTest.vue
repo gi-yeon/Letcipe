@@ -1,7 +1,72 @@
 <template>
-  <header id="app">
-    <v-app>
-      <v-app-bar dense fixed class="app-bar">
+  <v-app>
+    <v-card class="overflow-hidden">
+      <v-app-bar absolute color="white" elevate-on-scroll scroll-target="#scrolling-techniques-7">
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+
+        <v-toolbar-title>
+          <img
+            class="logo_word"
+            src="/icon/Logo_word_icon_b.png"
+            alt="Logo_word_icon_b.png"
+            @click="moveMain"
+          />
+        </v-toolbar-title>
+
+        <v-spacer></v-spacer>
+
+        <v-btn v-if="user === null || user === ''" icon>
+          <v-icon size="3rem" color="black" class="mr-2" @click="moveLogin">mdi-login-variant</v-icon>
+        </v-btn>
+
+        <v-btn icon>
+          <v-icon size="3rem" color="black" class="mr-2">mdi-account-circle</v-icon>
+        </v-btn>
+
+        <v-btn icon>
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn>
+      </v-app-bar>
+      <v-sheet id="scrolling-techniques-7" class="overflow-y-auto" max-height="600">
+        <v-container style="height: 1500px"></v-container>
+      </v-sheet>
+    </v-card>
+    <v-navigation-drawer
+      v-model="drawer"
+      class="nav-drawer"
+      absolute
+      bottom
+      temporary
+      style="width: 100%"
+    >
+      <v-col class="menu-wrap">
+        <div class="hamburger-menu" @click.stop="drawer = !drawer">
+          <div class="bar-top-after"></div>
+          <div class="bar-bottom-after"></div>
+        </div>
+      </v-col>
+      <v-list nav dense>
+        <v-list-item-group v-model="group" active-class="deep-purple--text text--accent-4">
+          <v-list-item>
+            <v-list-item-title>Foo</v-list-item-title>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-title>Bar</v-list-item-title>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-title>Fizz</v-list-item-title>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-title>Buzz</v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
+  </v-app>
+  <!-- <v-app-bar dense fixed class="app-bar">
         <v-row class="header-icon-wrap">
           <v-col class="menu-wrap">
             <div class="hamburger-menu" @click.stop="drawer = !drawer">
@@ -11,11 +76,7 @@
             </div>
           </v-col>
           <v-col class="logo-wrap">
-            <!-- <div>
-          <v-icon size="1.2rem" color="black" style="position: fixed; top: 0"
-            >mdi-bookmark</v-icon
-          >
-            </div>-->
+
             <img
               class="logo_word"
               src="/icon/Logo_word_icon_b.png"
@@ -72,8 +133,7 @@
           </v-list-item>
         </v-list-item-group>
       </v-list>
-    </v-navigation-drawer>
-  </header>
+  </v-navigation-drawer>-->
 </template>
 
 <script>
@@ -111,7 +171,7 @@ export default {
 }
 
 .app-bar {
-  height: 70px !important;
+  /* height: 70px !important; */
 }
 
 #header-container {
@@ -193,4 +253,3 @@ export default {
   height: 8vh;
 }
 </style>
- 

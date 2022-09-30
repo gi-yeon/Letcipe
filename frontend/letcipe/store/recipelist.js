@@ -28,7 +28,7 @@ export const mutations = {
     state.recipeListRepImg = recipeListRes.recipeListItems[0].recipe.repImg
   },
 }
- 
+
 export const getters = {}
 
 export const actions = {

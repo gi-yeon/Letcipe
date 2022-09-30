@@ -1,5 +1,5 @@
 <template>
-  <div id="app"> 
+  <div id="app">
     <v-app>
       <div class="agree-page">
         <div class="agree-container">

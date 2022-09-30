@@ -1,5 +1,5 @@
 <template>
-  <div id="app"> 
+  <div id="app">
     <v-app id="inspire">
       <div id="recipedetail-container">
         <v-container style="width: 100%">
