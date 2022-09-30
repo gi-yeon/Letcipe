@@ -25,8 +25,8 @@ public class ApiCount {
             context.write(word,one);
         }
         public static String logParser(String log) {
-            String[] tokens = log.split(" ")[2].split("\\{");
-            String[] split = tokens[1].split(",");
+            String[] tokens = log.split(" \\[")[2].split("\\{");
+            String[] split = tokens[2].split(",");
             String[] methodToken = split[2].split(":");
             String methodName = methodToken[1].substring(1, methodToken[1].length() - 1);
             return methodName;

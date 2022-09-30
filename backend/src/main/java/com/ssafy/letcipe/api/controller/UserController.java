@@ -124,9 +124,4 @@ public class UserController {
         userService.updatePassword(requestDto, userId);
         return ResponseEntity.ok().build();
     }
-
-    @GetMapping("check")
-    public ResponseEntity checkUser(HttpServletRequest request){
-        return ResponseEntity.ok(jwtService.isAdmin(request));
-    }
 }

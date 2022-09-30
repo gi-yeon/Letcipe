@@ -1,6 +1,5 @@
 package com.ssafy.letcipe.domain.user;
 
-import com.ssafy.letcipe.domain.type.StatusType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -20,8 +19,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByNickname(String nickname);
 
     Optional<User> findByUserIdAndPasswordAndUserType(String userId, String password, UserType admin);
-
-    Optional<User> findByUserIdAndPasswordAndStatusType(String userId, String password, StatusType n);
-
-    Optional<User> findByIdAndStatusType(Long userId, StatusType n);
 }

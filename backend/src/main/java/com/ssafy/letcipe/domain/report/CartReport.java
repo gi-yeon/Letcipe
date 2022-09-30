@@ -1,7 +1,5 @@
 package com.ssafy.letcipe.domain.report;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ssafy.letcipe.api.dto.report.ResGetCartReport;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,5 +32,5 @@ public class CartReport {
     private String attributes;
     private LocalDate date;
     private Integer count;
-    
+
 }
