@@ -21,14 +21,16 @@ public class HistoryController {
 
     @GetMapping("")
     public ResponseEntity<?> getHistoryList(HttpServletRequest request){
-        Long userId = jwtService.getUserId(request);
+//        Long userId = jwtService.getUserId(request);
+        Long userId = 1L;
         List<ResGetHistoryDto> historyList = historyService.getHistoryList(userId);
         return ResponseEntity.ok(historyList);
     }
 
     @GetMapping("/{history_id}")
     public ResponseEntity<?> getHistory(@PathVariable("history_id") Long historyId, HttpServletRequest request){
-        Long userId = jwtService.getUserId(request);
+//        Long userId = jwtService.getUserId(request);
+        Long userId = 1L;
         return ResponseEntity.ok(historyService.getHistory(userId, historyId));
     }
 

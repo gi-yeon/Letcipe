@@ -26,6 +26,6 @@ public class ResGetDetailHistoryDto {
         this.process = history.getProcess();
         this.review = history.getReview();
         this.historyItems = historyItems;
-//        this.historyIngredients = resGetHistoryIngredientDtoList;
+        this.historyIngredients = resGetHistoryIngredientDtoList;
     }
 }

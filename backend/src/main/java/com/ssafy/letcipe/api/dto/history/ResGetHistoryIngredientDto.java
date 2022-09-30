@@ -4,7 +4,9 @@ import com.ssafy.letcipe.api.dto.ingredient.ResGetIngredientDto;
 import com.ssafy.letcipe.domain.historyIngredient.HistoryIngredient;
 import com.ssafy.letcipe.domain.historyIngredient.PurchaseType;
 import com.ssafy.letcipe.domain.ingredient.Ingredient;
+import lombok.Getter;
 
+@Getter
 public class ResGetHistoryIngredientDto {
     private String name;
     private Double amount;
