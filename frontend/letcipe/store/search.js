@@ -9,7 +9,7 @@ export const state = () => ({
     recipesIngre : [],
     recipeLists : []
 })
-
+ 
 export const mutations = {
     SET_RECIPE(state, recipes){
         state.recipes = recipes

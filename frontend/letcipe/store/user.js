@@ -21,7 +21,7 @@ export const state = () => ({
   userId: 0,
   nickname: '',
 })
-
+ 
 export const mutations = {
   SET_IDCHECK_TRUE(state) {
     state.idcheck = true

@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app"> 
     <v-app class="cart-write-page">
       <v-container class="write-container">
         <div class="write-head-wrap d-flex justify-space-between pb-3" @click="moveCart">

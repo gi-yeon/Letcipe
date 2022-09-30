@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app"> 
     <v-app id="inspire">
       <div class="search-page">
         <v-container class="search-container d-flex-row">

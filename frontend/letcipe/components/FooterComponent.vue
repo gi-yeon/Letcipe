@@ -69,3 +69,4 @@ export default {
   color: black;
 }
 </style>
+ 

@@ -21,15 +21,19 @@ public class ResGetRecipeListDto {
     private String nickname;
     private String name;
     private String description;
+    private int recipeListBookmark;
+    private boolean isBookmark;
     private LocalDateTime regTime;
     private SharedType isShared;
     private List<ResGetRecipeListItemDto> recipeListItems;
 
-    public ResGetRecipeListDto(RecipeList recipeList) {
+    public ResGetRecipeListDto(RecipeList recipeList, boolean isBookmark) {
         this.id = recipeList.getId();
         this.nickname = recipeList.getUser().getNickname();
         this.name = recipeList.getName();
         this.description = recipeList.getDescription();
+        this.recipeListBookmark = recipeList.getBookmarks().size();
+        this.isBookmark = isBookmark;
         this.regTime = recipeList.getRegTime();
         this.isShared = recipeList.getIsShared();
         this.recipeListItems = new ArrayList<>();

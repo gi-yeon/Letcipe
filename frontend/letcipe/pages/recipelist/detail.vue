@@ -1,32 +1,40 @@
 <template>
-  <div id="app">
+  <div id="app"> 
     <v-app id="inspire">
       <div id="recipedetail-container">
         <v-container style="width: 100%">
           <v-card class="mx-auto my-12">
-            <v-img
-              src="https://2bob.co.kr/data/recipe/20210810142007-EYPBD.jpg"
-            ></v-img>
+            <v-img :src="recipeListRepImg"></v-img>
 
-            <v-card-title class="text-md-h3">{{ name }}</v-card-title>
+            <v-card-title class="text-md-h3">{{
+              recipeListRes.name
+            }}</v-card-title>
 
             <v-card-text>
               <div class="my-4 text-subtitle-1">
                 <v-row class="mx-0 d-flex justify-space-between">
-                  Chef&nbsp;&nbsp;{{ nickname }}
+                  {{ recipeListWriter.job }} &nbsp;&nbsp;{{
+                    recipeListWriter.nickname
+                  }}
                   <v-btn style="border: 1px solid black">+ 전체담기</v-btn>
                 </v-row>
               </div>
-              <v-row align="center" class="mx-0">{{ description }}</v-row>
-              <v-row align="center" class="mx-0">
-                <v-icon small color="blue lighten-1">mdi-thumb-up</v-icon
-                >&nbsp;2200&nbsp;&nbsp;
-                <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon
-                >&nbsp;123&nbsp;&nbsp;
-                <v-icon small color="blue lighten-3">mdi-comment</v-icon
-                >&nbsp;23
+              <v-row align="center" class="mx-0">{{
+                recipeListRes.description
+              }}</v-row>
+              <v-row v-if="isBookmark" align="center" class="mx-0">
+                <v-icon small color="letcipe" @click="bookmark"
+                  >mdi-bookmark</v-icon
+                >&nbsp;{{ Bookmarks }}&nbsp;&nbsp;
               </v-row>
-              <v-row align="center" class="mx-0">등록일자 : 2022-09-18</v-row>
+              <v-row v-else align="center" class="mx-0">
+                <v-icon small color="letcipe" @click="bookmark"
+                  >mdi-bookmark-outline</v-icon
+                >&nbsp;{{ Bookmarks }}&nbsp;&nbsp;
+              </v-row>
+              <v-row align="center" class="mx-0"
+                >등록일자 : {{ regTime }}</v-row
+              >
             </v-card-text>
             <br />
             <div align="center">
@@ -49,7 +57,7 @@
             <v-row>
               <v-col>
                 <v-hover
-                  v-for="(item, i) in recipeListItems"
+                  v-for="(item, i) in recipeListRes.recipeListItems"
                   :key="i"
                   style="width: 90%"
                 >
@@ -63,12 +71,12 @@
                       :class="hover ? 'grey lighten-5' : 'white'"
                       class="mx-auto mt-2 mb-2 d-flex align-center"
                     >
-                      <div class="ml-4">{{ i }}</div>
+                      <div class="ml-4">{{ i + 1 }}</div>
                       <v-list-item three-line>
                         <v-list-item-avatar tile size="57">
                           <v-img
                             elevation="10"
-                            src="https://2bob.co.kr/data/recipe/20191212142613-HV8JG.jpg"
+                            :src="item.recipe.repImg"
                             style="border-radius: 5px"
                           ></v-img>
                         </v-list-item-avatar>
@@ -83,13 +91,13 @@
                       </v-list-item>
 
                       <v-icon
-                        v-if="!checkedRecipe[i]"
+                        v-if="checkedRecipe[i]"
                         class="mr-3"
                         @click="addCart(i)"
-                        >mdi-check-circle-outline</v-icon
+                        >mdi-check-circle</v-icon
                       >
                       <v-icon v-else class="mr-3" @click="addCart(i)"
-                        >mdi-check-circle</v-icon
+                        >mdi-check-circle-outline</v-icon
                       >
                     </div>
                   </template>
@@ -104,58 +112,59 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
+
 export default {
   name: 'RecipeListDetail',
   data() {
     return {
-      id: '3',
-      nickname: 'jgy',
-      name: '정기연의 면요리',
-      description: '가성비 버전',
-      reg_time: '2022-09-13',
-      is_shared: 'private',
-      recipeListItems: [
-        {
-          recipe: {
-            id: 1,
-            nickname: '싸피10기',
-            title: '고르곤졸라피자',
-            content: `만만치 않은 가격에도 도우 반죽 때문에 집에서 만들기 영 꺼려졌던 피자.
-						토르티야로 간편하게 해결하세요!
-						꼬릿하지만 묘한 매력이 있는 고르곤졸라치즈를 얹으면
-						10분 만에 풍미 가득한 피자가 완성되죠. 꿀에 찍어 먹으면 더 맛있어요.`,
-            cookingTime: 10,
-            serving: 4,
-            repImg: 'adsasdasd',
-            recipeLike: 21,
-            recipeBookmark: 16,
-          },
-          amount: 3,
-        },
-        {
-          recipe: {
-            id: 4,
-            nickname: '싸피7기',
-            title: '시카고피자',
-            content: '만만치 않은 가격!',
-            cookingTime: 2,
-            serving: 2,
-            repImg: 'fsdfadasd',
-            recipeLike: 21,
-            recipeBookmark: 16,
-          },
-          amount: 1,
-        },
-      ],
+      recipeListWriter: {},
+      regTime: '',
+      Bookmarks: 0,
+      isBookmark: false,
       checkedRecipe: [],
       cart: [],
       isAllCheck: false,
     }
   },
-  created() {
+  async fetch() {
+    await this.getRecipeList(1)
+    this.recipeListWriter = this.recipeListUser
+    const temp = this.recipeListRes.regTime
+    this.regTime = temp.replace('T', '  ')
+    this.Bookmarks = this.recipeListRes.recipeListBookmark
+    this.isBookmark = this.recipeListRes.bookmark
     this.initCart()
   },
+  fetchOnServer: false,
+  computed: {
+    ...mapState('recipelist', [
+      'recipeListRes',
+      'recipeListUser',
+      'recipeListItems',
+      'recipeListRepImg',
+    ]),
+    ...mapState('user', ['userId']),
+  },
+  created() {},
   methods: {
+    ...mapActions('recipelist', [
+      'getRecipeList',
+      'createRecipeListBookmark',
+      'deleteRecipeListBookmark',
+    ]),
+    bookmark() {
+      if (this.userId === 0) return
+      if (this.isBookmark) {
+        this.isBookmark = !this.isBookmark
+        this.deleteRecipeListBookmark(this.recipeListRes.id)
+        this.Bookmarks--
+      } else {
+        this.isBookmark = !this.isBookmark
+        this.createRecipeListBookmark(this.recipeListRes.id)
+        this.Bookmarks++
+      }
+    },
     initCart() {
       for (let i = 0; i < this.recipeListItems.length; i++) {
         this.checkedRecipe.push(false)
@@ -166,13 +175,11 @@ export default {
       if (this.isAllCheck) {
         this.isAllCheck = false
       }
-      if (!this.checkedRecipe[index]) {
-        this.checkedRecipe[index] = true
-        // this.cart.push(this.recipeListItems[index])
-      } else {
-        this.checkedRecipe[index] = false
-        // this.cart.splice(index, 1)
-      }
+      // if (!this.checkedRecipe[index]) {
+      //   this.checkedRecipe[index] = true
+      this.checkedRecipe[index] = !this.checkedRecipe[index]
+      // this.cart.push(this.recipeListItems[index])
+      // this.cart.splice(index, 1)
       for (let i = 0; i < this.checkedRecipe.length; i++) {
         if (this.checkedRecipe[i]) {
           this.cart.push(this.recipeListItems[i])

@@ -16,7 +16,7 @@ export const state = () => ({
   recipeDetail: {},
   recipeID: null,
 })
-
+ 
 export const mutations = {
   SET_RECIPE_DETAIL(state, recipeDetail) {
     state.recipeDetail = recipeDetail
