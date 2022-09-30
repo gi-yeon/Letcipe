@@ -13,12 +13,12 @@
               <v-tabs v-model="tabs" fixed-tabs>
                 <v-tabs-slider color="black"></v-tabs-slider>
                 <v-tab href="#mobile-tabs-5-1" class="letcipe--text">
-                  <v-icon>mdi-cart-outline</v-icon>
+                  <v-icon color="letcipe">mdi-cart-outline</v-icon>
                   <div>전체보기</div>
                 </v-tab>
 
                 <v-tab href="#mobile-tabs-5-2" class="letcipe--text">
-                  <v-icon>mdi-sort</v-icon>
+                  <v-icon color="letcipe">mdi-sort</v-icon>
                   <div>분류별보기</div>
                 </v-tab>
               </v-tabs>
@@ -33,24 +33,30 @@
                   <div class="before-shopping">
                     <div class="d-flex justify-space-between align-center">
                       <div>
-                        <v-icon>mdi-carrot</v-icon>구매할식재료
+                        <v-icon color="letcipe">mdi-carrot</v-icon>구매할식재료
                       </div>
                       <div class="d-flex align-center">
                         <div>전체선택</div>
 
-                        <v-checkbox color="lime darken-1"></v-checkbox>
+                        <v-checkbox color="letcipe"></v-checkbox>
                       </div>
                     </div>
                     <v-divider></v-divider>
                     <div v-for="(c, index) in checklist" :key="index" class="pl-3 pr-3">
-                      <v-checkbox
-                        v-model="checklist[index]"
-                        :label="c"
-                        color="lime darken-1"
-                        :value="c"
-                        hide-details
-                        @click="bought(c, index)"
-                      ></v-checkbox>
+                      <div class="d-flex justify-space-between">
+                        <v-radio
+                          v-model="checklist[index]"
+                          :label="c.name"
+                          color="lime darken-1"
+                          :value="c.name"
+                          hide-details
+                          @click="bought(c, index)"
+                        ></v-radio>
+
+                        <div class="ingre-amount">{{c.amount}}</div>
+                      </div>
+
+                      <v-divider></v-divider>
                     </div>
                   </div>
                 </div>
@@ -70,9 +76,9 @@
                     <div v-for="(c, index) in checkedList" :key="index" class="pl-3 pr-3">
                       <v-checkbox
                         v-model="checkedList[index]"
-                        :label="c"
+                        :label="c.name"
                         color="lime darken-1"
-                        :value="c"
+                        true-value
                         hide-details
                         @click="needtobuy(c, index)"
                       ></v-checkbox>
@@ -129,9 +135,9 @@
                     <div v-for="(c) in checklist" :key="c" class="pl-3 pr-3">
                       <v-checkbox
                         v-model="checklist[index]"
-                        :label="c"
+                        :label="c.name"
                         color="lime darken-1"
-                        :value="c"
+                        :value="c.name"
                         hide-details
                         @click="bought(c, index)"
                       ></v-checkbox>
@@ -154,10 +160,11 @@
                     <div v-for="(c, index) in checkedList" :key="index" class="pl-3 pr-3">
                       <v-checkbox
                         v-model="checkedList[index]"
-                        :label="c"
+                        :label="c.name"
                         color="lime darken-1"
-                        :value="c"
+                        :value="c.name"
                         hide-details
+                        true-value
                         @click="needtobuy(c, index)"
                       ></v-checkbox>
                     </div>
@@ -201,13 +208,15 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 export default {
   name: 'CheckIndex',
   data() {
     return {
+      historyID: null,
       tabs: null,
       check: false,
-      checklist: ['양파', '오이', '토마토', '대파', '쪽마늘'],
+      checklist: [],
       checkedList: [],
       dialog: false,
       category: [],
@@ -243,25 +252,54 @@ export default {
       ],
     }
   },
+  computed: {
+    ...mapState('history', ['history', 'historyList']),
+  },
   created() {
     this.category = []
-    this.ingredients?.forEach((item) => {
-      if (this.category.length === 0) {
-        this.category.push(item.category)
-      } else {
-        let cnt = 0
-        this.category?.forEach((cg) => {
-          if (cg === item.category) {
-            cnt++
-          }
-        })
-        if (cnt === 0) {
-          this.category.push(item.category)
-        }
-      }
+    const promise = new Promise((resolve, reject) => {
+      resolve()
     })
+    promise.then(async () => {
+      await this.getHistoryList()
+      this.historyList.forEach((h) => {
+        if (h.process === 'READY') {
+          this.historyID = h.id
+        }
+      })
+      await this.getHistory(this.historyID)
+      this.history.historyIngredients.forEach((jaeryo) => {
+        if (jaeryo.isPurchased === 'N') {
+          this.checklist.push(jaeryo)
+        } else {
+          this.checkedList.push(jaeryo)
+        }
+      })
+      // console.log(this.history.historyItems)
+    })
+    // this.category = []
+    // this.ingredients?.forEach((item) => {
+    //   if (this.category.length === 0) {
+    //     this.category.push(item.category)
+    //   } else {
+    //     let cnt = 0
+    //     this.category?.forEach((cg) => {
+    //       if (cg === item.category) {
+    //         cnt++
+    //       }
+    //     })
+    //     if (cnt === 0) {
+    //       this.category.push(item.category)
+    //     }
+    //   }
+    // })
   },
   methods: {
+    ...mapActions('history', [
+      'getHistory',
+      'getHistoryList',
+      'checkHistoryIngredient',
+    ]),
     completeShopping() {
       console.log('장보기')
     },

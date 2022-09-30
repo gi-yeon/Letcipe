@@ -36,8 +36,6 @@ export const actions = {
         commit('SET_HISTORY_LIST', data)
         console.log('히스토리목록가져오기 성공!')
         console.log(data)
-        
-  
       },
       (error) => {
         console.log(error)
@@ -51,7 +49,6 @@ export const actions = {
         commit('SET_HISTORY', data)
         console.log(data)
         console.log('히스토리한개가져오기 성공!')
-      
       },
       (error) => {
         console.log(error)
