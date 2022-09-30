@@ -1,7 +1,9 @@
-import { apiInstance, fileInstance } from '.'
+import interceptor from '../config/interceptor'
+import { fileInstance } from '.'
 // import { fileInstance } from './multipart'
 
-const api = apiInstance()
+// const Api = apiInstance
+const api = interceptor
 const fileapi = fileInstance()
 
 // 레시피 상세 조회
