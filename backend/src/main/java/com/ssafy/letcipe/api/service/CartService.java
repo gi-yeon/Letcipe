@@ -152,10 +152,13 @@ public class CartService {
     @Transactional
     public void createCartHistory(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
-        History alreadyHistory = historyRepository.findByUserAndProcessAndIsDeleted(user, ProcessType.READY, StatusType.N).orElse(null);
-
-        if (alreadyHistory != null) {
-            throw new BadRequestException("이미 실행중인 이력이 있습니다.");
+        History alreadyReadyHistory = historyRepository.findByUserAndProcessAndIsDeleted(user, ProcessType.READY, StatusType.N).orElse(null);
+        History alreadyEatingHistory = historyRepository.findByUserAndProcessAndIsDeleted(user, ProcessType.EATING, StatusType.N).orElse(null);
+        if (alreadyReadyHistory != null) {
+            throw new BadRequestException("진행 예정인 장바구니가 있습니다.");
+        }
+        if (alreadyEatingHistory != null) {
+            throw new BadRequestException("이미 진행중인 레시피리스트가 있습니다.");
         }
 
         // History 생성 및 저장
