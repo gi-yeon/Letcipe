@@ -9,6 +9,7 @@ import com.ssafy.letcipe.domain.recipeList.RecipeList;
 import com.ssafy.letcipe.domain.recipeList.RecipeListRepository;
 import com.ssafy.letcipe.domain.recipeListBookmark.RecipeListBookmark;
 import com.ssafy.letcipe.domain.recipeListBookmark.RecipeListBookmarkRepository;
+import com.ssafy.letcipe.domain.type.StatusType;
 import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.domain.user.UserRepository;
 import com.ssafy.letcipe.domain.user.UserType;
@@ -82,7 +83,7 @@ public class UserService {
         sb.append(salt).append(requestDto.getPassword());
         String password = encryptUtils.encrypt(sb.toString());
 
-        User user = userRepository.findByUserIdAndPassword(requestDto.getUserId(), password)
+        User user = userRepository.findByUserIdAndPasswordAndStatusType(requestDto.getUserId(), password, StatusType.N)
                 .orElseThrow(() -> new NullPointerException());
 
         String token = jwtService.createToken(user);
@@ -114,29 +115,29 @@ public class UserService {
     }
 
     public ResGetUserDto readUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
+        User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
         return new ResGetUserDto(user);
     }
 
     @Transactional
     public void deleteUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
+        User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
         user.delete();
     }
 
     @Transactional
     public void updateUser(Long userId, ReqPutUserDto requestDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
+        User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
         user.update(requestDto);
     }
 
     public User findUser(long userId) throws NullPointerException {
-        return userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
+        return userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
     }
 
     @Transactional
     public ResGetUserRecipesDto readUserRecipe(Long userId, Pageable pageable) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
+        User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
         List<Recipe> recipeList = recipeRepository.findAllByUser(pageable, user);
         List<ResGetUserRecipeDto> dtoList = new ArrayList<>();
         for(Recipe recipe: recipeList){
@@ -146,7 +147,7 @@ public class UserService {
     }
 
     public ResGetUserRecipeListsDto readUserRecipeList(Long userId, Pageable pageable) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
+        User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
         List<RecipeList> recipeListList = recipeListRepository.findAllByUser(pageable, user);
         List<ResGetUserRecipeListDto> dtoList = new ArrayList<>();
         for(RecipeList recipeList: recipeListList){
@@ -156,7 +157,7 @@ public class UserService {
     }
 
     public ResGetUserRecipesDto readRecipeBookmark(Long userId, Pageable pageable) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
+        User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
         List<RecipeBookmark> recipeBookmarkList = recipeBookmarkRepository.findAllByUser(pageable, user);
         List<ResGetUserRecipeDto> dtoList = new ArrayList<>();
         for(RecipeBookmark recipeBookmark: recipeBookmarkList){
@@ -166,7 +167,7 @@ public class UserService {
     }
 
     public ResGetUserRecipeListsDto readRecipeListBookmark(Long userId, Pageable pageable) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
+        User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
         List<RecipeListBookmark> recipeListBookmarkList = recipeListBookmarkRepository.findAllByUser(pageable, user);
         List<ResGetUserRecipeListDto> dtoList = new ArrayList<>();
         for(RecipeListBookmark recipeListBookmark: recipeListBookmarkList){

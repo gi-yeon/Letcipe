@@ -1,5 +1,4 @@
-import interceptor from '../config/interceptor'
-import { apiInstance, fileInstance } from '.'
+import { apiInstance } from '.'
 
 const api = apiInstance()
 const fileApi = fileInstance() 
@@ -12,30 +11,15 @@ async function login(user, success, fail) {
     .catch(fail)
 }
 
-// 사용자 id, nickname 얻어오기
-async function readUser(success, fail) {
-  await interceptor.get(`/api/user`).then(success).catch(fail)
-}
-
 // 사용자 등록
 async function signup(user, success, fail) {
-  await fileApi.post(`/api/user`, user).then(success).catch(fail)
+  await api.post(`/api/user`, JSON.stringify(user)).then(success).catch(fail)
 }
 
-// 사용자 정보 조회
-async function idCheck(userid, success, fail) {
-  await api
-    .get(`/api/user/id/${userid}/exists`)
-    .then(success)
-    .catch(fail)
-}
-
-async function nicknameCheck(nickname, success, fail) {
-  await api
-    .get(`/api/user/nickname/${nickname}/exists`)
-    .then(success)
-    .catch(fail)
-}
+// 사용자 정보 조회 ??
+// async function check(userid, success, fail) {
+//   await api.get(`/api/user/${userid}`).then(success).catch(fail)
+// }
 
 // 사용자 정보 조회??
 async function mypage(userid, success, fail) {
@@ -63,30 +47,22 @@ async function deleteMember(userid, success, fail) {
 
 // 내 레시피 조회
 async function myrecipe(userid, success, fail) {
-  await api.get(`/api/user/recipe/${userid}`).then(success).catch(fail)
+  await api.get(`/api/use/recipe/${userid}`).then(success).catch(fail)
 }
 
 // 내 레시피리스트 조회
 async function myrecipeList(userid, success, fail) {
-  await api.get(`/api/user/recipeList/${userid}`).then(success).catch(fail)
-}
-
-// 핸드폰 인증
-async function createCode(phoneNo, success, fail) {
-  await api.post(`/api/sms`, phoneNo).then(success).catch(fail)
+  await api.get(`/api/use/recipeList/${userid}`).then(success).catch(fail)
 }
 
 export {
   login,
-  idCheck,
-  nicknameCheck,
   signup,
-  readUser,
+  //   check,
   mypage,
   modifyMember,
   deleteMember,
   myrecipe,
   myrecipeList,
-  createCode
 }
  
