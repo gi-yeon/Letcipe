@@ -28,6 +28,7 @@ services:
             SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/ssafy
             SPRING_DATASOURCE_USERNAME: root
             SPRING_DATASOURCE_PASSWORD: fPttlvl0914
+            - TZ=Asia/Seoul
         ports:
             - 8888:8888
     mysql:
