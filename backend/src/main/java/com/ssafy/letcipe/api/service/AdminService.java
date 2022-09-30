@@ -14,6 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 
 import java.io.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -71,16 +75,25 @@ public class AdminService {
         while ((str = br.readLine()) != null) {
             // 결과 파싱
             String[] tokens = str.split("\t");
-            // method= 로 시작하는 문자만 핸들링
-            if (!tokens[0].startsWith("method=")) continue;
-            String methodName = tokens[0].substring(7);
             ApiReport apiReport = ApiReport.builder()
-                    .methodName(methodName)
+                    .methodName(tokens[0])
                     .count(Integer.parseInt(tokens[1]))
                     .date(LocalDate.parse(fileName.substring(0, fileName.indexOf(".txt"))))
                     .build();
 
             apiReportRepository.save(apiReport);
         }
+    }
+
+    public List<ApiReport> getApiReport(LocalDate beginDate, LocalDate endDate) {
+        List<ApiReport> apiReports = apiReportRepository.rangeSearch(beginDate, endDate);
+        apiReports.sort(Comparator.comparing(ApiReport::getCount).reversed());
+        return apiReports;
+    }
+
+    public List<CartReport> getCartReport(String attributes, LocalDate beginDate, LocalDate endDate) {
+        List<CartReport> cartReports = cartReportRepository.findAllByAttr(attributes, beginDate, endDate);
+        cartReports.sort(Comparator.comparing(CartReport::getCount).reversed());
+        return cartReports;
     }
 }

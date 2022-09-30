@@ -1,7 +1,11 @@
 package com.ssafy.letcipe.api.controller;
 
+import com.ssafy.letcipe.api.dto.report.ReqGetApiReport;
+import com.ssafy.letcipe.api.dto.report.ReqGetCartReport;
 import com.ssafy.letcipe.api.dto.report.ReqPostReportDto;
 import com.ssafy.letcipe.api.service.AdminService;
+import com.ssafy.letcipe.domain.report.ApiReport;
+import com.ssafy.letcipe.domain.report.CartReport;
 import com.ssafy.letcipe.util.FileHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -10,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,6 +59,18 @@ public class AdminController {
             log.warn("이미 저장된 값이 있습니다.:{}",e.getMessage());
         }
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/report/api")
+    public ResponseEntity getApiReport(@RequestBody ReqGetApiReport reqDto) {
+        List<ApiReport> apiReport = adminService.getApiReport(LocalDate.parse(reqDto.getBeginDate()),LocalDate.parse(reqDto.getEndDate()));
+        return ResponseEntity.ok(apiReport);
+    }
+
+    @GetMapping("/report/cart")
+    public ResponseEntity getCartReport(@RequestBody ReqGetCartReport reqDto) {
+        List<CartReport> cartReport = adminService.getCartReport(reqDto.getAttributes(), LocalDate.parse(reqDto.getBeginDate()), LocalDate.parse(reqDto.getEndDate()));
+    return ResponseEntity.ok(cartReport);
     }
 
 
