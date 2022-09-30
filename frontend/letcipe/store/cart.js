@@ -5,21 +5,38 @@ import {
   createCartIngredient,
   deleteCartIngredient,
   patchCartIngredient,
+  getCartIngredient
   // startCart,
   // createCart,
 } from '@/api/cart'
 
 export const state = () => ({
   cart: [],
+  ingreList : []
+
 })
  
 export const mutations = {
   SET_CART(state, cart) {
     state.cart = cart
   },
-  CLEART_CART(state) {
+  CLEAR_CART(state) {
     state.cart = []
   },
+  SET_INGRE(state, ingreList){
+    state.ingreList = ingreList
+  },
+  CLEAR_INGRE(state){
+    state.ingreList = []
+  },
+  CALC_PLUS_INGRE(state, index){
+    state.ingreList[index].amount += 1
+  },
+  CALC_SUB_INGRE(state, index){
+    state.ingreList[index].amount -= 1
+  },
+  
+  
 }
 
 export const getters = {}
@@ -28,15 +45,16 @@ export const actions = {
   async readCart({ commit }) {
     await readCart(
       ({ data }) => {
-        commit('SET_CART', data.cart)
-        // console.log(data)
-        // console.log('장바구니 조회 성공!')
+        commit('SET_CART', data.cartItems)
+        console.log(data)
+      
       },
       (error) => {
         console.log(error)
       }
     )
   },
+  
   //   async createCart({ commit }, recipeId) {
   //     await createCart(
   //         recipeId,
@@ -50,6 +68,7 @@ export const actions = {
   //     )
   //   },
   async deleteCart({ commit }, recipeId) {
+   
     await deleteCart(
       recipeId,
       ({ data }) => {
@@ -61,9 +80,9 @@ export const actions = {
       }
     )
   },
-  async updateCartRecipe({ commit }, recipeAmount) {
+  async updateCartRecipe({ commit }, updateObject) {
     await updateCartRecipe(
-      recipeAmount,
+      updateObject,
       ({ data }) => {
         // console.log(data)
         // console.log('장바구니 레시피 수량 변경 성공!')
@@ -73,10 +92,25 @@ export const actions = {
       }
     )
   },
-  async createCartIngredient({ commit }, cartIngredientId, operator) {
+
+  async getCartIngredient({ commit }) {
+    commit('CLEAR_INGRE')
+    await getCartIngredient(
+      
+      ({ data }) => {
+        console.log(data)
+        commit('SET_INGRE',data.list)
+         console.log('장바구니 재료 읽어오기 성공!')
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  },
+
+  async createCartIngredient({ commit }, IngreId) {
     await createCartIngredient(
-      cartIngredientId,
-      operator,
+      IngreId,
       ({ data }) => {
         // console.log(data)
         // console.log('장바구니 추가재료 추가 성공!')
@@ -99,10 +133,9 @@ export const actions = {
       }
     )
   },
-  async patchCartIngredient({ commit }, recipeAmount) {
+  async patchCartIngredient({ commit }, updateObject) {
     await patchCartIngredient(
-      recipeAmount,
-
+      updateObject,
       ({ data }) => {
         // console.log(data)
         // console.log('장바구니 추가재료 수량 변경 성공!')

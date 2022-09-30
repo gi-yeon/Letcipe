@@ -7,6 +7,8 @@ async function readCart(success, fail) {
   await api.get(`/api/cart`).then(success).catch(fail)
 }
 
+
+
 // 장바구니에 레시피 등록 -- still ing
 // async function createCart(recipeId, success, fail) {
 //   await file
@@ -16,38 +18,49 @@ async function readCart(success, fail) {
 // }
 
 // 장바구니 레시피 삭제
-async function deleteCart(recipeId, success, fail) {
-  await api.delete(`/api/cart`, recipeId).then(success).catch(fail)
+async function deleteCart(id, success, fail) {
+
+  await api.delete(`/api/cart`, {data : {recipeId : id}}).then(success).catch(fail)
 }
 
 // 장바구니 레시피 수량 변경
-async function updateCartRecipe(recipeAmount, success, fail) {
+async function updateCartRecipe(updateObject, success, fail) {
+  console.log(updateObject)
   await api
-    .patch(`/api/cart-recipe`, JSON.stringify(recipeAmount))
+    .patch(`/api/cart-recipe`,JSON.stringify(updateObject))
+    .then(success)
+    .catch(fail)
+}
+
+// 장바구니 재료 조회
+async function getCartIngredient(success, fail) {
+  await api
+    .get(`/api/cart-ingredient`)
     .then(success)
     .catch(fail)
 }
 
 // 장바구니 추가재료 추가
-async function createCartIngredient(cartIngredientId, operator, success, fail) {
+async function createCartIngredient(createObject, success, fail) {
   await api
-    .post(`/api/cart-ingredient`, cartIngredientId, operator)
+    .post(`/api/cart-ingredient`, createObject)
     .then(success)
     .catch(fail)
 }
 
 // 장바구니 추가재료 삭제
-async function deleteCartIngredient(cartIngredientId, success, fail) {
+async function deleteCartIngredient(IngreId, success, fail) {
   await api
-    .delete(`/api/cart-ingredient`, cartIngredientId)
+    .delete(`/api/cart-ingredient`, {data : {ingredientId : IngreId}})
     .then(success)
     .catch(fail)
 }
 
 // 장바구니 추가재료 수량 변경
-async function patchCartIngredient(recipeAmount, success, fail) {
+async function patchCartIngredient(updateObject, success, fail) {
+  console.log(updateObject)
   await api
-    .patch(`/api/cart-ingredient`, JSON.stringify(recipeAmount))
+    .patch(`/api/cart-ingredient`, updateObject)
     .then(success)
     .catch(fail)
 }
@@ -67,6 +80,8 @@ export {
   createCartIngredient,
   deleteCartIngredient,
   patchCartIngredient,
+  getCartIngredient
+
   // startCart,
   // createCart,
 }
