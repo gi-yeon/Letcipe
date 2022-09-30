@@ -1,6 +1,7 @@
 package com.ssafy.letcipe.api.dto.recipeList;
 
 import com.ssafy.letcipe.api.dto.recipeListItem.ResGetRecipeListItemDto;
+import com.ssafy.letcipe.api.dto.user.ResGetUserDto;
 import com.ssafy.letcipe.domain.recipeList.RecipeList;
 import com.ssafy.letcipe.domain.recipeList.SharedType;
 import com.ssafy.letcipe.domain.recipeListItem.RecipeListItem;
@@ -18,7 +19,7 @@ import java.util.List;
 @Builder(access = AccessLevel.PRIVATE)
 public class ResGetRecipeListDto {
     private Long id;
-    private String nickname;
+    ResGetUserDto user;
     private String name;
     private String description;
     private int recipeListBookmark;
@@ -29,7 +30,7 @@ public class ResGetRecipeListDto {
 
     public ResGetRecipeListDto(RecipeList recipeList, boolean isBookmark) {
         this.id = recipeList.getId();
-        this.nickname = recipeList.getUser().getNickname();
+        this.user = ResGetUserDto.createDto(recipeList.getUser());
         this.name = recipeList.getName();
         this.description = recipeList.getDescription();
         this.recipeListBookmark = recipeList.getBookmarks().size();
