@@ -62,6 +62,7 @@ public class CartController {
     public ResponseEntity getCartIngredient(HttpServletRequest request){
         Long userId = 1L;
         userId = 1L;
+
         return ResponseEntity.ok(cartService.getCartIngredient(userId));
     }
 

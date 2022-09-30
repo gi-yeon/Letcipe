@@ -110,4 +110,16 @@ public class FileHandler {
         }
         return file;
     }
+
+    public File getFile(String path,String fileName) throws FileNotFoundException {
+        String filePath = path+sep+fileName;
+        File file;
+        try {
+            file = new File(filePath);
+            if (!file.exists()) throw new FileNotFoundException("파일을 찾을 수 없습니다.");
+        } catch (Exception e) {
+            throw new FileNotFoundException("파일을 찾을 수 없습니다.");
+        }
+        return file;
+    }
 }
