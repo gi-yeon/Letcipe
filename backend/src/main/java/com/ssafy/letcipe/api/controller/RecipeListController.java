@@ -23,7 +23,7 @@ public class RecipeListController {
 
     @PostMapping("")
     public ResponseEntity<?> createRecipeList(@RequestBody ReqCreateRecipeListDto reqCreateRecipeListDto, HttpServletRequest request) {
-        Long userId = jwtService.getUserId(request);
+        Long userId = 1L;
         recipeListService.createRecipeList(userId, reqCreateRecipeListDto);
         return ResponseEntity.ok().build();
     }
@@ -35,7 +35,7 @@ public class RecipeListController {
 
     @PutMapping("/{recipe_list_id}")
     public ResponseEntity<?> updateRecipeList(@RequestBody ReqUpdateRecipeListDto reqUpdateRecipeListDto, @PathVariable("recipe_list_id") Long recipeListId, HttpServletRequest request) {
-        Long userId = jwtService.getUserId(request);
+        Long userId = 1L;
         recipeListService.updateRecipeList(userId, reqUpdateRecipeListDto, recipeListId);
         return ResponseEntity.ok().build();
     }

@@ -130,9 +130,12 @@ public class CartService {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
         Ingredient ingredient = ingredientRepository.findById(requestDto.getIngredientId())
                 .orElseThrow(() -> new NullPointerException("재료를 찾을 수 없습니다."));
-        CartIngredient cartIngredient = cartIngredientRepository.findByUserAndIngredient(user, ingredient)
-                .orElseThrow(() -> new NullPointerException("수정한 적 없습니다."));
-        cartIngredientRepository.delete(cartIngredient);
+      if(cartIngredientRepository.findByUserAndIngredient(user, ingredient).isPresent()){
+          CartIngredient cartIngredient = cartIngredientRepository.findByUserAndIngredient(user, ingredient).get();
+          cartIngredientRepository.delete(cartIngredient);
+      }
+
+
     }
 
     @Transactional
@@ -240,6 +243,8 @@ public class CartService {
                 ingredientMap.put(ingredientId, ingredientMap.get(ingredientId) + recipeIngredient.getAmount()* cart.getAmount());
             }
         }
+        //레시피로만 된 재료 양
+        Map<Long, Double> recipeIngre = new HashMap<>(ingredientMap);
 
         for(CartIngredient cartIngredient: user.getCartIngredients()){
             Ingredient ingredient = cartIngredient.getIngredient();
@@ -250,7 +255,6 @@ public class CartService {
             }
             ingredientMap.put(ingredientId, ingredientMap.get(ingredientId) + cartIngredient.getAmount());
         }
-
         List<ResGetCartIngredientDto> list = new ArrayList<>();
         Iterator<Long> keys = ingredientMap.keySet().iterator();
         while(keys.hasNext()) {
@@ -265,10 +269,11 @@ public class CartService {
                             .gml(ingredient.getGml())
                             .build())
                     .amount(ingredientMap.get(id))
+
                     .build();
             list.add(dto);
         }
         System.out.println(list);
-        return new ResGetCartIngredientListDto(list);
+        return new ResGetCartIngredientListDto(list, recipeIngre);
     }
 }
