@@ -8,7 +8,6 @@ import com.ssafy.letcipe.api.service.CommentService;
 import com.ssafy.letcipe.api.service.JwtService;
 import com.ssafy.letcipe.domain.comment.BoardType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,9 +26,8 @@ public class CommentController {
 
     @GetMapping("/{board_type}/{board_id}")
     public ResponseEntity<List<ResGetCommentDto>> getComment(@PathVariable("board_type") BoardType boardType
-                                                            ,@PathVariable("board_id") Long boardId, Pageable pageable) {
-        System.out.println("size : " + pageable.getPageSize() + ", page : "  + pageable.getPageNumber());
-        return new ResponseEntity<>(commentService.getComment(boardType, boardId, pageable),   HttpStatus.OK);
+                                                            ,@PathVariable("board_id") Long boardId) {
+        return new ResponseEntity<>(commentService.getComment(boardType, boardId), HttpStatus.OK);
     }
 
 
@@ -52,12 +50,5 @@ public class CommentController {
         Long userId = jwtService.getUserId(request);;
         commentService.postComment(commentDto, userId);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("/{board_type}/{board_id}/commentNum")
-    public ResponseEntity<Long> getCommentNum(@PathVariable("board_type") BoardType boardType
-                                            ,@PathVariable("board_id") Long boardId){
-        System.out.println("boartType : " + boardType + ", boardId : "  + boardId);
-        return new ResponseEntity<>(commentService.getCommentNum(boardType, boardId), HttpStatus.OK);
     }
 }

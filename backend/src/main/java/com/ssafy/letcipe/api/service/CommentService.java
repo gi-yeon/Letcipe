@@ -16,8 +16,6 @@ import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.domain.user.UserRepository;
 import com.ssafy.letcipe.exception.AuthorityViolationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,9 +32,8 @@ public class CommentService {
 
 
     @Transactional(readOnly = true)
-    public List<ResGetCommentDto> getComment(BoardType boardType, Long boardId , Pageable pageable) {
-        PageRequest pageRequest = PageRequest.of(pageable.getPageNumber()-1, pageable.getPageSize());
-        List<ResGetCommentDto> comments = commentRepository.findByStatusTypeAndBoardTypeAndBoardId(StatusType.N, boardType, boardId, pageRequest)
+    public List<ResGetCommentDto> getComment(BoardType boardType, Long boardId) {
+        List<ResGetCommentDto> comments = commentRepository.findByStatusTypeAndBoardTypeAndBoardId(StatusType.N, boardType, boardId)
                 .stream().map(comment ->
                         new ResGetCommentDto(comment.getId(), comment.getUser().getNickname(), comment.getContent(), comment.getRegTime()))
                 .collect(Collectors.toList());
@@ -88,10 +85,5 @@ public class CommentService {
 
         commentRepository.save(comment);
 
-    }
-
-    public Long getCommentNum(BoardType boardType, Long boardId) {
-        Long count = commentRepository.findByStatusTypeAndBoardTypeAndBoardId(StatusType.N, boardType, boardId).stream().count();
-        return count;
     }
 }
