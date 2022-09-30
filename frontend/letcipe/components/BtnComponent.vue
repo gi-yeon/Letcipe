@@ -46,4 +46,4 @@ export default {
   position: relative;
   margin-right: 3%;
 }
-</style>
+</style> 

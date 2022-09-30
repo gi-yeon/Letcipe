@@ -9,7 +9,7 @@ export const state = () => ({
   comments: [],
   commentNum : 0,
 })
-
+ 
 export const mutations = {
   SET_COMMENT(state, comments) {
     state.comments = comments

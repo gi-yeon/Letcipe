@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app"> 
     <v-app id="inspire">
       <div class="mycomment-page">
         <v-container class="mycomment-container d-flex-row">

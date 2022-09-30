@@ -19,7 +19,7 @@ export const mutations = {
     state.recipeListRes = recipeListRes
   },
 }
-
+ 
 export const getters = {}
 
 export const actions = {

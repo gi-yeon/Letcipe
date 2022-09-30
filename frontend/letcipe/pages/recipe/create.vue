@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app"> 
     <v-app id="inspire">
       <div class="create-container">
         <v-container style="padding: 0%">

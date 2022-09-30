@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app"> 
     <v-app id="inspire">
       <div class="makerecipe-container">
         <v-container style="padding: 0%">
