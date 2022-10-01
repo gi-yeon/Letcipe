@@ -15,7 +15,9 @@
             <div class="recipe-img-wrap" align="center">
               <v-img class="recipe-imgs" :src="recipeDetail.repImg">
                 <div class="ref-wrap">
-                  <v-card-title class="text-h6 ref-title">{{ recipeDetail.title }}</v-card-title>
+                  <v-card-title class="text-h6 ref-title">{{
+                    recipeDetail.title
+                  }}</v-card-title>
 
                   <!-- 레시피도 서브타이틀 넣을지? 현재 erd에 작성 안되어있음 -->
                   <!-- <v-card-subtitle class="text-md-h3 ref-subtitle"
@@ -26,43 +28,39 @@
             </div>
 
             <v-card-title class="text-md-h3">
-              {{
-              recipeDetail.title
-              }}
+              {{ recipeDetail.title }}
             </v-card-title>
             <v-card-subtitle class="text-md-h5">맛있겠다!</v-card-subtitle>
 
             <v-card-text>
               <v-row align="center" class="d-flex mx-0">
                 <v-icon
-                  v-if="recipeDetail.like === true"
+                  v-if="isLike"
                   small
                   color="pink lighten-1"
-                  @click="deleteLikes()"
-                >mdi-heart</v-icon>
+                  @click="saveLike"
+                  >mdi-heart</v-icon
+                >
+                <v-icon v-else small color="grey" @click="saveLike"
+                  >mdi-heart-outline</v-icon
+                >
+                &nbsp;{{ Likes }}&nbsp;&nbsp;
                 <v-icon
-                  v-else-if="recipeDetail.like === false"
-                  small
-                  color="grey"
-                  @click="countLikes()"
-                >mdi-heart-outline</v-icon>
-                &nbsp;{{ recipeDetail.recipeLike }}&nbsp;&nbsp;
-                <v-icon
-                  v-if="recipeDetail.bookmark === true"
+                  v-if="isBookmark"
                   small
                   color="yellow lighten-1"
-                  @click="deleteBookmark()"
-                >mdi-bookmark</v-icon>
-                <v-icon
-                  v-if="recipeDetail.bookmark === false"
-                  small
-                  color="grey"
-                  @click="saveBookmark()"
-                >mdi-bookmark-outline</v-icon>
-                &nbsp;{{ recipeDetail.recipeBookmark }}
+                  @click="saveBookmark"
+                  >mdi-bookmark</v-icon
+                >
+                <v-icon v-else small color="grey" @click="saveBookmark"
+                  >mdi-bookmark-outline</v-icon
+                >
+                &nbsp;{{ Bookmarks }}
               </v-row>
 
-              <v-row align="center" class="mx-0">등록일자 : 2022-09-18</v-row>
+              <v-row align="center" class="mx-0"
+                >등록일자 : {{ regTime }}
+              </v-row>
               <div class="my-4 text-subtitle-1">
                 <!-- <v-avatar
                   v-if="profileImg !== null || profileImg !== ''"
@@ -71,10 +69,14 @@
                   <img alt="Avatar" :src="profileImg" />
                 </v-avatar>-->
                 <v-avatar size="27px" color="letcipe">
-                  <v-icon dark>mdi-account-circle</v-icon>
+                  <v-img
+                    v-if="writer.profileImage"
+                    :src="writer.profileImage"
+                  ></v-img>
+                  <v-icon v-else dark>mdi-account-circle</v-icon>
                 </v-avatar>
-                <span style="color: #ffa500">Chef</span>
-                &nbsp;&nbsp;{{ writer }}
+                <span style="color: #ffa500">{{ writer.job }}</span>
+                &nbsp;&nbsp;{{ writer.nickname }}
               </div>
             </v-card-text>
 
@@ -114,12 +116,18 @@
                 </template>
               </v-simple-table>
               <v-card-title class="text-md-h4">레시피</v-card-title>
-              <div v-for="(stepInfo, i) in recipeSteps" :key="i" style="width: 80%; margin: auto">
+              <div
+                v-for="(stepInfo, i) in recipeSteps"
+                :key="i"
+                style="width: 80%; margin: auto"
+              >
                 <div class="stepDetail">
                   <v-img :src="stepInfo.img"></v-img>
                   <h2
                     style="display: inline; color: #ffa500; font-size: xx-large"
-                  >{{ stepInfo.step }}</h2>
+                  >
+                    {{ stepInfo.step }}
+                  </h2>
                   {{ stepInfo.content }}
                 </div>
               </div>
@@ -131,16 +139,14 @@
             <v-card-text>
               <v-chip-group column>
                 <v-chip v-for="(tag, i) in recipeDetail.tags" :key="i">
-                  {{
-                  tag.name
-                  }}
+                  {{ tag.name }}
                 </v-chip>
               </v-chip-group>
             </v-card-text>
 
             <div align="center">
               <v-row class="d-flex justify-center">
-                <v-btn color="letcipe">+ 담기</v-btn>
+                <v-btn color="letcipe" @click="addCart">+ 담기</v-btn>
               </v-row>
               <v-row align="center">
                 <v-col cols="1"></v-col>
@@ -160,7 +166,11 @@
 
               <v-row>
                 <v-col align="center">
-                  <div v-for="(comment, i) in comments" :key="i" style="width: 80%">
+                  <div
+                    v-for="(comment, i) in comments"
+                    :key="i"
+                    style="width: 80%"
+                  >
                     <div class="mx-auto pt-2 pb-2 d-flex align-center">
                       <v-list-item
                         three-line
@@ -171,19 +181,25 @@
                           <v-row>
                             <v-col>
                               <v-list-item-subtitle class="recipe-comment">
-                                {{
-                                comment.nickName
-                                }}
+                                {{ comment.nickName }}
                               </v-list-item-subtitle>
                             </v-col>
                             <v-col align="right">
-                              <v-list-item-subtitle
-                                class="recipe-comment"
-                              >{{ comment.regTime.split('T')[0] }}</v-list-item-subtitle>
+                              <v-list-item-subtitle class="recipe-comment"
+                                >{{ comment.regTime.split('T')[0]
+                                }}<v-icon
+                                  v-if="comment.nickName === nickname"
+                                  size="small"
+                                  @click="deleteComment(comment.id)"
+                                  >mdi-close</v-icon
+                                >
+                              </v-list-item-subtitle>
                             </v-col>
                           </v-row>
 
-                          <v-list-item-content class="recipe-comment">{{ comment.content }}</v-list-item-content>
+                          <v-list-item-content class="recipe-comment">{{
+                            comment.content
+                          }}</v-list-item-content>
                         </v-list-item-content>
                       </v-list-item>
                     </div>
@@ -218,22 +234,22 @@ export default {
       TotalPage: 1,
       currentPage: 1,
       enterComment: null,
-      writer: '',
+      writer: {},
       content: '',
-      cookingTime: 10,
-      serving: 4,
-      repImg: 'adsasdasd',
-      recipeLike: 21,
-      recipeBookmark: 16,
+      regTime: '',
+      Likes: 0,
+      isLike: false,
+      Bookmarks: 0,
+      isBookmark: false,
       recipeSteps: [],
       recipeIngredient: [],
       ingredient: [],
-      profileImg: '',
     }
   },
   computed: {
     ...mapState('comment', ['comments', 'commentNum']),
     ...mapState('recipe', ['recipeDetail', 'recipeID']),
+    ...mapState('user', ['userId', 'nickname']),
   },
 
   created() {
@@ -251,7 +267,15 @@ export default {
       console.log(this.recipeDetail.user.nickname)
       this.recipeSteps = this.recipeDetail.recipeSteps
       this.recipeIngredient = this.recipeDetail.ingredients
-      this.writer = this.recipeDetail.user.nickname
+      this.writer = this.recipeDetail.user
+      const temp = this.recipeDetail.regTime
+      this.regTime = temp.split('T')[0]
+      this.Likes = this.recipeDetail.recipeLike
+      this.Bookmarks = this.recipeDetail.recipeBookmark
+      if (this.userId !== 0) {
+        this.isLike = this.recipeDetail.like
+        this.isBookmark = this.recipeDetail.bookmark
+      }
 
       // 레시피 코멘트 불러오는 부분
       await this.getCommentNum(this.recipeInfo)
@@ -269,7 +293,12 @@ export default {
     })
   },
   methods: {
-    ...mapActions('comment', ['getComment', 'postComment', 'getCommentNum']),
+    ...mapActions('comment', [
+      'getComment',
+      'postComment',
+      'getCommentNum',
+      'patchComment',
+    ]),
     ...mapActions('recipe', [
       'RecipeDetail',
       'createRecipeDetail',
@@ -278,6 +307,7 @@ export default {
       'countRecipeLikes',
       'decountRecipeLikes',
     ]),
+    ...mapActions('cart', ['createCart']),
     handlePage(page) {
       this.recipeInfo = {
         boardType: 'RECIPE',
@@ -293,30 +323,65 @@ export default {
       })
     },
     saveBookmark() {
-      this.selectBookmarks(this.recipeDetail.id)
-      this.RecipeDetail(this.recipeDetail.id)
+      if (this.userId === 0) return
+      if (this.isBookmark) {
+        this.deleteBookmarks(this.recipeDetail.id)
+        this.Bookmarks--
+      } else {
+        this.selectBookmarks(this.recipeDetail.id)
+        this.Bookmarks++
+      }
+      this.isBookmark = !this.isBookmark
     },
-    deleteBookmark() {
-      this.deleteBookmarks(this.recipeDetail.id)
-      //   this.RecipeDetail(1)
+    saveLike() {
+      if (this.userId === 0) return
+      if (this.isLike) {
+        this.decountRecipeLikes(this.recipeDetail.id)
+        this.Likes--
+      } else {
+        this.countRecipeLikes(this.recipeDetail.id)
+        this.Likes++
+      }
+      this.isLike = !this.isLike
     },
-    deleteLikes() {
-      this.decountRecipeLikes(this.recipeDetail.id)
-    },
-    countLikes() {
-      this.countRecipeLikes(this.recipeDetail.id)
-    },
-    addComment() {
+    async addComment() {
+      if (this.userId === 0) {
+        console.log('로그인이 필요합니다!')
+        return
+      }
+      if (this.enterComment === null || this.enterComment.split('') === []) {
+        console.log('내용을 입력하세요')
+        return
+      }
       console.log(this.enterComment)
       const comment = {
         content: this.enterComment,
         boardId: this.recipeDetail.id,
         boardType: 'RECIPE',
       }
-      this.postComment(comment)
+      await this.postComment(comment)
       this.enterComment = null
-
-      this.$router.go()
+      this.reloadComment()
+    },
+    async deleteComment(id) {
+      const comment = {
+        commentId: id,
+      }
+      await this.patchComment(comment)
+      this.reloadComment()
+    },
+    async reloadComment() {
+      await this.getCommentNum(this.recipeInfo)
+      await this.getComment(this.recipeInfo)
+    },
+    addCart() {
+      const recipeList = []
+      recipeList.push(this.recipeID)
+      console.log(this.recipeID)
+      const addrecipes = {
+        list: recipeList,
+      }
+      this.createCart(addrecipes)
     },
   },
 }
