@@ -87,9 +87,7 @@ export const actions = {
   async countRecipeLikes({ commit }, recipeId) {
     await countRecipeLikes(
       recipeId,
-      ({ data }) => {
-        commit('')
-      },
+      ({ data }) => {},
       (error) => {
         console.log(error)
       }
@@ -98,9 +96,7 @@ export const actions = {
   async decountRecipeLikes({ commit }, id) {
     await decountRecipeLikes(
       id,
-      ({ data }) => {
-        commit('')
-      },
+      ({ data }) => {},
       (error) => {
         console.log(error)
       }
@@ -109,7 +105,6 @@ export const actions = {
   async selectBookmarks({ commit }, recipeId) {
     await selectBookmarks(
       recipeId,
-      commit,
       ({ data }) => {
         console.log('북마크 등록 성공!')
       },
@@ -122,7 +117,6 @@ export const actions = {
     await deleteBookmarks(
       id,
       ({ data }) => {
-        commit('')
         console.log('북마크 해제 성공!')
       },
       (error) => {

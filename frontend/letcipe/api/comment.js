@@ -1,7 +1,6 @@
 import interceptor from '../config/interceptor'
-import { apiInstance } from '.'
 
-const api = apiInstance()
+const api = interceptor
 
 async function getComment(recipeObject, success, fail) {
   await api
@@ -13,7 +12,7 @@ async function getComment(recipeObject, success, fail) {
 }
 async function postComment(commentObject, success, fail) {
   console.log(commentObject)
-  await interceptor
+  await api
     .post(`/api/comment`, JSON.stringify(commentObject))
     .then(success)
     .catch(fail)
@@ -21,18 +20,26 @@ async function postComment(commentObject, success, fail) {
 
 async function putComment(commentObject, success, fail) {
   console.log(commentObject)
-  await interceptor
+  await api
     .put(`/api/comment`, JSON.stringify(commentObject))
     .then(success)
     .catch(fail)
 }
 
+async function patchComment(commentObject, success, fail) {
+  console.log(commentObject)
+  await api
+    .patch(`/api/comment`, JSON.stringify(commentObject))
+    .then(success)
+    .catch(fail)
+}
+
 async function getCommentNum(recipeObject, success, fail) {
-  await interceptor
+  await api
     .get(
       `/api/comment/${recipeObject.boardType}/${recipeObject.boardId}/commentNum`
     )
     .then(success)
     .catch(fail)
 }
-export { getComment, getCommentNum, postComment, putComment }
+export { getComment, getCommentNum, postComment, putComment, patchComment }

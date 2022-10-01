@@ -3,16 +3,24 @@
     <v-app id="inspire">
       <v-container class="main-container">
         <div class="title-wrap">
-          <div v-if="nickname == null" class="title">{{ nickname }}님이 좋아할 레시피</div>
-          <div v-if="nickname != null" class="title">{{ nickname }}님이 좋아할 레시피</div>
+          <div v-if="nickname == null" class="title">
+            {{ nickname }}님이 좋아할 레시피
+          </div>
+          <div v-if="nickname != null" class="title">
+            {{ nickname }}님이 좋아할 레시피
+          </div>
           <div class="title-imgs">
             <div v-for="(ref, i) in refImg" :key="i" class="card">
               <div>{{ nickname }}맞춤 추천</div>
               <v-card>
                 <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
                   <div class="ref-wrap">
-                    <v-card-title class="ref-title">{{ ref.title }}</v-card-title>
-                    <v-card-subtitle class="ref-subtitle">{{ ref.sub_title }}</v-card-subtitle>
+                    <v-card-title class="ref-title">{{
+                      ref.title
+                    }}</v-card-title>
+                    <v-card-subtitle class="ref-subtitle">{{
+                      ref.sub_title
+                    }}</v-card-subtitle>
                   </div>
                 </v-img>
               </v-card>
@@ -37,13 +45,20 @@
                             <div>
                               <div class="my-lecipe">
                                 <v-avatar class="ma-3" size="100">
-                                  <v-img :src="'https://2bob.co.kr/' + item.url">
+                                  <v-img
+                                    :src="'https://2bob.co.kr/' + item.url"
+                                  >
                                     <v-icon x-large>mdi-play</v-icon>
                                   </v-img>
                                 </v-avatar>
                               </div>
-                              <v-card-title class="my-title text-h5" v-text="item.title"></v-card-title>
-                              <v-card-subtitle v-text="item.sub_title"></v-card-subtitle>
+                              <v-card-title
+                                class="my-title text-h5"
+                                v-text="item.title"
+                              ></v-card-title>
+                              <v-card-subtitle
+                                v-text="item.sub_title"
+                              ></v-card-subtitle>
                             </div>
                           </div>
                         </v-card>
@@ -97,21 +112,42 @@
         <div class="btn-group">
           <v-hover>
             <template #default="{ hover }">
-              <v-btn :elevation="hover ? 24 : 6" class="mx-2" fab dark x-large color="amber">
+              <v-btn
+                :elevation="hover ? 24 : 6"
+                class="mx-2"
+                fab
+                dark
+                x-large
+                color="amber"
+              >
                 <v-icon dark>mdi-android</v-icon>
               </v-btn>
             </template>
           </v-hover>
           <v-hover>
             <template #default="{ hover }">
-              <v-btn :elevation="hover ? 24 : 6" class="mx-2" fab dark x-large color="amber">
+              <v-btn
+                :elevation="hover ? 24 : 6"
+                class="mx-2"
+                fab
+                dark
+                x-large
+                color="amber"
+              >
                 <v-icon dark>mdi-android</v-icon>
               </v-btn>
             </template>
           </v-hover>
           <v-hover>
             <template #default="{ hover }">
-              <v-btn :elevation="hover ? 24 : 6" class="mx-2" fab dark x-large color="amber">
+              <v-btn
+                :elevation="hover ? 24 : 6"
+                class="mx-2"
+                fab
+                dark
+                x-large
+                color="amber"
+              >
                 <v-icon dark>mdi-android</v-icon>
               </v-btn>
             </template>
@@ -130,7 +166,8 @@
               class="tag-set ma-1"
               color="green"
               outlined
-            >{{ tag }}</v-chip>
+              >{{ tag }}</v-chip
+            >
           </div>
           <v-row>
             <v-col>
@@ -147,15 +184,19 @@
                     <div class="ml-4">{{ i }}</div>
                     <v-list-item three-line>
                       <v-list-item-avatar tile size="57">
-                        <v-img elevation="10" :src="data.imgUrl" style="border-radius: 5px"></v-img>
+                        <v-img
+                          elevation="10"
+                          :src="data.imgUrl"
+                          style="border-radius: 5px"
+                        ></v-img>
                       </v-list-item-avatar>
                       <v-list-item-content>
                         <v-list-item-title class="mb-1">
-                          {{
-                          data.title
-                          }}
+                          {{ data.title }}
                         </v-list-item-title>
-                        <v-list-item-subtitle>{{ data.sub_title }}</v-list-item-subtitle>
+                        <v-list-item-subtitle>{{
+                          data.sub_title
+                        }}</v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
                     <v-btn class="mr-3" fab dark x-small color="pink" outlined>
@@ -185,7 +226,9 @@
               <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
                 <div class="ref-wrap">
                   <v-card-title class="ref-title">{{ ref.title }}</v-card-title>
-                  <v-card-subtitle class="ref-subtitle">{{ ref.sub_title }}</v-card-subtitle>
+                  <v-card-subtitle class="ref-subtitle">{{
+                    ref.sub_title
+                  }}</v-card-subtitle>
                 </div>
               </v-img>
             </v-avatar>
@@ -209,7 +252,9 @@
               <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
                 <div class="ref-wrap">
                   <v-card-title class="ref-title">{{ ref.title }}</v-card-title>
-                  <v-card-subtitle class="ref-subtitle">{{ ref.sub_title }}</v-card-subtitle>
+                  <v-card-subtitle class="ref-subtitle">{{
+                    ref.sub_title
+                  }}</v-card-subtitle>
                 </div>
               </v-img>
             </v-avatar>
@@ -279,7 +324,7 @@ export default {
           title: '오이냉면',
         },
       ],
-      tag_set: ['Now', '최신', '추석', '쉐프의리스트', '더보기'],
+      tag_set: [],
       lecipeData: [],
       checklist: ['양파', '오이', '토마토', '대파', '쪽마늘'],
       time: '',
@@ -287,13 +332,12 @@ export default {
   },
   computed: {
     ...mapState('user', ['userId', 'nickname']),
-    ...mapState('search', ['recipes', 'recipeLists']),
+    ...mapState('search', ['recipes', 'recipeLists', 'hotRecipes', 'hotTitle']),
   },
   created() {
     setInterval(this.findnow.bind(this), 1000)
-    const seraching = {
-      keyword: '감자',
-      size: 3,
+    const searching = {
+      size: 5,
       page: 0,
     }
     const promise = new Promise((resolve, reject) => {
@@ -301,19 +345,16 @@ export default {
     })
     promise.then(async () => {
       this.lecipeData = []
-      await this.getRecipeList(seraching)
-      await this.getRecipes(seraching)
-      // console.log('이거슨감자' + this.recipes[0].id)
-      // console.log('이거슨 타이틀' + this.recipes[0].title)
-      // console.log('이거슨 타이틀' + this.recipes[0].content)
-      // console.log('이거슨 카테고리' + this.recipes[0].category)
-
-      this.recipes.forEach((r) => {
+      await this.getHotRecipes(searching)
+      // await this.getRecipeList(seraching)
+      // await this.getRecipes(seraching)
+      this.tag_set.push(this.hotTitle)
+      this.hotRecipes.forEach((r) => {
         const chartData = {
-          recipeId: r.id,
-          imgUrl: r.repImg,
-          sub_title: r.content,
-          title: r.title,
+          recipeId: r.recipe.id,
+          imgUrl: r.recipe.repImg,
+          sub_title: r.recipe.content,
+          title: r.recipe.title,
         }
         this.lecipeData.push(chartData)
       })
@@ -321,7 +362,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions('search', ['getRecipes', 'getRecipeList']),
+    ...mapActions('search', ['getRecipes', 'getRecipeList', 'getHotRecipes']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     findnow() {
       const today = new Date()
