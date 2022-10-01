@@ -255,4 +255,7 @@ export const actions = {
       }
     )
   },
+  changeNickCheck({commit}){
+    commit('SET_NICKCHECK_TRUE')
+  }
 }

@@ -12,32 +12,51 @@
               <div class="d-flex flex-column">
                 <div>아이디</div>
                 <div class="d-flex">
-                  <v-text-field v-model="id" :rules="rules.id_rule" placeholder="아이디" solo></v-text-field>
+                  <v-text-field 
+                    v-model="id" 
+                    :rules="rules.id_rule" 
+                    placeholder="아이디" 
+                    solo>
+                  </v-text-field>
                   <v-dialog v-model="dialogId" persistent max-width="290">
                     <template #activator="{ on, attrs }">
                       <v-btn
+                        :disabled="id === userid || id.length < 6 || !idcheck"
                         color="letcipe"
                         height="48px"
                         style="color: white;"
                         v-bind="attrs"
-                        @click="idCheck(id)"
+                        @click="idDupCheck(id)"
                         v-on="on"
                       >중복확인</v-btn>
                     </template>
-                    <v-card v-if="checkId===true">
+                    <v-card v-if="idcheck === true">
                       <v-card-title class="text-h5">Caution</v-card-title>
-                      <v-card-text>중복되는 아이디가 있습니다. 다른 아이디를 입력해주세요.</v-card-text>
+                      <v-card-text
+                        >중복되는 아이디가 있습니다. 다른 아이디를
+                        입력해주세요.</v-card-text
+                      >
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="green darken-1" text @click="dialogId = false">확인</v-btn>
+                        <v-btn
+                          color="green darken-1"
+                          text
+                          @click="dialogId = false"
+                          >확인</v-btn
+                        >
                       </v-card-actions>
                     </v-card>
-                    <v-card v-if="checkId===false">
+                    <v-card v-if="idcheck === false">
                       <v-card-title class="text-h5">Caution</v-card-title>
                       <v-card-text>사용가능한 아이디입니다.</v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="green darken-1" text @click="dialogId = false">확인</v-btn>
+                        <v-btn
+                          color="green darken-1"
+                          text
+                          @click="dialogId = false"
+                          >확인</v-btn
+                        >
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -85,28 +104,42 @@
                   <v-dialog v-model="dialogNick" persistent max-width="290">
                     <template #activator="{ on, attrs }">
                       <v-btn
+                        :disabled="nickNm.length < 2 || nickNm === nickname || !nickCheck"
                         color="letcipe"
                         height="48px"
                         style="color: white;"
                         v-bind="attrs"
-                        @click="nickCheck(nickNm)"
+                        @click="nicknameDupCheck(nickNm)"
                         v-on="on"
                       >중복확인</v-btn>
                     </template>
-                    <v-card v-if="checkNick===true">
+                    <v-card v-if="nickCheck === true">
                       <v-card-title class="text-h5">Caution</v-card-title>
-                      <v-card-text>중복되는 닉네임이 있습니다. 다른 닉네임을 입력해주세요.</v-card-text>
+                      <v-card-text
+                        >중복되는 닉네임이 있습니다. 다른 닉네임을
+                        입력해주세요.</v-card-text
+                      >
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="green darken-1" text @click="dialogNick = false">확인</v-btn>
+                        <v-btn
+                          color="green darken-1"
+                          text
+                          @click="dialogNick = false"
+                          >확인</v-btn
+                        >
                       </v-card-actions>
                     </v-card>
-                    <v-card v-if="checkNick===false">
+                    <v-card v-if="nickCheck === false">
                       <v-card-title class="text-h5">Caution</v-card-title>
                       <v-card-text>사용가능한 닉네임입니다.</v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="green darken-1" text @click="dialogNick = false">확인</v-btn>
+                        <v-btn
+                          color="green darken-1"
+                          text
+                          @click="dialogNick = false"
+                          >확인</v-btn
+                        >
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -211,7 +244,7 @@
             <v-dialog v-model="dialogModify" persistent max-width="290">
               <template #activator="{ on, attrs }">
                 <v-btn
-                  :disabled="!form"
+                  :disabled="!(gender&&(!idcheck||id===userId)&&(!nickCheck||nickNm===nickname)&&userNm&&email_id&&email_address)"
                   :loading="isLoading"
                   class="white--text"
                   color="letcipe"
@@ -273,6 +306,7 @@
                 <v-dialog v-model="dialogPwChange" persistent max-width="290">
                   <template #activator="{ on, attrs }">
                     <v-btn
+                      :disabled="pw === oldpw || !pw || pw.length < 8 || pw.length > 20 || !/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/.test(pw) || !pwck || pw !== pwck"
                       color="letcipe"
                       height="48px"
                       style="color: white;"
@@ -411,6 +445,14 @@ export default {
       gender: '',
     }
   },
+  watch: {
+    id(newValue, oldValue) {
+      this.changeIdCheck()
+    },
+    nickNm(newValue, oldValue) {
+      this.changeNickCheck()
+    }
+  },  
   computed: {
     ...mapState('user', ['userid', 'birth', 'email', 'family', 'name', 'phone', 'nickname', 'profileImage', 'userGender', 'userJob', 'userJoinCheck', 'idcheck', 'nickCheck', 'codeCheck']),
   },
@@ -419,7 +461,7 @@ export default {
   },
   methods: {
     ...mapMutations('user', ['SET_IDCHECK_TRUE', 'SET_NICKCHECK_TRUE', 'SET_CODECHECK_FALSE', 'SET_USERJOINCHECK_FALSE', 'SET_CODE']),
-    ...mapActions('user', ['modifyPassword', 'readUser', 'modifyMember', 'resetStatus', 'idCheckReset', 'idCheck', 'nicknameCheck', 'signup', 'createCode', 'checkCodeEq']),
+    ...mapActions('user', ['changeNickCheck', 'modifyPassword', 'readUser', 'modifyMember', 'resetStatus', 'idCheckReset', 'idCheck', 'nicknameCheck', 'signup', 'createCode', 'checkCodeEq']),
     init(){
       this.id = this.userid
       this.nickNm = this.nickname
@@ -454,56 +496,6 @@ export default {
     },
     clearForm() {
       this.$refs.form.reset()
-    },
-    find_Postcode() {
-      new window.daum.Postcode({
-        oncomplete: (data) => {
-          // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-          // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-          // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-          // let addr = '' // 주소 변수
-          // let extraAddr = '' // 참고항목 변수
-          // vue라서 위 data에 변수로 추가해줬음.
-          // //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-          this.mainAddress = ''
-          this.detailAddress = ''
-          if (data.userSelectedType === 'R') {
-            // 사용자가 도로명 주소를 선택했을 경우
-            this.mainAddress = data.roadAddress
-          } else {
-            // 사용자가 지번 주소를 선택했을 경우(J)
-            this.mainAddress = data.jibunAddress
-          }
-          // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-          if (data.userSelectedType === 'R') {
-            // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-            // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
-              this.detailAddress += data.bname
-            }
-            // 건물명이 있고, 공동주택일 경우 추가한다.
-            if (data.buildingName !== '' && data.apartment === 'Y') {
-              this.detailAddress +=
-                this.detailAddress !== ''
-                  ? ', ' + data.buildingName
-                  : data.buildingName
-            }
-            // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-            if (this.detailAddress !== '') {
-              this.detailAddress = ' (' + this.detailAddress + ')'
-            }
-            // 조합된 참고항목을 해당 필드에 넣는다.
-            document.getElementById('address-detail').value = this.extraAddr
-          } else {
-            document.getElementById('address-detail').value = ''
-          }
-          // 우편번호와 주소 정보를 해당 필드에 넣는다.
-          document.getElementById('postal-code').value = data.zonecode
-          document.getElementById('address').value = this.addr
-          // 커서를 상세주소 필드로 이동한다.
-          document.getElementById('address-detail').focus()
-        },
-      }).open()
     },
     imglog() {
       console.log(this.profile_img)
@@ -543,17 +535,11 @@ export default {
         )
       }
     },
-    idCheck(id) {
-      console.log(id)
+    idDupCheck(id) {
+      this.idCheck(id)
     },
-    nickCheck(nickNm) {
-      console.log(nickNm)
-    },
-    CodeCheck(phoneRef, phoneFirst, phoneSecond) {
-      console.log(phoneRef, phoneFirst, phoneSecond)
-    },
-    varification(validNum) {
-      console.log(validNum)
+    nicknameDupCheck(nickNm) {
+      this.nicknameCheck(nickNm)
     },
     async modify() {
       this.familymember = (this.familymember === '5인 이상')? 5: this.familymember
@@ -593,6 +579,10 @@ export default {
     setGenderW(){
       this.gender = 'W'
     },
+    changeIdCheck(){
+      console.log(this.idCheck)
+      this.idCheckReset()
+    }
   },
 }
 </script>
