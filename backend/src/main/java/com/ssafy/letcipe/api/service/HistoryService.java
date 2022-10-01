@@ -1,6 +1,7 @@
 package com.ssafy.letcipe.api.service;
 
 import com.ssafy.letcipe.api.dto.history.*;
+import com.ssafy.letcipe.domain.detailCode.DetailCodeRepository;
 import com.ssafy.letcipe.domain.history.History;
 import com.ssafy.letcipe.domain.history.HistoryRepository;
 import com.ssafy.letcipe.domain.historyIngredient.HistoryIngredient;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +24,8 @@ public class HistoryService {
     private final HistoryRepository historyRepository;
     private final HistoryIngredientRepository historyIngredientRepository;
     private final RecipeService recipeService;
+
+    private final DetailCodeRepository detailCodeRepository;
 
     public History findHistory(Long historyId) {
         return historyRepository.findById(historyId).orElseThrow(() -> new NullPointerException("히스토리를 찾을 수 없습니다."));
@@ -42,16 +46,21 @@ public class HistoryService {
     }
 
     @Transactional
-    public ResGetDetailHistoryDto getHistory(Long userId, Long historyId) {
+    public ResGetDetailHistoryDto getHistory(Long userId, Long historyId) throws Exception{
         History history = findHistory(historyId);
         if (!userId.equals(history.getUser().getId())) throw new AuthorityViolationException("접근 권한이 없습니다.");
         List<ResGetHistoryItemDto> historyItems = new ArrayList<>();
         for (HistoryItem historyItem : history.getHistoryItems()) {
             historyItems.add(new ResGetHistoryItemDto(historyItem, recipeService.getRecipeDto(historyItem.getRecipe())));
         }
+
         List<ResGetHistoryIngredientDto> historyIngredientDtoList = new ArrayList<>();
+
         for (HistoryIngredient historyIngredient : history.getHistoryIngredients()) {
-            historyIngredientDtoList.add(new ResGetHistoryIngredientDto(historyIngredient));
+            // TODO: 나중에 join하는 쿼리문 REPO에 만들어서 그거로 변경하기. ㅠㅠ
+            String category = detailCodeRepository.findById(historyIngredient.getIngredient().getCategory()).orElseThrow(
+                    ()-> new Exception() ).getHeader().getName();
+            historyIngredientDtoList.add(new ResGetHistoryIngredientDto(historyIngredient, category));
         }
         return new ResGetDetailHistoryDto(history, historyItems, historyIngredientDtoList);
     }
@@ -70,6 +79,7 @@ public class HistoryService {
         historyRepository.save(history);
     }
 
+    @Transactional
     public void checkHistoryIngredient(Long userId, Long history_ingredient_id) {
         HistoryIngredient historyIngredient = historyIngredientRepository.findById(history_ingredient_id).orElseThrow(() -> new NullPointerException("히스토리 재료를 찾을 수 없습니다."));
         if (!userId.equals(historyIngredient.getHistory().getUser().getId()))

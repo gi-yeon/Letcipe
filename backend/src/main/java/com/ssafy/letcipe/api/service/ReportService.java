@@ -24,8 +24,6 @@ public class ReportService {
     private final CartReportRepository cartReportRepository;
     private final RecipeService recipeService;
 
-
-
     @Transactional
     public List<ResGetCartReport> getCartReport(String attributes, LocalDate beginDate, LocalDate endDate, Pageable pageable) {
         List<ResGetCartReport> reports = new ArrayList<>();

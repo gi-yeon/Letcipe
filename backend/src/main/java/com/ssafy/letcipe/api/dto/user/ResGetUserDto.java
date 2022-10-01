@@ -14,8 +14,12 @@ import java.time.LocalDate;
 @Builder
 public class ResGetUserDto {
     long id;
+    String userId;
+    String name;
     String nickname;
     String profileImage;
+    String email;
+    String phone;
     GenderType gender;
     JobType job;
     Integer family;
