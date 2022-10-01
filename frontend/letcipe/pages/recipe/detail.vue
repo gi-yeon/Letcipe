@@ -297,7 +297,6 @@ export default {
     },
     deleteBookmark() {
       this.deleteBookmarks(this.recipeDetail.id)
-      //   this.RecipeDetail(1)
     },
     deleteLikes() {
       this.decountRecipeLikes(this.recipeDetail.id)
