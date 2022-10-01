@@ -15,12 +15,11 @@
                   <v-icon v-else :color="message.color" v-text="message.icon"></v-icon>
                 </v-avatar>
               </v-col>
-
               <v-col cols="6" style="margin: auto">
                 <v-row style="font-size: 18px">&nbsp;{{ nickname }}ㅡㅡㅡㅡ</v-row>
                 <v-row style="font-size: 13px">&nbsp;{{ job }}</v-row>
               </v-col>
-              <v-col cols="3" style="margin: auto">
+              <v-col cols="3" class="d-flex justify-center align-center">
                 <v-btn
                   outlined
                   small
@@ -28,6 +27,8 @@
                   style="margin: 0px; color: black"
                   @click="moveModify"
                 >내 정보</v-btn>
+
+                <v-btn outlined small rounded style="margin: 0px; color: black" @click="logout">로그아웃</v-btn>
               </v-col>
             </v-row>
           </v-container>
@@ -53,7 +54,7 @@
               <v-col cols="3">
                 <v-icon x-large class="menu-icon">mdi-book-edit-outline</v-icon>
               </v-col>
-              <v-col cols="3">
+              <v-col cols="3" @click="moveMyRecipe">
                 <v-icon x-large class="menu-icon">mdi-noodles</v-icon>
               </v-col>
               <v-col cols="3">
@@ -69,7 +70,7 @@
                 내가 만든
                 <br />레시피리스트
               </v-col>
-              <v-col cols="3" class="menu-title">
+              <v-col cols="3" class="menu-title" @click="moveMyRecipe">
                 내가 만든
                 <br />레시피
               </v-col>
@@ -78,7 +79,11 @@
             <br />
             <v-row style="margin: auto; text-align: center">
               <v-col cols="3">
-                <v-icon x-large class="menu-icon">mdi-bookmark-check-outline</v-icon>
+                <v-icon
+                  x-large
+                  class="menu-icon"
+                  @click="moveRecipeBookmark"
+                >mdi-bookmark-check-outline</v-icon>
               </v-col>
               <v-col cols="3">
                 <v-icon x-large class="menu-icon">mdi-cards-heart</v-icon>
@@ -91,7 +96,7 @@
               </v-col>
             </v-row>
             <v-row style="margin: auto; text-align: center; display: flex">
-              <v-col cols="3" class="menu-title">
+              <v-col cols="3" class="menu-title" @click="moveRecipeBookmark">
                 즐겨찾는
                 <br />레시피
               </v-col>
@@ -132,6 +137,13 @@ export default {
     moveProgress() {
       this.$router.push('/user/progress')
     },
+    moveRecipeBookmark() {
+      this.$router.push('/user/bookmark')
+    },
+    moveMyRecipe() {
+      this.$router.push('/user/recipe')
+    },
+    logout() {},
   },
 }
 </script>
@@ -160,9 +172,11 @@ export default {
 .menu-title {
   font-size: 0.8rem;
   padding: 0rem;
+  cursor: pointer;
 }
 .menu-icon {
   color: black;
+  cursor: pointer;
 }
 
 .fadeInUp {

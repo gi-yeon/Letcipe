@@ -14,7 +14,7 @@
         <v-icon x-large class="footer-icon" @click="moveSearch">mdi-magnify</v-icon>
       </div>
       <div>
-        <v-icon x-large class="footer-icon" @click="moveHadoop">mdi-clipboard-text</v-icon>
+        <v-icon x-large class="footer-icon" @click="moveWrite">mdi-clipboard-text</v-icon>
       </div>
     </div>
   </div>
@@ -41,7 +41,10 @@ export default {
     },
     moveHadoop() {
       this.$router.push('/recipe/test')
-    }
+    },
+    moveWrite() {
+      this.$router.push('/recipe/create')
+    },
   },
 }
 </script>

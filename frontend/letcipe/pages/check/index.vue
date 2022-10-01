@@ -4,7 +4,7 @@
       <v-container class="check-container">
         <div class="check-head-wrap">
           <v-toolbar flat>
-            <v-icon>mdi-window-close</v-icon>
+            <v-icon @click="moveMypage">mdi-window-close</v-icon>
 
             <v-toolbar-title @click="test()">장바구니</v-toolbar-title>
 
@@ -248,32 +248,35 @@ export default {
     })
     promise.then(async () => {
       await this.getHistoryList()
+
       this.historyList.forEach((h) => {
         if (h.process === 'READY') {
           this.historyID = h.id
         }
       })
-      await this.getHistory(this.historyID)
-      this.history.historyIngredients.forEach((jaeryo) => {
-        if (jaeryo.isPurchased === 'N') {
-          this.checklist.push(jaeryo)
-        } else {
-          this.checkedList.push(jaeryo)
-        }
-        if (this.category.length === 0) {
-          this.category.push(jaeryo.categoryName)
-        } else {
-          let cnt = 0
-          this.category?.forEach((cg) => {
-            if (cg === jaeryo.categoryName) {
-              cnt++
-            }
-          })
-          if (cnt === 0) {
-            this.category.push(jaeryo.categoryName)
+      if (this.historyID !== null) {
+        await this.getHistory(this.historyID)
+        this.history.historyIngredients.forEach((jaeryo) => {
+          if (jaeryo.isPurchased === 'N') {
+            this.checklist.push(jaeryo)
+          } else {
+            this.checkedList.push(jaeryo)
           }
-        }
-      })
+          if (this.category.length === 0) {
+            this.category.push(jaeryo.categoryName)
+          } else {
+            let cnt = 0
+            this.category?.forEach((cg) => {
+              if (cg === jaeryo.categoryName) {
+                cnt++
+              }
+            })
+            if (cnt === 0) {
+              this.category.push(jaeryo.categoryName)
+            }
+          }
+        })
+      }
     })
   },
   methods: {
@@ -283,11 +286,14 @@ export default {
       'checkHistoryIngredient',
       'updateHistory',
     ]),
+    moveMypage() {
+      this.$router.push('/user/mapage')
+    },
     completeShopping() {
       console.log('장보기')
       const h = {
         id: this.history.id,
-        process: this.history.process,
+        process: 1,
       }
       this.updateHistory(h)
     },

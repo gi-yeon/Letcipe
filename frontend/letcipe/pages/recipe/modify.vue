@@ -391,7 +391,7 @@ export default {
   },
   computed: {
     ...mapState('ingredients', ['ingredientsList']),
-    ...mapState('recipe', ['recipeDetail']),
+    ...mapState('recipe', ['recipeDetail', 'recipeID']),
     formTitle() {
       return this.editedIndex === -1 ? '재료 추가' : '재료 수정'
     },
@@ -410,7 +410,7 @@ export default {
     promise.then(async () => {
       // 1793
 
-      await this.RecipeDetail(1798) // 1591 자리에 recipelist id 넘겨 받으면 돼.
+      await this.RecipeDetail(this.recipeID) // 1591 자리에 recipelist id 넘겨 받으면 돼.
 
       console.log(this.recipeDetail)
       if (this.recipeDetail !== null) {
@@ -680,7 +680,7 @@ export default {
       this.updateRecipeDetail(1798, formdata)
     },
     moveBack() {
-      this.$router.push('/main')
+      this.$router.go(-1)
     },
   },
 }

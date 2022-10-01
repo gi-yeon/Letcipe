@@ -9,8 +9,10 @@ import {
   deleteMember,
   myrecipe,
   myrecipeList,
+  myBookmarkRecipe,
+  myBookmarkRecipeList,
   createCode,
-  modifyPassword
+  modifyPassword,
 } from '@/api/user'
 
 export const state = () => ({
@@ -20,16 +22,20 @@ export const state = () => ({
   code: '',
   email: '',
   userJoinCheck: false,
-  userid:'',
-  birth:'',
-  family:'',
-  name:'',
-  phone:'',
+  userid: '',
+  birth: '',
+  family: '',
+  name: '',
+  phone: '',
   userId: 0,
   nickname: '',
   profileImage: '',
   userGender: '',
   userJob: '',
+  myRecipe: [],
+  myRecipeList: [],
+  myBookMarkRecipe: [],
+  myBookMarkRecipeList: [],
 })
 
 export const mutations = {
@@ -82,7 +88,20 @@ export const mutations = {
     state.userGender = data.gender
     state.userJob = data.job
   },
-  
+
+  SET_MY_RECIPE(state, recipes) {
+    state.myRecipe = recipes
+  },
+  SET_MY_RECIPELIST(state, myRecipeList) {
+    state.myRecipeList = myRecipeList
+  },
+  SET_MY_BOOKMARK_RECIPE(state, myBookMarkRecipe) {
+    state.myBookMarkRecipe = myBookMarkRecipe
+  },
+  SET_MY_BOOKMARK_RECIPELIST(state, myBookMarkRecipeList) {
+    state.myBookMarkRecipeList = myBookMarkRecipeList
+  },
+
   CLEAR_USER(state) {
     state.userid = ''
     state.birth = ''
@@ -95,6 +114,18 @@ export const mutations = {
     state.profileImage = ''
     state.userGender = ''
     state.userJob = ''
+  },
+  CLEAR_MY_RECIPE(state) {
+    state.myRecipe = []
+  },
+  CLEAR_MY_RECIPELIST() {
+    state.myRecipeList = []
+  },
+  CLEAR_MY_BOOKMARK_RECIPE() {
+    state.myBookMarkRecipe = []
+  },
+  CLEAR_MY_BOOKMARK_RECIPELIST() {
+    state.myBookMarkRecipeList = []
   },
 }
 
@@ -114,7 +145,8 @@ export const actions = {
     )
   },
   async idCheck({ commit }, userid) {
-    await idCheck(userid, 
+    await idCheck(
+      userid,
       (res) => {
         console.log(res.status)
         commit('SET_IDCHECK_FALSE')
@@ -122,7 +154,8 @@ export const actions = {
       (error) => {
         console.log(error.status)
         commit('SET_IDCHECK_TRUE')
-      })
+      }
+    )
   },
   idCheckReset({ commit }) {
     commit('SET_IDCHECK_TRUE')
@@ -151,7 +184,7 @@ export const actions = {
       }
     )
   },
-  async modifyPassword({commit}, passwords) {
+  async modifyPassword({ commit }, passwords) {
     await modifyPassword(
       passwords,
       (res) => {
@@ -202,22 +235,56 @@ export const actions = {
       }
     )
   },
-  async myrecipe({ commit }, userid) {
+  async myrecipe({ commit }, pageable) {
+    commit('CLEAR_MY_RECIPE')
     await myrecipe(
-      userid,
+      pageable,
       ({ data }) => {
-        commit('')
+        // console.log(data)
+        // console.log("내가만든 레시피 가져오기 성공!")
+        commit('SET_MY_RECIPE', data.recipes)
       },
       (error) => {
         console.log(error)
       }
     )
   },
-  async myrecipeList({ commit }, userid) {
+  async myrecipeList({ commit }, pageable) {
+    commit('CLEAR_MY_RECIPELIST')
     await myrecipeList(
-      userid,
+      pageable,
       ({ data }) => {
-        commit('')
+        // console.log(data)
+        // console.log("내가만든 레시피리스트 가져오기 성공!")
+        commit('SET_MY_RECIPELIST', data.recipeList)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  },
+  async myBookmarkRecipe({ commit }, pageable) {
+    commit('CLEAR_MY_BOOKMARK_RECIPE')
+    await myBookmarkRecipe(
+      pageable,
+      ({ data }) => {
+        console.log(data)
+        // console.log("북마크 레시피 가져오기 성공!")
+        commit('SET_MY_BOOKMARK_RECIPE', data.recipes)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  },
+  async myBookmarkRecipeList({ commit }, pageable) {
+    commit('CLEAR_MY_BOOKMARK_RECIPELIST')
+    await myBookmarkRecipeList(
+      pageable,
+      ({ data }) => {
+        // console.log(data)
+        // console.log("북마크 레시피목록 가져오기 성공!")
+        commit('SET_MY_BOOKMARK_RECIPELIST', data.recipes)
       },
       (error) => {
         console.log(error)
@@ -237,7 +304,7 @@ export const actions = {
     )
   },
   checkCodeEq({ commit, state }, code) {
-    if(state.code === code) {
+    if (state.code === code) {
       commit('SET_CODECHECK_TRUE')
     } else {
       commit('SET_CODECHECK_FALSE')
@@ -255,7 +322,7 @@ export const actions = {
       }
     )
   },
-  changeNickCheck({commit}){
+  changeNickCheck({ commit }) {
     commit('SET_NICKCHECK_TRUE')
-  }
+  },
 }
