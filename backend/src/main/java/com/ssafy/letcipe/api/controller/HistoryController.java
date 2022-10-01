@@ -21,16 +21,14 @@ public class HistoryController {
 
     @GetMapping("")
     public ResponseEntity<?> getHistoryList(HttpServletRequest request){
-//        Long userId = jwtService.getUserId(request);
-        Long userId = 1L;
+        Long userId = jwtService.getUserId(request);
         List<ResGetHistoryDto> historyList = historyService.getHistoryList(userId);
         return ResponseEntity.ok(historyList);
     }
 
     @GetMapping("/{history_id}")
-    public ResponseEntity<?> getHistory(@PathVariable("history_id") Long historyId, HttpServletRequest request){
-//        Long userId = jwtService.getUserId(request);
-        Long userId = 1L;
+    public ResponseEntity<?> getHistory(@PathVariable("history_id") Long historyId, HttpServletRequest request) throws Exception{
+        Long userId = jwtService.getUserId(request);
         return ResponseEntity.ok(historyService.getHistory(userId, historyId));
     }
 
