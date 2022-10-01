@@ -144,8 +144,8 @@ public class RecipeController {
     }
 
     @GetMapping("/recommend")
-    public ResponseEntity getCartReport(@RequestBody ReqGetCartReport reqDto, Pageable pageable) {
-        List<ResGetCartReport> cartReport = reportService.getCartReport(reqDto.getAttributes(), LocalDate.parse(reqDto.getBeginDate()), LocalDate.parse(reqDto.getEndDate()), pageable);
+    public ResponseEntity getCartReport(ReqGetCartReport reqDto, Pageable pageable) {
+        List<ResGetCartReport> cartReport = reportService.getCartReport(reqDto.getAttributes(), LocalDate.parse(reqDto.getBeginDate()), LocalDate.parse(reqDto.getEndDate()),pageable);
         return ResponseEntity.ok(cartReport);
     }
 
