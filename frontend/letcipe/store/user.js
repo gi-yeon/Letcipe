@@ -20,6 +20,9 @@ export const state = () => ({
   userJoinCheck: false,
   userId: 0,
   nickname: '',
+  profileImage: '',
+  gender: '',
+  job: '',
 })
 
 export const mutations = {
@@ -62,11 +65,17 @@ export const mutations = {
   SET_USER(state, data) {
     state.userId = data.id
     state.nickname = data.nickname
+    state.profileImage = data.profileImage
+    state.gender = data.gender
+    state.job = data.job
   },
+  
   CLEAR_USER(state) {
     state.userId = 0
     state.nickname = ''
-
+    state.profileImage = ''
+    state.gender = ''
+    state.job = ''
   },
 }
 
@@ -115,7 +124,6 @@ export const actions = {
   async readUser({ commit }) {
     await readUser(
       ({ data }) => {
-        console.log(data)
         commit('SET_USER', data)
       },
       (error) => {
