@@ -1,4 +1,5 @@
 import interceptor from '../config/interceptor'
+import fileInterceptor from '../config/fileInterceptor'
 import { apiInstance, fileInstance } from '.'
 
 const api = apiInstance()
@@ -48,10 +49,15 @@ async function mypage(userid, success, fail) {
 // 사용자 수정
 async function modifyMember(userObject, success, fail) {
   // eslint-disable-next-line dot-notation
-  api.defaults.headers['Authorization'] =
-    sessionStorage.getItem('Authorization')
-  await api
-    .put('/api/user', JSON.stringify(userObject))
+  await fileInterceptor
+    .put('/api/user', userObject)
+    .then(success)
+    .catch(fail)
+}
+
+async function modifyPassword(passwordObject, success, fail) {
+  await interceptor
+    .patch('/api/user/password', passwordObject)
     .then(success)
     .catch(fail)
 }
@@ -87,5 +93,6 @@ export {
   deleteMember,
   myrecipe,
   myrecipeList,
-  createCode
+  createCode,
+  modifyPassword
 }
