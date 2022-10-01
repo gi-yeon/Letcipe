@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { Line } from "vue-chartjs/legacy";
+import { Line, Bar, Pie } from "vue-chartjs/legacy";
 import {
   Chart as ChartJS,
   Title,
@@ -23,6 +23,26 @@ ChartJS.register(
   LineElement,
 );
 
-Vue.component("line-chart", {
-  extends: Line,
-});
+Vue.component('line-chart', {
+    extends: Line,
+    props: ['data', 'options'],
+    mounted() {
+      this.renderChart(this.data, this.options)
+    },
+  })
+  
+  Vue.component('pie-chart', {
+    extends: Pie,
+    props: ['data', 'options'],
+    mounted() {
+      this.renderChart(this.data, this.options)
+    },
+  })
+  
+  Vue.component('bar-chart', {
+    extends: Bar,
+    props: ['data', 'options'],
+    mounted() {
+      this.renderChart(this.data, this.options)
+    },
+  })

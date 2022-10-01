@@ -1,17 +1,21 @@
 <template>
-  <Bar :chart-data="chartData" :chart-options="chartOptions" />
+  <div id="app">
+    <Bar :chart-data="chartData" :chart-options="chartOptions" />
+    <Line :chart-data="chartData" :chart-options="chartOptions" />
+    <Pie :chart-data="chartData" :chart-options="chartOptions" />
+  </div>
 </template>
 
 <script>
 // DataPage.vue
-import { Bar } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+import { Bar, Line, Pie } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, ArcElement, LineElement, CategoryScale, LinearScale } from 'chart.js'
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, LineElement, CategoryScale, LinearScale)
 
 export default {
   name: 'BarChart',
-  components: { Bar },
+  components: { Bar, Line, Pie },
   data() {
       return {
         chartData: {
@@ -20,7 +24,7 @@ export default {
           ],
           datasets: [{
             label: 'Title',
-            data: [10, 20, 30, 40]
+            data: [15, 23,47, 55]
           }]
         },
         chartOptions: {
