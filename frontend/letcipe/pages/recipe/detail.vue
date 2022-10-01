@@ -226,20 +226,6 @@ export default {
       recipeLike: 21,
       recipeBookmark: 16,
       recipeSteps: [],
-      recipeComment: [
-        {
-          nickname: '수리수리마수리',
-          content: 'asd맛나는 레시피일까요아닐까요',
-          reg_time: '2022-09-24',
-          mod_time: '',
-        },
-        {
-          nickname: '수리수리마수리',
-          content: 'asd맛나는 레시피일까요아닐까요',
-          reg_time: '2022-09-24',
-          mod_time: '',
-        },
-      ],
       recipeIngredient: [],
       ingredient: [],
       profileImg: '',
@@ -256,20 +242,17 @@ export default {
     })
     this.recipeInfo = {
       boardType: 'RECIPE',
-      boadrId: this.recipeID,
+      boardId: this.recipeID,
     }
     promise.then(async () => {
       // 레시피 디테일 불러오는 부분
       this.recipeSteps = []
       await this.RecipeDetail(this.recipeID)
-      console.log(this.recipeDetail)
       console.log(this.recipeDetail.user.nickname)
       this.recipeSteps = this.recipeDetail.recipeSteps
       this.recipeIngredient = this.recipeDetail.ingredients
       this.writer = this.recipeDetail.user.nickname
-      console.log(this.writer)
 
-      console.log('f레시피 인포' + JSON.stringify(this.recipeInfo))
       // 레시피 코멘트 불러오는 부분
       await this.getCommentNum(this.recipeInfo)
       console.log('코멘트 넘버요' + this.commentNum)
@@ -310,28 +293,29 @@ export default {
       })
     },
     saveBookmark() {
-      this.selectBookmarks(1798)
-      this.RecipeDetail(1798)
+      this.selectBookmarks(this.recipeDetail.id)
+      this.RecipeDetail(this.recipeDetail.id)
     },
     deleteBookmark() {
-      this.deleteBookmarks(1798)
+      this.deleteBookmarks(this.recipeDetail.id)
       //   this.RecipeDetail(1)
     },
     deleteLikes() {
-      this.decountRecipeLikes(1798)
+      this.decountRecipeLikes(this.recipeDetail.id)
     },
     countLikes() {
-      this.countRecipeLikes(1798)
+      this.countRecipeLikes(this.recipeDetail.id)
     },
     addComment() {
       console.log(this.enterComment)
       const comment = {
         content: this.enterComment,
-        boardId: 1798,
+        boardId: this.recipeDetail.id,
         boardType: 'RECIPE',
       }
       this.postComment(comment)
       this.enterComment = null
+
       this.$router.go()
     },
   },
