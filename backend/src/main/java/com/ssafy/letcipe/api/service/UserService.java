@@ -116,7 +116,19 @@ public class UserService {
 
     public ResGetUserDto readUser(Long userId) {
         User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
-        return new ResGetUserDto(user);
+        return ResGetUserDto.builder()
+                .id(user.getId())
+                .userId(user.getUserId())
+                .name(user.getName())
+                .nickname(user.getNickname())
+                .profileImage(user.getProfileImage())
+                .phone(user.getPhone())
+                .email(user.getEmail())
+                .gender(user.getGender())
+                .job(user.getJob())
+                .family(user.getFamily())
+                .birth(user.getBirth())
+                .build();
     }
 
     @Transactional
@@ -126,9 +138,14 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(Long userId, ReqPutUserDto requestDto) {
+    public void updateUser(Long userId, ReqPutUserDto requestDto) throws FileUploadException {
         User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
+        // 개인 정보 수정
         user.update(requestDto);
+        // 프로필 이미지 따로 수정
+        if(requestDto.getProfileImg() != null) {
+            user.updateProfileImage(fileHandler.uploadImage(requestDto.getProfileImg()));
+        }
     }
 
     public User findUser(long userId) throws NullPointerException {

@@ -94,10 +94,18 @@ public class User {
     }
 
     public void update(ReqPutUserDto user){
+        this.name = user.getName();
+        this.userId = user.getUserId();
+        this.birth = LocalDate.parse(user.getBirth());
         this.email=user.getEmail();
         this.nickname=user.getNickname();
         this.job=user.getJob();
         this.family=user.getFamily();
+        this.gender = user.getGender();
+    }
+
+    public void updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     public void updatePassword(String password) {
