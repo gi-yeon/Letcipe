@@ -180,13 +180,7 @@
             <v-divider v-if="item.amount > 0"></v-divider>
           </div>
           <div class="d-flex justify-center align-center pa-2">
-            <v-btn
-              class="mx-2"
-              small
-              dark
-              color="#aac821"
-              @click="addIngreDialog = true"
-            >
+            <v-btn class="mx-2" small dark color="#aac821" @click="clearItem">
               재료 추가
             </v-btn>
           </div>
@@ -216,77 +210,109 @@
           >
         </div>
         <div class="d-flex justify-center">
-          <v-dialog v-model="addIngreDialog" max-width="500px">
-            <v-card>
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col cols="12" sm="6" md="4">
-                      <!-- <v-text-field
-                              v-model="editedItem.name"
-                              label="재료명"
-                            ></v-text-field> -->
-                      <v-autocomplete
-                        cache-items
-                        clearable
-                        hide-details
-                        hide-selected
-                        hide-spin-buttons
-                        item-text="name"
-                        item-value="id"
-                        label="재료검색"
-                        outlined
-                        class="pt-3 pb-3"
-                        color="letcipe"
-                        style="width: 90%"
-                        append-inner-icon="mdi-magnify"
-                        @keyup="ingre(search)"
-                      >
-                        <template #no-data>
-                          <v-list-item>
-                            <v-list-item-title
-                              >일치하는 재료가 없습니다.</v-list-item-title
-                            >
-                          </v-list-item>
-                        </template>
-                        <template #item="{ item }">
-                          <v-list-item-content @click="selectIngre(item)">
-                            <v-list-item-title
-                              v-text="item.name"
-                            ></v-list-item-title>
-                          </v-list-item-content>
-                          <v-list-item-action @click="selectIngre(item)">
-                            <v-chip :color="colors[item.category]" label>
-                              {{ item.category }}
-                            </v-chip>
-                          </v-list-item-action>
-                        </template>
-                      </v-autocomplete>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        :rules="ingre_rule"
-                        placeholder="0"
-                        color="letcipe"
-                        label="재료량"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field disabled label="단위"></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
+          <v-dialog v-model="dialog" max-width="500px">
+            <!-- <template #activator="{ on, attrs }">
+              <v-btn
+                dark
+                class="mb-5 mt-6"
+                v-bind="attrs"
+                v-on="on"
+                @click="clearItem"
+                >재료 추가</v-btn
+              >
+            </template> -->
 
+            <v-card>
+              <v-card-title>
+                <span>재료 추가</span>
+              </v-card-title>
+              <v-form ref="form">
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12" sm="6" md="4">
+                        <!-- <v-text-field
+                            v-model="editedItem.name"
+                            label="재료명"
+                            ></v-text-field>-->
+                        <v-autocomplete
+                          ref="keyword"
+                          v-model="keyword"
+                          :rules="keyword_rule"
+                          :items="ingredientsList"
+                          :search-input.sync="search"
+                          cache-items
+                          clearable
+                          hide-details
+                          hide-selected
+                          hide-spin-buttons
+                          item-text="name"
+                          item-value="id"
+                          label="재료검색"
+                          outlined
+                          :required="keyword"
+                          class="pt-3 pb-3"
+                          color="letcipe"
+                          style="width: 90%"
+                          append-inner-icon="mdi-magnify"
+                          @keyup="ingre(search)"
+                        >
+                          <template #no-data>
+                            <v-list-item>
+                              <v-list-item-title>
+                                일치하는 재료가 없습니다.
+                              </v-list-item-title>
+                            </v-list-item>
+                          </template>
+                          <template #item="{ item }">
+                            <v-list-item-content @click="selectIngre(item)">
+                              <v-list-item-title
+                                v-text="item.name"
+                              ></v-list-item-title>
+                            </v-list-item-content>
+                            <v-list-item-action @click="selectIngre(item)">
+                              <v-chip :color="colors[item.category]" label>{{
+                                item.category
+                              }}</v-chip>
+                            </v-list-item-action>
+                          </template>
+                        </v-autocomplete>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          ref="amount"
+                          v-model="editedItem.amount"
+                          :rules="ingre_rule"
+                          required
+                          placeholder="0"
+                          color="letcipe"
+                          label="재료량"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.unit"
+                          disabled
+                          label="단위"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
+              </v-form>
               <v-card-actions>
                 <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="close">취소</v-btn>
                 <v-btn
                   color="blue darken-1"
+                  :disabled="
+                    keyword === null ||
+                    keyword === '' ||
+                    editedItem.amount === null ||
+                    editedItem.amount === ''
+                  "
                   text
-                  @click="addIngreDialog = false"
-                  >취소</v-btn
-                >
-                <v-btn color="blue darken-1" text @click="saveIngre"
+                  @click="saveIngre"
                   >재료 저장</v-btn
                 >
               </v-card-actions>
@@ -321,6 +347,7 @@ export default {
     return {
       errorMsg: '',
       totalAmount: 0,
+      dialog: false,
       dialogStartCartError: false,
       isAllCheck: false,
       checked: [],
@@ -334,6 +361,46 @@ export default {
         (v) => /^[0-9]*$/.test(v) || '재료량은 숫자만 입력 가능합니다.',
         (v) => !(v <= 0) || '재료량은 0 이상이어야 합니다.',
       ],
+      keyword: null,
+      keyword_rule: [(v) => !!v || '재료는 필수 입력사항입니다.'],
+      colors: {
+        '가루 분말': 'purple',
+        '감자 고구마': 'pink',
+        고기: 'pink darken-3',
+        곡류: 'purple lighten-1',
+        과일: 'red lighten-5',
+        과자: 'green lighten-3',
+        '국물 육수': 'green',
+        기름: 'yellow darken-4',
+        기타: 'blue lighten-3',
+        달걀: 'blue darken-4',
+        '떡 면': 'red',
+        '묵 두부': 'purple darken-3',
+        빵: 'red lighten-2',
+        어패류: 'yellow lighten-1',
+        '유제품 치즈': 'blue darken-2',
+        '음료 주류': 'green lighten-1',
+        '음식 식품': 'pink lighten-3',
+        절임류: 'light-green darken-4',
+        '조미료 향신료 소스': 'blue',
+        채소: 'light-green',
+        '초콜릿 사탕': 'light-green lighten-2',
+        '콩 견과류': 'yellow',
+        해조류: 'grey',
+        '햄 소시지': 'black',
+      },
+      editedItem: {
+        name: '',
+        id: '',
+        amount: null,
+        unit: 'g',
+      },
+      defaultItem: {
+        name: '',
+        id: '',
+        amount: null,
+        unit: 'g',
+      },
     }
   },
   computed: {
@@ -343,6 +410,12 @@ export default {
       'amountByRecipe',
       'isSucceededtoHistory',
     ]),
+    ...mapState('ingredients', ['ingredientsList']),
+  },
+  watch: {
+    dialog(val) {
+      val || this.close()
+    },
   },
   created() {
     const promise = new Promise((resolve, reject) => {
@@ -364,6 +437,13 @@ export default {
     })
   },
   methods: {
+    close() {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
     initCart() {
       for (let i = 0; i < this.cart.length; i++) {
         this.checkedRecipe.push(true)
@@ -407,24 +487,35 @@ export default {
       this.editedItem.unit = item.measure
     },
     saveIngre() {
-      this.IngreValid = false
-      this.ingredients?.forEach((ingre) => {
-        if (this.editedItem.name === ingre.name) {
-          ingre.amount =
-            parseInt(ingre.amount) + parseInt(this.editedItem.amount)
-          this.IngreValid = true
+      if (this.$refs.form.validate()) {
+        console.log(this.$refs.form.validate())
+
+        this.IngreValid = false
+        this.ingredients?.forEach((ingre) => {
+          if (this.editedItem.name === ingre.name) {
+            ingre.amount =
+              parseInt(ingre.amount) + parseInt(this.editedItem.amount)
+            this.IngreValid = true
+          }
+        })
+        if (this.IngreValid === false) {
+          if (this.editedIndex > -1) {
+            Object.assign(this.ingredients[this.editedIndex], this.editedItem)
+          } else {
+            this.ingredients.push(this.editedItem)
+          }
         }
-      })
-      if (this.IngreValid === false) {
+
         if (this.editedIndex > -1) {
           Object.assign(this.ingredients[this.editedIndex], this.editedItem)
-        } else {
-          this.ingredients.push(this.editedItem)
         }
-      }
+        // if (this.editedIndex > -1) {
+        //   Object.assign(this.ingredients[this.editedIndex], this.editedItem)
+        // } else {
+        //   this.ingredients.push(this.editedItem)
+        // }
 
-      if (this.editedIndex > -1) {
-        Object.assign(this.ingredients[this.editedIndex], this.editedItem)
+        this.close()
       }
     },
     initSelectIndex() {
@@ -638,6 +729,35 @@ export default {
         this.dialogStartCartError = true
       }
     },
+  },
+  clearItem() {
+    this.keyword = null
+  },
+  editItem(item) {
+    this.search = item.name
+    this.editedIndex = this.ingredients.indexOf(item)
+    this.editedItem = Object.assign({}, item)
+    this.dialog = true
+  },
+  deleteItem(item) {
+    this.editedIndex = this.ingredients.indexOf(item)
+    this.editedItem = Object.assign({}, item)
+    this.ingredients.splice(this.editedIndex, 1)
+    this.closeDelete()
+  },
+  closeDelete() {
+    this.dialogDelete = false
+    this.$nextTick(() => {
+      this.editedItem = Object.assign({}, this.defaultItem)
+      this.editedIndex = -1
+    })
+  },
+  close() {
+    this.dialog = false
+    this.$nextTick(() => {
+      this.editedItem = Object.assign({}, this.defaultItem)
+      this.editedIndex = -1
+    })
   },
 }
 </script>
