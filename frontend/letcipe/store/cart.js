@@ -121,7 +121,7 @@ export const actions = {
         console.log(data)
         commit('SET_INGRE',data.list)
         commit('SET_RECIPE_INGRE', data.amountByRecipe)
-         console.log('장바구니 재료 읽어오기 성공!'  + data.amountByRecipe["80"])
+         console.log('장바구니 재료 읽어오기 성공!' )
       },
       (error) => {
         console.log(error)

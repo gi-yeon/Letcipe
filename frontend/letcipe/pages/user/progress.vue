@@ -115,7 +115,9 @@
               >
             </div>
           </div>
-          <div v-else>진행중인 레시피리스트가 없습니다.</div>
+          <div v-else align="center" class="pt-3 pb-3">
+            진행중인 레시피리스트가 없습니다.
+          </div>
         </v-container>
       </div>
     </v-app>

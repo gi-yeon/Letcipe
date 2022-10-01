@@ -563,55 +563,55 @@ export default {
     },
     subIngreAmount(index) {
       const ingredientInfo = this.ingreList[index]
+
       // 원래있던 재료에서더한 경우
-      console.log(ingredientInfo.amount)
-      console.log(this.amountByRecipe[ingredientInfo.ingredient.id])
-      console.log(this.amountByRecipe)
-      if (
-        ingredientInfo.amount !==
-        this.amountByRecipe[ingredientInfo.ingredient.id]
-      ) {
-        if (ingredientInfo.ingredient.id in this.amountByRecipe) {
-          if (
-            ingredientInfo.amount -
-              this.amountByRecipe[ingredientInfo.ingredient.id] -
-              1 ===
-            0
-          ) {
-            this.deleteCartIngredient(ingredientInfo.ingredient.id)
-            this.CALC_SUB_INGRE(index)
-            console.log('11111111111111111111111111111111')
-          } else {
-            console.log('222222222222222222')
-            const updateObject = {
-              ingredientId: this.ingreList[index].ingredient.id,
-              operator: '-',
-            }
-            this.patchCartIngredient(updateObject)
-            this.CALC_SUB_INGRE(index)
-          }
-        } else if (
-          !(ingredientInfo.ingredient.id in this.amountByRecipe) &&
-          ingredientInfo.amount - 1 === 0
+
+      if (ingredientInfo.ingredient.id in this.amountByRecipe) {
+        // amountByRecipe에 재료가 있는 지 확인 -> 있으면 원래 있던 재료에서 추가한 재료
+        if (
+          Number(
+            parseInt(ingredientInfo.amount) -
+              parseInt(this.amountByRecipe[ingredientInfo.ingredient.id])
+          ) === 0
+        )
+          return
+        if (
+          // delete하는 경우
+          Number(
+            parseInt(ingredientInfo.amount) -
+              parseInt(this.amountByRecipe[ingredientInfo.ingredient.id]) -
+              1
+          ) === 0
         ) {
-          console.log('3333333333333333333333333')
-          // 원래 없는 재료를 더해줬는데 0보다 더 줄이려고 할때
           this.deleteCartIngredient(ingredientInfo.ingredient.id)
-          this.CALC_SUB_INGRE(index)
-        } else if (
-          !(ingredientInfo.ingredient.id in this.amountByRecipe) &&
-          ingredientInfo.amount - 1 > 0
-        ) {
-          console.log('4444444444444444444444444')
+
+          console.log('11111111111111111111111111111111')
+        } else {
+          // 추가 재료의 수를 -1해줘야 하는 경우
+          console.log('222222222222222222')
           const updateObject = {
             ingredientId: this.ingreList[index].ingredient.id,
             operator: '-',
           }
           this.patchCartIngredient(updateObject)
-          this.CALC_SUB_INGRE(index)
         }
+      } else if (ingredientInfo.amount - 1 === 0) {
+        // 원래 없는 재료를 더해준 것
+
+        // 추가 재료의 수가 0이되어 cart_ingredient 테이블에서 정보를 지워야 할때
+        console.log('3333333333333333333333333')
+
+        this.deleteCartIngredient(ingredientInfo.ingredient.id)
+      } else {
+        const updateObject = {
+          ingredientId: this.ingreList[index].ingredient.id,
+          operator: '-',
+        }
+        this.patchCartIngredient(updateObject)
       }
+      this.CALC_SUB_INGRE(index)
     },
+
     plusIngreAmount(index) {
       this.CALC_PLUS_INGRE(index)
       console.log(this.ingreList[index])
