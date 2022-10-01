@@ -41,7 +41,13 @@ public class RecipeController {
     @GetMapping("/{recipe_id}")
     @Transactional
     public ResponseEntity readRecipe(@PathVariable long recipe_id, HttpServletRequest request) {
-        long userId = jwtService.getUserId(request); // TODO 토큰에서 유저 id 가져와야 함, 없다면 -1 등으로 표기
+         // TODO 토큰에서 유저 id 가져와야 함, 없다면 -1 등으로 표기
+        Long userId;
+        try {
+            userId = jwtService.getUserId(request);
+        }catch (Exception e){
+            userId = -1L;
+        }
         ResGetDetailRecipeDto recipe = recipeService.readRecipe(recipe_id, userId);
         return ResponseEntity.ok(recipe);
     }
