@@ -288,7 +288,6 @@ export default {
         size: 5,
         page: this.currentPage,
       }
-      console.log('레시피 인포' + this.recipeInfo)
       await this.getComment(this.recipeInfo)
     })
   },
@@ -311,7 +310,7 @@ export default {
     handlePage(page) {
       this.recipeInfo = {
         boardType: 'RECIPE',
-        boardId: '1',
+        boardId: this.recipeDetail.id,
         size: 5,
         page: this.currentPage,
       }
