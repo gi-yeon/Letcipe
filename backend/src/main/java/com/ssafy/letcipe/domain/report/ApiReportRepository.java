@@ -11,6 +11,6 @@ import java.util.List;
 
 @Repository
 public interface ApiReportRepository extends JpaRepository<ApiReport, Long> {
-    @Query("select new com.ssafy.letcipe.api.dto.report.JPQLApiReportDto(ar.methodName,count(ar.methodName)) from ApiReport ar where ar.date >= :begin and ar.date <= :end")
+    @Query("select new com.ssafy.letcipe.api.dto.report.JPQLApiReportDto(ar.methodName,count(ar.methodName)) from ApiReport ar where ar.date >= :begin and ar.date <= :end group by ar.methodName")
     public List<JPQLApiReportDto> rangeSearch(LocalDate begin, LocalDate end);
 }

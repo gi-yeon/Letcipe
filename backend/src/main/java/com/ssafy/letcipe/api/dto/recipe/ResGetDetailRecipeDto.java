@@ -1,14 +1,12 @@
 package com.ssafy.letcipe.api.dto.recipe;
 
-import com.ssafy.letcipe.api.dto.ingredient.ResGetIngredientDto;
-import com.ssafy.letcipe.api.dto.recipeComment.ResGetRecipeCommentDto;
+
 import com.ssafy.letcipe.api.dto.recipeIngredient.ResGetRecipeIngredientDto;
 import com.ssafy.letcipe.api.dto.recipeStep.ResGetRecipeStepDto;
 import com.ssafy.letcipe.api.dto.recipeTag.ResGetRecipeTagDto;
-import com.ssafy.letcipe.api.dto.user.ResGetUserDto;
+import com.ssafy.letcipe.api.dto.user.ResGetWriterDto;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
-import com.ssafy.letcipe.domain.recipeComment.RecipeComment;
 import com.ssafy.letcipe.domain.recipeLike.RecipeLike;
 import com.ssafy.letcipe.domain.recipeStep.RecipeStep;
 import com.ssafy.letcipe.domain.recipeTag.RecipeTag;
@@ -16,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +23,7 @@ import java.util.List;
 @Builder
 public class ResGetDetailRecipeDto {
     long id;
-    ResGetUserDto user;
+    ResGetWriterDto user;
     String title;
     String content;
     int cookingTime;
@@ -35,14 +34,15 @@ public class ResGetDetailRecipeDto {
     boolean isLike;
     int recipeBookmark;
     boolean isBookmark;
-    List<ResGetRecipeCommentDto> recipeComment;
+    LocalDateTime regTime;
+
     List<ResGetRecipeTagDto> tags;
     List<ResGetRecipeStepDto> recipeSteps;
     List<ResGetRecipeIngredientDto> ingredients;
 
     public ResGetDetailRecipeDto(Recipe recipe, long userId, List<ResGetRecipeIngredientDto> ingredients) {
         this.id = recipe.getId();
-        this.user = ResGetUserDto.createDto(recipe.getUser());
+        this.user = new ResGetWriterDto(recipe.getUser());
         this.title = recipe.getTitle();
         this.content = recipe.getContent();
         this.cookingTime = recipe.getCookingTime();
@@ -50,10 +50,7 @@ public class ResGetDetailRecipeDto {
         this.category = recipe.getCategory();
         this.recipeLike = recipe.getLikes().size();
         this.recipeBookmark = recipe.getBookmarks().size();
-        this.recipeComment = new ArrayList<>();
-        for (RecipeComment comment : recipe.getComments()) {
-            recipeComment.add(ResGetRecipeCommentDto.createDto(comment));
-        }
+        this.regTime = recipe.getRegTime();
 
         this.tags = new ArrayList<>();
         for (RecipeTag tag : recipe.getTags()) {

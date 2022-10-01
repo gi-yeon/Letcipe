@@ -27,7 +27,7 @@ public class HistoryController {
     }
 
     @GetMapping("/{history_id}")
-    public ResponseEntity<?> getHistory(@PathVariable("history_id") Long historyId, HttpServletRequest request){
+    public ResponseEntity<?> getHistory(@PathVariable("history_id") Long historyId, HttpServletRequest request) throws Exception{
         Long userId = jwtService.getUserId(request);
         return ResponseEntity.ok(historyService.getHistory(userId, historyId));
     }

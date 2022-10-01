@@ -78,8 +78,9 @@ public class UserController {
     }
 
     @PutMapping("")
-    public ResponseEntity updateUser(@RequestBody ReqPutUserDto requestDto, HttpServletRequest request) {
+    public ResponseEntity updateUser(@ModelAttribute ReqPutUserDto requestDto, HttpServletRequest request) throws FileUploadException {
         Long userId = jwtService.getUserId(request);
+        System.out.println(requestDto);
         userService.updateUser(userId, requestDto);
         return ResponseEntity.ok().build();
     }

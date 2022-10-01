@@ -2,13 +2,11 @@ package com.ssafy.letcipe.api.service;
 
 import com.ssafy.letcipe.api.dto.ingredient.ResGetIngredientDto;
 import com.ssafy.letcipe.api.dto.recipe.*;
-import com.ssafy.letcipe.api.dto.recipeBookmark.ReqPostRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeBookmark.ReqDeleteRecipeBookmarkDto;
-import com.ssafy.letcipe.api.dto.recipeComment.ReqPostRecipeCommentDto;
-import com.ssafy.letcipe.api.dto.recipeComment.ReqPutRecipeCommentDto;
+import com.ssafy.letcipe.api.dto.recipeBookmark.ReqPostRecipeBookmarkDto;
 import com.ssafy.letcipe.api.dto.recipeIngredient.ResGetRecipeIngredientDto;
-import com.ssafy.letcipe.api.dto.recipeLike.ReqPostRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqDeleteRecipeLikeDto;
+import com.ssafy.letcipe.api.dto.recipeLike.ReqPostRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeStep.ReqPostRecipeStepDto;
 import com.ssafy.letcipe.domain.ingredient.Ingredient;
 import com.ssafy.letcipe.domain.recipe.Recipe;
@@ -17,8 +15,6 @@ import com.ssafy.letcipe.domain.recipe.RecipeRepository;
 import com.ssafy.letcipe.domain.recipe.RecipeRepositoryCustomImpl;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmarkRepository;
-import com.ssafy.letcipe.domain.recipeComment.RecipeComment;
-import com.ssafy.letcipe.domain.recipeComment.RecipeCommentRepository;
 import com.ssafy.letcipe.domain.recipeIngredient.RecipeIngredient;
 import com.ssafy.letcipe.domain.recipeLike.RecipeLike;
 import com.ssafy.letcipe.domain.recipeLike.RecipeLikeRepository;
@@ -45,7 +41,6 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final FileHandler fileHandler;
     private final UserService userService;
-    private final RecipeCommentRepository recipeCommentRepository;
     private final RecipeBookmarkRepository recipeBookmarkRepository;
     private final RecipeLikeRepository recipeLikeRepository;
     private final IngredientService ingredientService;
@@ -53,12 +48,12 @@ public class RecipeService {
     private final RecipeTagService recipeTagService;
     private final RecipeStepService recipeStepService;
     private final RecipeIngredientService recipeIngredientService;
+
     private final RecipeRepositoryCustomImpl customRepository;
 
     public Recipe getRecipe(long recipeId) throws NullPointerException {
         return recipeRepository.findById(recipeId).orElseThrow(() -> new NullPointerException("레시피를 찾을 수 없습니다."));
     }
-
 
     @Transactional
     public ResGetDetailRecipeDto readRecipe(long recipe_id, long userId) {
@@ -167,39 +162,6 @@ public class RecipeService {
         recipe.delete();
     }
 
-
-    @Transactional
-    public void deleteComment(Long recipeCommentId) throws SQLException {
-        RecipeComment comment = recipeCommentRepository
-                .findById(recipeCommentId)
-                .orElseThrow(() -> new NullPointerException());
-        recipeCommentRepository.delete(comment);
-    }
-
-    @Transactional
-    public void updateComment(ReqPutRecipeCommentDto requestDto) throws SQLException {
-        RecipeComment comment = recipeCommentRepository
-                .findById(requestDto.getRecipeCommentId())
-                .orElseThrow(() -> new NullPointerException());
-        comment.updateRecipeComment(requestDto.getContent());
-    }
-
-    @Transactional
-    public void createComment(ReqPostRecipeCommentDto requestDto, Long userId) throws SQLException {
-        System.out.println("recipe id : " + requestDto.getRecipeId());
-        System.out.println("content: " + requestDto.getContent());
-        User user = userService.findUser(userId);
-        Recipe recipe = recipeRepository
-                .findById(requestDto.getRecipeId())
-                .orElseThrow(() -> new NullPointerException());
-        recipeCommentRepository.save(
-                RecipeComment.builder()
-                        .recipe(recipe)
-                        .content(requestDto.getContent())
-                        .user(user)
-                        .build());
-    }
-
     @Transactional
     public void createBookmark(ReqPostRecipeBookmarkDto requestDto, Long userId) throws SQLException {
         User user = userService.findUser(userId);
@@ -285,7 +247,7 @@ public class RecipeService {
         recipeContainsIngredient.forEach(i -> {
             result.add(getRecipeDto(i.getRecipe()));
         });
-
+        System.out.println(result);
         return result;
     }
 
@@ -297,6 +259,7 @@ public class RecipeService {
             ResGetIngredientDto ing = ingredientService.getIngredientResponse(ri.getIngredient());
             recipeIngredientResponses.add(new ResGetRecipeIngredientDto(ing, ri.getAmount()));
         }
+
         return new ResGetRecipeDto(recipe, recipeIngredientResponses);
     }
 

@@ -6,7 +6,7 @@ LABEL maintainer="giyeon3145@gmail.com"
 
 #포트번호 설정
 EXPOSE 8888
-
+ENV TZ=Asia/Seoul
 #가져올 파일 jar또는 war
 ARG JAR_FILE=./backend/build/libs/*.jar
 
