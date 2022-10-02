@@ -134,6 +134,96 @@ public class UserService {
     }
 
     @Transactional
+    public ResGetHotRecipeComponentDto getAttribute2(Long userId) {
+        JobType job;
+        GenderType gen;
+        int fam;
+        int age;
+        List<String> str = new ArrayList<>();
+        Random rnd = new Random();
+        if (userId == -1L) {
+            job = JobType.values()[rnd.nextInt(4)];
+            gen = GenderType.values()[rnd.nextInt(2)];
+            fam = rnd.nextInt(1) + 1;
+            age = (rnd.nextInt(4) + 1) * 10;
+        } else {
+            User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
+            job = user.getJob();
+            gen = user.getGender();
+            fam = user.getFamily();
+            age = (LocalDate.now().getYear() - user.getBirth().getYear()) / 10 * 10;
+        }
+        str.add(gen.getDesc().substring(0, 1).toUpperCase());
+        str.add("" + age);
+        str.add("" + fam);
+        str.add(job.getDesc().toUpperCase());
+        int flag = rnd.nextInt(16);
+        if (fam != 1) {
+            flag |= 0b0100;
+        }
+        StringBuilder att = new StringBuilder();
+        StringBuilder title = new StringBuilder();
+        boolean[] check = new boolean[4];
+        int cnt = 0;
+        for (int i = 0; i < 4; i++) {
+            if (flag % 2 == 0) {
+                att.append(str.get(i));
+                check[i] = true;
+                cnt++;
+            } else {
+                att.append("-");
+            }
+            att.append(",");
+            flag /= 2;
+        }
+        if (check[2]) {
+            if (str.get(2).equals("1")) {
+                title.append("혼자 사는 ");
+            } else {
+                title.append(str.get(2)).append("명이서 사는 ");
+            }
+            if (cnt == 1)
+                title.append("사람이 ");
+        }
+        if (check[1])
+            if (check[0] || check[3])
+                title.append(str.get(1) + "대 ");
+            else
+                title.append(str.get(1) + "대가 ");
+        if (check[0])
+            if (check[3])
+                title.append(str.get(0).equals("F") ? "여성 " : "남성 ");
+            else
+                title.append(str.get(0).equals("F") ? "여성이 " : "남성이 ");
+        if (check[3]) {
+            switch (str.get(3)) {
+                case "STUDENT":
+                    title.append("학생이 ");
+                    break;
+                case "JUBU":
+                    title.append("주부가 ");
+                    break;
+                case "WORKER":
+                    title.append("직장인이 ");
+                    break;
+                case "COOK":
+                    title.append("요리사가 ");
+                    break;
+            }
+        }
+        if(cnt==0){
+            title.append("모두가 ");
+        }
+        title.append("좋아하는 레시피들");
+        att.setLength(att.length() - 1);
+        ResGetHotRecipeComponentDto hotRecipeDto = ResGetHotRecipeComponentDto.builder()
+                .title(title.toString())
+                .attribute(att.toString())
+                .build();
+        return hotRecipeDto;
+    }
+
+    @Transactional
     public void createUser(ReqPostUserDto requestDto) throws NoSuchAlgorithmException, FileUploadException {
 
         StringBuilder sb = new StringBuilder();
