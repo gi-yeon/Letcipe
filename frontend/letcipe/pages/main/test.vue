@@ -19,185 +19,167 @@
             </div>
           </div>
         </div>
-        <div class="my-container">
-          <div>{{ nickname }}님의 현재 진행중인 레시피리스트</div>
-          <v-carousel class="my-list-carousel" height="100%" style="border-radius: 10px">
-            <v-carousel-item v-for="(item, i) in userPlayList" :key="i">
-              <v-container>
-                <v-row style="margin: -25px">
-                  <v-col cols="12">
-                    <v-hover>
-                      <template #default="{ hover }">
-                        <v-card
-                          :elevation="hover ? 24 : 6"
-                          :class="hover ? 'letcipe lighten-2' : 'white'"
-                          class="my-card mx-auto"
-                        >
-                          <div class="d-flex flex-no-wrap justify-center pa-3">
-                            <div>
-                              <div class="my-lecipe">
-                                <v-avatar class="ma-3" size="100">
-                                  <v-img :src="'https://2bob.co.kr/' + item.url">
-                                    <v-icon x-large>mdi-play</v-icon>
-                                  </v-img>
-                                </v-avatar>
+        <div class="my-middle-wrap">
+          <div class="my-middle">
+            <div class="my-container">
+              <div>{{ nickname }}님의 현재 진행중인 레시피리스트</div>
+              <v-carousel
+                hide-delimiters="true"
+                class="my-list-carousel"
+                height="100%"
+                style="border-radius: 10px"
+              >
+                <v-carousel-item v-for="(item, i) in userPlayList" :key="i">
+                  <v-container>
+                    <v-row style="margin: -25px">
+                      <v-col cols="12">
+                        <v-hover>
+                          <template #default="{ hover }">
+                            <v-card
+                              :elevation="hover ? 24 : 6"
+                              :class="hover ? 'letcipe lighten-2' : 'white'"
+                              class="my-card mx-auto"
+                            >
+                              <div class="d-flex flex-no-wrap justify-center pa-3">
+                                <div>
+                                  <div class="my-lecipe">
+                                    <v-avatar class="ma-3" size="100">
+                                      <v-img :src="'https://2bob.co.kr/' + item.url">
+                                        <v-icon x-large>mdi-play</v-icon>
+                                      </v-img>
+                                    </v-avatar>
+                                  </div>
+                                  <v-card-title class="my-title text-h5" v-text="item.title"></v-card-title>
+                                  <v-card-subtitle v-text="item.sub_title"></v-card-subtitle>
+                                </div>
                               </div>
-                              <v-card-title class="my-title text-h5" v-text="item.title"></v-card-title>
-                              <v-card-subtitle v-text="item.sub_title"></v-card-subtitle>
-                            </div>
-                          </div>
-                        </v-card>
-                      </template>
-                    </v-hover>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-carousel-item>
-          </v-carousel>
-        </div>
-        <div class="check-wrap">
-          <div>{{ nickname }}님의 장보기목록</div>
-          <v-container elevation="3" class="check-container">
-            <div class="check-head-wrap">
-              <v-tabs v-model="tabs" fixed-tabs>
-                <v-tabs-slider color="black"></v-tabs-slider>
-                <v-tab href="#mobile-tabs-5-1" class="letcipe--text">
-                  <div>
-                    <v-icon color="letcipe">mdi-cart-outline</v-icon>구매할식재료
-                  </div>
-                </v-tab>
-
-                <v-tab href="#mobile-tabs-5-2" class="letcipe--text">
-                  <div>
-                    <v-icon color="letcipe">mdi-cart-plus</v-icon>담은식재료
-                  </div>
-                </v-tab>
-              </v-tabs>
+                            </v-card>
+                          </template>
+                        </v-hover>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-carousel-item>
+              </v-carousel>
             </div>
-            <v-tabs-items v-model="tabs" class="check-tabs-wrap">
-              <v-tab-item v-for="i in 2" :key="i" :value="'mobile-tabs-5-' + i">
-                <v-card flat>
-                  <v-card-text v-if="i === 1" class="check-item-wrap fadeInUp">
-                    <div class="shopping-wrap">
-                      <div class="before-shopping">
-                        <div v-for="(c, index) in checklist" :key="index" class="pl-3 pr-3">
-                          <div class="d-flex justify-space-between align-center mt-1">
-                            <div class="ingre-name">
-                              <v-checkbox
-                                v-model="checklist[index]"
-                                class="mt-0 pt-0"
-                                :label="c.name"
-                                color="letcipe"
-                                :value="c.name"
-                                hide-details
-                                @click="bought(c, index)"
-                              ></v-checkbox>
-                            </div>
-                            <div class="ingre-amount">{{c.amount}}{{c.measure}}</div>
-                          </div>
+          </div>
+          <div class="my-middle">
+            <div class="check-wrap">
+              <div>{{ nickname }}님의 장보기목록</div>
+              <v-container elevation="3" class="check-container">
+                <div class="check-head-wrap">
+                  <v-tabs v-model="tabs" fixed-tabs>
+                    <v-tabs-slider color="black"></v-tabs-slider>
+                    <v-tab href="#mobile-tabs-5-1" class="letcipe--text">
+                      <div>
+                        <v-icon color="letcipe">mdi-cart-outline</v-icon>구매할식재료
+                      </div>
+                    </v-tab>
 
-                          <v-divider></v-divider>
-                        </div>
+                    <v-tab href="#mobile-tabs-5-2" class="letcipe--text">
+                      <div>
+                        <v-icon color="letcipe">mdi-cart-plus</v-icon>담은식재료
                       </div>
-                    </div>
-                  </v-card-text>
-                  <v-card-text v-if="i === 2 " class="check-item-wrapfadeInUp">
-                    <div v-if=" checkedList.length > 0" class="shopping-wrap">
-                      <div class="after-shopping">
-                        <div v-for="(c, index) in checkedList" :key="index" class="pl-3 pr-3">
-                          <div class="d-flex justify-space-between align-center mt-1">
-                            <div class="ingre-name">
-                              <v-checkbox
-                                v-model="checkedList[index]"
-                                class="mt-0 pt-0"
-                                :label="c.name"
-                                color="letcipe"
-                                true-value
-                                hide-details
-                                @click="needtobuy(c, index)"
-                              ></v-checkbox>
+                    </v-tab>
+                  </v-tabs>
+                </div>
+                <v-tabs-items v-model="tabs" class="check-tabs-wrap">
+                  <v-tab-item v-for="i in 2" :key="i" :value="'mobile-tabs-5-' + i">
+                    <v-card flat>
+                      <v-card-text v-if="i === 1" class="check-item-wrap fadeInUp">
+                        <div class="shopping-wrap">
+                          <div class="before-shopping">
+                            <div v-for="(c, index) in checklist" :key="index" class="pl-3 pr-3">
+                              <div class="d-flex justify-space-between align-center mt-1">
+                                <div class="ingre-name">
+                                  <v-checkbox
+                                    v-model="checklist[index]"
+                                    class="mt-0 pt-0"
+                                    :label="c.name"
+                                    color="letcipe"
+                                    :value="c.name"
+                                    hide-details
+                                    @click="bought(c, index)"
+                                  ></v-checkbox>
+                                </div>
+                                <div class="ingre-amount">{{c.amount}}{{c.measure}}</div>
+                              </div>
+
+                              <v-divider></v-divider>
                             </div>
-                            <div class="ingre-amount">{{c.amount}}{{c.measure}}</div>
                           </div>
-                          <v-divider></v-divider>
                         </div>
-                      </div>
-                    </div>
-                    <div v-else class="shopping-wrap">
-                      <div class="after-shopping-none">
-                        <div>담은 식재료가 없습니다.</div>
-                      </div>
-                    </div>
-                  </v-card-text>
-                </v-card>
-                <v-dialog v-model="dialog1" persistent max-width="290">
-                  <template #activator="{ on, attrs }">
-                    <v-btn
-                      color="letcipe"
-                      style="color: white; width: 100%"
-                      v-bind="attrs"
-                      v-on="on"
-                    >장보기 완료</v-btn>
-                  </template>
-                  <v-card v-if="checklist.length===0">
-                    <v-card-title style="font-size: x-large;">
-                      장보기완료
-                      <img class="category-images" src="/cart_icon/담은카트_1.png" alt="flour" />
-                    </v-card-title>
-                    <v-card-text>장보기를 완료하시겠습니까?</v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn
-                        color="green darken-1"
-                        text
-                        @click="[dialog1 = false, completeShopping()]"
-                      >확인</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                  <v-card v-else>
-                    <v-card-title style="font-size: x-large">
-                      잠깐
-                      <img class="category-images" src="/cart_icon/빈카트_1.png" alt="flour" />
-                    </v-card-title>
-                    <v-card-text>아직 구매하지 않은 식재료가 있습니다. 장보기를 완료하시겠습니까?</v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="green darken-1" text @click="dialog1 = false">돌아가기</v-btn>
-                      <v-btn
-                        color="green darken-1"
-                        text
-                        @click="[dialog1 = false, completeShopping()]"
-                      >확인</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
-              </v-tab-item>
-            </v-tabs-items>
-          </v-container>
+                      </v-card-text>
+                      <v-card-text v-if="i === 2 " class="check-item-wrapfadeInUp">
+                        <div v-if=" checkedList.length > 0" class="shopping-wrap">
+                          <div class="after-shopping">
+                            <div v-for="(c, index) in checkedList" :key="index" class="pl-3 pr-3">
+                              <div class="d-flex justify-space-between align-center mt-1">
+                                <div class="ingre-name">
+                                  <v-checkbox
+                                    v-model="checkedList[index]"
+                                    class="mt-0 pt-0"
+                                    :label="c.name"
+                                    color="letcipe"
+                                    true-value
+                                    hide-details
+                                    @click="needtobuy(c, index)"
+                                  ></v-checkbox>
+                                </div>
+                                <div class="ingre-amount">{{c.amount}}{{c.measure}}</div>
+                              </div>
+                              <v-divider></v-divider>
+                            </div>
+                          </div>
+                        </div>
+                        <div v-else class="shopping-wrap">
+                          <div
+                            class="after-shopping-none"
+                            style="align-self: center !important; text-align: center !important;"
+                          >
+                            <div>담은 식재료가 없습니다.</div>
+                          </div>
+                        </div>
+                      </v-card-text>
+                    </v-card>
+                  </v-tab-item>
+                </v-tabs-items>
+              </v-container>
+            </div>
+            <div class="btn-group pt-4">
+              <v-hover style="text-align: center;">
+                <template #default="{ hover }">
+                  <v-btn class="my-btn" large width="49%">
+                    <img
+                      class="footer-icon"
+                      width="30px"
+                      :src="hover ? `/icons/연필_h.gif`: `/icons/연필_o.png`"
+                      alt
+                      :style="hover ? `filter: brightness(0.9);` : `filter: brightness(1);`"
+                    />
+                    <span style="font-size: medium">레시피 만들기</span>
+                  </v-btn>
+                </template>
+              </v-hover>
+              <v-hover style="text-align: center;">
+                <template #default="{ hover }">
+                  <v-btn class="my-btn" large width="49%">
+                    <img
+                      class="footer-icon"
+                      width="30px"
+                      :src="hover ? `/icons/종이_h.gif`: `/icons/종이_o.png`"
+                      alt
+                      :style="hover ? `filter: brightness(0.9);` : `filter: brightness(1);`"
+                    />
+
+                    <span style="font-size: medium">장보기목록</span>
+                  </v-btn>
+                </template>
+              </v-hover>
+            </div>
+          </div>
         </div>
-        <div class="btn-group pt-4">
-          <v-hover>
-            <template #default="{ hover }">
-              <v-btn :elevation="hover ? 24 : 6" class="mx-2" dark large color="amber">
-                <v-icon dark>mdi-android</v-icon>
-              </v-btn>
-            </template>
-          </v-hover>
-          <v-hover>
-            <template #default="{ hover }">
-              <v-btn :elevation="hover ? 24 : 6" class="mx-2" dark large color="amber">
-                <v-icon dark>mdi-android</v-icon>
-              </v-btn>
-            </template>
-          </v-hover>
-          <v-hover>
-            <template #default="{ hover }">
-              <v-btn :elevation="hover ? 24 : 6" class="mx-2" dark large color="amber">
-                <v-icon dark>mdi-android</v-icon>
-              </v-btn>
-            </template>
-          </v-hover>
-        </div>
+
         <div class="chart-group mt-7 mb-7">
           <div>오늘 {{ time }} 기준</div>
           <div class="chart-header">
@@ -205,14 +187,28 @@
             <div>전체보기</div>
           </div>
           <div class="chart-chips-group">
-            <v-chip
+            <!-- <v-chip
               v-for="(tag, i) in tag_set"
               :key="i"
               class="tag-set ma-1"
               color="letcipe"
               outlined
-            >{{ tag }}</v-chip>
+            >{{ tag }}</v-chip>-->
+            <v-sheet class="chip-sheet mx-auto">
+              <v-slide-group multiple overflow>
+                <v-slide-item v-for="(tag, i) in tag_set" :key="i" v-slot="{ active, toggle }">
+                  <v-chip
+                    class="mx-2"
+                    :input-value="active"
+                    active-class="letcipe white--text"
+                    rounded
+                    @click="toggle"
+                  >{{tag}}</v-chip>
+                </v-slide-item>
+              </v-slide-group>
+            </v-sheet>
           </div>
+
           <v-row>
             <v-col>
               <v-hover v-for="(data, i) in lecipeData" :key="i">
@@ -360,7 +356,20 @@ export default {
           title: '오이냉면',
         },
       ],
-      tag_set: ['Now', '최신', '추석', '쉐프의리스트', '더보기'],
+      tag_set: [
+        'Now',
+        '최신',
+        '추석',
+        '쉐프의리스트',
+        '20대 남성들이 좋아할 만한 레시피',
+        '쉐프의리스트',
+        '쉐프의리스트',
+        '쉐프의리스트',
+        '쉐프의리스트',
+        '쉐프의리스트',
+
+        '더보기',
+      ],
       lecipeData: [],
       time: '',
       historyID: null,
@@ -477,6 +486,9 @@ export default {
       })
       this.checkedList = []
     },
+    createRecipe() {
+      this.$router.push('/recipe/create')
+    },
   },
 }
 </script>
@@ -528,7 +540,7 @@ export default {
 
 /* 체크리스트 */
 .check-container {
-  height: 300px;
+  height: 280px;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }
 
@@ -600,7 +612,7 @@ export default {
 
 /* 캐러셀 css */
 .v-carousel__controls {
-  display: none;
+  display: none !important;
 }
 .my-list-carousel {
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
@@ -646,6 +658,43 @@ export default {
 .container {
   max-width: 100%;
 }
+
+@media (min-width: 900px) {
+  .my-middle-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .my-middle {
+    width: 48%;
+  }
+
+  .chip-sheet {
+    max-width: 100%;
+  }
+  .my-list-carousel {
+    height: 300px;
+  }
+  .my-card {
+    height: 340px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+  /* .check-container {
+    height: 190px;
+    box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  }
+  .check-item-wrap {
+    height: 110px;
+    overflow: scroll;
+  }
+  .after-shopping-none {
+    height: 165px;
+    box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  } */
+}
 /* 모바일 screen */
 @media (max-width: 400px) {
   .ref-imgs {
@@ -656,6 +705,156 @@ export default {
   .imgs {
     justify-content: space-between;
     overflow-x: auto;
+  }
+
+  .main-container {
+    height: 100%;
+    padding: 10%;
+    /* background-image: url('/bg/bg_img.png'); */
+    background-repeat: repeat;
+    background-color: white;
+    /* background-color: rgba(255, 255, 221, 0.771); */
+    color: black;
+    margin-top: 70px;
+    margin-bottom: 70px;
+  }
+  .title {
+    font-size: x-large;
+    font-family: 'LeeSeoyun';
+  }
+  .v-application .title {
+    font-family: 'LeeSeoyun' !important;
+    font-size: x-large !important;
+  }
+  .title-wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .title-imgs {
+    display: flex;
+    overflow: auto;
+    cursor: pointer;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* 체크리스트 */
+  .check-container {
+    height: 280px;
+    box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  }
+
+  .check-container {
+  }
+  .check-item-wrap {
+    height: 200px;
+    overflow: scroll;
+  }
+  .before-shopping {
+    padding: 4%;
+    box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  }
+  .after-shopping {
+    padding: 4%;
+    box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  }
+  .after-shopping-none {
+    height: 165px;
+    box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  }
+
+  .card {
+    margin-right: 10%;
+    width: 150px;
+  }
+
+  .ref-wrap {
+    width: 150px;
+    height: 80px;
+    background-color: rgba(49, 49, 49, 0.422);
+  }
+  .ref-title {
+    /* color: rgb(0, 0, 0); */
+    color: aliceblue;
+    text-align: right;
+    font-size: large;
+    font-weight: bolder;
+    display: block;
+    overflow: auto;
+    text-overflow: ellipsis;
+  }
+  .ref-subtitle {
+    /* color: rgb(0, 0, 0); */
+    color: aliceblue;
+    text-align: right;
+  }
+  .my-container {
+    padding-top: 10%;
+    padding-bottom: 10%;
+  }
+  .my-title {
+    font-family: 'LeeSeoyun' !important;
+  }
+  .my-card {
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .my-lecipe {
+    display: flex;
+    justify-content: center;
+  }
+
+  /* 캐러셀 css */
+  .v-carousel__controls {
+    display: none !important;
+  }
+  .my-list-carousel {
+    box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  }
+  /* btn-group css */
+
+  /* cart-group css */
+  .cart-group {
+    margin-top: 3%;
+    margin-bottom: 3%;
+  }
+  /* btn-group css */
+  .btn-group {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* chart-group css */
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+  }
+  .chart-chips-group {
+    display: flex;
+    overflow-x: auto;
+  }
+  .tag-set {
+    padding: 0 12px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+  }
+  .lecipe-list-group {
+    cursor: pointer;
+  }
+
+  /* rec-imgs-group css */
+  .rec-imgs-group {
+    overflow: auto;
+  }
+  .container {
+    max-width: 100%;
+  }
+  .chip-sheet {
+    max-width: 700px;
   }
 }
 </style>

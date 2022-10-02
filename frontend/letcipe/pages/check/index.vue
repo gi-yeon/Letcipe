@@ -43,7 +43,7 @@
                     </div>
                     <v-divider></v-divider>
                     <div v-for="(c, index) in checklist" :key="index" class="pl-3 pr-3">
-                      <div class="d-flex justify-space-between align-center mt-1">
+                      <div class="check-wrap d-flex justify-space-between align-center mt-1">
                         <div class="ingre-name">
                           <v-checkbox
                             v-model="checklist[index]"
@@ -76,7 +76,7 @@
                     </div>
                     <v-divider></v-divider>
                     <div v-for="(c, index) in checkedList" :key="index" class="pl-3 pr-3">
-                      <div class="d-flex justify-space-between align-center mt-1">
+                      <div class="check-wrap d-flex justify-space-between align-center mt-1">
                         <div class="ingre-name">
                           <v-checkbox
                             v-model="checkedList[index]"
@@ -117,7 +117,7 @@
                     <div v-for="(c, idx) in checklist" :key="idx" class="pl-3 pr-3">
                       <div
                         v-if="checklist[idx].categoryName === cg"
-                        class="d-flex justify-space-between align-center mt-1"
+                        class="check-wrap d-flex justify-space-between align-center mt-1"
                       >
                         <div class="ingre-name">
                           <v-checkbox
@@ -149,7 +149,7 @@
                     </div>
                     <v-divider></v-divider>
                     <div v-for="(c, index) in checkedList" :key="index" class="pl-3 pr-3">
-                      <div class="d-flex justify-space-between align-center mt-1">
+                      <div class="check-wrap d-flex justify-space-between align-center mt-1">
                         <div class="ingre-name">
                           <v-checkbox
                             v-model="checkedList[index]"
@@ -287,7 +287,7 @@ export default {
       'updateHistory',
     ]),
     moveMypage() {
-      this.$router.push('/user/mapage')
+      this.$router.push('/user/mypage')
     },
     completeShopping() {
       console.log('장보기')
@@ -367,6 +367,11 @@ export default {
   margin-top: 0 !important;
   padding-top: 0 !important;
 } */
+
+.check-wrap {
+  cursor: pointer;
+}
+
 .fadeInUp {
   animation: fadeInUp 1s ease backwards;
 }
