@@ -55,53 +55,127 @@
             </v-carousel-item>
           </v-carousel>
         </div>
-        <div class="cart-group">
-          <div>{{ nickname }}님의 장보기 리스트</div>
-          <v-card
-            flat
-            color="green lighten-2"
-            height="250px"
-            style="overflow: scroll; border-radius: 25px"
-          >
-            <v-card-text>
-              <v-container fluid>
-                <div style="color: white">
-                  <v-icon>mdi-cart</v-icon>장보기 목록
-                </div>
-                <v-row v-for="(c, index) in checklist" :key="index">
-                  <v-col>
-                    <v-checkbox
-                      v-model="checklist[index]"
-                      :label="c"
-                      color="indigo darken-3"
-                      :value="c"
-                      hide-details
-                    ></v-checkbox>
-                  </v-col>
-                  <!-- <v-row align="center">
-                      <v-checkbox
-                        v-model="enabled"
-                        hide-details
-                        class="shrink mr-2 mt-0"
-                      ></v-checkbox>
-                      <v-text-field
-                        :disabled="!enabled"
-                        label="I only work if you check the box"
-                      ></v-text-field>
-                  </v-row>-->
-                </v-row>
-              </v-container>
-            </v-card-text>
-          </v-card>
+        <div class="check-wrap">
+          <div>{{ nickname }}님의 장보기목록</div>
+          <v-container class="check-container">
+            <div class="check-head-wrap">
+              <v-tabs v-model="tabs" fixed-tabs>
+                <v-tabs-slider color="black"></v-tabs-slider>
+                <v-tab href="#mobile-tabs-5-1" class="letcipe--text">
+                  <div>
+                    <v-icon color="letcipe">mdi-cart-outline</v-icon>구매할식재료
+                  </div>
+                </v-tab>
+
+                <v-tab href="#mobile-tabs-5-2" class="letcipe--text">
+                  <div>
+                    <v-icon color="letcipe">mdi-cart-plus</v-icon>담은식재료
+                  </div>
+                </v-tab>
+              </v-tabs>
+            </div>
+            <v-tabs-items v-model="tabs" class="check-tabs-wrap">
+              <v-tab-item v-for="i in 2" :key="i" :value="'mobile-tabs-5-' + i">
+                <v-card flat>
+                  <v-card-text v-if="i === 1" class="check-item-wrap fadeInUp">
+                    <div class="shopping-wrap">
+                      <div class="before-shopping">
+                        <div v-for="(c, index) in checklist" :key="index" class="pl-3 pr-3">
+                          <div class="d-flex justify-space-between align-center mt-1">
+                            <div class="ingre-name">
+                              <v-checkbox
+                                v-model="checklist[index]"
+                                class="mt-0 pt-0"
+                                :label="c.name"
+                                color="letcipe"
+                                :value="c.name"
+                                hide-details
+                                @click="bought(c, index)"
+                              ></v-checkbox>
+                            </div>
+                            <div class="ingre-amount">{{c.amount}}{{c.measure}}</div>
+                          </div>
+
+                          <v-divider></v-divider>
+                        </div>
+                      </div>
+                    </div>
+                  </v-card-text>
+                  <v-card-text v-if="i === 2 " class="check-item-wrapfadeInUp">
+                    <div v-if=" checkedList.length > 0" class="shopping-wrap">
+                      <div class="after-shopping">
+                        <div v-for="(c, index) in checkedList" :key="index" class="pl-3 pr-3">
+                          <div class="d-flex justify-space-between align-center mt-1">
+                            <div class="ingre-name">
+                              <v-checkbox
+                                v-model="checkedList[index]"
+                                class="mt-0 pt-0"
+                                :label="c.name"
+                                color="letcipe"
+                                true-value
+                                hide-details
+                                @click="needtobuy(c, index)"
+                              ></v-checkbox>
+                            </div>
+                            <div class="ingre-amount">{{c.amount}}{{c.measure}}</div>
+                          </div>
+                          <v-divider></v-divider>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-else class="shopping-wrap">
+                      <div class="after-shopping-none">
+                        <div>담은 식재료가 없습니다.</div>
+                      </div>
+                    </div>
+                  </v-card-text>
+                </v-card>
+                <v-dialog v-model="dialog1" persistent max-width="290">
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      color="letcipe"
+                      style="color: white; width: 100%"
+                      v-bind="attrs"
+                      v-on="on"
+                    >장보기 완료</v-btn>
+                  </template>
+                  <v-card v-if="checklist.length===0">
+                    <v-card-title style="font-size: x-large;">
+                      장보기완료
+                      <img class="category-images" src="/cart_icon/담은카트_1.png" alt="flour" />
+                    </v-card-title>
+                    <v-card-text>장보기를 완료하시겠습니까?</v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="green darken-1"
+                        text
+                        @click="[dialog1 = false, completeShopping()]"
+                      >확인</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                  <v-card v-else>
+                    <v-card-title style="font-size: x-large">
+                      잠깐
+                      <img class="category-images" src="/cart_icon/빈카트_1.png" alt="flour" />
+                    </v-card-title>
+                    <v-card-text>아직 구매하지 않은 식재료가 있습니다. 장보기를 완료하시겠습니까?</v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="green darken-1" text @click="dialog1 = false">돌아가기</v-btn>
+                      <v-btn
+                        color="green darken-1"
+                        text
+                        @click="[dialog1 = false, completeShopping()]"
+                      >확인</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </v-tab-item>
+            </v-tabs-items>
+          </v-container>
         </div>
-        <div class="btn-group">
-          <v-hover>
-            <template #default="{ hover }">
-              <v-btn :elevation="hover ? 24 : 6" class="mx-2" fab dark x-large color="amber">
-                <v-icon dark>mdi-android</v-icon>
-              </v-btn>
-            </template>
-          </v-hover>
+        <div class="btn-group pt-4">
           <v-hover>
             <template #default="{ hover }">
               <v-btn :elevation="hover ? 24 : 6" class="mx-2" fab dark x-large color="amber">
@@ -281,13 +355,27 @@ export default {
       ],
       tag_set: ['Now', '최신', '추석', '쉐프의리스트', '더보기'],
       lecipeData: [],
-      checklist: ['양파', '오이', '토마토', '대파', '쪽마늘'],
       time: '',
+      historyID: null,
+      tabs: null,
+      check: false,
+      checklist: [],
+      checkedList: [],
+      dialog1: false,
+      dialog2: false,
+      category: [],
+      ingredients: [],
+      isSelected: false,
+      isRemoved: false,
+      isComplete: false,
+      selectedIngre: [],
     }
   },
   computed: {
     ...mapState('user', ['userId', 'nickname']),
     ...mapState('search', ['recipes', 'recipeLists']),
+
+    ...mapState('history', ['history', 'historyList']),
   },
   created() {
     setInterval(this.findnow.bind(this), 1000)
@@ -303,10 +391,6 @@ export default {
       this.lecipeData = []
       await this.getRecipeList(seraching)
       await this.getRecipes(seraching)
-      // console.log('이거슨감자' + this.recipes[0].id)
-      // console.log('이거슨 타이틀' + this.recipes[0].title)
-      // console.log('이거슨 타이틀' + this.recipes[0].content)
-      // console.log('이거슨 카테고리' + this.recipes[0].category)
 
       this.recipes.forEach((r) => {
         const chartData = {
@@ -317,10 +401,33 @@ export default {
         }
         this.lecipeData.push(chartData)
       })
-      console.log('이거슨감자' + this.recipeLists)
+
+      await this.getHistoryList()
+
+      this.historyList?.forEach((h) => {
+        if (h.process === 'READY') {
+          this.historyID = h.id
+        }
+      })
+      if (this.historyID !== null) {
+        await this.getHistory(this.historyID)
+        this.history.historyIngredients.forEach((jaeryo) => {
+          if (jaeryo.isPurchased === 'N') {
+            this.checklist.push(jaeryo)
+          } else {
+            this.checkedList.push(jaeryo)
+          }
+        })
+      }
     })
   },
   methods: {
+    ...mapActions('history', [
+      'getHistory',
+      'getHistoryList',
+      'checkHistoryIngredient',
+      'updateHistory',
+    ]),
     ...mapActions('search', ['getRecipes', 'getRecipeList']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     findnow() {
@@ -338,6 +445,30 @@ export default {
       this.CLEAR_RECIPE_ID()
       this.SET_RECIPE_ID(data.recipeId)
       this.$router.push('/recipe/detail')
+    },
+    bought(c, index) {
+      this.checklist.splice(index, 1)
+      this.checkedList.push(c)
+      this.checkHistoryIngredient(c.id)
+    },
+    needtobuy(c, index) {
+      this.checkedList.splice(index, 1)
+      this.checklist.push(c)
+      this.checkHistoryIngredient(c.id)
+    },
+    checkAll() {
+      this.checklist.forEach((c) => {
+        this.checkHistoryIngredient(c.id)
+        this.checkedList.push(c)
+      })
+      this.checklist = []
+    },
+    removeAll() {
+      this.checkedList.forEach((c) => {
+        this.checkHistoryIngredient(c.id)
+        this.checklist.push(c)
+      })
+      this.checkedList = []
     },
   },
 }
@@ -387,6 +518,32 @@ export default {
   cursor: pointer;
   transform: translate3d(0, 0, 0);
 }
+
+/* 체크리스트 */
+.check-container {
+  height: 300px;
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
+
+.check-container {
+}
+.check-item-wrap {
+  height: 200px;
+  overflow: scroll;
+}
+.before-shopping {
+  padding: 4%;
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
+.after-shopping {
+  padding: 4%;
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
+.after-shopping-none {
+  height: 165px;
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
+
 .card {
   margin-right: 10%;
   width: 150px;

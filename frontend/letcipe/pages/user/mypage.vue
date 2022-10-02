@@ -27,8 +27,8 @@
                   style="margin: 0px; color: black"
                   @click="moveModify"
                 >내 정보</v-btn>
-
-                <v-btn outlined small rounded style="margin: 0px; color: black" @click="logout">로그아웃</v-btn>
+                <!-- 
+                <v-btn outlined small rounded style="margin: 0px; color: black" @click="logout">로그아웃</v-btn>-->
               </v-col>
             </v-row>
           </v-container>
