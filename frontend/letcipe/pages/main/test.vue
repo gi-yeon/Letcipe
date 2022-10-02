@@ -21,7 +21,7 @@
         </div>
         <div class="my-container">
           <div>{{ nickname }}님의 현재 진행중인 레시피리스트</div>
-          <v-carousel height="100%" style="border-radius: 30px">
+          <v-carousel class="my-list-carousel" height="100%" style="border-radius: 10px">
             <v-carousel-item v-for="(item, i) in userPlayList" :key="i">
               <v-container>
                 <v-row style="margin: -25px">
@@ -30,7 +30,7 @@
                       <template #default="{ hover }">
                         <v-card
                           :elevation="hover ? 24 : 6"
-                          :class="hover ? 'lime lighten-3' : 'lime lighten-2'"
+                          :class="hover ? 'letcipe lighten-2' : 'white'"
                           class="my-card mx-auto"
                         >
                           <div class="d-flex flex-no-wrap justify-center pa-3">
@@ -57,7 +57,7 @@
         </div>
         <div class="check-wrap">
           <div>{{ nickname }}님의 장보기목록</div>
-          <v-container class="check-container">
+          <v-container elevation="3" class="check-container">
             <div class="check-head-wrap">
               <v-tabs v-model="tabs" fixed-tabs>
                 <v-tabs-slider color="black"></v-tabs-slider>
@@ -178,14 +178,21 @@
         <div class="btn-group pt-4">
           <v-hover>
             <template #default="{ hover }">
-              <v-btn :elevation="hover ? 24 : 6" class="mx-2" fab dark x-large color="amber">
+              <v-btn :elevation="hover ? 24 : 6" class="mx-2" dark large color="amber">
                 <v-icon dark>mdi-android</v-icon>
               </v-btn>
             </template>
           </v-hover>
           <v-hover>
             <template #default="{ hover }">
-              <v-btn :elevation="hover ? 24 : 6" class="mx-2" fab dark x-large color="amber">
+              <v-btn :elevation="hover ? 24 : 6" class="mx-2" dark large color="amber">
+                <v-icon dark>mdi-android</v-icon>
+              </v-btn>
+            </template>
+          </v-hover>
+          <v-hover>
+            <template #default="{ hover }">
+              <v-btn :elevation="hover ? 24 : 6" class="mx-2" dark large color="amber">
                 <v-icon dark>mdi-android</v-icon>
               </v-btn>
             </template>
@@ -202,7 +209,7 @@
               v-for="(tag, i) in tag_set"
               :key="i"
               class="tag-set ma-1"
-              color="green"
+              color="letcipe"
               outlined
             >{{ tag }}</v-chip>
           </div>
@@ -213,12 +220,12 @@
                   <v-card
                     :elevation="hover ? 24 : 6"
                     :class="
-                        hover ? 'light-green lighten-3' : 'light-green lighten-2'
+                        hover ? 'letcipe lighten-2' : 'white'
                       "
                     class="lecipe-list-group mx-auto mt-2 mb-2 d-flex align-center"
                     @click="moveDetail(data)"
                   >
-                    <div class="ml-4">{{ i }}</div>
+                    <div class="ml-4" style="color: #FFA500;">{{ i+1 }}</div>
                     <v-list-item three-line>
                       <v-list-item-avatar tile size="57">
                         <v-img elevation="10" :src="data.imgUrl" style="border-radius: 5px"></v-img>
@@ -232,8 +239,8 @@
                         <v-list-item-subtitle>{{ data.sub_title }}</v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
-                    <v-btn class="mr-3" fab dark x-small color="pink" outlined>
-                      <v-icon dark>mdi-heart</v-icon>
+                    <v-btn class="mr-3" fab dark x-small color="letcipe" outlined>
+                      <v-icon color="letcipe">mdi-heart</v-icon>
                     </v-btn>
                   </v-card>
                 </template>
@@ -582,7 +589,7 @@ export default {
   font-family: 'LeeSeoyun' !important;
 }
 .my-card {
-  border-radius: 30px;
+  border-radius: 10px;
   cursor: pointer;
 }
 
@@ -592,9 +599,12 @@ export default {
 }
 
 /* 캐러셀 css */
-/* .v-carousel__controls {
-        display: none;
-      } */
+.v-carousel__controls {
+  display: none;
+}
+.my-list-carousel {
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
 /* btn-group css */
 
 /* cart-group css */
