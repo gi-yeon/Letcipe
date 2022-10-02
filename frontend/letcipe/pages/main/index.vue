@@ -10,7 +10,7 @@
             {{ nickname }}님이 좋아할 레시피
           </div>
           <div class="title-imgs">
-            <div v-for="(ref, i) in refImg" :key="i" class="card">
+            <div v-for="(ref, i) in refImg" :key="i" class="card" >
               <div>{{ nickname }}맞춤 추천</div>
               <v-card>
                 <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
@@ -208,26 +208,27 @@
             </v-col>
           </v-row>
         </div>
+
         <div class="ingrediant-base-group mt-2 mb-3">
-          <div>최근 먹은 두부 토마토 파스타</div>
+          <div>이런 레시피 어때요?</div>
           <div class="chart-header">
-            <div>같은 재료가 들어간 레시피 더보기</div>
+            <div>{{recommendTitle}}</div>
             <div>전체보기</div>
           </div>
           <div class="rec-imgs-group d-flex justify-space-between">
             <v-avatar
-              v-for="(ref, i) in refImg"
+              v-for="(ref, i) in recommendRecipes"
               :key="i"
               size="130"
               tile
               class="mr-2"
-              @click="moveDetail"
+              @click="moveDetail2(ref.recipe.id)"
             >
-              <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
+              <v-img class="ref-imgs" :src="ref.recipe.repImg">
                 <div class="ref-wrap">
-                  <v-card-title class="ref-title">{{ ref.title }}</v-card-title>
+                  <v-card-title class="ref-title">{{ ref.recipe.title }}</v-card-title>
                   <v-card-subtitle class="ref-subtitle">{{
-                    ref.sub_title
+                    ref.recipe.content
                   }}</v-card-subtitle>
                 </div>
               </v-img>
@@ -267,6 +268,7 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex'
+import { getUserRecommend} from "@/api/recommend";
 export default {
   name: 'MainPage',
   data() {
@@ -328,10 +330,12 @@ export default {
       lecipeData: [],
       checklist: ['양파', '오이', '토마토', '대파', '쪽마늘'],
       time: '',
+      recommendTitle:"",
+      recommendRecipes:[],
     }
   },
   computed: {
-    ...mapState('user', ['userId', 'nickname']),
+    ...mapState('user', ['userId', 'nickname','userGender','birth','userJob']),
     ...mapState('search', ['recipes', 'recipeLists', 'hotRecipes', 'hotTitle']),
   },
   created() {
@@ -360,6 +364,19 @@ export default {
       })
       console.log('이거슨감자' + this.recipeLists)
     })
+
+    console.log("새로운요청")
+    getUserRecommend(
+      (response) => {
+        console.log("새로운 요청 성공")
+        console.log(response);
+        this.recommendTitle = response.data.title;
+        this.recommendRecipes = response.data.report;
+      },
+      (fail) => {
+        console.log(fail);
+      }
+    );
   },
   methods: {
     ...mapActions('search', ['getRecipes', 'getRecipeList', 'getHotRecipes']),
@@ -380,7 +397,12 @@ export default {
       this.SET_RECIPE_ID(data.recipeId)
       this.$router.push('/recipe/detail')
     },
-  },
+    moveDetail2(recipeId) {
+      this.CLEAR_RECIPE_ID()
+      this.SET_RECIPE_ID(recipeId)
+      this.$router.push('/recipe/detail')
+    },
+  }
 }
 </script>
 
@@ -456,7 +478,9 @@ export default {
 .ref-subtitle {
   /* color: rgb(0, 0, 0); */
   color: aliceblue;
+  height: 50px;
   text-align: right;
+  overflow: hidden;
 }
 .my-container {
   padding-top: 10%;
