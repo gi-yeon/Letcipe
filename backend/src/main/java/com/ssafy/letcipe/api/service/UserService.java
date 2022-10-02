@@ -31,6 +31,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -245,7 +246,7 @@ public class UserService {
     @Transactional
     public ResGetUserRecipesDto readUserRecipe(Long userId, Pageable pageable) {
         User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
-        List<Recipe> recipeList = recipeRepository.findAllByUser(pageable, user);
+        List<Recipe> recipeList = recipeRepository.findAllByUser(pageable, user).stream().filter(x -> x.getStatusType()== StatusType.N).collect(Collectors.toList());
         List<ResGetUserRecipeDto> dtoList = new ArrayList<>();
         for (Recipe recipe : recipeList) {
             dtoList.add(new ResGetUserRecipeDto(recipe));
@@ -263,6 +264,7 @@ public class UserService {
         return new ResGetUserRecipeListsDto(dtoList);
     }
 
+    @Transactional
     public ResGetUserRecipesDto readRecipeBookmark(Long userId, Pageable pageable) {
         User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
         List<RecipeBookmark> recipeBookmarkList = recipeBookmarkRepository.findAllByUser(pageable, user);
