@@ -3,11 +3,13 @@ package com.ssafy.letcipe.api.controller;
 import com.ssafy.letcipe.api.dto.user.*;
 import com.ssafy.letcipe.api.service.JwtService;
 import com.ssafy.letcipe.api.service.UserService;
+import com.ssafy.letcipe.domain.comment.BoardType;
 import com.ssafy.letcipe.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -107,6 +109,17 @@ public class UserController {
     public ResponseEntity readRecipeListBookmark(HttpServletRequest request, Pageable pageable) {
         Long userId = jwtService.getUserId(request);
         return ResponseEntity.ok(userService.readRecipeListBookmark(userId, pageable));
+    }
+
+    @GetMapping("comment")
+    public ResponseEntity<?> getUserComment(HttpServletRequest request, Pageable pageable) {
+        Long userId = jwtService.getUserId(request);
+        return ResponseEntity.ok(userService.getUserComment(userId, pageable));
+    }
+    @GetMapping("commentNum")
+    public ResponseEntity<Long> getCommentNum(HttpServletRequest request){
+        Long userId = jwtService.getUserId(request);
+        return ResponseEntity.ok(userService.getCommentNum(userId));
     }
 
     @PostMapping("id")
