@@ -24,4 +24,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     List<Recipe> findAllByUser(Pageable pageable, User user);
 
     Optional<Recipe> findByStatusTypeAndId(StatusType n, Long boardId);
+
+    List<Recipe> findAllByUserAndStatusType(Pageable pageable, User user, StatusType n);
 }
