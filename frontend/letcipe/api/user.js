@@ -82,6 +82,13 @@ async function myBookmarkRecipe(pageable, success, fail) {
     .catch(fail)
 }
 
+async function myLikeRecipe(pageable, success, fail) {
+  await interceptor
+    .get(`/api/user/like/recipe`, pageable)
+    .then(success)
+    .catch(fail)
+}
+
 // 내 레시피북마크 목록 조회
 async function myBookmarkRecipeList(pageable, success, fail) {
   await interceptor
@@ -125,4 +132,5 @@ export {
   mycommentNum,
   createCode,
   modifyPassword,
+  myLikeRecipe
 }
