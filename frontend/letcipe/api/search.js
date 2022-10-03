@@ -17,4 +17,26 @@ async function getRecipeList(keyword, size, page, success, fail) {
     .then(success)
     .catch(fail)
 }
-export { getRecipes, getRecipesIngre, getRecipeList, getHotRecipes }
+
+async function getTotalNumRecipe(object, success, fail){
+    await api
+    .get(`/api/recipe/totalNum`, {params : object})
+    .then(success)
+    .catch(fail)
+
+}
+async function getTotalNumRecipeList(object, success, fail){
+    await api
+    .get(`/api/recipelist/totalNum`, {params : object})
+    .then(success)
+    .catch(fail)
+
+}
+export {
+    getRecipes,
+    getRecipesIngre,
+    getRecipeList,
+    getTotalNumRecipe,
+    getTotalNumRecipeList,
+    getHotRecipes
+}
