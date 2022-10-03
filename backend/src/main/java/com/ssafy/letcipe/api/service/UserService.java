@@ -2,10 +2,15 @@ package com.ssafy.letcipe.api.service;
 
 import com.ssafy.letcipe.api.dto.recipe.ResGetHotRecipeComponentDto;
 import com.ssafy.letcipe.api.dto.user.*;
+import com.ssafy.letcipe.domain.comment.BoardType;
+import com.ssafy.letcipe.domain.comment.Comment;
+import com.ssafy.letcipe.domain.comment.CommentRepository;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipe.RecipeRepository;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmarkRepository;
+import com.ssafy.letcipe.domain.recipeLike.RecipeLike;
+import com.ssafy.letcipe.domain.recipeLike.RecipeLikeRepository;
 import com.ssafy.letcipe.domain.recipeList.RecipeList;
 import com.ssafy.letcipe.domain.recipeList.RecipeListRepository;
 import com.ssafy.letcipe.domain.recipeListBookmark.RecipeListBookmark;
@@ -40,7 +45,10 @@ public class UserService {
     private final RecipeRepository recipeRepository;
     private final RecipeListRepository recipeListRepository;
     private final RecipeBookmarkRepository recipeBookmarkRepository;
+
+    private final RecipeLikeRepository recipeLikeRepository;
     private final RecipeListBookmarkRepository recipeListBookmarkRepository;
+    private final CommentRepository commentRepository;
     private final EncryptUtils encryptUtils;
     private final StringUtils stringUtils;
 
@@ -308,6 +316,7 @@ public class UserService {
                 .job(user.getJob())
                 .family(user.getFamily())
                 .birth(user.getBirth())
+                .userType(user.getUserType())
                 .build();
     }
 
@@ -371,6 +380,19 @@ public class UserService {
             dtoList.add(new ResGetUserRecipeListDto(recipeListBookmark.getRecipeList()));
         }
         return new ResGetUserRecipeListsDto(dtoList);
+    }
+
+    public List<ResGetUserCommentDto> getUserComment(Long userId, Pageable pageable) {
+        List<Comment> commentList = commentRepository.findAllByUserIdAndBoardTypeAndStatusType(pageable, userId, BoardType.RECIPE, StatusType.N);
+        List<ResGetUserCommentDto> dtoList = new ArrayList<>();
+        for (Comment comment : commentList) {
+            dtoList.add(new ResGetUserCommentDto(comment));
+        }
+        return dtoList;
+    }
+
+    public Long getCommentNum(Long userId) {
+        return commentRepository.countByUserIdAndBoardTypeAndStatusType(userId, BoardType.RECIPE, StatusType.N);
     }
 
     public String readUserId(ReqGetUserIdDto requestDto) {
@@ -439,4 +461,14 @@ public class UserService {
         if (userRepository.existsByNickname(nickname)) throw new BadRequestException("이미 사용중인 닉네임 입니다.");
     }
 
+    @Transactional
+    public ResGetUserRecipesDto readRecipeLike(Long userId, Pageable pageable) {
+        User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
+        List<RecipeLike> recipeLikeList = recipeLikeRepository.findAllByUser(pageable, user);
+        List<ResGetUserRecipeDto> dtoList = new ArrayList<>();
+        for (RecipeLike recipelike : recipeLikeList) {
+            dtoList.add(new ResGetUserRecipeDto(recipelike.getRecipe()));
+        }
+        return new ResGetUserRecipesDto(dtoList);
+    }
 }

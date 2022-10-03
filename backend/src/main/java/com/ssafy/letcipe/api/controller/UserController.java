@@ -8,11 +8,13 @@ import com.ssafy.letcipe.api.service.JwtService;
 import com.ssafy.letcipe.api.service.RecipeService;
 import com.ssafy.letcipe.api.service.ReportService;
 import com.ssafy.letcipe.api.service.UserService;
+import com.ssafy.letcipe.domain.comment.BoardType;
 import com.ssafy.letcipe.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -115,10 +117,27 @@ public class UserController {
         return ResponseEntity.ok(userService.readRecipeBookmark(userId, pageable));
     }
 
+    @GetMapping("like/recipe")
+    public ResponseEntity readRecipeLike(HttpServletRequest request, Pageable pageable) {
+        Long userId = jwtService.getUserId(request);
+        return ResponseEntity.ok(userService.readRecipeLike(userId, pageable));
+    }
+
     @GetMapping("mark/recipelist")
     public ResponseEntity readRecipeListBookmark(HttpServletRequest request, Pageable pageable) {
         Long userId = jwtService.getUserId(request);
         return ResponseEntity.ok(userService.readRecipeListBookmark(userId, pageable));
+    }
+
+    @GetMapping("comment")
+    public ResponseEntity<?> getUserComment(HttpServletRequest request, Pageable pageable) {
+        Long userId = jwtService.getUserId(request);
+        return ResponseEntity.ok(userService.getUserComment(userId, pageable));
+    }
+    @GetMapping("commentNum")
+    public ResponseEntity<Long> getCommentNum(HttpServletRequest request){
+        Long userId = jwtService.getUserId(request);
+        return ResponseEntity.ok(userService.getCommentNum(userId));
     }
 
     @PostMapping("id")
@@ -146,7 +165,6 @@ public class UserController {
     @GetMapping("/recipe/recommend")
     @Transactional
     ResponseEntity getRecipeRecommend(Pageable pageable, HttpServletRequest request) throws SQLException {
-        // TODO 토큰에서 유저 id 가져와야 함, 없다면 -1 등으로 표기
         Long userId;
         try {
             userId = jwtService.getUserId(request);
