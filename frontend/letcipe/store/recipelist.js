@@ -15,6 +15,7 @@ export const state = () => ({
   recipeListUser: {},
   recipeListItems: [],
   recipeListRepImg: '',
+  isSucceededtoRecipeList: false
 })
 
 export const mutations = {
@@ -26,6 +27,12 @@ export const mutations = {
     })
     state.recipeListItems = recipeListRes.recipeListItems
     state.recipeListRepImg = recipeListRes.recipeListItems[0].recipe.repImg
+  },
+  SET_ISSUCCESS_TRUE(state) {
+    state.isSucceededtoRecipeList = true
+  },
+  SET_ISSUCCESS_FALSE(state) {
+    state.isSucceededtoRecipeList = false
   },
 }
 
@@ -44,6 +51,19 @@ export const actions = {
       },
       (error) => {
         console.log(error)
+      }
+    )
+  },
+  async createRecipeListAll({commit}, recipeList) {
+    await createRecipeList(
+      recipeList,
+      ({data}) => {
+        console.log(data)
+        commit('SET_ISSUCCESS_TRUE')
+      },
+      (error) => {
+        console.log(error)
+        commit('SET_ISSUCCESS_FALSE')
       }
     )
   },
