@@ -117,4 +117,11 @@ public class RecipeListService {
         }
         return result;
     }
+
+    @Transactional
+    public Integer totalNumRecipeList(String keyword) {
+      return recipeListRepository.countRecipeListByNameContaining(keyword);
+    }
+
+
 }

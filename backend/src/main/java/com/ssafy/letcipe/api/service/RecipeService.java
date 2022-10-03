@@ -229,6 +229,15 @@ public class RecipeService {
     }
 
     @Transactional
+    public Integer totalNumByKeyword(String keyword) throws SQLException {
+        // 레시피 엔티티 검색 결과
+        List<Recipe> searched = recipeRepository.totalNumByKeyword(keyword);
+
+        return searched.size();
+
+    }
+
+    @Transactional
     public List<ResGetRecipeDto> searchRecipeByIngredients(Pageable pageable, String ingCSV) throws SQLException {
         // 응답용 검색 결과 리스트
         List<ResGetRecipeDto> result = new ArrayList<>();
@@ -250,6 +259,27 @@ public class RecipeService {
         });
         System.out.println(result);
         return result;
+    }
+
+    @Transactional
+    public Integer totalNumByIngredients(String ingCSV) throws SQLException {
+        // 응답용 검색 결과 리스트
+        List<ResGetRecipeDto> result = new ArrayList<>();
+
+        // 재료목록 파싱
+        String[] token = ingCSV.split(",");
+        if (token.length == 0)
+            return 0;
+
+        // 재료를 1개 이상 포함하는 레시피 목록
+        List<RecipeIngredientCountDto> recipeContainsIngredient = customRepository.totalNumRecipeContains(token);
+        // 재료를 모두 포함하는 리스트만 추리기
+        for (int i= 0 ;i<recipeContainsIngredient.size();i++) {
+            if (recipeContainsIngredient.get(i).getCount() != token.length)
+                recipeContainsIngredient.remove(i--);
+        }
+
+        return recipeContainsIngredient.size();
     }
 
     public ResGetRecipeDto getRecipeDto(Recipe recipe) {

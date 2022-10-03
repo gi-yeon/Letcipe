@@ -116,6 +116,16 @@ public class RecipeController {
             return ResponseEntity.ok(recipeService.searchRecipeByIngredients(pageable, ingredients));
     }
 
+    @GetMapping("/totalNum")
+    ResponseEntity<Integer> totalNumRecipe(@RequestParam(required = false) String keyword,@RequestParam(required = false) String ingredients) throws SQLException {
+        System.out.println(keyword + "kkkkkkkkk" + ingredients);
+        if (!StringUtil.isNullOrEmpty(keyword))
+            return ResponseEntity.ok(recipeService.totalNumByKeyword(keyword));
+        else
+            return ResponseEntity.ok(recipeService.totalNumByIngredients(ingredients));
+    }
+
+
     @GetMapping("/best")
     ResponseEntity getBestRecipes(Pageable pageable) throws SQLException {
         return ResponseEntity.ok(recipeService.getBestRecipes(pageable));

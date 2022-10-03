@@ -109,7 +109,7 @@ public class CartService {
         Ingredient ingredient = ingredientRepository.findById(requestDto.getIngredientId())
                 .orElseThrow(() -> new NullPointerException("재료를 찾을 수 없습니다."));
 
-        cartIngredientRepository.save(new CartIngredient(user, ingredient, requestDto.getOperator()));
+        cartIngredientRepository.save(new CartIngredient(user, ingredient, requestDto.getAmount()));
     }
 
     @Transactional
