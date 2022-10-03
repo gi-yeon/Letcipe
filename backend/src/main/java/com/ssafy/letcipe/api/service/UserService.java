@@ -316,6 +316,7 @@ public class UserService {
                 .job(user.getJob())
                 .family(user.getFamily())
                 .birth(user.getBirth())
+                .userType(user.getUserType())
                 .build();
     }
 
