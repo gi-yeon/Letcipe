@@ -4,7 +4,8 @@ import {
     getRecipeList,
     getTotalNumRecipe,
     getTotalNumRecipeList,
-    getHotRecipes
+    getHotRecipes,
+    getChartInfo
   } from '@/api/search'
   
   export const state = () => ({
@@ -14,6 +15,7 @@ import {
       totalPage : 1,
       hotRecipes: [],
       hotTitle: '',
+      charts: [],
   })
   
   export const mutations = {
@@ -22,6 +24,9 @@ import {
       },
       SET_HOT_RECIPE(state, hotRecipes) {
         state.hotRecipes = hotRecipes
+      },
+      SET_CHARTS(state, charts) {
+        state.charts = charts
       },
       SET_HOT_TITLE(state, hotTitle) {
         state.hotTitle = hotTitle
@@ -50,7 +55,10 @@ import {
       },
       SET_TOTAL_PAGE(state, page){
         state.totalPage = page
-      }
+      },
+      CLEAR_CHARTS(state) {
+        state.charts = []
+      },
   }
   export const getters = {}
   
@@ -161,5 +169,21 @@ import {
         }
       )
     },
+    async getCharts({ commit }, object) {
+        commit('CLEAR_CHARTS')
+        await getChartInfo(
+          {
+            size: object.size,
+            page: object.page,
+          },
+          ({ data }) => {
+            console.log(data)
+            // commit('SET_CHARTS', data.report)
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
+      },
   }
   
