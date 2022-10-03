@@ -406,6 +406,7 @@ export default {
   computed: {
     ...mapState('ingredients', ['ingredientsList']),
     ...mapState('recipe', ['recipeDetail']),
+    ...mapState('user', ['userid']),
     formTitle() {
       return this.editedIndex === -1 ? '재료 추가' : '재료 수정'
     },
@@ -624,10 +625,10 @@ export default {
         console.log(p[0] + ',' + p[1])
       }
       console.log(formdata)
-      // this.createRecipeDetail(formdata)
+      this.createRecipeDetail(formdata)
     },
     moveBack() {
-      this.$router.push('/main')
+      this.$router.go(-1)
     },
   },
 }

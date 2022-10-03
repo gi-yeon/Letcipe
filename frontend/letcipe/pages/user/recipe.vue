@@ -1,21 +1,21 @@
 <template>
   <div id="app">
     <v-app id="inspire">
-      <div class="bookmark-page">
-        <v-container class="bookmark-container d-flex-row">
-          <div class="bookmark-head-wrap">
+      <div class="myrecipe-page">
+        <v-container class="myrecipe-container d-flex-row">
+          <div class="myrecipe-head-wrap">
             <div class="d-flex justify-space-between pb-3">
               <v-icon @click="moveMypage">mdi-window-close</v-icon>
-              <div style="font-size: x-large">즐겨찾는 레시피</div>
+              <div style="font-size: x-large">내가 만든 레시피</div>
               <v-icon>mdi-blank</v-icon>
             </div>
           </div>
           <v-divider></v-divider>
 
-          <v-card-subtitle>즐겨찾는 레시피</v-card-subtitle>
-
-          <div v-if="recipeBookmarks.length> 0">
-            <div v-for="(mr, i) in recipeBookmarks" :key="i">
+          <v-card-subtitle>내가 만든 레시피</v-card-subtitle>
+          <!-- <div :page="currentPage" :items="myRecipes" :items-per-page="perPage" class="text-center"> -->
+          <div>
+            <div v-for="(mr, i) in myRecipe" :key="i">
               <v-list-item three-line>
                 <v-list-item-avatar class="recipe-item" tile size="100" @click="moveDetail(mr)">
                   <v-img :src="mr.repImg"></v-img>
@@ -24,19 +24,8 @@
                   <v-list-item-title class="d-flex justify-space-between">
                     <div class="recipe-item" @click="moveDetail(mr)">{{ mr.title }}</div>
                     <div>
-                      <v-icon
-                        v-if="nickname === mr.nickName"
-                        style="z-index: 1"
-                        small
-                        color="info"
-                        @click="editItem(mr)"
-                      >mdi-pencil</v-icon>
-                      <v-icon
-                        v-if="nickname === mr.nickName"
-                        style="z-index: 1"
-                        small
-                        @click="deleteItem(mr)"
-                      >mdi-delete</v-icon>
+                      <v-icon style="z-index: 1" small color="info" @click="editItem(mr)">mdi-pencil</v-icon>
+                      <v-icon style="z-index: 1" small @click="deleteItem(mr)">mdi-delete</v-icon>
                     </div>
                   </v-list-item-title>
 
@@ -55,7 +44,7 @@
                       </div>
                     </v-list-item-subtitle>
                     <v-list-item-subtitle style="text-align: right">
-                      <v-btn style="z-index: 1" small color="letcipe">+담기</v-btn>
+                      <v-btn style="z-index: 1" small color="letcipe" @click="addCart(mr)">+담기</v-btn>
                     </v-list-item-subtitle>
                   </div>
                 </v-list-item-content>
@@ -63,12 +52,7 @@
               <v-divider></v-divider>
             </div>
           </div>
-          <div v-else>
-            <div>
-              <v-list-item three-line>즐겨찾기에 추가된 레시피가 없습니다.</v-list-item>
-              <v-divider></v-divider>
-            </div>
-          </div>
+
           <v-pagination
             v-model="currentPage"
             color="letcipe"
@@ -82,11 +66,11 @@
     </v-app>
   </div>
 </template>
-    
-    <script>
+  
+  <script>
 import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
-  name: 'BookmarkPage',
+  name: 'MyrecipePage',
   data() {
     return {
       TotalPage: 0,
@@ -105,17 +89,16 @@ export default {
       tab: null,
       isSelected: [],
       selectedIngre: '',
-      recipeBookmarks: [],
+      myRecipes: [],
     }
   },
   computed: {
-    ...mapState('user', ['nickname', 'myRecipe', 'myBookMarkRecipe']),
+    ...mapState('user', ['myRecipe']),
   },
 
   watch: {},
 
   created() {
-    console.log(this.nickname)
     const pageable = {
       page: 0,
     }
@@ -123,24 +106,19 @@ export default {
       resolve()
     })
     promise.then(async () => {
-      await this.myBookmarkRecipe(pageable)
-      this.myBookMarkRecipe.forEach((mr) => {
-        this.recipeBookmarks.push(mr)
-      })
-      this.TotalPage = this.myBookMarkRecipe.length / 5
-      console.log(this.myBookMarkRecipe)
-      console.log(this.myBookMarkRecipe)
+      await this.myrecipe(pageable)
+      //   this.myRecipe.forEach((mr) => {
+      //     this.myRecipes.push(mr)
+      //   })
+      //   this.TotalPage = this.myRecipe.length / 5
+      //   console.log(this.TotalPage)
+      //   console.log(this.myRecipes)
     })
   },
   methods: {
-    ...mapActions('recipe', [
-      'patchRecipeDetail',
-      'countRecipeLikes',
-      'decountRecipeLikes',
-      'selectBookmarks',
-      'deleteBookmarks',
-    ]),
-    ...mapActions('user', ['myBookmarkRecipe']),
+    ...mapActions('recipe', ['patchRecipeDetail']),
+    ...mapActions('user', ['myrecipe']),
+    ...mapActions('cartr', ['createCart']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     editItem(mr) {
       this.CLEAR_RECIPE_ID()
@@ -160,22 +138,27 @@ export default {
     moveMypage() {
       this.$router.push('/user/mypage')
     },
+    addCart(mr) {
+      const cartItem = [mr.id]
+      const list = { cartItem }
+      this.createCart(list)
+    },
   },
 }
 </script>
-    
-    <style scoped>
-.bookmark-page {
+  
+  <style scoped>
+.myrecipe-page {
   /* padding-top: 70px; */
   padding-bottom: 70px;
   padding: 4%;
 }
-.bookmark-page-head {
+.myrecipe-page-head {
   padding: 4%;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
   /* border: 1px solid gray; */
 }
-.bookmark-container {
+.myrecipe-container {
   position: sticky;
   height: 100%;
   color: black;
@@ -192,4 +175,4 @@ export default {
   display: none;
 }
 </style>
-    
+  

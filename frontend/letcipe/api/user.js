@@ -62,13 +62,32 @@ async function deleteMember(userid, success, fail) {
 }
 
 // 내 레시피 조회
-async function myrecipe(userid, success, fail) {
-  await api.get(`/api/user/recipe/${userid}`).then(success).catch(fail)
+async function myrecipe(pageable, success, fail) {
+  await interceptor.get(`/api/user/recipe`, pageable).then(success).catch(fail)
 }
 
 // 내 레시피리스트 조회
-async function myrecipeList(userid, success, fail) {
-  await api.get(`/api/user/recipeList/${userid}`).then(success).catch(fail)
+async function myrecipeList(pageable, success, fail) {
+  await interceptor
+    .get(`/api/user/recipelist`, pageable)
+    .then(success)
+    .catch(fail)
+}
+
+// 내 레시피북마크 목록 조회
+async function myBookmarkRecipe(pageable, success, fail) {
+  await interceptor
+    .get(`/api/user/mark/recipe`, pageable)
+    .then(success)
+    .catch(fail)
+}
+
+// 내 레시피북마크 목록 조회
+async function myBookmarkRecipeList(pageable, success, fail) {
+  await interceptor
+    .get(`/api/user/mark/recipelist`, pageable)
+    .then(success)
+    .catch(fail)
 }
 
 // 내 댓글관리
@@ -100,6 +119,8 @@ export {
   deleteMember,
   myrecipe,
   myrecipeList,
+  myBookmarkRecipe,
+  myBookmarkRecipeList,
   mycomment,
   mycommentNum,
   createCode,

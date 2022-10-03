@@ -1,7 +1,7 @@
 <template>
   <div id="header-container">
     <div class="header-icon-wrap">
-      <div class="menu-wrap">
+      <div class="menu-wrap" @click.stop="drawer = !drawer">
         <div class="hamburger-menu">
           <div class="bar-top"></div>
           <div class="bar-middle"></div>
@@ -14,24 +14,66 @@
             >mdi-bookmark</v-icon
           >
         </div>-->
-        <img
-          class="logo_word"
-          src="/icon/Logo_word_icon_b.png"
-          alt="Logo_word_icon_b.png"
-          @click="moveMain"
-        />
+        <v-hover>
+          <template #default="{ hover }">
+            <img
+              class="logo_word"
+              :src="hover ? `/icon/렛시피_로고.png`: `/icon/렛시피_로고_b1.png`"
+              alt="Logo_word_icon_b.png"
+            />
+          </template>
+        </v-hover>
       </div>
-      <div v-if="userId === 0 || userId === ''">
-        <v-icon size="3rem" color="black" class="mr-2" @click="moveLogin"
-          >mdi-login-variant</v-icon
-        >
+      <div v-if="userId === 0 || userId === ''" class="login-icon" @click="moveLogin">
+        <v-hover>
+          <template #default="{ hover }">
+            <v-list-item>
+              <v-list-item-icon>
+                <img class="login-img" :src="hover ? `/icons/로그인_h.gif`: `/icons/로그인_o.png`" alt />
+              </v-list-item-icon>
+            </v-list-item>
+          </template>
+        </v-hover>
       </div>
-      <div v-else>
-        <v-icon size="3rem" color="black" class="mr-2" @click="logOut"
-          >mdi-logout-variant</v-icon
-        >
+      <div v-else class="logout-icon" @click="logOut">
+        <v-hover>
+          <template #default="{ hover }">
+            <v-list-item>
+              <v-list-item-icon>
+                <img class="login-img" :src="hover ? `/icons/로그아웃_h.gif`: `/icons/로그아웃_o.png`" alt />
+              </v-list-item-icon>
+            </v-list-item>
+          </template>
+        </v-hover>
       </div>
     </div>
+    <v-navigation-drawer v-model="drawer" absolute temporary overlay-inherit>
+      <v-list-item>
+        <v-list-item-avatar>
+          <v-img v-if="profileImage !== (null && '')" :src="profileImage"></v-img>
+          <v-img v-else src="/icons/유저_mo.png"></v-img>
+        </v-list-item-avatar>
+        <v-list-item-content>
+          <v-list-item-title>{{nickname}}</v-list-item-title>
+        </v-list-item-content>
+        <v-list-item-icon @click.stop="drawer = !drawer">
+          <v-icon>mdi-close</v-icon>
+        </v-list-item-icon>
+      </v-list-item>
+      <v-divider></v-divider>
+
+      <v-list dense>
+        <v-list-item v-for="item in items" :key="item.title" link>
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
   </div>
 </template>
 
@@ -39,12 +81,21 @@
 import { mapActions, mapState } from 'vuex'
 export default {
   name: 'HeaderComponent',
+
   data() {
-    return {}
+    return {
+      drawer: null,
+      items: [
+        { title: 'Home', icon: 'mdi-view-dashboard' },
+        { title: 'About', icon: 'mdi-forum' },
+      ],
+    }
   },
+
   computed: {
-    ...mapState('user', ['userId', 'nickname']),
+    ...mapState('user', ['userId', 'nickname', 'profileImage']),
   },
+  created() {},
   methods: {
     ...mapActions('user', ['logout']),
     moveLogin() {
@@ -92,7 +143,7 @@ export default {
 .bar-top,
 .bar-middle,
 .bar-bottom {
-  height: 5px;
+  height: 4px;
   background: black;
   border-radius: 5px;
   margin: 3px 0;
@@ -137,6 +188,69 @@ export default {
   cursor: pointer;
 }
 .logo_word {
-  height: 8vh;
+  height: 5vh;
+}
+.logout-icon,
+.login-icon {
+  cursor: pointer;
+}
+.login-img {
+  width: 45px;
+}
+.v-navigation-drawer,
+.v-navigation-drawer--absolute,
+.v-navigation-drawer--is-mobile,
+.v-navigation-drawer--open,
+.v-navigation-drawer--temporary {
+  z-index: 999;
+  /* height: 100vh !important; */
+  position: inherit !important;
+}
+
+.v-overlay--absolute {
+  position: inherit !important;
+}
+/* .v-overlay,
+.v-overlay--absolute,
+.v-overlay--active,
+.theme--dark {
+  position: inherit !important;
+}
+.v-overlay__scrim {
+  height: 100vh !important;
+} */
+/* 모바일 screen */
+@media (max-width: 400px) {
+  .hamburger-menu {
+    margin: 1rem;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-between;
+    height: 2.3rem;
+    width: 2rem;
+    cursor: pointer;
+  }
+  .bar-top,
+  .bar-middle,
+  .bar-bottom {
+    height: 3px;
+    background: black;
+    border-radius: 5px;
+    margin: 3px 0;
+    transform-origin: left;
+    transition: all 0.5s;
+  }
+  .login-img {
+    width: 35px;
+  }
+  .v-navigation-drawer,
+  .v-navigation-drawer--absolute,
+  .v-navigation-drawer--is-mobile,
+  .v-navigation-drawer--open,
+  .v-navigation-drawer--temporary {
+    z-index: 999 !important;
+    height: 100vh !important;
+    width: 100vw !important;
+  }
 }
 </style>

@@ -9,6 +9,8 @@ import {
   deleteMember,
   myrecipe,
   myrecipeList,
+  myBookmarkRecipe,
+  myBookmarkRecipeList,
   mycomment,
   mycommentNum,
   createCode,
@@ -32,6 +34,10 @@ export const state = () => ({
   profileImage: '',
   userGender: '',
   userJob: '',
+  myRecipe: [],
+  myRecipeList: [],
+  myBookMarkRecipe: [],
+  myBookMarkRecipeList: [],
 })
 
 export const mutations = {
@@ -85,6 +91,19 @@ export const mutations = {
     state.userJob = data.job
   },
 
+  SET_MY_RECIPE(state, recipes) {
+    state.myRecipe = recipes
+  },
+  SET_MY_RECIPELIST(state, myRecipeList) {
+    state.myRecipeList = myRecipeList
+  },
+  SET_MY_BOOKMARK_RECIPE(state, myBookMarkRecipe) {
+    state.myBookMarkRecipe = myBookMarkRecipe
+  },
+  SET_MY_BOOKMARK_RECIPELIST(state, myBookMarkRecipeList) {
+    state.myBookMarkRecipeList = myBookMarkRecipeList
+  },
+
   CLEAR_USER(state) {
     state.userid = ''
     state.birth = ''
@@ -97,6 +116,18 @@ export const mutations = {
     state.profileImage = ''
     state.userGender = ''
     state.userJob = ''
+  },
+  CLEAR_MY_RECIPE(state) {
+    state.myRecipe = []
+  },
+  CLEAR_MY_RECIPELIST() {
+    state.myRecipeList = []
+  },
+  CLEAR_MY_BOOKMARK_RECIPE() {
+    state.myBookMarkRecipe = []
+  },
+  CLEAR_MY_BOOKMARK_RECIPELIST() {
+    state.myBookMarkRecipeList = []
   },
 }
 
@@ -206,22 +237,56 @@ export const actions = {
       }
     )
   },
-  async myrecipe({ commit }, userid) {
+  async myrecipe({ commit }, pageable) {
+    commit('CLEAR_MY_RECIPE')
     await myrecipe(
-      userid,
+      pageable,
       ({ data }) => {
-        commit('')
+        // console.log(data)
+        // console.log("내가만든 레시피 가져오기 성공!")
+        commit('SET_MY_RECIPE', data.recipes)
       },
       (error) => {
         console.log(error)
       }
     )
   },
-  async myrecipeList({ commit }, userid) {
+  async myrecipeList({ commit }, pageable) {
+    commit('CLEAR_MY_RECIPELIST')
     await myrecipeList(
-      userid,
+      pageable,
       ({ data }) => {
-        commit('')
+        // console.log(data)
+        // console.log("내가만든 레시피리스트 가져오기 성공!")
+        commit('SET_MY_RECIPELIST', data.recipeList)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  },
+  async myBookmarkRecipe({ commit }, pageable) {
+    commit('CLEAR_MY_BOOKMARK_RECIPE')
+    await myBookmarkRecipe(
+      pageable,
+      ({ data }) => {
+        console.log(data)
+        // console.log("북마크 레시피 가져오기 성공!")
+        commit('SET_MY_BOOKMARK_RECIPE', data.recipes)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  },
+  async myBookmarkRecipeList({ commit }, pageable) {
+    commit('CLEAR_MY_BOOKMARK_RECIPELIST')
+    await myBookmarkRecipeList(
+      pageable,
+      ({ data }) => {
+        // console.log(data)
+        // console.log("북마크 레시피목록 가져오기 성공!")
+        commit('SET_MY_BOOKMARK_RECIPELIST', data.recipes)
       },
       (error) => {
         console.log(error)

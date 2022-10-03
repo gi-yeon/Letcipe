@@ -4,7 +4,7 @@
       <v-container class="check-container">
         <div class="check-head-wrap">
           <v-toolbar flat>
-            <v-icon>mdi-window-close</v-icon>
+            <v-icon @click="moveMypage">mdi-window-close</v-icon>
 
             <v-toolbar-title @click="test()">장바구니</v-toolbar-title>
 
@@ -43,7 +43,7 @@
                     </div>
                     <v-divider></v-divider>
                     <div v-for="(c, index) in checklist" :key="index" class="pl-3 pr-3">
-                      <div class="d-flex justify-space-between align-center mt-1">
+                      <div class="check-wrap d-flex justify-space-between align-center mt-1">
                         <div class="ingre-name">
                           <v-checkbox
                             v-model="checklist[index]"
@@ -76,7 +76,7 @@
                     </div>
                     <v-divider></v-divider>
                     <div v-for="(c, index) in checkedList" :key="index" class="pl-3 pr-3">
-                      <div class="d-flex justify-space-between align-center mt-1">
+                      <div class="check-wrap d-flex justify-space-between align-center mt-1">
                         <div class="ingre-name">
                           <v-checkbox
                             v-model="checkedList[index]"
@@ -117,7 +117,7 @@
                     <div v-for="(c, idx) in checklist" :key="idx" class="pl-3 pr-3">
                       <div
                         v-if="checklist[idx].categoryName === cg"
-                        class="d-flex justify-space-between align-center mt-1"
+                        class="check-wrap d-flex justify-space-between align-center mt-1"
                       >
                         <div class="ingre-name">
                           <v-checkbox
@@ -149,7 +149,7 @@
                     </div>
                     <v-divider></v-divider>
                     <div v-for="(c, index) in checkedList" :key="index" class="pl-3 pr-3">
-                      <div class="d-flex justify-space-between align-center mt-1">
+                      <div class="check-wrap d-flex justify-space-between align-center mt-1">
                         <div class="ingre-name">
                           <v-checkbox
                             v-model="checkedList[index]"
@@ -248,32 +248,35 @@ export default {
     })
     promise.then(async () => {
       await this.getHistoryList()
+
       this.historyList.forEach((h) => {
         if (h.process === 'READY') {
           this.historyID = h.id
         }
       })
-      await this.getHistory(this.historyID)
-      this.history.historyIngredients.forEach((jaeryo) => {
-        if (jaeryo.isPurchased === 'N') {
-          this.checklist.push(jaeryo)
-        } else {
-          this.checkedList.push(jaeryo)
-        }
-        if (this.category.length === 0) {
-          this.category.push(jaeryo.categoryName)
-        } else {
-          let cnt = 0
-          this.category?.forEach((cg) => {
-            if (cg === jaeryo.categoryName) {
-              cnt++
-            }
-          })
-          if (cnt === 0) {
-            this.category.push(jaeryo.categoryName)
+      if (this.historyID !== null) {
+        await this.getHistory(this.historyID)
+        this.history.historyIngredients.forEach((jaeryo) => {
+          if (jaeryo.isPurchased === 'N') {
+            this.checklist.push(jaeryo)
+          } else {
+            this.checkedList.push(jaeryo)
           }
-        }
-      })
+          if (this.category.length === 0) {
+            this.category.push(jaeryo.categoryName)
+          } else {
+            let cnt = 0
+            this.category?.forEach((cg) => {
+              if (cg === jaeryo.categoryName) {
+                cnt++
+              }
+            })
+            if (cnt === 0) {
+              this.category.push(jaeryo.categoryName)
+            }
+          }
+        })
+      }
     })
   },
   methods: {
@@ -283,11 +286,14 @@ export default {
       'checkHistoryIngredient',
       'updateHistory',
     ]),
+    moveMypage() {
+      this.$router.push('/user/mypage')
+    },
     completeShopping() {
       console.log('장보기')
       const h = {
         id: this.history.id,
-        process: this.history.process,
+        process: 1,
       }
       this.updateHistory(h)
     },
@@ -361,6 +367,11 @@ export default {
   margin-top: 0 !important;
   padding-top: 0 !important;
 } */
+
+.check-wrap {
+  cursor: pointer;
+}
+
 .fadeInUp {
   animation: fadeInUp 1s ease backwards;
 }
