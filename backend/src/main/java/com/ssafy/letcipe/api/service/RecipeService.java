@@ -55,7 +55,6 @@ public class RecipeService {
         return recipeRepository.findById(recipeId).orElseThrow(() -> new NullPointerException("레시피를 찾을 수 없습니다."));
     }
 
-
     @Transactional
     public ResGetDetailRecipeDto readRecipe(long recipe_id, long userId) {
         // 레시피 찾기
