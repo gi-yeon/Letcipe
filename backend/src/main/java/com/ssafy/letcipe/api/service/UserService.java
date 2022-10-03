@@ -2,6 +2,9 @@ package com.ssafy.letcipe.api.service;
 
 import com.ssafy.letcipe.api.dto.recipe.ResGetHotRecipeComponentDto;
 import com.ssafy.letcipe.api.dto.user.*;
+import com.ssafy.letcipe.domain.comment.BoardType;
+import com.ssafy.letcipe.domain.comment.Comment;
+import com.ssafy.letcipe.domain.comment.CommentRepository;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipe.RecipeRepository;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
@@ -45,6 +48,7 @@ public class UserService {
 
     private final RecipeLikeRepository recipeLikeRepository;
     private final RecipeListBookmarkRepository recipeListBookmarkRepository;
+    private final CommentRepository commentRepository;
     private final EncryptUtils encryptUtils;
     private final StringUtils stringUtils;
 
@@ -375,6 +379,19 @@ public class UserService {
             dtoList.add(new ResGetUserRecipeListDto(recipeListBookmark.getRecipeList()));
         }
         return new ResGetUserRecipeListsDto(dtoList);
+    }
+
+    public List<ResGetUserCommentDto> getUserComment(Long userId, Pageable pageable) {
+        List<Comment> commentList = commentRepository.findAllByUserIdAndBoardTypeAndStatusType(pageable, userId, BoardType.RECIPE, StatusType.N);
+        List<ResGetUserCommentDto> dtoList = new ArrayList<>();
+        for (Comment comment : commentList) {
+            dtoList.add(new ResGetUserCommentDto(comment));
+        }
+        return dtoList;
+    }
+
+    public Long getCommentNum(Long userId) {
+        return commentRepository.countByUserIdAndBoardTypeAndStatusType(userId, BoardType.RECIPE, StatusType.N);
     }
 
     public String readUserId(ReqGetUserIdDto requestDto) {
