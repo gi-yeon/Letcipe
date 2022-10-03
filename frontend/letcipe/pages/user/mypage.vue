@@ -389,6 +389,11 @@ export default {
   padding-bottom: 2%;
   width: 96%;
 }
+@media (max-width: 900px) {
+  .user-name {
+    width: 100%;
+  }
+}
 
 /* 모바일 screen */
 @media (max-width: 400px) {

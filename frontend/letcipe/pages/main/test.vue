@@ -28,6 +28,7 @@
                 class="my-list-carousel"
                 height="100%"
                 style="border-radius: 10px"
+                @click="moveProgress"
               >
                 <v-carousel-item v-for="(item, i) in userPlayList" :key="i">
                   <v-container>
@@ -439,6 +440,9 @@ export default {
       this.CLEAR_RECIPE_ID()
       this.SET_RECIPE_ID(data.recipeId)
       this.$router.push('/recipe/detail')
+    },
+    moveProgress() {
+      this.$router.push('/user/progress')
     },
     bought(c, index) {
       this.checklist.splice(index, 1)
