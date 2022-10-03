@@ -244,7 +244,7 @@
             <v-dialog v-model="dialogModify" persistent max-width="290">
               <template #activator="{ on, attrs }">
                 <v-btn
-                  :disabled="!(gender&&(!idcheck||id===userId)&&(!nickCheck||nickNm===nickname)&&userNm&&email_id&&email_address)"
+                  :disabled="!((gender!==userGender)||(!idcheck||id!==userid)||(!nickCheck||nickNm!==nickname)||(userNm&&userNm!==name)||(profileImage!==preview_profile)||(birth!==birthdate)||(email_id&&email_id!==real_eid)||(email_address&&email_address!==real_eaddr)||(job!==jobMap[userJob])||(familymember!==realFam))"
                   :loading="isLoading"
                   class="white--text"
                   color="letcipe"
@@ -361,6 +361,8 @@ export default {
       bdmenu: false,
       email_id: '',
       email_address: undefined,
+      real_eid:'',
+      real_eaddr:'',
       form: false,
       phoneRef: undefined,
       phoneFirst: undefined,
@@ -429,6 +431,7 @@ export default {
         'COOK': '요식업 종사자'
       },
       famCnt: ['선택',1, 2, 3, 4, '5인 이상'],
+      realFam: '',
       preview_profile: null,
       dialogId: false,
       checkId: true,
@@ -471,7 +474,9 @@ export default {
 
       const emailStr = this.email.split('@')
       this.email_id = emailStr[0]
+      this.real_eid = emailStr[0]
       this.email_address = emailStr[1]
+      this.real_eaddr = emailStr[1]
 
       this.phoneRef = this.phone.substring(0,3)
       this.phoneFirst = this.phone.substring(3,7)
@@ -481,7 +486,9 @@ export default {
       if(this.family){
         if(this.family === 5) {
           this.familymember = "5인 이상"
+          this.realFam = "5인 이상"
         } else {
+          this.realFam = this.family
           this.familymember = this.family
         }
       }

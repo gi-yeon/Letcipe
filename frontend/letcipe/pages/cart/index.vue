@@ -22,7 +22,11 @@
               </div>
             </div>
             <div>
-              <v-btn small color="letcipe" @click="checkedDelete"
+              <v-btn
+                small
+                color="letcipe"
+                class="white--text"
+                @click="checkedDelete"
                 >선택 삭제</v-btn
               >
             </div>
@@ -89,7 +93,7 @@
                       fab
                       dark
                       x-small
-                      color="#aac821"
+                      color="letcipe"
                       @click="subRecipeAmount(recipeInfo.recipe.id)"
                     >
                       <v-icon dark>mdi-minus</v-icon>
@@ -100,7 +104,7 @@
                       fab
                       dark
                       x-small
-                      color="#aac821"
+                      color="letcipe"
                       @click="plusRecipeAmount(recipeInfo.recipe.id)"
                     >
                       <v-icon dark>mdi-plus</v-icon>
@@ -146,7 +150,7 @@
                     fab
                     dark
                     x-small
-                    color="#aac821"
+                    color="letcipe"
                     @click="subIngreAmount(index)"
                   >
                     <v-icon dark>mdi-minus</v-icon>
@@ -157,7 +161,7 @@
                     fab
                     dark
                     x-small
-                    color="#aac821"
+                    color="letcipe"
                     @click="plusIngreAmount(index)"
                   >
                     <v-icon dark>mdi-plus</v-icon>
@@ -179,10 +183,116 @@
             </div>
             <v-divider v-if="item.amount > 0"></v-divider>
           </div>
-          <div class="d-flex justify-center align-center pa-2">
-            <v-btn class="mx-2" small dark color="#aac821" @click="clearItem">
-              재료 추가
-            </v-btn>
+          <div class="d-flex justify-center">
+            <v-dialog v-model="dialog" max-width="500px">
+              <template #activator="{ on, attrs }">
+                <v-btn
+                  small
+                  color="letcipe"
+                  class="mb-5 mt-6 white--text"
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="clearItem"
+                  >재료 추가</v-btn
+                >
+              </template>
+
+              <v-card>
+                <v-card-title>
+                  <span>재료 추가</span>
+                </v-card-title>
+                <v-form ref="form">
+                  <v-card-text>
+                    <v-container>
+                      <v-row>
+                        <v-col cols="12" sm="6" md="4">
+                          <!-- <v-text-field
+                            v-model="editedItem.name"
+                            label="재료명"
+                            ></v-text-field>-->
+                          <v-autocomplete
+                            ref="keyword"
+                            v-model="keyword"
+                            :rules="keyword_rule"
+                            :items="ingredientsList"
+                            :search-input.sync="search"
+                            cache-items
+                            clearable
+                            hide-details
+                            hide-selected
+                            hide-spin-buttons
+                            item-text="name"
+                            item-value="id"
+                            label="재료검색"
+                            outlined
+                            :required="keyword"
+                            class="pt-3 pb-3"
+                            color="letcipe"
+                            style="width: 90%"
+                            append-inner-icon="mdi-magnify"
+                            @keyup="ingre(search)"
+                          >
+                            <template #no-data>
+                              <v-list-item>
+                                <v-list-item-title>
+                                  일치하는 재료가 없습니다.
+                                </v-list-item-title>
+                              </v-list-item>
+                            </template>
+                            <template #item="{ item }">
+                              <v-list-item-content @click="selectIngre(item)">
+                                <v-list-item-title
+                                  v-text="item.name"
+                                ></v-list-item-title>
+                              </v-list-item-content>
+                              <v-list-item-action @click="selectIngre(item)">
+                                <v-chip :color="colors[item.category]" label>{{
+                                  item.category
+                                }}</v-chip>
+                              </v-list-item-action>
+                            </template>
+                          </v-autocomplete>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="4">
+                          <v-text-field
+                            ref="amount"
+                            v-model="editedItem.amount"
+                            :rules="ingre_rule"
+                            required
+                            placeholder="0"
+                            color="letcipe"
+                            label="재료량"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="4">
+                          <v-text-field
+                            v-model="editedItem.ingredient.measure"
+                            disabled
+                            label="단위"
+                          ></v-text-field>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-card-text>
+                </v-form>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="close">취소</v-btn>
+                  <v-btn
+                    color="blue darken-1"
+                    :disabled="
+                      keyword === null ||
+                      keyword === '' ||
+                      editedItem.amount === null ||
+                      editedItem.amount === ''
+                    "
+                    text
+                    @click="saveIngre"
+                    >재료 저장</v-btn
+                  >
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </div>
         </div>
         <div class="cart-count-wrap fadeInUp">
@@ -203,122 +313,13 @@
             elevation="5"
             width="100%"
             large
-            color="#aac821"
+            color="letcipe"
             class="white--text"
             @click="clickStartCart"
             >장보기</v-btn
           >
         </div>
-        <div class="d-flex justify-center">
-          <v-dialog v-model="dialog" max-width="500px">
-            <!-- <template #activator="{ on, attrs }">
-              <v-btn
-                dark
-                class="mb-5 mt-6"
-                v-bind="attrs"
-                v-on="on"
-                @click="clearItem"
-                >재료 추가</v-btn
-              >
-            </template> -->
 
-            <v-card>
-              <v-card-title>
-                <span>재료 추가</span>
-              </v-card-title>
-              <v-form ref="form">
-                <v-card-text>
-                  <v-container>
-                    <v-row>
-                      <v-col cols="12" sm="6" md="4">
-                        <!-- <v-text-field
-                            v-model="editedItem.name"
-                            label="재료명"
-                            ></v-text-field>-->
-                        <v-autocomplete
-                          ref="keyword"
-                          v-model="keyword"
-                          :rules="keyword_rule"
-                          :items="ingredientsList"
-                          :search-input.sync="search"
-                          cache-items
-                          clearable
-                          hide-details
-                          hide-selected
-                          hide-spin-buttons
-                          item-text="name"
-                          item-value="id"
-                          label="재료검색"
-                          outlined
-                          :required="keyword"
-                          class="pt-3 pb-3"
-                          color="letcipe"
-                          style="width: 90%"
-                          append-inner-icon="mdi-magnify"
-                          @keyup="ingre(search)"
-                        >
-                          <template #no-data>
-                            <v-list-item>
-                              <v-list-item-title>
-                                일치하는 재료가 없습니다.
-                              </v-list-item-title>
-                            </v-list-item>
-                          </template>
-                          <template #item="{ item }">
-                            <v-list-item-content @click="selectIngre(item)">
-                              <v-list-item-title
-                                v-text="item.name"
-                              ></v-list-item-title>
-                            </v-list-item-content>
-                            <v-list-item-action @click="selectIngre(item)">
-                              <v-chip :color="colors[item.category]" label>{{
-                                item.category
-                              }}</v-chip>
-                            </v-list-item-action>
-                          </template>
-                        </v-autocomplete>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          ref="amount"
-                          v-model="editedItem.amount"
-                          :rules="ingre_rule"
-                          required
-                          placeholder="0"
-                          color="letcipe"
-                          label="재료량"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12" sm="6" md="4">
-                        <v-text-field
-                          v-model="editedItem.unit"
-                          disabled
-                          label="단위"
-                        ></v-text-field>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-card-text>
-              </v-form>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="close">취소</v-btn>
-                <v-btn
-                  color="blue darken-1"
-                  :disabled="
-                    keyword === null ||
-                    keyword === '' ||
-                    editedItem.amount === null ||
-                    editedItem.amount === ''
-                  "
-                  text
-                  @click="saveIngre"
-                  >재료 저장</v-btn
-                >
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </div>
         <v-dialog v-model="dialogStartCartError" persistent max-width="290">
           <v-card>
             <v-card-title>Caution</v-card-title>
@@ -345,6 +346,7 @@ export default {
   name: 'CartIndex',
   data() {
     return {
+      ingredients: [],
       errorMsg: '',
       totalAmount: 0,
       dialog: false,
@@ -354,7 +356,7 @@ export default {
       checkedRecipe: [], // 체크된 재료를 구분 false 체크 x
       cartCategory: [],
       cartKeyList: [],
-      addIngreDialog: false,
+
       ingreIndexList: {}, // ingreList에 저장된 재료들의 인덱스를 저장하는 객체
       ingre_rule: [
         (v) => !!v || '재료량은 필수 입력사항입니다.',
@@ -390,17 +392,28 @@ export default {
         '햄 소시지': 'black',
       },
       editedItem: {
-        name: '',
-        id: '',
-        amount: null,
-        unit: 'g',
+        amount: 0,
+        ingredient: {
+          name: '',
+          id: '',
+          category: '',
+          gml: 1,
+          measure: 'g',
+        },
       },
       defaultItem: {
-        name: '',
-        id: '',
-        amount: null,
-        unit: 'g',
+        amount: 0,
+        ingredient: {
+          name: '',
+          id: '',
+          category: '',
+          gml: 1,
+          measure: 'g',
+        },
       },
+      search: null,
+      historyListInfo: [],
+      isProgressHistory: false,
     }
   },
   computed: {
@@ -411,6 +424,7 @@ export default {
       'isSucceededtoHistory',
     ]),
     ...mapState('ingredients', ['ingredientsList']),
+    ...mapState('history', ['historyList']),
   },
   watch: {
     dialog(val) {
@@ -430,13 +444,48 @@ export default {
       console.log(this.ingreList)
       for (let i = 0; i < this.ingreList.length; i++) {
         // 각 재료의 인덱스 저장
-
         this.ingreIndexList[this.ingreList[i].ingredient.id] = i
       }
-      console.log(this.ingreIndexList)
+      await this.getHistoryList()
+      this.historyListInfo = this.historyList
+      console.log(this.historyList)
+      for (let i = 0; i < this.historyListInfo.length; i++) {
+        if (this.historyListInfo[i].process === 'READY') {
+          this.isProgressHistory = true
+          break
+        } else if (this.historyListInfo[i].process === 'EATING') {
+          this.isProgressHistory = true
+          break
+        }
+      }
     })
   },
   methods: {
+    ...mapMutations('cart', [
+      'CALC_PLUS_INGRE',
+      'CALC_SUB_INGRE',
+      'SET_INGRELIST_AMOUNT',
+      'SET_BYRECIPE_AMOUNT',
+      'ADD_INGRELIST',
+      'ADD_INGRE_AMOUNT',
+    ]),
+    ...mapActions('ingredients', ['searchIngredient']),
+    ...mapActions('cart', [
+      'readCart',
+      'updateCartRecipe',
+      'deleteCart',
+      'patchCartIngredient',
+      'createCartIngredient',
+      'deleteCartIngredient',
+      'getCartIngredient',
+      'deleteCartIngredient',
+      'startCart',
+    ]),
+    ...mapActions('history', ['getHistoryList']),
+
+    initialize() {
+      this.ingredients = []
+    },
     close() {
       this.dialog = false
       this.$nextTick(() => {
@@ -449,23 +498,7 @@ export default {
         this.checkedRecipe.push(true)
       }
     },
-    ...mapMutations('cart', [
-      'CALC_PLUS_INGRE',
-      'CALC_SUB_INGRE',
-      'SET_INGRELIST_AMOUNT',
-      'SET_BYRECIPE_AMOUNT',
-    ]),
-    ...mapActions('cart', [
-      'readCart',
-      'updateCartRecipe',
-      'deleteCart',
-      'patchCartIngredient',
-      'createCartIngredient',
-      'deleteCartIngredient',
-      'getCartIngredient',
-      'deleteCartIngredient',
-      'startCart',
-    ]),
+
     minusNum() {},
     addNum() {},
     plusCartList() {},
@@ -482,33 +515,85 @@ export default {
       }
     },
     selectIngre(item) {
-      this.editedItem.name = item.name
-      this.editedItem.id = item.id
-      this.editedItem.unit = item.measure
+      console.log(item)
+      this.editedItem.ingredient.name = item.name
+      this.editedItem.ingredient.id = item.id
+      this.editedItem.ingredient.measure = item.measure
+      this.editedItem.ingredient.gml = item.gml
+      this.editedItem.ingredient.category = item.category
     },
     saveIngre() {
       if (this.$refs.form.validate()) {
         console.log(this.$refs.form.validate())
-
+        // const tempEditedItem = {
+        //   ingredientId : this.editedItem.id,
+        //   operator : '+'
+        // }
         this.IngreValid = false
-        this.ingredients?.forEach((ingre) => {
-          if (this.editedItem.name === ingre.name) {
-            ingre.amount =
-              parseInt(ingre.amount) + parseInt(this.editedItem.amount)
+        // ingreList를 돌면서 안에 있으면 amount를 더한 것으로 설정, 없으면 patch어짜구
+        for (let i = 0; i < this.ingreList.length; i++) {
+          // console.log(this.editedItem.ingredient.name)
+          // console.log(this.ingreList[i].ingredient.name)
+          if (
+            this.editedItem.ingredient.name ===
+            this.ingreList[i].ingredient.name
+          ) {
+            const ingreInfo = {
+              index: i,
+              amount: parseFloat(this.editedItem.amount),
+            }
+            this.ADD_INGRE_AMOUNT(ingreInfo)
+            const createObject = {
+              ingredientId: this.editedItem.ingredient.id,
+              operator: '+',
+            }
+            for (let i = 0; i < this.editedItem.amount; i++) {
+              this.patchCartIngredient(createObject)
+            }
+
             this.IngreValid = true
           }
-        })
+        }
+        // this.ingreList?.forEach((ingre) => {
+        //   if (this.editedItem.name === ingre.ingredient.name) {
+        //     ingre.amount =
+        //       parseInt(ingre.amount) + parseInt(this.editedItem.amount)
+        //     this.IngreValid = true
+        //   }
+        // })
         if (this.IngreValid === false) {
-          if (this.editedIndex > -1) {
-            Object.assign(this.ingredients[this.editedIndex], this.editedItem)
-          } else {
-            this.ingredients.push(this.editedItem)
+          console.log(this.editedItem)
+          const ingreItem = {
+            amount: this.editedItem.amount,
+            ingredient: {
+              name: this.editedItem.ingredient.name,
+              id: this.editedItem.ingredient.id,
+              category: this.editedItem.ingredient.category,
+              gml: this.editedItem.ingredient.gml,
+              measure: this.editedItem.ingredient.measure,
+            },
           }
+          this.ADD_INGRELIST(ingreItem)
+          const createObject = {
+            ingredientId: this.editedItem.ingredient.id,
+            amount: this.editedItem.amount,
+          }
+          this.createCartIngredient(createObject)
+
+          this.ingreIndexList[this.editedItem.ingredient.id] =
+            this.ingreList.length - 1
+
+          // if (this.editedIndex > -1) {
+          //   Object.assign(this.ingreList[this.editedIndex], this.editedItem)
+          // } else {
+          //   this.ADD_INGRELIST(this.editedItem)
+          //   // this.ingreList.push(this.editedItem)
+          // }
         }
 
-        if (this.editedIndex > -1) {
-          Object.assign(this.ingredients[this.editedIndex], this.editedItem)
-        }
+        // if (this.editedIndex > -1) {
+        //   Object.assign(this.ingreList[this.editedIndex], this.editedItem)
+        // }
         // if (this.editedIndex > -1) {
         //   Object.assign(this.ingredients[this.editedIndex], this.editedItem)
         // } else {
@@ -654,11 +739,13 @@ export default {
     },
     subIngreAmount(index) {
       const ingredientInfo = this.ingreList[index]
-
+      console.log(ingredientInfo)
       // 원래있던 재료에서더한 경우
-
+      console.log(this.amountByRecipe)
       if (ingredientInfo.ingredient.id in this.amountByRecipe) {
         // amountByRecipe에 재료가 있는 지 확인 -> 있으면 원래 있던 재료에서 추가한 재료
+        console.log(parseInt(ingredientInfo.amount))
+        console.log(parseInt(this.amountByRecipe[ingredientInfo.ingredient.id]))
         if (
           Number(
             parseInt(ingredientInfo.amount) -
@@ -666,6 +753,20 @@ export default {
           ) === 0
         )
           return
+        console.log(
+          Number(
+            parseInt(ingredientInfo.amount) -
+              parseInt(this.amountByRecipe[ingredientInfo.ingredient.id]) -
+              1
+          )
+        )
+        console.log(
+          Number(
+            parseInt(ingredientInfo.amount) -
+              parseInt(this.amountByRecipe[ingredientInfo.ingredient.id]) -
+              1
+          ) === 0
+        )
         if (
           // delete하는 경우
           Number(
@@ -717,47 +818,41 @@ export default {
     },
     clickStartCart() {
       if (this.checked.length > 0) {
-        this.startCart()
-        if (!this.isSucceededtoHistory) {
+        if (this.isProgressHistory) {
           this.errorMsg =
             '이미 진행 예정이거나 진행 중인 레시피 리스트가 있습니다.'
           this.dialogStartCartError = true
+        } else {
+          this.startCart()
+          this.$router.go()
         }
-        this.$router.go()
       } else {
         this.errorMsg = '하나 이상의 레시피를 담아주세요.'
         this.dialogStartCartError = true
       }
     },
-  },
-  clearItem() {
-    this.keyword = null
-  },
-  editItem(item) {
-    this.search = item.name
-    this.editedIndex = this.ingredients.indexOf(item)
-    this.editedItem = Object.assign({}, item)
-    this.dialog = true
-  },
-  deleteItem(item) {
-    this.editedIndex = this.ingredients.indexOf(item)
-    this.editedItem = Object.assign({}, item)
-    this.ingredients.splice(this.editedIndex, 1)
-    this.closeDelete()
-  },
-  closeDelete() {
-    this.dialogDelete = false
-    this.$nextTick(() => {
-      this.editedItem = Object.assign({}, this.defaultItem)
-      this.editedIndex = -1
-    })
-  },
-  close() {
-    this.dialog = false
-    this.$nextTick(() => {
-      this.editedItem = Object.assign({}, this.defaultItem)
-      this.editedIndex = -1
-    })
+    clearItem() {
+      this.keyword = null
+    },
+    editItem(item) {
+      this.search = item.name
+      this.editedIndex = this.ingreList.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialog = true
+    },
+    deleteItem(item) {
+      this.editedIndex = this.ingreList.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.ingreList.splice(this.editedIndex, 1)
+      this.closeDelete()
+    },
+    closeDelete() {
+      this.dialogDelete = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
   },
 }
 </script>

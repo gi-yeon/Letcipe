@@ -9,8 +9,10 @@ import {
   deleteMember,
   myrecipe,
   myrecipeList,
+  mycomment,
+  mycommentNum,
   createCode,
-  modifyPassword
+  modifyPassword,
 } from '@/api/user'
 
 export const state = () => ({
@@ -20,11 +22,11 @@ export const state = () => ({
   code: '',
   email: '',
   userJoinCheck: false,
-  userid:'',
-  birth:'',
-  family:'',
-  name:'',
-  phone:'',
+  userid: '',
+  birth: '',
+  family: '',
+  name: '',
+  phone: '',
   userId: 0,
   nickname: '',
   profileImage: '',
@@ -82,7 +84,7 @@ export const mutations = {
     state.userGender = data.gender
     state.userJob = data.job
   },
-  
+
   CLEAR_USER(state) {
     state.userid = ''
     state.birth = ''
@@ -114,7 +116,8 @@ export const actions = {
     )
   },
   async idCheck({ commit }, userid) {
-    await idCheck(userid, 
+    await idCheck(
+      userid,
       (res) => {
         console.log(res.status)
         commit('SET_IDCHECK_FALSE')
@@ -122,7 +125,8 @@ export const actions = {
       (error) => {
         console.log(error.status)
         commit('SET_IDCHECK_TRUE')
-      })
+      }
+    )
   },
   idCheckReset({ commit }) {
     commit('SET_IDCHECK_TRUE')
@@ -151,7 +155,7 @@ export const actions = {
       }
     )
   },
-  async modifyPassword({commit}, passwords) {
+  async modifyPassword({ commit }, passwords) {
     await modifyPassword(
       passwords,
       (res) => {
@@ -224,6 +228,31 @@ export const actions = {
       }
     )
   },
+  async mycomment({ commit }, page) {
+    let result
+    await mycomment(
+      page,
+      ({ data }) => {
+        result = data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+    return result
+  },
+  async mycommentNum({ commit }) {
+    let result
+    await mycommentNum(
+      ({ data }) => {
+        result = data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+    return result
+  },
   async createCode({ commit }, phone) {
     await createCode(
       phone,
@@ -237,7 +266,7 @@ export const actions = {
     )
   },
   checkCodeEq({ commit, state }, code) {
-    if(state.code === code) {
+    if (state.code === code) {
       commit('SET_CODECHECK_TRUE')
     } else {
       commit('SET_CODECHECK_FALSE')
@@ -255,7 +284,7 @@ export const actions = {
       }
     )
   },
-  changeNickCheck({commit}){
+  changeNickCheck({ commit }) {
     commit('SET_NICKCHECK_TRUE')
-  }
+  },
 }
