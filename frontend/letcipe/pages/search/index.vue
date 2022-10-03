@@ -384,6 +384,7 @@ export default {
       this.CLEAR_RECIPE_LIST()
       this.byname = ''
       this.isSelecte = []
+      this.currentPage = 1
     },
   },
   created() {
@@ -433,7 +434,6 @@ export default {
           promise.then(async () => {
             await this.getRecipes(searchObject)
           })
-          this.currentPage = 1
         } else {
           const searchObject = {
             keyword: this.byname,
@@ -446,7 +446,6 @@ export default {
           promise.then(async () => {
             await this.getRecipeList(searchObject)
           })
-          this.currentPage = 1
         }
         this.searchedName = this.byname
       } else {
@@ -461,7 +460,6 @@ export default {
         promise.then(async () => {
           await this.getRecipesIngre(searchObject)
         })
-        this.currentPage = 1
       }
     },
     selectIngre(item) {
