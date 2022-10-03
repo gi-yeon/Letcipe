@@ -171,7 +171,6 @@ public class UserController {
         } catch (Exception e) {
             userId = -1L;
         }
-        System.out.println("유저아이디:" + userId);
         List<ResGetCartReport> cartReport;
         ResGetHotRecipeDto responseDto = null;
         for (int loop = 0; loop < 5; loop++) {

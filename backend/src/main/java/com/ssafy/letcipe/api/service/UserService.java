@@ -142,6 +142,12 @@ public class UserService {
         return hotRecipeDto;
     }
 
+    /**
+     * getAttribute에서 일부 변경된 메서드
+     * 가구원수 속성값이 1이거나 -로만 나타납니다.
+     * @param userId
+     * @return
+     */
     @Transactional
     public ResGetHotRecipeComponentDto getAttribute2(Long userId) {
         JobType job;
