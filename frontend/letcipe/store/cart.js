@@ -14,7 +14,8 @@ export const state = () => ({
   cart: [],     // 레시피 정보들
   ingreList : [],       // 전부 계산된 재료들
   amountByRecipe : {},
-  isSucceededtoHistory : false
+  isSucceededtoHistory : false,
+  isSucceededtoRecipeList : false,
 })
 
 export const mutations = {
