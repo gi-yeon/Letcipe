@@ -15,6 +15,7 @@ import {
   mycommentNum,
   createCode,
   modifyPassword,
+  myLikeRecipe,
 } from '@/api/user'
 
 export const state = () => ({
@@ -38,6 +39,7 @@ export const state = () => ({
   myRecipeList: [],
   myBookMarkRecipe: [],
   myBookMarkRecipeList: [],
+  mylikeRecipe: [],
 })
 
 export const mutations = {
@@ -103,6 +105,9 @@ export const mutations = {
   SET_MY_BOOKMARK_RECIPELIST(state, myBookMarkRecipeList) {
     state.myBookMarkRecipeList = myBookMarkRecipeList
   },
+  SET_MY_LIKE_RECIPE(state, myLikeRecipe) {
+    state.mylikeRecipe = myLikeRecipe
+  },
 
   CLEAR_USER(state) {
     state.userid = ''
@@ -129,6 +134,9 @@ export const mutations = {
   CLEAR_MY_BOOKMARK_RECIPELIST() {
     state.myBookMarkRecipeList = []
   },
+  CLEAR_MY_LIKE_RECIPE() {
+    state.mylikeRecipe = []
+  }
 }
 
 export const getters = {}
@@ -352,4 +360,16 @@ export const actions = {
   changeNickCheck({ commit }) {
     commit('SET_NICKCHECK_TRUE')
   },
+  async myLikeRecipe({ commit }, pageable) {
+    await myLikeRecipe(
+      pageable,
+      ({ data }) => {
+        console.log(data)
+        commit('SET_MY_LIKE_RECIPE', data.recipes)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
 }

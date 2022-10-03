@@ -14,7 +14,7 @@
 
           <!-- <div :page="currentPage" :items="myRecipes" :items-per-page="perPage" class="text-center"> -->
           <div v-if="recipeList.length > 0">
-            <div v-for="(mr, i) in myBookMarkRecipeList" :key="i">
+            <div v-for="(mr, i) in recipeList" :key="i">
               <v-list-item three-line>
                 <v-list-item-avatar class="recipe-item" tile size="100" @click="moveDetail(mr)">
                   <v-img :src="mr.repImg"></v-img>
@@ -23,8 +23,8 @@
                   <v-list-item-title class="d-flex justify-space-between">
                     <div class="recipe-item" @click="moveDetail(mr)">{{ mr.title }}</div>
                     <div>
-                      <v-icon style="z-index: 1" small color="info" @click="editItem(mr)">mdi-pencil</v-icon>
-                      <v-icon style="z-index: 1" small @click="deleteItem(mr)">mdi-delete</v-icon>
+                      <v-icon v-if="mr.nickName===nickname" style="z-index: 1" small color="info" @click="editItem(mr)">mdi-pencil</v-icon>
+                      <v-icon v-if="mr.nickName===nickname" style="z-index: 1" small @click="deleteItem(mr)">mdi-delete</v-icon>
                     </div>
                   </v-list-item-title>
 
@@ -32,14 +32,8 @@
                   <div class="d-flex justify-space-between">
                     <v-list-item-subtitle class="d-flex align-center">
                       <div class="d-flex align-center">
-                        <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
-                        <div>{{mr.recipeLike }}</div>
-                      </div>
-                      <div>
-                        <div class="d-flex align-center">
-                          <v-icon small color="yellow lighten-1">mdi-bookmark</v-icon>
-                          <div>{{mr.recipeBookmark }}</div>
-                        </div>
+                        <v-icon v-if="recipeLike[i]" small color="pink lighten-1" @click="saveLike(i, mr)">mdi-heart</v-icon>
+                        <v-icon v-else small color="grey" @click="saveLike(i, mr)">mdi-heart-outline</v-icon>
                       </div>
                     </v-list-item-subtitle>
                     <v-list-item-subtitle style="text-align: right">
@@ -94,10 +88,11 @@ export default {
       isSelected: [],
       selectedIngre: '',
       recipeList: [],
+      recipeLike: [],
     }
   },
   computed: {
-    ...mapState('user', ['myBookMarkRecipeList']),
+    ...mapState('user', ['nickname', 'mylikeRecipe']),
   },
 
   watch: {},
@@ -111,18 +106,17 @@ export default {
     })
     promise.then(async () => {
       // 이부분만 고쳐서 쓰면됩니다.
-      await this.myBookmarkRecipeList(pageable)
-      this.myBookMarkRecipeList?.forEach((mr) => {
-        this.recipeList.push(mr)
+      await this.myLikeRecipe(pageable)
+      this.mylikeRecipe.forEach((lr) => {
+        this.recipeLike.push(true)
+        this.recipeList.push(lr)
       })
-
-      console.log(this.myBookMarkRecipeList)
-      console.log(this.recipeList.length)
+      this.TotalPage = this.recipeList.length / 5
     })
   },
   methods: {
-    ...mapActions('recipe', ['patchRecipeDetail']),
-    ...mapActions('user', ['myBookmarkRecipeList']),
+    ...mapActions('recipe', ['patchRecipeDetail', 'countRecipeLikes', 'decountRecipeLikes',]),
+    ...mapActions('user', ['myLikeRecipe']),
     ...mapActions('cartr', ['createCart']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     editItem(mr) {
@@ -147,6 +141,14 @@ export default {
       const cartItem = [mr.id]
       const list = { cartItem }
       this.createCart(list)
+    },
+    saveLike(i, mr) {
+      if(this.recipeLike[i]) {
+        this.decountRecipeLikes(mr.id)
+      } else {
+        this.countRecipeLikes(mr.id)
+      }
+      this.$set(this.recipeLike, i, !this.recipeLike[i])
     },
   },
 }

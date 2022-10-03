@@ -315,7 +315,7 @@ export default {
       this.$router.push('/search')
     },
     moveLike() {
-      console.log('라이크 페이지는 아직 없습니다.')
+      this.$router.push('/user/like')
     },
     logout() {},
   },
