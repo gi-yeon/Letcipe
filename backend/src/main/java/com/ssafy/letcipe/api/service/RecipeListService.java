@@ -138,5 +138,15 @@ public class RecipeListService {
       return recipeListRepository.countRecipeListByNameContaining(keyword);
     }
 
+    @Transactional
+    public List<ResGetRecipeListDto> getBestRecipeList(Pageable pageable) {
+        List<ResGetRecipeListDto> result = new ArrayList<>();
+        List<RecipeList> lists = recipeListRepository.findBestRecipeLists(pageable);
+        for (RecipeList list : lists) {
+            result.add(new ResGetRecipeListDto(list,false));
+        }
+        return result;
+    }
+
 
 }
