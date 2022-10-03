@@ -6,6 +6,8 @@ import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipe.RecipeRepository;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmarkRepository;
+import com.ssafy.letcipe.domain.recipeLike.RecipeLike;
+import com.ssafy.letcipe.domain.recipeLike.RecipeLikeRepository;
 import com.ssafy.letcipe.domain.recipeList.RecipeList;
 import com.ssafy.letcipe.domain.recipeList.RecipeListRepository;
 import com.ssafy.letcipe.domain.recipeListBookmark.RecipeListBookmark;
@@ -40,6 +42,8 @@ public class UserService {
     private final RecipeRepository recipeRepository;
     private final RecipeListRepository recipeListRepository;
     private final RecipeBookmarkRepository recipeBookmarkRepository;
+
+    private final RecipeLikeRepository recipeLikeRepository;
     private final RecipeListBookmarkRepository recipeListBookmarkRepository;
     private final EncryptUtils encryptUtils;
     private final StringUtils stringUtils;
@@ -439,4 +443,14 @@ public class UserService {
         if (userRepository.existsByNickname(nickname)) throw new BadRequestException("이미 사용중인 닉네임 입니다.");
     }
 
+    @Transactional
+    public ResGetUserRecipesDto readRecipeLike(Long userId, Pageable pageable) {
+        User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
+        List<RecipeLike> recipeLikeList = recipeLikeRepository.findAllByUser(pageable, user);
+        List<ResGetUserRecipeDto> dtoList = new ArrayList<>();
+        for (RecipeLike recipelike : recipeLikeList) {
+            dtoList.add(new ResGetUserRecipeDto(recipelike.getRecipe()));
+        }
+        return new ResGetUserRecipesDto(dtoList);
+    }
 }

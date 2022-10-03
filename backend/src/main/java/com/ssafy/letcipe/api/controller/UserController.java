@@ -115,6 +115,12 @@ public class UserController {
         return ResponseEntity.ok(userService.readRecipeBookmark(userId, pageable));
     }
 
+    @GetMapping("like/recipe")
+    public ResponseEntity readRecipeLike(HttpServletRequest request, Pageable pageable) {
+        Long userId = jwtService.getUserId(request);
+        return ResponseEntity.ok(userService.readRecipeLike(userId, pageable));
+    }
+
     @GetMapping("mark/recipelist")
     public ResponseEntity readRecipeListBookmark(HttpServletRequest request, Pageable pageable) {
         Long userId = jwtService.getUserId(request);
@@ -146,7 +152,6 @@ public class UserController {
     @GetMapping("/recipe/recommend")
     @Transactional
     ResponseEntity getRecipeRecommend(Pageable pageable, HttpServletRequest request) throws SQLException {
-        // TODO 토큰에서 유저 id 가져와야 함, 없다면 -1 등으로 표기
         Long userId;
         try {
             userId = jwtService.getUserId(request);
