@@ -28,9 +28,8 @@
                 class="my-list-carousel"
                 height="100%"
                 style="border-radius: 10px"
-                @click="moveProgress"
               >
-                <v-carousel-item v-for="(item, i) in userPlayList" :key="i">
+                <v-carousel-item v-for="(item, i) in userPlayList" :key="i" @click="moveProgress">
                   <v-container>
                     <v-row style="margin: -25px">
                       <v-col cols="12">
