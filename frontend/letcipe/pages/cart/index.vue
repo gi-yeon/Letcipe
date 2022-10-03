@@ -4,11 +4,15 @@
       <v-container class="cart-container d-flex-row">
         <div class="cart-head-wrap">
           <div class="d-flex justify-space-between pb-3">
-            <v-icon>mdi-window-close</v-icon>
+            <div>
+              <v-icon @click="moveBack">mdi-window-close</v-icon>
+            </div>
             <div style="font-size: x-large">장바구니</div>
-            <v-icon style="color: white">mdi-window-close</v-icon>
+            <div>
+              <v-icon style="color: white">mdi-window-close</v-icon>
+            </div>
           </div>
-          <div class="d-flex justify-space-between pb-7" @click="moveWirte">
+          <div class="recipelist-title-btn d-flex justify-space-between pb-7" @click="moveWirte">
             <div>레시피리스트 제목을 입력해주세요</div>
             <v-icon>mdi-chevron-right</v-icon>
           </div>
@@ -34,7 +38,12 @@
           </div>
           <v-divider></v-divider>
           <div v-for="(recipeInfo, i) in cart" :key="i">
-            <v-list-item three-line style="background-color: white" class="pl-3 pr-3">
+            <v-list-item
+              three-line
+              style="background-color: white"
+              class="pl-3 pr-3"
+              @click="moveDetail(recipeInfo)"
+            >
               <v-icon
                 v-if="!checkedRecipe[i]"
                 class="mr-3"
@@ -432,6 +441,7 @@ export default {
       'ADD_INGRELIST',
       'ADD_INGRE_AMOUNT',
     ]),
+    ...mapMutations('recipe', ['CLEAR_RECIPE_ID', 'SET_RECIPE_ID']),
     ...mapActions('ingredients', ['searchIngredient']),
     ...mapActions('cart', [
       'readCart',
@@ -448,6 +458,15 @@ export default {
 
     initialize() {
       this.ingredients = []
+    },
+    moveBack() {
+      this.$router.go(-1)
+    },
+    moveDetail(data) {
+      this.CLEAR_RECIPE_ID()
+      this.SET_RECIPE_ID(data.recipe.id)
+      this.$router.push('/recipe/detail')
+      console.log(data)
     },
     close() {
       this.dialog = false
@@ -846,6 +865,9 @@ export default {
 .cart-count-wrap {
   padding: 2%;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
+.recipelist-title-btn {
+  cursor: pointer;
 }
 
 .fadeInUp {

@@ -1,106 +1,122 @@
 <template>
-  <div>
-    <v-btn @click="testReadDetail()"> testReadDetail </v-btn>
-    <v-btn @click="testHadoop()"> HadoopTest </v-btn>
-    <v-btn @click="test()"> testIngredient </v-btn>
-    <v-file-input
-      v-model="fileImg"
-      width="50%"
-      label="이미지 업로드"
-      outlined
-      dense
-      value="img"
-    ></v-file-input>
-    <v-btn @click="changeForm()"> testForm </v-btn>
-    <v-btn @click="testLikes()"> testLikes </v-btn>
-  </div>
+  <v-container>
+    <v-app>
+      <v-row>
+        <v-col cols="12" lg="6">
+          <v-menu
+            ref="menu1"
+            v-model="menu1"
+            :close-on-content-click="false"
+            transition="scale-transition"
+            offset-y
+            max-width="290px"
+            min-width="auto"
+          >
+            <template #activator="{ on, attrs }">
+              <v-text-field
+                v-model="dateFormatted"
+                label="Date"
+                hint="MM/DD/YYYY format"
+                persistent-hint
+                prepend-icon="mdi-calendar"
+                v-bind="attrs"
+                @blur="date = parseDate(dateFormatted)"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker v-model="date" no-title @input="menu1 = false"></v-date-picker>
+          </v-menu>
+          <p>
+            Date in ISO format:
+            <strong>{{ date }}</strong>
+          </p>
+        </v-col>
+
+        <v-col cols="12" lg="6">
+          <v-menu
+            v-model="menu2"
+            :close-on-content-click="false"
+            transition="scale-transition"
+            offset-y
+            max-width="290px"
+            min-width="auto"
+          >
+            <template #activator="{ on, attrs }">
+              <v-text-field
+                v-model="computedDateFormatted"
+                label="Date (read only text field)"
+                hint="MM/DD/YYYY format"
+                persistent-hint
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker v-model="date" no-title @input="menu2 = false"></v-date-picker>
+          </v-menu>
+          <p>
+            Date in ISO format:
+            <strong>{{ date }}</strong>
+          </p>
+        </v-col>
+      </v-row>
+    </v-app>
+  </v-container>
 </template>
 
 <script>
-import axios from 'axios'
-import { mapActions, mapState } from 'vuex'
+// import ChartComponent from '@/components/ChartComponent.vue'
 export default {
-  name: 'DataTest',
+  name: 'AdminPAGE',
+  components: {
+    // ChartComponent,
+  },
   data() {
     return {
-      fileImg: '',
+      date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+        .toISOString()
+        .substr(0, 10),
+      dateFormatted: '',
+      menu1: false,
+      menu2: false,
     }
   },
   computed: {
-    ...mapState('recipe', ['recipeDetail']),
-    ...mapState('ingredients', ['ingredientsList']),
+    computedDateFormatted() {
+      return this.formatDate(this.date)
+    },
   },
-  methods: {
-    ...mapActions('recipe', ['RecipeDetail', 'createRecipeDetail']),
-    ...mapActions('ingredients', ['searchIngredient']),
-    testReadDetail() {
-      this.RecipeDetail(2)
-      console.log(this.recipeDetail)
+  watch: {
+    date(val) {
+      this.dateFormatted = this.formatDate(this.date)
     },
-    testCreate() {
-      this.changeForm()
+  },
+  created() {
+    // this.dateFormatted = this.formatDate(
+    //   new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+    //     .toISOString()
+    //     .substr(0, 10)
+    // )
+    this.dateFormatted = this.formatDate(this.date)
+  },
 
-      //   console.log(formData.entries())
-      // this.selectRecipeDetail(formData)
+  methods: {
+    formatDate(date) {
+      if (!date) return null
+      const [year, month, day] = date.split('-')
+      return `${month}/${day}/${year}`
     },
-    changeForm() {
-      console.log(this.fileImg)
-      // const formData = new FormData()
-      // formData.append('title', '고르곤졸라피자')
-      // formData.append('content', '만만치 않은 가격')
-      // formData.append('category', 'R0001')
-      // formData.append('serving', 4)
-      // formData.append('cookingTime', 30)
-      // formData.append('repImg', this.fileImg)
-      // formData.append('stepDtoList[0].step', 1)
-      // formData.append('stepDtoList[0].img', this.fileImg)
-      // formData.append('stepDtoList[0].content', 'asd')
-      // formData.append('ingredients[0].id', 1)
-      // formData.append('ingredients[0].amount', 5)
-      // formData.append('ingredients[1].id', 3)
-      // formData.append('ingredients[1].amount', 1)
-      // formData.append('ingredients[2].id', 6)
-      // formData.append('ingredients[2].amount', 2)
-      // formData.append('cookingTime', 30)
-      // formData.append('tagList[0]', '피자')
-      const formdata = new FormData()
-      formdata.append('title', 'this is title')
-      formdata.append('content', 'content2')
-      formdata.append('category', 'R0001')
-      formdata.append('serving', 3)
-      formdata.append('repImg', this.fileImg)
-      formdata.append('tagList[0]', '면요리')
-      formdata.append('tagList[1]', '중국요리')
-      formdata.append('stepDtoList[0].step', 1)
-      formdata.append('stepDtoList[0].content', 'step1')
-      formdata.append('stepDtoList[0].img', this.fileImge)
-      formdata.append('stepDtoList[1].step', 2)
-      formdata.append('stepDtoList[1].content', 'step2')
-      formdata.append('stepDtoList[1].img', this.fileImg)
-      formdata.append('cookingTime', 15)
-      formdata.append('ingredients[0].id', 69)
-      formdata.append('ingredients[0].amount', 1)
-      formdata.append('ingredients[1].id', 66)
-      formdata.append('ingredients[1].amount', 2)
-      for (const p of formdata.entries()) {
-        console.log(p[0] + ',' + p[1])
-      }
-      console.log(formdata)
-      this.createRecipeDetail(formdata)
+    parseDate(date) {
+      if (!date) return null
+      const [month, day, year] = date.split('/')
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
     },
-    test() {
-      const keyword = '양파'
-      this.searchIngredient(keyword)
-      console.log(this.ingredientsList)
-    },
-    testHadoop() {
-      axios.get('https://j7a705.q.ssafy.io/hadoop/test').then((res) => {
-        console.log(res.data)
-      })
-    },
-    testLikes() {},
   },
 }
 </script>
-
-<style></style>
+<style lang="scss" scoped>
+.row {
+  justify-content: center;
+}
+</style>
