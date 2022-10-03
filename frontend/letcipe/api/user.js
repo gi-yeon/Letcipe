@@ -1,4 +1,5 @@
 import interceptor from '../config/interceptor'
+import fileInterceptor from '../config/fileInterceptor'
 import { apiInstance, fileInstance } from '.'
 
 const api = apiInstance()
@@ -24,10 +25,7 @@ async function signup(user, success, fail) {
 
 // 사용자 정보 조회
 async function idCheck(userid, success, fail) {
-  await api
-    .get(`/api/user/id/${userid}/exists`)
-    .then(success)
-    .catch(fail)
+  await api.get(`/api/user/id/${userid}/exists`).then(success).catch(fail)
 }
 
 async function nicknameCheck(nickname, success, fail) {
@@ -48,10 +46,12 @@ async function mypage(userid, success, fail) {
 // 사용자 수정
 async function modifyMember(userObject, success, fail) {
   // eslint-disable-next-line dot-notation
-  api.defaults.headers['Authorization'] =
-    sessionStorage.getItem('Authorization')
-  await api
-    .put('/api/user', JSON.stringify(userObject))
+  await fileInterceptor.put('/api/user', userObject).then(success).catch(fail)
+}
+
+async function modifyPassword(passwordObject, success, fail) {
+  await interceptor
+    .patch('/api/user/password', passwordObject)
     .then(success)
     .catch(fail)
 }
@@ -71,6 +71,19 @@ async function myrecipeList(userid, success, fail) {
   await api.get(`/api/user/recipeList/${userid}`).then(success).catch(fail)
 }
 
+// 내 댓글관리
+async function mycomment(page, success, fail) {
+  await interceptor
+    .get(`/api/user/comment?page=${page}`)
+    .then(success)
+    .catch(fail)
+}
+
+// 내 댓글 갯수
+async function mycommentNum(success, fail) {
+  await interceptor.get(`/api/user/commentNum`).then(success).catch(fail)
+}
+
 // 핸드폰 인증
 async function createCode(phoneNo, success, fail) {
   await api.post(`/api/sms`, phoneNo).then(success).catch(fail)
@@ -87,5 +100,8 @@ export {
   deleteMember,
   myrecipe,
   myrecipeList,
-  createCode
+  mycomment,
+  mycommentNum,
+  createCode,
+  modifyPassword,
 }

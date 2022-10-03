@@ -3,6 +3,7 @@ import {
   putComment,
   postComment,
   getCommentNum,
+  patchComment,
 } from '@/api/comment'
 
 export const state = () => ({
@@ -53,9 +54,7 @@ export const actions = {
         boardId: object.boardId,
         boardType: object.boardType,
       },
-      ({ data }) => {
-        commit('')
-      },
+      ({ data }) => {},
       (error) => {
         console.log(error)
       }
@@ -67,9 +66,18 @@ export const actions = {
         id: object.commentId,
         content: object.content,
       },
-      ({ data }) => {
-        commit('')
+      ({ data }) => {},
+      (error) => {
+        console.log(error)
+      }
+    )
+  },
+  async patchComment({ commit }, object) {
+    await patchComment(
+      {
+        id: object.commentId,
       },
+      ({ data }) => {},
       (error) => {
         console.log(error)
       }

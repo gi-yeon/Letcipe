@@ -9,7 +9,10 @@ import {
   deleteMember,
   myrecipe,
   myrecipeList,
-  createCode
+  mycomment,
+  mycommentNum,
+  createCode,
+  modifyPassword,
 } from '@/api/user'
 
 export const state = () => ({
@@ -17,9 +20,18 @@ export const state = () => ({
   nickCheck: true,
   codeCheck: false,
   code: '',
+  email: '',
   userJoinCheck: false,
+  userid: '',
+  birth: '',
+  family: '',
+  name: '',
+  phone: '',
   userId: 0,
   nickname: '',
+  profileImage: '',
+  userGender: '',
+  userJob: '',
 })
 
 export const mutations = {
@@ -60,13 +72,31 @@ export const mutations = {
   },
 
   SET_USER(state, data) {
+    state.userid = data.userId
+    state.birth = data.birth
+    state.family = data.family
+    state.name = data.name
+    state.phone = data.phone
+    state.email = data.email
     state.userId = data.id
     state.nickname = data.nickname
+    state.profileImage = data.profileImage
+    state.userGender = data.gender
+    state.userJob = data.job
   },
+
   CLEAR_USER(state) {
+    state.userid = ''
+    state.birth = ''
+    state.family = ''
+    state.name = ''
+    state.phone = ''
+    state.email = ''
     state.userId = 0
     state.nickname = ''
-
+    state.profileImage = ''
+    state.userGender = ''
+    state.userJob = ''
   },
 }
 
@@ -86,7 +116,8 @@ export const actions = {
     )
   },
   async idCheck({ commit }, userid) {
-    await idCheck(userid, 
+    await idCheck(
+      userid,
       (res) => {
         console.log(res.status)
         commit('SET_IDCHECK_FALSE')
@@ -94,7 +125,8 @@ export const actions = {
       (error) => {
         console.log(error.status)
         commit('SET_IDCHECK_TRUE')
-      })
+      }
+    )
   },
   idCheckReset({ commit }) {
     commit('SET_IDCHECK_TRUE')
@@ -117,6 +149,17 @@ export const actions = {
       ({ data }) => {
         console.log(data)
         commit('SET_USER', data)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  },
+  async modifyPassword({ commit }, passwords) {
+    await modifyPassword(
+      passwords,
+      (res) => {
+        console.log(res)
       },
       (error) => {
         console.log(error)
@@ -185,6 +228,31 @@ export const actions = {
       }
     )
   },
+  async mycomment({ commit }, page) {
+    let result
+    await mycomment(
+      page,
+      ({ data }) => {
+        result = data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+    return result
+  },
+  async mycommentNum({ commit }) {
+    let result
+    await mycommentNum(
+      ({ data }) => {
+        result = data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+    return result
+  },
   async createCode({ commit }, phone) {
     await createCode(
       phone,
@@ -198,21 +266,25 @@ export const actions = {
     )
   },
   checkCodeEq({ commit, state }, code) {
-    if(state.code === code) {
+    if (state.code === code) {
       commit('SET_CODECHECK_TRUE')
     } else {
       commit('SET_CODECHECK_FALSE')
     }
   },
-  modifyMember({ commit }, userObject) {
-    modifyMember(
+  async modifyMember({ commit }, userObject) {
+    await modifyMember(
       userObject,
-      (response) => {
-        commit('')
+      (res) => {
+        console.log(res)
+        this.readUser()
       },
       (error) => {
         console.log(error)
       }
     )
+  },
+  changeNickCheck({ commit }) {
+    commit('SET_NICKCHECK_TRUE')
   },
 }

@@ -12,97 +12,57 @@
               <div class="d-flex flex-column">
                 <div>아이디</div>
                 <div class="d-flex">
-                  <v-text-field v-model="id" :rules="rules.id_rule" placeholder="아이디" solo></v-text-field>
+                  <v-text-field 
+                    v-model="id" 
+                    :rules="rules.id_rule" 
+                    placeholder="아이디" 
+                    solo>
+                  </v-text-field>
                   <v-dialog v-model="dialogId" persistent max-width="290">
                     <template #activator="{ on, attrs }">
                       <v-btn
+                        :disabled="id === userid || id.length < 6 || !idcheck"
                         color="letcipe"
                         height="48px"
                         style="color: white;"
                         v-bind="attrs"
-                        @click="idCheck(id)"
+                        @click="idDupCheck(id)"
                         v-on="on"
                       >중복확인</v-btn>
                     </template>
-                    <v-card v-if="checkId===true">
+                    <v-card v-if="idcheck === true">
                       <v-card-title class="text-h5">Caution</v-card-title>
-                      <v-card-text>중복되는 아이디가 있습니다. 다른 아이디를 입력해주세요.</v-card-text>
+                      <v-card-text
+                        >중복되는 아이디가 있습니다. 다른 아이디를
+                        입력해주세요.</v-card-text
+                      >
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="green darken-1" text @click="dialogId = false">확인</v-btn>
+                        <v-btn
+                          color="green darken-1"
+                          text
+                          @click="dialogId = false"
+                          >확인</v-btn
+                        >
                       </v-card-actions>
                     </v-card>
-                    <v-card v-if="checkId===false">
+                    <v-card v-if="idcheck === false">
                       <v-card-title class="text-h5">Caution</v-card-title>
                       <v-card-text>사용가능한 아이디입니다.</v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="green darken-1" text @click="dialogId = false">확인</v-btn>
+                        <v-btn
+                          color="green darken-1"
+                          text
+                          @click="dialogId = false"
+                          >확인</v-btn
+                        >
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
                 </div>
               </div>
               <div class="d-flex flex-column">
-                <div>현재 비밀번호</div>
-                <v-text-field
-                  v-model="oldPw"
-                  :append-icon="showPW ? 'mdi-eye' : 'mdi-eye-off'"
-                  :type="showPW ? 'text' : 'password'"
-                  placeholder="현재 비밀번호"
-                  solo
-                  @click:append="showPW = !showPW"
-                ></v-text-field>
-                <div>새 비밀번호</div>
-                <v-text-field
-                  v-model="pw"
-                  :rules="rules.pw_rule"
-                  :append-icon="showPW ? 'mdi-eye' : 'mdi-eye-off'"
-                  :type="showPW ? 'text' : 'password'"
-                  placeholder="새 비밀번호"
-                  solo
-                  @click:append="showPW = !showPW"
-                ></v-text-field>
-                <div>새 비밀번호 확인</div>
-                <v-text-field
-                  v-model="pwck"
-                  :rules="rules.pwck_rule"
-                  :append-icon="showPWCK ? 'mdi-eye' : 'mdi-eye-off'"
-                  :type="showPWCK ? 'text' : 'password'"
-                  placeholder="새 비밀번호 확인"
-                  solo
-                  @click:append="showPWCK = !showPWCK"
-                ></v-text-field>
-                <v-dialog v-model="dialogPwChange" persistent max-width="290">
-                  <template #activator="{ on, attrs }">
-                    <v-btn
-                      color="letcipe"
-                      height="48px"
-                      style="color: white;"
-                      v-bind="attrs"
-                      @click="oldPwCheck(oldPw)"
-                      v-on="on"
-                    >비밀번호변경</v-btn>
-                  </template>
-                  <v-card v-if="checkOldPw===true">
-                    <v-card-title class="text-h5">Caution</v-card-title>
-                    <v-card-text>현재 비밀번호가 맞지 않습니다.</v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="green darken-1" text @click="dialogPwChange = false">확인</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                  <v-card v-if="checkOldPw===false">
-                    <v-card-title class="text-h5">Caution</v-card-title>
-                    <v-card-text>비밀번호가 정상적으로 변경되었습니다.</v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="green darken-1" text @click="dialogPwChange = false">확인</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
-              </div>
-              <div class="d-flex flex-column pt-7">
                 <div>이름</div>
                 <v-text-field v-model="userNm" :rules="rules.nm_rule" placeholder="이름" solo></v-text-field>
               </div>
@@ -144,28 +104,42 @@
                   <v-dialog v-model="dialogNick" persistent max-width="290">
                     <template #activator="{ on, attrs }">
                       <v-btn
+                        :disabled="nickNm.length < 2 || nickNm === nickname || !nickCheck"
                         color="letcipe"
                         height="48px"
                         style="color: white;"
                         v-bind="attrs"
-                        @click="nickCheck(nickNm)"
+                        @click="nicknameDupCheck(nickNm)"
                         v-on="on"
                       >중복확인</v-btn>
                     </template>
-                    <v-card v-if="checkNick===true">
+                    <v-card v-if="nickCheck === true">
                       <v-card-title class="text-h5">Caution</v-card-title>
-                      <v-card-text>중복되는 닉네임이 있습니다. 다른 닉네임을 입력해주세요.</v-card-text>
+                      <v-card-text
+                        >중복되는 닉네임이 있습니다. 다른 닉네임을
+                        입력해주세요.</v-card-text
+                      >
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="green darken-1" text @click="dialogNick = false">확인</v-btn>
+                        <v-btn
+                          color="green darken-1"
+                          text
+                          @click="dialogNick = false"
+                          >확인</v-btn
+                        >
                       </v-card-actions>
                     </v-card>
-                    <v-card v-if="checkNick===false">
+                    <v-card v-if="nickCheck === false">
                       <v-card-title class="text-h5">Caution</v-card-title>
                       <v-card-text>사용가능한 닉네임입니다.</v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="green darken-1" text @click="dialogNick = false">확인</v-btn>
+                        <v-btn
+                          color="green darken-1"
+                          text
+                          @click="dialogNick = false"
+                          >확인</v-btn
+                        >
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -187,12 +161,23 @@
                   ></v-file-input>
                 </div>
               </div>
-
               <div class="d-flex flex-column">
                 <div>성별</div>
                 <div class="d-flex justify-space-between mb-4">
-                  <v-btn height="48px" width="47%" color="white">남</v-btn>
-                  <v-btn height="48px" width="47%" color="white">여</v-btn>
+                  <v-btn 
+                    height="48px" 
+                    width="47%" 
+                    v-bind:color="gender === 'M'?'letcipe':'white'"
+                    @click="setGenderM">
+                    남
+                  </v-btn>
+                  <v-btn 
+                    height="48px" 
+                    width="47%" 
+                    v-bind:color="gender === 'W'?'letcipe':'white'"
+                    @click="setGenderW">
+                    여
+                  </v-btn>
                 </div>
               </div>
               <div class="d-flex flex-column">
@@ -218,102 +203,30 @@
               <div class="d-flex flex-column">
                 <div>휴대전화번호</div>
                 <div class="d-flex justify-space-between align-items-center">
-                  <v-text-field v-model="phoneRef" placeholder="010" solo>
+                  <v-text-field :disabled="true" v-model="phoneRef" placeholder="010" solo>
                     {{
                     phoneRef
                     }}
                   </v-text-field>
                   <span>-</span>
-                  <v-text-field v-model="phoneFirst" placeholder="0000" solo>
+                  <v-text-field :disabled="true" v-model="phoneFirst" placeholder="0000" solo>
                     {{
                     phoneFirst
                     }}
                   </v-text-field>
                   <span>-</span>
-                  <v-text-field v-model="phoneSecond" placeholder="0000" solo>
+                  <v-text-field :disabled="true" v-model="phoneSecond" placeholder="0000" solo>
                     {{
                     phoneSecond
                     }}
                   </v-text-field>
-                  <v-dialog v-model="dialogCode" persistent max-width="290">
-                    <template #activator="{ on, attrs }">
-                      <v-btn
-                        color="letcipe"
-                        class="pl-2"
-                        height="48px"
-                        style="color: white;"
-                        v-bind="attrs"
-                        @click="CodeCheck(phoneRef, phoneFirst, phoneSecond)"
-                        v-on="on"
-                      >인증</v-btn>
-                    </template>
-                    <v-card>
-                      <v-card-title class="text-h5">Caution</v-card-title>
-                      <v-card-text>인증번호가 발송되었습니다.</v-card-text>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="green darken-1" text @click="dialogCode = false">확인</v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
                 </div>
-              </div>
-              <div class="d-flex">
-                <v-text-field v-model="validNum" placeholder="SK123LDk" solo>
-                  {{
-                  validNum
-                  }}
-                </v-text-field>
-                <v-dialog v-model="dialogCode2" persistent max-width="290">
-                  <template #activator="{ on, attrs }">
-                    <v-btn
-                      color="letcipe"
-                      height="48px"
-                      style="color: white;"
-                      v-bind="attrs"
-                      @click="varification(validNum)"
-                      v-on="on"
-                    >확인</v-btn>
-                  </template>
-                  <v-card v-if="checkValidNum===true">
-                    <v-card-title class="text-h5">Caution</v-card-title>
-                    <v-card-text>중복되는 닉네임이 있습니다. 다른 닉네임을 입력해주세요.</v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="green darken-1" text @click="dialogCode2 = false">확인</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                  <v-card v-if="checkValidNum===false">
-                    <v-card-title class="text-h5">Caution</v-card-title>
-                    <v-card-text>사용가능한 닉네임입니다.</v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="green darken-1" text @click="dialogCode2 = false">확인</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
               </div>
             </div>
             <v-divider></v-divider>
             <div class="option-info pt-5">
               <div class="d-flex">
                 <div class="modify-subtitle">선택정보</div>
-              </div>
-              <div class="d-flex flex-column">
-                <div>주소</div>
-                <div class="d-flex">
-                  <v-text-field
-                    id="postal-code"
-                    v-model="postalcode"
-                    placeholder="우편번호"
-                    solo
-                    style="width: 20px"
-                    @click="find_Postcode()"
-                  ></v-text-field>
-                  <v-btn height="48px" class="ml-3" color="letcipe" @click="find_Postcode()">주소검색</v-btn>
-                </div>
-                <v-text-field id="address" v-model="mainAddress" placeholder="주소" solo></v-text-field>
-                <v-text-field id="address-detail" v-model="detailsAddress" placeholder="상세주소" solo></v-text-field>
               </div>
               <div class="d-flex flex-column">
                 <div>직업</div>
@@ -326,12 +239,12 @@
             </div>
           </v-form>
           <v-card-actions>
-            <v-btn text @click="clearForm">지우기</v-btn>
+            <v-btn text @click="init()">초기화</v-btn>
             <v-spacer></v-spacer>
             <v-dialog v-model="dialogModify" persistent max-width="290">
               <template #activator="{ on, attrs }">
                 <v-btn
-                  :disabled="!form"
+                  :disabled="!((gender!==userGender)||(!idcheck||id!==userid)||(!nickCheck||nickNm!==nickname)||(userNm&&userNm!==name)||(profileImage!==preview_profile)||(birth!==birthdate)||(email_id&&email_id!==real_eid)||(email_address&&email_address!==real_eaddr)||(job!==jobMap[userJob])||(familymember!==realFam))"
                   :loading="isLoading"
                   class="white--text"
                   color="letcipe"
@@ -339,22 +252,88 @@
                   v-bind="attrs"
                   @click="modify()"
                   v-on="on"
-                >가입</v-btn>
+                >수정</v-btn>
               </template>
               <v-card>
                 <v-card-title class="text-h5">Congratulations!&#127930;</v-card-title>
-                <v-card-text>성공적으로 가입되었습니다!</v-card-text>
+                <v-card-text>성공적으로 수정되었습니다!</v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn
                     color="green darken-1"
                     text
-                    @click="[dialogModify = false, moveMypage()]"
+                    @click="[dialogModify = false]"
                   >확인</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
           </v-card-actions>
+          <v-divider></v-divider>
+          <div class="option-info pt-5">
+              <div class="d-flex">
+                <div class="modify-subtitle">비밀번호</div>
+              </div>
+              <div class="d-flex flex-column">
+                <div>현재 비밀번호</div>
+                <v-text-field
+                  v-model="oldPw"
+                  :append-icon="showPW ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="showPW ? 'text' : 'password'"
+                  placeholder="현재 비밀번호"
+                  solo
+                  @click:append="showPW = !showPW"
+                ></v-text-field>
+                <div>새 비밀번호</div>
+                <v-text-field
+                  v-model="pw"
+                  :rules="rules.pw_rule"
+                  :append-icon="showPW ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="showPW ? 'text' : 'password'"
+                  placeholder="새 비밀번호"
+                  solo
+                  @click:append="showPW = !showPW"
+                ></v-text-field>
+                <div>새 비밀번호 확인</div>
+                <v-text-field
+                  v-model="pwck"
+                  :rules="rules.pwck_rule"
+                  :append-icon="showPWCK ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="showPWCK ? 'text' : 'password'"
+                  placeholder="새 비밀번호 확인"
+                  solo
+                  @click:append="showPWCK = !showPWCK"
+                ></v-text-field>
+                <v-dialog v-model="dialogPwChange" persistent max-width="290">
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      :disabled="pw === oldpw || !pw || pw.length < 8 || pw.length > 20 || !/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/.test(pw) || !pwck || pw !== pwck"
+                      color="letcipe"
+                      height="48px"
+                      style="color: white;"
+                      v-bind="attrs"
+                      @click="updatePassword()"
+                      v-on="on"
+                    >비밀번호변경</v-btn>
+                  </template>
+                  <v-card v-if="checkOldPw===true">
+                    <v-card-title class="text-h5">Caution</v-card-title>
+                    <v-card-text>현재 비밀번호가 맞지 않습니다.</v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="green darken-1" text @click="dialogPwChange = false">확인</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                  <v-card v-if="checkOldPw===false">
+                    <v-card-title class="text-h5">Caution</v-card-title>
+                    <v-card-text>비밀번호가 정상적으로 변경되었습니다.</v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="green darken-1" text @click="dialogPwChange = false">확인</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </div>
+            </div>
         </div>
       </v-container>
     </v-app>
@@ -362,11 +341,12 @@
 </template>
 
 <script>
+import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
   name: 'ModifyPage',
   data() {
     return {
-      id: '',
+      id:'',
       oldPw: '',
       pw: '',
       pwck: '',
@@ -381,8 +361,9 @@ export default {
       bdmenu: false,
       email_id: '',
       email_address: undefined,
+      real_eid:'',
+      real_eaddr:'',
       form: false,
-      phone: undefined,
       phoneRef: undefined,
       phoneFirst: undefined,
       phoneSecond: undefined,
@@ -390,8 +371,7 @@ export default {
       postalcode: null,
       mainAddress: '',
       detailsAddress: '',
-      job: '',
-      familymember: 1,
+      familymember: '선택',
       isLoading: false,
       rules: {
         id_rule: [
@@ -436,8 +416,22 @@ export default {
         'hotmail.com',
         'outlook.com',
       ],
+      job:'',
       jobs: ['주부', '학생', '직장인', '요식업 종사자'],
-      famCnt: [1, 2, 3, 4, '5인 이상'],
+      jobsMap: {
+        '주부': 'JUBU',
+        '학생': 'STUDENT',
+        '직장인': 'WORKER',
+        '요식업 종사자': 'COOK'
+      },
+      jobMap: {
+        'JUBU': '주부',
+        'STUDENT': '학생',
+        'WORKER': '직장인',
+        'COOK': '요식업 종사자'
+      },
+      famCnt: ['선택',1, 2, 3, 4, '5인 이상'],
+      realFam: '',
       preview_profile: null,
       dialogId: false,
       checkId: true,
@@ -450,9 +444,57 @@ export default {
       dialogModify: false,
       dialogPwChange: false,
       checkOldPw: true,
+      changeProfile: false,
+      gender: '',
     }
   },
+  watch: {
+    id(newValue, oldValue) {
+      this.changeIdCheck()
+    },
+    nickNm(newValue, oldValue) {
+      this.changeNickCheck()
+    }
+  },  
+  computed: {
+    ...mapState('user', ['userid', 'birth', 'email', 'family', 'name', 'phone', 'nickname', 'profileImage', 'userGender', 'userJob', 'userJoinCheck', 'idcheck', 'nickCheck', 'codeCheck']),
+  },
+  created() {
+    this.init()
+  },
   methods: {
+    ...mapMutations('user', ['SET_IDCHECK_TRUE', 'SET_NICKCHECK_TRUE', 'SET_CODECHECK_FALSE', 'SET_USERJOINCHECK_FALSE', 'SET_CODE']),
+    ...mapActions('user', ['changeNickCheck', 'modifyPassword', 'readUser', 'modifyMember', 'resetStatus', 'idCheckReset', 'idCheck', 'nicknameCheck', 'signup', 'createCode', 'checkCodeEq']),
+    init(){
+      this.id = this.userid
+      this.nickNm = this.nickname
+      this.userNm = this.name
+      this.birthdate = this.birth
+      this.preview_profile = this.profileImage
+
+      const emailStr = this.email.split('@')
+      this.email_id = emailStr[0]
+      this.real_eid = emailStr[0]
+      this.email_address = emailStr[1]
+      this.real_eaddr = emailStr[1]
+
+      this.phoneRef = this.phone.substring(0,3)
+      this.phoneFirst = this.phone.substring(3,7)
+      this.phoneSecond = this.phone.substring(7, this.phone.size)
+
+      this.job = this.jobMap[this.userJob]
+      if(this.family){
+        if(this.family === 5) {
+          this.familymember = "5인 이상"
+          this.realFam = "5인 이상"
+        } else {
+          this.realFam = this.family
+          this.familymember = this.family
+        }
+      }
+
+      this.gender = this.userGender
+    },
     moveMain() {
       this.$router.push('/main')
     },
@@ -461,56 +503,6 @@ export default {
     },
     clearForm() {
       this.$refs.form.reset()
-    },
-    find_Postcode() {
-      new window.daum.Postcode({
-        oncomplete: (data) => {
-          // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
-          // 각 주소의 노출 규칙에 따라 주소를 조합한다.
-          // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
-          // let addr = '' // 주소 변수
-          // let extraAddr = '' // 참고항목 변수
-          // vue라서 위 data에 변수로 추가해줬음.
-          // //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
-          this.mainAddress = ''
-          this.detailAddress = ''
-          if (data.userSelectedType === 'R') {
-            // 사용자가 도로명 주소를 선택했을 경우
-            this.mainAddress = data.roadAddress
-          } else {
-            // 사용자가 지번 주소를 선택했을 경우(J)
-            this.mainAddress = data.jibunAddress
-          }
-          // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
-          if (data.userSelectedType === 'R') {
-            // 법정동명이 있을 경우 추가한다. (법정리는 제외)
-            // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
-              this.detailAddress += data.bname
-            }
-            // 건물명이 있고, 공동주택일 경우 추가한다.
-            if (data.buildingName !== '' && data.apartment === 'Y') {
-              this.detailAddress +=
-                this.detailAddress !== ''
-                  ? ', ' + data.buildingName
-                  : data.buildingName
-            }
-            // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-            if (this.detailAddress !== '') {
-              this.detailAddress = ' (' + this.detailAddress + ')'
-            }
-            // 조합된 참고항목을 해당 필드에 넣는다.
-            document.getElementById('address-detail').value = this.extraAddr
-          } else {
-            document.getElementById('address-detail').value = ''
-          }
-          // 우편번호와 주소 정보를 해당 필드에 넣는다.
-          document.getElementById('postal-code').value = data.zonecode
-          document.getElementById('address').value = this.addr
-          // 커서를 상세주소 필드로 이동한다.
-          document.getElementById('address-detail').focus()
-        },
-      }).open()
     },
     imglog() {
       console.log(this.profile_img)
@@ -530,6 +522,7 @@ export default {
           },
           false
         )
+        this.changeProfile = true
       } else if (file === null) {
         this.fileInfo = null
         this.preview_profile = '/banner/no-image.png'
@@ -549,24 +542,54 @@ export default {
         )
       }
     },
-    idCheck(id) {
-      console.log(id)
+    idDupCheck(id) {
+      this.idCheck(id)
     },
-    nickCheck(nickNm) {
-      console.log(nickNm)
+    nicknameDupCheck(nickNm) {
+      this.nicknameCheck(nickNm)
     },
-    CodeCheck(phoneRef, phoneFirst, phoneSecond) {
-      console.log(phoneRef, phoneFirst, phoneSecond)
+    async modify() {
+      this.familymember = (this.familymember === '5인 이상')? 5: this.familymember
+      if(this.familymember === '선택') {
+        this.familymember = undefined
+      }
+      const job = (this.job !== '직업')? this.jobsMap[this.job]:undefined
+      const formData = new FormData();
+      formData.append('name',this.userNm)
+      formData.append('userId',this.id)
+      formData.append('email',this.email_id + "@" + this.email_address)
+      formData.append('nickname',this.nickNm)
+      formData.append('birth',this.birthdate)
+      formData.append('gender',this.gender)
+      if(job) {
+        formData.append('job', job)
+      }
+      if(this.familymember){
+        formData.append('family', this.familymember)
+      }
+      if(this.changeProfile){
+        formData.append('profileImg',this.file)
+      }
+
+      await this.modifyMember(formData)
+      await this.readUser()      
     },
-    varification(validNum) {
-      console.log(validNum)
+    updatePassword() {
+      this.modifyPassword({
+        password: this.oldPw,
+        newPassword: this.pw
+      })
     },
-    modify() {
-      console.log('가입')
+    setGenderM(){
+      this.gender = 'M'
     },
-    oldPwCheck(oldPw) {
-      console.log(oldPw)
+    setGenderW(){
+      this.gender = 'W'
     },
+    changeIdCheck(){
+      console.log(this.idCheck)
+      this.idCheckReset()
+    }
   },
 }
 </script>

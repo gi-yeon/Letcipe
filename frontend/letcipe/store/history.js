@@ -35,9 +35,7 @@ export const actions = {
       ({ data }) => {
         commit('SET_HISTORY_LIST', data)
         console.log('히스토리목록가져오기 성공!')
-        console.log(data)
-        
-  
+        // console.log(data)
       },
       (error) => {
         console.log(error)
@@ -49,9 +47,8 @@ export const actions = {
       historyId,
       ({ data }) => {
         commit('SET_HISTORY', data)
-        console.log(data)
+        // console.log(data)
         console.log('히스토리한개가져오기 성공!')
-      
       },
       (error) => {
         console.log(error)
@@ -75,7 +72,7 @@ export const actions = {
     await updateHistory(
       history,
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         console.log('히스토리 프로세스 변경 성공!')
       },
       (error) => {
@@ -88,7 +85,7 @@ export const actions = {
       historyIngredientId,
       ({ data }) => {
         // console.log(data)
-        // console.log('히스토리 장보기목록 checked 성공!')
+        console.log('히스토리 장보기목록 checked 성공!')
       },
       (error) => {
         console.log(error)
