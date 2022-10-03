@@ -2,12 +2,15 @@
 import{
   getRecipes,
   getRecipesIngre,
-  getRecipeList
+  getRecipeList,
+  getTotalNumRecipe,
+  getTotalNumRecipeList
 } from '@/api/search'
 export const state = () => ({
     recipes : [],
     recipesIngre : [],
-    recipeLists : []
+    recipeLists : [],
+    totalPage : 1,
 })
 
 export const mutations = {
@@ -28,7 +31,11 @@ export const mutations = {
     },
     CLEAR_RECIPE_LIST(state){
       state.recipeLists = ""
+    },
+    SET_TOTAL_PAGE(state, page){
+      state.totalPage = page
     }
+    
 }
 
 export const getters = {}
@@ -51,6 +58,19 @@ export const actions = {
         console.log(error)
       }
     )
+    await getTotalNumRecipe(
+      {
+        keyword: object.keyword,
+
+      },
+      ({data}) => {
+        console.log(data)
+        commit('SET_TOTAL_PAGE', data)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
   },
   async getRecipesIngre({ commit }, object) {
     commit('CLEAR_RECIPE_INGRE');
@@ -68,19 +88,42 @@ export const actions = {
         console.log(error)
       }
     )
-  }, async getRecipeList({ commit }, object) {
+    await getTotalNumRecipe(
+      {
+        ingredients : object.ingredients,
+      },
+      ({data}) => {
+        console.log(data)
+        commit('SET_TOTAL_PAGE', data)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }, 
+  async getRecipeList({ commit }, object) {
     commit('CLEAR_RECIPE_LIST');
     commit('CLEAR_RECIPE');
     console.log(object)
     await getRecipeList(
-      
          object.keyword,
-       object.size,
+        object.size,
         object.page
        ,
       ({ data }) => {
         commit('SET_RECIPE_LIST', data)
         console.log(data)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+    await getTotalNumRecipeList(
+      object.keyword,
+  
+      ({data}) => {
+    console.log(data)
+        commit('SET_TOTAL_PAGE', data)
       },
       (error) => {
         console.log(error)
