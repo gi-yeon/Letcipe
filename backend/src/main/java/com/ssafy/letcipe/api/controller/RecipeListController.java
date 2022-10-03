@@ -24,8 +24,7 @@ public class RecipeListController {
     @PostMapping("")
     public ResponseEntity<?> createRecipeList(@RequestBody ReqCreateRecipeListDto reqCreateRecipeListDto, HttpServletRequest request) {
         Long userId = jwtService.getUserId(request);
-        recipeListService.createRecipeList(userId, reqCreateRecipeListDto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(recipeListService.createRecipeList(userId, reqCreateRecipeListDto));
     }
 
     @GetMapping("/{recipe_list_id}")
