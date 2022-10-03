@@ -3,6 +3,7 @@ import {
   getRecipesIngre,
   getRecipeList,
   getHotRecipes,
+  getChartInfo,
 } from '@/api/search'
 export const state = () => ({
   recipes: [],
@@ -10,6 +11,7 @@ export const state = () => ({
   recipeLists: [],
   hotRecipes: [],
   hotTitle: '',
+  charts: [],
 })
 
 export const mutations = {
@@ -18,6 +20,9 @@ export const mutations = {
   },
   SET_HOT_RECIPE(state, hotRecipes) {
     state.hotRecipes = hotRecipes
+  },
+  SET_CHARTS(state, charts) {
+    state.charts = charts
   },
   SET_HOT_TITLE(state, hotTitle) {
     state.hotTitle = hotTitle
@@ -42,6 +47,9 @@ export const mutations = {
   },
   CLEAR_RECIPE_LIST(state) {
     state.recipeLists = ''
+  },
+  CLEAR_CHARTS(state) {
+    state.charts = []
   },
 }
 
@@ -77,6 +85,22 @@ export const actions = {
         console.log(data)
         commit('SET_HOT_RECIPE', data.report)
         commit('SET_HOT_TITLE', data.title)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  },
+  async getCharts({ commit }, object) {
+    commit('CLEAR_CHARTS')
+    await getChartInfo(
+      {
+        size: object.size,
+        page: object.page,
+      },
+      ({ data }) => {
+        console.log(data)
+        // commit('SET_CHARTS', data.report)
       },
       (error) => {
         console.log(error)

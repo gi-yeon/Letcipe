@@ -8,6 +8,12 @@ async function getRecipes(object, success, fail) {
 async function getHotRecipes(object, success, fail) {
   await api.get(`/api/recipe/hot`, { params: object }).then(success).catch(fail)
 }
+async function getChartInfo(object, success, fail) {
+  await api
+    .get(`/api/admin/recipe`, { params: object })
+    .then(success)
+    .catch(fail)
+}
 async function getRecipesIngre(object, success, fail) {
   await api.get(`/api/recipe`, { params: object }).then(success).catch(fail)
 }
@@ -17,4 +23,10 @@ async function getRecipeList(keyword, size, page, success, fail) {
     .then(success)
     .catch(fail)
 }
-export { getRecipes, getRecipesIngre, getRecipeList, getHotRecipes }
+export {
+  getRecipes,
+  getRecipesIngre,
+  getRecipeList,
+  getHotRecipes,
+  getChartInfo,
+}
