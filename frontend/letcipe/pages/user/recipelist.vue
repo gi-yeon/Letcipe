@@ -6,16 +6,15 @@
           <div class="myrecipe-head-wrap">
             <div class="d-flex justify-space-between pb-3">
               <v-icon @click="moveMypage">mdi-window-close</v-icon>
-              <div style="font-size: x-large">내가 작성한 레시피</div>
+              <div style="font-size: x-large">내가 만든 레시피리스트</div>
               <v-icon>mdi-blank</v-icon>
             </div>
           </div>
           <v-divider></v-divider>
 
-          <v-card-subtitle>내가 작성한 레시피</v-card-subtitle>
           <!-- <div :page="currentPage" :items="myRecipes" :items-per-page="perPage" class="text-center"> -->
-          <div>
-            <div v-for="(mr, i) in myRecipe" :key="i">
+          <div v-if="recipeList.length > 0">
+            <div v-for="(mr, i) in recipeList" :key="i">
               <v-list-item three-line>
                 <v-list-item-avatar class="recipe-item" tile size="100" @click="moveDetail(mr)">
                   <v-img :src="mr.repImg"></v-img>
@@ -52,7 +51,12 @@
               <v-divider></v-divider>
             </div>
           </div>
-
+          <div v-else>
+            <div>
+              <v-list-item three-line>레시피 리스트를 만들어주세요.</v-list-item>
+              <v-divider></v-divider>
+            </div>
+          </div>
           <v-pagination
             v-model="currentPage"
             color="letcipe"
@@ -89,11 +93,11 @@ export default {
       tab: null,
       isSelected: [],
       selectedIngre: '',
-      myRecipes: [],
+      recipeList: [],
     }
   },
   computed: {
-    ...mapState('user', ['myRecipe']),
+    ...mapState('user', ['myRecipe', 'myRecipeList']),
   },
 
   watch: {},
@@ -106,10 +110,10 @@ export default {
       resolve()
     })
     promise.then(async () => {
-      await this.myrecipe(pageable)
-      //   this.myRecipe.forEach((mr) => {
-      //     this.myRecipes.push(mr)
-      //   })
+      await this.myrecipeList(pageable)
+      this.myRecipeList?.forEach((mr) => {
+        this.recipeList.push(mr)
+      })
       //   this.TotalPage = this.myRecipe.length / 5
       //   console.log(this.TotalPage)
       //   console.log(this.myRecipes)
@@ -117,7 +121,7 @@ export default {
   },
   methods: {
     ...mapActions('recipe', ['patchRecipeDetail']),
-    ...mapActions('user', ['myrecipe']),
+    ...mapActions('user', ['myrecipe', 'myrecipeList']),
     ...mapActions('cartr', ['createCart']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     editItem(mr) {

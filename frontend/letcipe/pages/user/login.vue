@@ -35,12 +35,8 @@
           </div>
           <div>
             <div class="btn-wrap">
-              <v-btn class="btn" color="#AAC821" @click="loginTemp"
-                >로그인</v-btn
-              >
-              <v-btn class="btn" color="#AAC821" @click="moveAgree"
-                >회원가입</v-btn
-              >
+              <v-btn class="btn" color="#AAC821" @click="loginTemp">로그인</v-btn>
+              <v-btn class="btn" color="#AAC821" @click="moveAgree">회원가입</v-btn>
             </div>
           </div>
         </div>
@@ -49,9 +45,7 @@
           <v-card-text>아이디 또는 비밀번호가 일치하지 않습니다.</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="checkLogin = false"
-              >확인</v-btn
-            >
+            <v-btn color="green darken-1" text @click="checkLogin = false">확인</v-btn>
           </v-card-actions>
         </v-card>
       </v-container>
@@ -147,7 +141,7 @@ export default {
   border-radius: 10px;
 }
 .login-wrap {
-  width: 30%;
+  width: 40%;
 }
 .find-wrap {
   color: #51600d;
@@ -171,6 +165,13 @@ export default {
 .v-input {
   padding: 2%;
 }
+
+@media (max-width: 1000px) {
+  .login-wrap {
+    width: 50%;
+  }
+}
+
 /* mobile screen */
 @media (max-width: 415px) {
   .login-title {
@@ -189,7 +190,7 @@ export default {
   }
 
   .login-wrap {
-    width: 60%;
+    width: 70%;
   }
 }
 .fadeInUp {

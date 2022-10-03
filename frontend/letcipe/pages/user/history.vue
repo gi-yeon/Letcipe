@@ -14,8 +14,8 @@
 
           <v-card-subtitle>히스토리</v-card-subtitle>
           <!-- <div :page="currentPage" :items="myRecipes" :items-per-page="perPage" class="text-center"> -->
-          <div>
-            <div v-for="(mr, i) in myRecipe" :key="i">
+          <div v-if="recipeList.length > 0">
+            <div v-for="(mr, i) in recipeList" :key="i">
               <v-list-item three-line>
                 <v-list-item-avatar class="recipe-item" tile size="100" @click="moveDetail(mr)">
                   <v-img :src="mr.repImg"></v-img>
@@ -24,23 +24,20 @@
                   <v-list-item-title class="d-flex justify-space-between">
                     <div class="recipe-item" @click="moveDetail(mr)">{{ mr.title }}</div>
                     <div>
-                      <v-icon style="z-index: 1" small color="info" @click="editItem(mr)">mdi-pencil</v-icon>
-                      <v-icon style="z-index: 1" small @click="deleteItem(mr)">mdi-delete</v-icon>
+                      <v-icon
+                        style="z-index: 1"
+                        small
+                        color="info"
+                        @click="writeReview(mr)"
+                      >mdi-pencil</v-icon>
                     </div>
                   </v-list-item-title>
-
-                  <v-list-item-subtitle class="recipe-item" @click="moveDetail(mr)">{{ mr.content }}</v-list-item-subtitle>
+                  <v-list-item-subtitle class="recipe-item" @click="moveDetail(mr)">{{ mr.review }}</v-list-item-subtitle>
                   <div class="d-flex justify-space-between">
                     <v-list-item-subtitle class="d-flex align-center">
                       <div class="d-flex align-center">
-                        <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
-                        <div>{{mr.recipeLike }}</div>
-                      </div>
-                      <div>
-                        <div class="d-flex align-center">
-                          <v-icon small color="yellow lighten-1">mdi-bookmark</v-icon>
-                          <div>{{mr.recipeBookmark }}</div>
-                        </div>
+                        <v-icon small color="letcipe">mdi-calendar-clock</v-icon>
+                        <div style="font-size: x-small">{{mr.regTime }}</div>
                       </div>
                     </v-list-item-subtitle>
                     <v-list-item-subtitle style="text-align: right">
@@ -52,7 +49,12 @@
               <v-divider></v-divider>
             </div>
           </div>
-
+          <div v-else>
+            <div>
+              <v-list-item three-line>완료된 목록이 없습니다.</v-list-item>
+              <v-divider></v-divider>
+            </div>
+          </div>
           <v-pagination
             v-model="currentPage"
             color="letcipe"
@@ -89,11 +91,12 @@ export default {
       tab: null,
       isSelected: [],
       selectedIngre: '',
-      myRecipes: [],
+      recipeList: [],
     }
   },
   computed: {
     ...mapState('user', ['myRecipe']),
+    ...mapState('history', ['historyList']),
   },
 
   watch: {},
@@ -106,29 +109,35 @@ export default {
       resolve()
     })
     promise.then(async () => {
-      await this.myrecipe(pageable)
-      //   this.myRecipe.forEach((mr) => {
-      //     this.myRecipes.push(mr)
-      //   })
+      await this.getHistoryList(pageable)
+      this.historyList?.forEach((mr) => {
+        if (mr.process === 'END') {
+          const myHistory = {
+            regTime: mr.regTime.split('T')[0],
+            review: mr.review,
+            repImg: mr.historyItems[0].recipe.repImg,
+            title:
+              mr.historyItems[0].recipe.title + ' 외 ' + mr.historyItems.length,
+          }
+          this.recipeList.push(myHistory)
+        }
+      })
       //   this.TotalPage = this.myRecipe.length / 5
       //   console.log(this.TotalPage)
       //   console.log(this.myRecipes)
+      console.log(this.historyList)
     })
   },
   methods: {
     ...mapActions('recipe', ['patchRecipeDetail']),
+    ...mapActions('history', ['getHistoryList']),
     ...mapActions('user', ['myrecipe']),
     ...mapActions('cartr', ['createCart']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
-    editItem(mr) {
+    writeReview(mr) {
       this.CLEAR_RECIPE_ID()
       this.SET_RECIPE_ID(mr.id)
       this.$router.push('/recipe/modify')
-    },
-    deleteItem(mr) {
-      //     this.checkedList.splice(index, 1)
-      //   this.checklist.push(c)
-      this.patchRecipeDetail(mr.id)
     },
     moveDetail(mr) {
       this.CLEAR_RECIPE_ID()

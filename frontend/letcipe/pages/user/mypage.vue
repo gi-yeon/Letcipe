@@ -9,16 +9,16 @@
                 <div class="user-avatar">
                   <v-avatar class="user-profile" size="90px">
                     <img
-                      v-if="avatar"
+                      v-if="profileImage !== '' && profileImage !== null"
                       alt="Avatar"
-                      src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
+                      :src="profileImage"
                     />
-                    <v-icon v-else :color="message.color" v-text="message.icon"></v-icon>
+                    <img v-else alt="Avatar" src="/icons/유저_mo.png" />
                   </v-avatar>
                 </div>
                 <div class="user-info">
-                  <div class="user-name" style="font-size: 18px">&nbsp;{{ nickname }}ㅡㅡㅡㅡ</div>
-                  <div class="user-name" style="font-size: 13px">&nbsp;{{ job }}</div>
+                  <div class="user-name" style="font-size: 18px">{{ nickname }}</div>
+                  <div class="user-name" style="font-size: 13px">{{ userJob }}</div>
                 </div>
               </div>
               <div class="user-chip">
@@ -34,16 +34,7 @@
           </v-container>
           <v-container class="my-btn-container">
             <div class="user-head-btn d-flex justify-space-between">
-              <!-- <v-row style="margin: auto">
-                <v-col cols="6" @click="moveProgress">
-                  <v-icon class="menu-icon">mdi-book-open-page-variant-outline</v-icon>진행중인 리스트
-                </v-col>
-                <span style="margin: auto">|</span>
-                <v-col style="margin: auto" @click="moveCheckList">
-                  <v-icon class="menu-icon">mdi-cart</v-icon>장보기목록
-                </v-col>
-              </v-row>-->
-              <v-btn class="my-btn" large>
+              <v-btn class="my-btn" large @click="moveProgress">
                 <v-hover style="text-align: center;">
                   <template #default="{ hover }">
                     <img
@@ -57,7 +48,7 @@
                 </v-hover>
                 <span style="font-size: medium">진행중인 리스트</span>
               </v-btn>
-              <v-btn class="my-btn" large>
+              <v-btn class="my-btn" large @click="moveCheckList">
                 <v-hover style="text-align: center;">
                   <template #default="{ hover }">
                     <img
@@ -148,7 +139,7 @@
                 </v-hover>
                 <v-hover>
                   <template #default="{ hover }">
-                    <v-list-item @click="moveRecipeListBookmark">
+                    <v-list-item @click="moveMyRecipeList">
                       <v-list-item-icon>
                         <img
                           class="footer-icon"
@@ -278,15 +269,17 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'MyPage',
   data: () => ({
     avatar: 'https://avatars0.githubusercontent.com/u/9064066?v=4&s=460',
-    nickname: '레시피 마법사',
-    job: 'Chef',
     title: 'Welcome to Vuetify!',
     excerpt: 'Thank you for joining our community...',
   }),
+  computed: {
+    ...mapState('user', ['userId', 'nickname', 'userJob', 'profileImage']),
+  },
   methods: {
     moveModify() {
       this.$router.push('/user/modify')
@@ -310,7 +303,7 @@ export default {
       this.$router.push('/user/listbookmark')
     },
     moveMyRecipeList() {
-      this.$router.push('/user/reciplist')
+      this.$router.push('/user/recipelist')
     },
     moveCart() {
       this.$router.push('/cart')

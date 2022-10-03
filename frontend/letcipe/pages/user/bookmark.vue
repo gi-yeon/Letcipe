@@ -14,8 +14,8 @@
 
           <v-card-subtitle>즐겨찾는 레시피</v-card-subtitle>
 
-          <div>
-            <div v-for="(mr, i) in myBookMarkRecipe" :key="i">
+          <div v-if="recipeBookmarks.length> 0">
+            <div v-for="(mr, i) in recipeBookmarks" :key="i">
               <v-list-item three-line>
                 <v-list-item-avatar class="recipe-item" tile size="100" @click="moveDetail(mr)">
                   <v-img :src="mr.repImg"></v-img>
@@ -63,7 +63,12 @@
               <v-divider></v-divider>
             </div>
           </div>
-
+          <div v-else>
+            <div>
+              <v-list-item three-line>즐겨찾기에 추가된 레시피가 없습니다.</v-list-item>
+              <v-divider></v-divider>
+            </div>
+          </div>
           <v-pagination
             v-model="currentPage"
             color="letcipe"

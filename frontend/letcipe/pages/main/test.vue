@@ -44,13 +44,13 @@
                                 <div>
                                   <div class="my-lecipe">
                                     <v-avatar class="ma-3" size="100">
-                                      <v-img :src="'https://2bob.co.kr/' + item.url">
+                                      <v-img :src="item.url">
                                         <v-icon x-large>mdi-play</v-icon>
                                       </v-img>
                                     </v-avatar>
                                   </div>
                                   <v-card-title class="my-title text-h5" v-text="item.title"></v-card-title>
-                                  <v-card-subtitle v-text="item.sub_title"></v-card-subtitle>
+                                  <v-card-subtitle class="my-sub-title" v-text="item.sub_title"></v-card-subtitle>
                                 </div>
                               </div>
                             </v-card>
@@ -88,7 +88,7 @@
                     <v-card flat>
                       <v-card-text v-if="i === 1" class="check-item-wrap fadeInUp">
                         <div class="shopping-wrap">
-                          <div class="before-shopping">
+                          <div v-if="checklist.length > 0" class="before-shopping">
                             <div v-for="(c, index) in checklist" :key="index" class="pl-3 pr-3">
                               <div class="d-flex justify-space-between align-center mt-1">
                                 <div class="ingre-name">
@@ -106,6 +106,14 @@
                               </div>
 
                               <v-divider></v-divider>
+                            </div>
+                          </div>
+                          <div v-else class="shopping-wrap">
+                            <div
+                              class="before-shopping-none"
+                              style="align-self: center !important; text-align: center !important;"
+                            >
+                              <div>진행중인 장보기목록이 없습니다.</div>
                             </div>
                           </div>
                         </div>
@@ -305,28 +313,10 @@ export default {
     return {
       userPlayList: [
         {
-          url: 'data/recipe/20191212142613-HV8JG.jpg',
-          sub_title: '만소~만소',
-          title: '만두소시지꼬치',
-          content:
-            '소떡소떡을 응용한 만두요리예요. 떡 대신 만두가 실하게 자리잡았답니다. 추억의 케첩 양념에 고소함을 더할 마요네즈도 꼭 곁들여주세요.',
-          ingrediants: {
-            must: '냉동 납작만두(15개), 소시지(12개), 마요네즈(2)',
-            option: '고추장(1)+케첩(4)+올리고당(2)',
-            souce: '',
-          },
-        },
-        {
-          url: 'data/recipe/20170419170950-RSFQM.jpg',
-          sub_title: '알싸한 파로 승부 걸었다',
-          title: '매운파골뱅이무침',
-          content:
-            '고춧가루와 고추만 맵다고 생각했다면 큰 오산. 골뱅이무침에 소면 대신 파채를 듬뿍 곁들여보세요. 아삭하고 알싸한 파의 매운맛,이번에 제대로 경험할 거예요.',
-          ingrediants: {
-            must: '콩나물(2줌=150g),통조림 골뱅이(1캔=400g), 대파(4대×20cm=대파채 4컵 분량=180g)',
-            option: '풋고추(1개)',
-            souce: '소금(0.2)',
-          },
+          url: 'https://img.icons8.com/emoji/344/orange-circle-emoji.png',
+          sub_title: '아직 진행중인 레시피리스트가 없습니다.',
+          title: '레시피를 진행해주세요',
+          serving: 0,
         },
       ],
       refImg: [
@@ -356,20 +346,7 @@ export default {
           title: '오이냉면',
         },
       ],
-      tag_set: [
-        'Now',
-        '최신',
-        '추석',
-        '쉐프의리스트',
-        '20대 남성들이 좋아할 만한 레시피',
-        '쉐프의리스트',
-        '쉐프의리스트',
-        '쉐프의리스트',
-        '쉐프의리스트',
-        '쉐프의리스트',
-
-        '더보기',
-      ],
+      tag_set: [],
       lecipeData: [],
       time: '',
       historyID: null,
@@ -389,15 +366,13 @@ export default {
   },
   computed: {
     ...mapState('user', ['userId', 'nickname']),
-    ...mapState('search', ['recipes', 'recipeLists']),
-
+    ...mapState('search', ['recipes', 'recipeLists', 'hotRecipes', 'hotTitle']),
     ...mapState('history', ['history', 'historyList']),
   },
   created() {
     setInterval(this.findnow.bind(this), 1000)
-    const seraching = {
-      keyword: '감자',
-      size: 3,
+    const searching = {
+      size: 5,
       page: 0,
     }
     const promise = new Promise((resolve, reject) => {
@@ -405,34 +380,37 @@ export default {
     })
     promise.then(async () => {
       this.lecipeData = []
-      await this.getRecipeList(seraching)
-      await this.getRecipes(seraching)
+      await this.getHotRecipes(searching)
+      // await this.getRecipes(seraching)
 
-      this.recipes.forEach((r) => {
+      this.tag_set.push(this.hotTitle)
+      this.hotRecipes.forEach((r) => {
         const chartData = {
-          recipeId: r.id,
-          imgUrl: r.repImg,
-          sub_title: r.content,
-          title: r.title,
+          recipeId: r.recipe.id,
+          imgUrl: r.recipe.repImg,
+          sub_title: r.recipe.content,
+          title: r.recipe.title,
         }
         this.lecipeData.push(chartData)
       })
-
+      console.log('이거슨감자' + this.recipeLists)
       await this.getHistoryList()
-
       this.historyList?.forEach((h) => {
         if (h.process === 'READY') {
           this.historyID = h.id
         }
       })
       if (this.historyID !== null) {
+        this.userPlayList = []
         await this.getHistory(this.historyID)
-        this.history.historyIngredients.forEach((jaeryo) => {
-          if (jaeryo.isPurchased === 'N') {
-            this.checklist.push(jaeryo)
-          } else {
-            this.checkedList.push(jaeryo)
+        this.history.historyItems?.forEach((h) => {
+          const playRecipe = {
+            url: h.recipe.repImg,
+            sub_title: h.recipe.content,
+            title: h.recipe.title,
+            serving: h.recipe.serving,
           }
+          this.userPlayList.push(playRecipe)
         })
       }
     })
@@ -444,7 +422,7 @@ export default {
       'checkHistoryIngredient',
       'updateHistory',
     ]),
-    ...mapActions('search', ['getRecipes', 'getRecipeList']),
+    ...mapActions('search', ['getRecipes', 'getRecipeList', 'getHotRecipes']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     findnow() {
       const today = new Date()
@@ -558,6 +536,7 @@ export default {
   padding: 4%;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }
+.before-shopping-none,
 .after-shopping-none {
   height: 165px;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
@@ -599,6 +578,14 @@ export default {
 }
 .my-title {
   font-family: 'LeeSeoyun' !important;
+}
+.my-sub-title {
+  text-overflow: ellipsis;
+  height: 2.3rem;
+  word-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 .my-card {
   border-radius: 10px;

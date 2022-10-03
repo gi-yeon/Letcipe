@@ -6,15 +6,14 @@
           <div class="myrecipe-head-wrap">
             <div class="d-flex justify-space-between pb-3">
               <v-icon @click="moveMypage">mdi-window-close</v-icon>
-              <div style="font-size: x-large">내가 작성한 레시피리스트</div>
+              <div style="font-size: x-large">즐겨찾는 레시피리스트</div>
               <v-icon>mdi-blank</v-icon>
             </div>
           </div>
           <v-divider></v-divider>
 
-          <v-card-subtitle>내가 작성한 레시피</v-card-subtitle>
           <!-- <div :page="currentPage" :items="myRecipes" :items-per-page="perPage" class="text-center"> -->
-          <div>
+          <div v-if="recipeList.length > 0">
             <div v-for="(mr, i) in myBookMarkRecipeList" :key="i">
               <v-list-item three-line>
                 <v-list-item-avatar class="recipe-item" tile size="100" @click="moveDetail(mr)">
@@ -52,7 +51,12 @@
               <v-divider></v-divider>
             </div>
           </div>
-
+          <div v-else>
+            <div>
+              <v-list-item three-line>즐겨찾기에 추가된 레시피 리스트가 없습니다.</v-list-item>
+              <v-divider></v-divider>
+            </div>
+          </div>
           <v-pagination
             v-model="currentPage"
             color="letcipe"
@@ -89,7 +93,7 @@ export default {
       tab: null,
       isSelected: [],
       selectedIngre: '',
-      myRecipes: [],
+      recipeList: [],
     }
   },
   computed: {
@@ -107,12 +111,12 @@ export default {
     })
     promise.then(async () => {
       await this.myBookmarkRecipeList(pageable)
-      //   this.myRecipe.forEach((mr) => {
-      //     this.myRecipes.push(mr)
-      //   })
-      //   this.TotalPage = this.myRecipe.length / 5
-      //   console.log(this.TotalPage)
-      //   console.log(this.myRecipes)
+      this.myBookMarkRecipeList?.forEach((mr) => {
+        this.recipeList.push(mr)
+      })
+
+      console.log(this.myBookMarkRecipeList)
+      console.log(this.recipeList.length)
     })
   },
   methods: {

@@ -589,7 +589,7 @@ export default {
       this.createRecipeDetail(formdata)
     },
     moveBack() {
-      this.$router.push('/main')
+      this.$router.go(-1)
     },
   },
 }

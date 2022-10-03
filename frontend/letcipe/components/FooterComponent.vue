@@ -119,7 +119,7 @@ export default {
   width: 100%;
   position: fixed;
   bottom: 0;
-  z-index: 999;
+  z-index: 800;
   box-shadow: 0 4px 7px black;
 }
 .footer-icon-wrap {
