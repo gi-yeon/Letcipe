@@ -408,7 +408,7 @@ export default {
       if (this.selectedIngre !== '') {
         const searchObject = {
           ingredients: this.selectedIngre,
-          size: 5,
+          size: 30,
           page: 0,
         }
         this.getRecipesIngre(searchObject)
