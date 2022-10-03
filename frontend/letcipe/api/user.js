@@ -90,6 +90,19 @@ async function myBookmarkRecipeList(pageable, success, fail) {
     .catch(fail)
 }
 
+// 내 댓글관리
+async function mycomment(page, success, fail) {
+  await interceptor
+    .get(`/api/user/comment?page=${page}`)
+    .then(success)
+    .catch(fail)
+}
+
+// 내 댓글 갯수
+async function mycommentNum(success, fail) {
+  await interceptor.get(`/api/user/commentNum`).then(success).catch(fail)
+}
+
 // 핸드폰 인증
 async function createCode(phoneNo, success, fail) {
   await api.post(`/api/sms`, phoneNo).then(success).catch(fail)
@@ -108,6 +121,8 @@ export {
   myrecipeList,
   myBookmarkRecipe,
   myBookmarkRecipeList,
+  mycomment,
+  mycommentNum,
   createCode,
   modifyPassword,
 }

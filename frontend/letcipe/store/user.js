@@ -11,6 +11,8 @@ import {
   myrecipeList,
   myBookmarkRecipe,
   myBookmarkRecipeList,
+  mycomment,
+  mycommentNum,
   createCode,
   modifyPassword,
 } from '@/api/user'
@@ -290,6 +292,31 @@ export const actions = {
         console.log(error)
       }
     )
+  },
+  async mycomment({ commit }, page) {
+    let result
+    await mycomment(
+      page,
+      ({ data }) => {
+        result = data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+    return result
+  },
+  async mycommentNum({ commit }) {
+    let result
+    await mycommentNum(
+      ({ data }) => {
+        result = data
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+    return result
   },
   async createCode({ commit }, phone) {
     await createCode(

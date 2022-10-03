@@ -14,13 +14,13 @@
             v-model="tab"
             centered
             icons-and-text
-            color="red accent-3"
+            color="letcipe"
             hide-slider
           >
             <v-tabs-slider></v-tabs-slider>
 
             <v-tab href="#tab-1" style="width: 50%">
-              이름으로 검색
+              이름 또는 태그로 검색
               <v-icon>mdi-hamburger</v-icon>
             </v-tab>
 
@@ -38,7 +38,7 @@
                     <v-btn
                       style="width: 90%"
                       depressed
-                      :color="byRecipe ? 'red accent-3' : 'black'"
+                      :color="byRecipe ? 'letcipe' : 'black'"
                       text
                       small
                       class="pt-0 pb-0"
@@ -47,7 +47,7 @@
                     >
                     <v-btn
                       style="width: 90%"
-                      :color="byRecipe ? 'black' : 'red accent-3'"
+                      :color="byRecipe ? 'black' : 'letcipe'"
                       text
                       small
                       class="pt-0 pb-0"
@@ -59,7 +59,7 @@
                 <v-col class="d-flex pr-0 pl-0" align="center">
                   <v-text-field
                     v-model="byname"
-                    label="이름으로 검색"
+                    label="이름 또는 태그로 검색"
                     outlined
                     class="pt-3 pb-3"
                     color="letcipe"
@@ -109,9 +109,9 @@
                 </div>
                 <div class="text-center">
                   <v-pagination
-                    v-model="Page"
+                    v-model="currentPage"
                     color="letcipe"
-                    :length="TotalPage"
+                    :length="Math.ceil(totalPage / 5)"
                     prev-icon="mdi-menu-left"
                     next-icon="mdi-menu-right"
                     @input="handlePage"
@@ -277,7 +277,7 @@
                   <v-pagination
                     v-model="currentPage"
                     color="letcipe"
-                    :length="TotalPage"
+                    :length="Math.ceil(totalPage / 5)"
                     prev-icon="mdi-menu-left"
                     next-icon="mdi-menu-right"
                     @input="handlePage"
@@ -318,12 +318,11 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
   name: 'SearchMain',
   data() {
     return {
-      TotalPage: 1,
       currentPage: 1,
       byname: '',
       searchedName: '',
@@ -368,11 +367,25 @@ export default {
   },
   computed: {
     ...mapState('ingredients', ['ingredientsList']),
-    ...mapState('search', ['recipes', 'recipesIngre', 'recipeLists']),
+    ...mapState('search', [
+      'recipes',
+      'recipesIngre',
+      'recipeLists',
+      'totalPage',
+    ]),
     ...mapState('cart', ['cart', 'ingreList', 'amountByRecipe']),
   },
 
-  watch: {},
+  watch: {
+    tab() {
+      console.log('====')
+      this.CLEAR_RECIPE()
+      this.CLEAR_RECIPE_INGRE()
+      this.CLEAR_RECIPE_LIST()
+      this.byname = ''
+      this.isSelecte = []
+    },
+  },
   created() {
     const promise = new Promise((resolve, reject) => {
       resolve()
@@ -380,8 +393,16 @@ export default {
     promise.then(async () => {
       await this.readCart()
     })
+    this.CLEAR_RECIPE()
+    this.CLEAR_RECIPE_INGRE()
+    this.CLEAR_RECIPE_LIST()
   },
   methods: {
+    ...mapMutations('search', [
+      'CLEAR_RECIPE',
+      'CLEAR_RECIPE_INGRE',
+      'CLEAR_RECIPE_LIST',
+    ]),
     ...mapActions('ingredients', ['searchIngredient']),
     ...mapActions('search', ['getRecipes', 'getRecipesIngre', 'getRecipeList']),
     ...mapActions('cart', ['createCart', 'readCart']),
@@ -391,6 +412,56 @@ export default {
         if (keyword.length > 0 && keyword != null) {
           this.searchIngredient(keyword)
         }
+      }
+    },
+    // nextPage() {
+    //   this.TotalPage++
+    //   this.currentPage = this.currentPage + 1
+    //   console.log('----------------')
+    // },
+    handlePage(page) {
+      if (this.tab === 'tab-1') {
+        if (this.byRecipe) {
+          const searchObject = {
+            keyword: this.byname,
+            size: 5,
+            page: this.currentPage - 1,
+          }
+          const promise = new Promise((resolve, reject) => {
+            resolve()
+          })
+          promise.then(async () => {
+            await this.getRecipes(searchObject)
+          })
+          this.currentPage = 1
+        } else {
+          const searchObject = {
+            keyword: this.byname,
+            size: 5,
+            page: this.currentPage - 1,
+          }
+          const promise = new Promise((resolve, reject) => {
+            resolve()
+          })
+          promise.then(async () => {
+            await this.getRecipeList(searchObject)
+          })
+          this.currentPage = 1
+        }
+        this.searchedName = this.byname
+      } else {
+        const searchObject = {
+          ingredients: this.selectedIngre,
+          size: 5,
+          page: this.currentPage - 1,
+        }
+        const promise = new Promise((resolve, reject) => {
+          resolve()
+        })
+        promise.then(async () => {
+          await this.getRecipesIngre(searchObject)
+        })
+        this.currentPage = 1
       }
     },
     selectIngre(item) {
@@ -409,7 +480,7 @@ export default {
         const searchObject = {
           ingredients: this.selectedIngre,
           size: 5,
-          page: 0,
+          page: this.currentPage - 1,
         }
         this.getRecipesIngre(searchObject)
       }
@@ -427,7 +498,7 @@ export default {
         const searchObject = {
           ingredients: this.selectedIngre,
           size: 5,
-          page: 0,
+          page: this.currentPage - 1,
         }
         this.getRecipesIngre(searchObject)
       }
@@ -437,14 +508,14 @@ export default {
         const searchObject = {
           keyword: this.byname,
           size: 5,
-          page: 0,
+          page: this.currentPage - 1,
         }
         this.getRecipes(searchObject)
       } else {
         const searchObject = {
           keyword: this.byname,
           size: 5,
-          page: 0,
+          page: this.currentPage - 1,
         }
         this.getRecipeList(searchObject)
       }

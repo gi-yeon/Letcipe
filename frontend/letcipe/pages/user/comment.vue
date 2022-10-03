@@ -48,11 +48,11 @@
                     style="border: 1px solid black !important"
                     align="left"
                   >
-                    <v-list-item-content @click="commentDetail(i)">
+                    <v-list-item-content>
                       <v-row>
                         <v-col>
                           <v-list-item-subtitle>{{
-                            comment.user
+                            nickname
                           }}</v-list-item-subtitle></v-col
                         ><v-col align="right">
                           <v-list-item-subtitle>{{
@@ -72,6 +72,7 @@
                       > -->
 
                       <v-list-item-content
+                        @click="commentDetail(i)"
                         style="
                           display: inline-block;
                           text-overflow: ellipsis;
@@ -83,7 +84,7 @@
                       </v-list-item-content>
                       <v-row
                         ><v-col align="right">
-                          <v-icon @click="deleteComment()"
+                          <v-icon @click="deleteComment(comment.id)"
                             >mdi-delete</v-icon
                           ></v-col
                         ></v-row
@@ -106,7 +107,7 @@
                     <v-row class="mb-5">
                       <v-col>
                         <v-list-item-subtitle>{{
-                          selectedComment.user
+                          nickname
                         }}</v-list-item-subtitle></v-col
                       ><v-col align="right">
                         <v-list-item-subtitle>{{
@@ -128,12 +129,12 @@
                     <v-list-item-title
                       style="font-size: 1.2rem"
                       class="text-wrap pb-4"
-                    >
-                      {{ selectedComment.content }}
+                      >{{ selectedComment.content }}
                     </v-list-item-title>
                     <v-row>
                       <v-col cols="12" align="right">
                         <v-list-item-subtitle
+                          @click="moveBoard(selectedComment.id)"
                           ><v-btn text
                             >원문 보기 >>
                           </v-btn></v-list-item-subtitle
@@ -145,7 +146,15 @@
                           @click="commentDialog = false"
                           >닫기</v-btn
                         >
-                        <v-btn dark style="width: 45%" @click="deleteComment()"
+                        <v-btn
+                          dark
+                          style="width: 45%"
+                          @click="
+                            {
+                              deleteComment(selectedComment.id)
+                              commentDialog = false
+                            }
+                          "
                           >삭제</v-btn
                         ></v-col
                       ></v-row
@@ -163,66 +172,52 @@
 </template>
 
 <script>
+import { mapActions, mapState, mapMutations } from 'vuex'
+
 export default {
   name: 'MyCommentPage',
   data() {
     return {
+      commentNum: 0,
       checkedNum: 0,
       isChecked: [],
       checkedComment: [],
       isAllCheck: false,
-      comments: [
-        {
-          user: '나야나',
-          board: '1',
-          content:
-            '밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.밥도둑레시피입니다.',
-          regTime: '2022-09-08',
-        },
-        {
-          user: '나야나',
-          board: '1',
-          content: `밥도둑레시피입니다.
-          `,
-          regTime: '2022-09-08',
-        },
-        {
-          user: '나야나',
-          board: '1',
-          content: '밥도둑레시피입니다.',
-          regTime: '2022-09-08',
-        },
-      ],
+      comments: [],
       commentDialog: false,
-      selectedComment: {
-        user: null,
-        board: null,
-        content: null,
-        regTime: null,
-      },
+      selectedComment: {},
     }
+  },
+  async fetch() {
+    this.commentNum = await this.mycommentNum()
+    this.comments = await this.mycomment()
+    console.log(this.comments)
+    console.log(this.commentNum)
+  },
+  fetchOnServer: false,
+  computed: {
+    ...mapState('user', ['userId', 'nickname']),
   },
   created() {
     this.initChecked()
   },
   methods: {
+    ...mapActions('comment', ['patchComment']),
+    ...mapActions('user', ['mycomment', 'mycommentNum']),
+    ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     initChecked() {
       for (let i = 0; i < this.comments.length; i++) {
         this.isChecked.push(false)
       }
     },
     addChecked(index) {
-      if (this.isAllCheck) {
-        this.isAllCheck = false
-        this.checkedComment = []
-      }
+      this.isAllCheck = false
       if (!this.isChecked[index]) {
-        this.isChecked[index] = true
         this.checkedComment.push(this.comments[index])
       } else {
-        this.isChecked[index] = false
         this.checkedComment.splice(index, 1)
       }
+      this.isChecked[index] = !this.isChecked[index]
       console.log(this.isChecked)
       console.log(this.checkedComment)
     },
@@ -245,13 +240,24 @@ export default {
       }
       console.log(this.checkedComment)
     },
-    deleteComment() {},
+    async deleteComment(id) {
+      console.log('-----------------------------')
+      console.log(id)
+      console.log('-----------------------------')
+      const comment = {
+        commentId: id,
+      }
+      await this.patchComment(comment)
+      this.comments = await this.mycomment()
+    },
     commentDetail(index) {
-      this.selectedComment.user = this.comments[index].user
-      this.selectedComment.board = this.comments[index].board
-      this.selectedComment.content = this.comments[index].content
-      this.selectedComment.regTime = this.comments[index].regTime
+      this.selectedComment = this.comments[index]
       this.commentDialog = true
+    },
+    moveBoard() {
+      this.CLEAR_RECIPE_ID()
+      this.SET_RECIPE_ID(this.selectedComment.boardId)
+      this.$router.push('/recipe/detail')
     },
   },
 }
