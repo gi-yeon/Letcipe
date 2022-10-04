@@ -258,11 +258,7 @@
               size="130"
               tile
               class="mr-2"
-<<<<<<< frontend/letcipe/pages/main/test.vue
-              @click="moveDetail(ref)"
-=======
               @click="moveDetail2(ref.recipe.id)"
->>>>>>> frontend/letcipe/pages/main/test.vue
             >
               <v-img class="ref-imgs" :src="ref.recipe.repImg">
                 <div class="ref-wrap">
