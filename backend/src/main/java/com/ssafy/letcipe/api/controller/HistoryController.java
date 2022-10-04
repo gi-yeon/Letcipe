@@ -57,20 +57,20 @@ public class HistoryController {
 
     @PostMapping("/review")
     public ResponseEntity postReview(@RequestBody ReqHistoryReviewDto historyReviewDto, HttpServletRequest request){
-        Long userId = jwtService.getUserId(request);
+        Long userId = 1L;
         historyService.postReview(userId, historyReviewDto);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/review")
     public ResponseEntity putReview(@RequestBody ReqHistoryReviewDto historyReviewDto, HttpServletRequest request){
-        Long userId = jwtService.getUserId(request);
+        Long userId = 1L;
         historyService.putReview(userId, historyReviewDto);
         return ResponseEntity.ok().build();
     }
     @DeleteMapping("/review")
-    public ResponseEntity deleteReview(@RequestParam Long historyId, HttpServletRequest request){
-        Long userId = jwtService.getUserId(request);
+    public ResponseEntity deleteReview(@RequestParam("historyId") Long historyId, HttpServletRequest request){
+        Long userId = 1L;
         historyService.deleteReview(userId, historyId);
         return ResponseEntity.ok().build();
     }

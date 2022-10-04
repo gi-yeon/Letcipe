@@ -114,6 +114,7 @@ public class HistoryService {
                 () -> new NullPointerException("히스토리를 찾을 수 없습니다."));
         if (!userId.equals(history.getUser().getId()))
             throw new AuthorityViolationException("접근 권한이 없습니다.");
-        historyRepository.delete(history);
+        history.updateReview(null);
+        historyRepository.save(history);
     }
 }
