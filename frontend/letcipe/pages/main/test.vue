@@ -246,10 +246,10 @@
           </v-row>
         </div>
         <div class="ingrediant-base-group mt-2 mb-3">
-          <div>이런 레시피 어때요?</div>
+          <div v-if="nickname!=''">{{nickname}} 님을 위한 레시피 추천</div>
+          <div v-else>이런 레시피 어때요?</div>
           <div class="chart-header">
             <div>{{recommendTitle}}</div>
-            <div>전체보기</div>
           </div>
           <div class="rec-imgs-group d-flex justify-space-between">
             <v-avatar
@@ -276,12 +276,32 @@
           </div>
         </div>
         <div class="lecipe-base-group mt-3 mb-2">
-          <div>이런 레시피리스트 어때요?</div>
           <div class="chart-header">
-            <div>{{ nickname }}님 맞춤 추천</div>
-            <div>전체보기</div>
+            <div>인기있는 레시피 리스트!</div>
           </div>
-          <div class="rec-imgs-group d-flex justify-space-between">
+          <div v-for="(recipeList,i) in recipeLists" :key="i">
+            <div class="chart-header">
+              {{recipeList.name}}
+            </div>
+            <div class="chart-header">
+              {{recipeList.description}}
+            </div>
+            <div class="rec-imgs-group d-flex justify-space-between">
+              <v-avatar
+                v-for="(item, j) in recipeList.recipeListItems"
+                :key="j"
+                size="130"
+                tile
+                class="mr-2"
+                @click="moveListDetail"
+              >
+                <!-- <v-img class="ref-imgs" :src="item.recipe.repImg"></v-img> -->
+                <v-img class="ref-imgs" :src="item.recipe.repImg">
+              </v-img>
+              </v-avatar>
+            </div>
+          </div>
+          <!-- <div class="rec-imgs-group d-flex justify-space-between">
             <v-avatar
               v-for="(ref, i) in refImg"
               :key="i"
@@ -297,16 +317,17 @@
                 </div>
               </v-img>
             </v-avatar>
-          </div>
+          </div> -->
         </div>
       </v-container>
     </v-app>
   </div>
 </template>
 
-  <script>
+<script>
 import { mapState, mapActions, mapMutations } from 'vuex'
-import { getCartReport, getUserRecommend} from "@/api/recommend";
+import { getCartReport, getUserRecommend, getBestRecipeLists} from "@/api/recommend";
+
 export default {
   name: 'MainTestPage',
   data() {
@@ -366,6 +387,7 @@ export default {
       selectedIngre: [],
       recommendTitle:"",
       recommendRecipes:[],
+      recipeLists:[],
     }
   },
   computed: {
@@ -417,7 +439,13 @@ export default {
       (response) => {
         this.recommendTitle = response.data.title;
         this.recommendRecipes = response.data.report;
-      });
+    });
+    getBestRecipeLists(1,
+      (response) => {
+        this.recipeLists = response.data;
+      }
+    );
+
   },
   methods: {
     ...mapActions('history', [
