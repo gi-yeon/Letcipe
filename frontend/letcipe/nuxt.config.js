@@ -40,6 +40,9 @@ export default {
       {
         src: 'https://cdn.shopify.com/s/files/1/2979/3338/files/UGC_-_new_v.3.js',
       },
+      {
+        src: 'https://code.jquery.com/jquery-3.4.1.js',
+      },
     ],
   },
 
@@ -47,7 +50,10 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [{ src: '~/plugins/persistedState.js' }, {src: '~/plugins/chart.js', mode: 'client'}],
+  plugins: [
+    { src: '~/plugins/persistedState.js' },
+    { src: '~/plugins/chart.js', mode: 'client' },
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,

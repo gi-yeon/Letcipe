@@ -5,66 +5,92 @@
         <v-container class="bookmark-container d-flex-row">
           <div class="bookmark-head-wrap">
             <div class="d-flex justify-space-between pb-3">
-              <v-icon>mdi-window-close</v-icon>
-              <div style="font-size: x-large">검색하기</div>
+              <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              <div style="font-size: x-large">즐겨찾는 레시피</div>
               <v-icon>mdi-blank</v-icon>
             </div>
           </div>
           <v-divider></v-divider>
-          <div v-if="recipes != null && recipes.length > 0">
-            <v-card-subtitle>"{{ searchedName }}" 검색 결과</v-card-subtitle>
-            <div v-for="(recipeInfo, i) in recipes" :key="i">
+
+          <v-card-subtitle>즐겨찾는 레시피</v-card-subtitle>
+
+          <div v-if="recipeBookmarks.length> 0">
+            <div v-for="(mr, i) in recipeBookmarks" :key="i">
               <v-list-item three-line>
-                <v-list-item-avatar tile size="100">
-                  <v-img :src="recipeInfo['repImg']"></v-img>
+                <v-list-item-avatar class="recipe-item" tile size="100" @click="moveDetail(mr)">
+                  <v-img :src="mr.repImg"></v-img>
                 </v-list-item-avatar>
                 <v-list-item-content>
-                  <v-list-item-title>
-                    {{ recipeInfo['title'] }}
+                  <v-list-item-title class="d-flex justify-space-between">
+                    <div class="recipe-item" @click="moveDetail(mr)">{{ mr.title }}</div>
+                    <div>
+                      <v-icon
+                        v-if="nickname === mr.nickName"
+                        style="z-index: 1"
+                        small
+                        color="info"
+                        @click="editItem(mr)"
+                      >mdi-pencil</v-icon>
+                      <v-icon
+                        v-if="nickname === mr.nickName"
+                        style="z-index: 1"
+                        small
+                        @click="deleteItem(mr)"
+                      >mdi-delete</v-icon>
+                    </div>
                   </v-list-item-title>
 
-                  <v-list-item-subtitle>
-                    {{ recipeInfo['content'] }}
-                  </v-list-item-subtitle>
+                  <v-list-item-subtitle class="recipe-item" @click="moveDetail(mr)">{{ mr.content }}</v-list-item-subtitle>
                   <div class="d-flex justify-space-between">
-                    <v-list-item-subtitle>
-                      <v-icon small color="pink lighten-1"
-                        >mdi-cards-heart</v-icon
-                      >
-                      {{ recipeInfo['recipeLike'] }}
+                    <v-list-item-subtitle class="d-flex align-center">
+                      <div class="d-flex align-center">
+                        <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
+                        <div>{{mr.recipeLike }}</div>
+                      </div>
+                      <div>
+                        <div class="d-flex align-center">
+                          <v-icon small color="yellow lighten-1">mdi-bookmark</v-icon>
+                          <div>{{mr.recipeBookmark }}</div>
+                        </div>
+                      </div>
                     </v-list-item-subtitle>
                     <v-list-item-subtitle style="text-align: right">
-                      <v-btn small color="letcipe">+담기</v-btn>
+                      <v-btn style="z-index: 1" small color="letcipe">+담기</v-btn>
                     </v-list-item-subtitle>
                   </div>
                 </v-list-item-content>
               </v-list-item>
               <v-divider></v-divider>
             </div>
-            <div class="text-center">
-              <v-pagination
-                v-model="Page"
-                color="letcipe"
-                :length="TotalPage"
-                prev-icon="mdi-menu-left"
-                next-icon="mdi-menu-right"
-                @input="handlePage"
-              ></v-pagination>
+          </div>
+          <div v-else>
+            <div>
+              <v-list-item three-line>즐겨찾기에 추가된 레시피가 없습니다.</v-list-item>
+              <v-divider></v-divider>
             </div>
           </div>
+          <v-pagination
+            v-model="currentPage"
+            color="letcipe"
+            :length="TotalPage"
+            :per-page="perPage"
+            :total-visivle="TotalPage"
+            circle
+          ></v-pagination>
         </v-container>
       </div>
     </v-app>
   </div>
 </template>
-
-<script>
-import { mapActions, mapState } from 'vuex'
+    
+    <script>
+import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
   name: 'BookmarkPage',
   data() {
     return {
-      TotalPage: 1,
+      TotalPage: 0,
+      perPage: 5,
       currentPage: 1,
       byname: '',
       searchedName: '',
@@ -72,32 +98,6 @@ export default {
       byRecipe: true,
       scroll: 0,
       scrollTarget: '',
-      colors: {
-        '가루 분말': 'purple',
-        '감자 고구마': 'pink',
-        고기: 'pink darken-3',
-        곡류: 'purple lighten-1',
-        과일: 'red lighten-5',
-        과자: 'green lighten-3',
-        '국물 육수': 'green',
-        기름: 'yellow darken-4',
-        기타: 'blue lighten-3',
-        달걀: 'blue darken-4',
-        '떡 면': 'red',
-        '묵 두부': 'purple darken-3',
-        빵: 'red lighten-2',
-        어패류: 'yellow lighten-1',
-        '유제품 치즈': 'blue darken-2',
-        '음료 주류': 'green lighten-1',
-        '음식 식품': 'pink lighten-3',
-        절임류: 'light-green darken-4',
-        '조미료 향신료 소스': 'blue',
-        채소: 'light-green',
-        '초콜릿 사탕': 'light-green lighten-2',
-        '콩 견과류': 'yellow',
-        해조류: 'grey',
-        '햄 소시지': 'black',
-      },
       isLoading: false,
       items: [],
       keyword: '',
@@ -105,22 +105,66 @@ export default {
       tab: null,
       isSelected: [],
       selectedIngre: '',
+      recipeBookmarks: [],
     }
   },
   computed: {
-    ...mapState('ingredients', ['ingredientsList']),
-    ...mapState('recipe', []),
-    ...mapState('recipelist', ['getRecipeList']),
-    ...mapState('recipe', []),
+    ...mapState('user', ['nickname', 'myRecipe', 'myBookMarkRecipe']),
   },
+
   watch: {},
+
+  created() {
+    console.log(this.nickname)
+    const pageable = {
+      page: 0,
+    }
+    const promise = new Promise((resolve, reject) => {
+      resolve()
+    })
+    promise.then(async () => {
+      await this.myBookmarkRecipe(pageable)
+      this.myBookMarkRecipe.forEach((mr) => {
+        this.recipeBookmarks.push(mr)
+      })
+      this.TotalPage = this.myBookMarkRecipe.length / 5
+      console.log(this.myBookMarkRecipe)
+      console.log(this.myBookMarkRecipe)
+    })
+  },
   methods: {
-    ...mapActions(),
+    ...mapActions('recipe', [
+      'patchRecipeDetail',
+      'countRecipeLikes',
+      'decountRecipeLikes',
+      'selectBookmarks',
+      'deleteBookmarks',
+    ]),
+    ...mapActions('user', ['myBookmarkRecipe']),
+    ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
+    editItem(mr) {
+      this.CLEAR_RECIPE_ID()
+      this.SET_RECIPE_ID(mr.id)
+      this.$router.push('/recipe/modify')
+    },
+    deleteItem(mr) {
+      //     this.checkedList.splice(index, 1)
+      //   this.checklist.push(c)
+      this.patchRecipeDetail(mr.id)
+    },
+    moveDetail(mr) {
+      this.CLEAR_RECIPE_ID()
+      this.SET_RECIPE_ID(mr.id)
+      this.$router.push('/recipe/detail')
+    },
+    moveMypage() {
+      this.$router.push('/user/mypage')
+    },
   },
 }
 </script>
-
-<style scoped>
+    
+    <style scoped>
 .bookmark-page {
   /* padding-top: 70px; */
   padding-bottom: 70px;
@@ -138,6 +182,9 @@ export default {
 
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }
+.recipe-item {
+  cursor: pointer;
+}
 :deep(.v-input__icon.v-input__icon--append) {
   display: none;
 }
@@ -145,3 +192,4 @@ export default {
   display: none;
 }
 </style>
+    

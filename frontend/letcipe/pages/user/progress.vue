@@ -7,9 +7,13 @@
         <v-container class="progressrecipelist-container d-flex-row">
           <div class="progressrecipelist-head-wrap">
             <div class="d-flex justify-space-between pb-3">
-              <v-icon>mdi-window-close</v-icon>
+              <div>
+                <v-icon @click="moveBack">mdi-window-close</v-icon>
+              </div>
               <div style="font-size: x-large">진행중인 레시피리스트</div>
-              <v-icon>mdi-blank</v-icon>
+              <div>
+                <v-icon>mdi-blank</v-icon>
+              </div>
             </div>
           </div>
           <v-divider></v-divider>
@@ -23,28 +27,31 @@
                 <!-- <v-list-item-title
                 style="display: inline; float: left"
                 :color="statusColor"
-                >{{ historyInfo }} -->
-                <v-list-item-title style="display: inline; float: left"
-                  >{{ historyInfo.regTime }}
-                  <span style="font-size: 1rem; float: right; color: green">{{
+                >{{ historyInfo }}-->
+                <v-list-item-title style="display: inline; float: left">
+                  {{ historyInfo.regTime }}
+                  <span
+                    style="font-size: 1rem; float: right; color: green"
+                  >
+                    {{
                     status
-                  }}</span>
+                    }}
+                  </span>
                 </v-list-item-title>
 
                 <br />
 
                 <!-- <v-list-item-subtitle
                 >생성일 : {{ letcipeList.reg_time }}</v-list-item-subtitle
-              > -->
+                >-->
                 <v-list-item-subtitle style="text-align: right">
                   총&nbsp;
-                  <span style="color: black; font-size: 1rem">{{
+                  <span style="color: black; font-size: 1rem">
+                    {{
                     containsNum
-                  }}</span
-                  >&nbsp;개의 레시피를 포함&nbsp;
-                  <v-icon v-if="!isShow" @click="showRecipes"
-                    >mdi-chevron-down</v-icon
-                  >
+                    }}
+                  </span>&nbsp;개의 레시피를 포함&nbsp;
+                  <v-icon v-if="!isShow" @click="showRecipes">mdi-chevron-down</v-icon>
                   <v-icon v-else @click="hideRecipes">mdi-chevron-up</v-icon>
                 </v-list-item-subtitle>
               </v-list-item-content>
@@ -55,8 +62,7 @@
               <v-card-title
                 class="justify-center"
                 style="background-color: white; color: #7cb342"
-                >포함된 레시피 목록</v-card-title
-              >
+              >포함된 레시피 목록</v-card-title>
               <v-divider></v-divider>
               <div v-for="(recipeInfo, i) in historyInfo.historyItems" :key="i">
                 <v-list-item three-line style="background-color: white">
@@ -64,31 +70,25 @@
                     <v-img :src="recipeInfo.recipe.repImg"></v-img>
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title>
-                      {{ recipeInfo.recipe.title }}
-                    </v-list-item-title>
+                    <v-list-item-title>{{ recipeInfo.recipe.title }}</v-list-item-title>
 
-                    <v-list-item-subtitle>
-                      {{ recipeInfo.recipe.content }}
-                    </v-list-item-subtitle>
+                    <v-list-item-subtitle>{{ recipeInfo.recipe.content }}</v-list-item-subtitle>
                     <div class="d-flex justify-space-between">
                       <v-list-item-subtitle style="margin: auto 0">
-                        <v-icon small color="pink lighten-1"
-                          >mdi-cards-heart</v-icon
-                        >
+                        <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
                         {{ recipeInfo.recipe.recipeLike }}
                       </v-list-item-subtitle>
 
-                      <v-list-item-subtitle style="text-align: right"
-                        >수량&nbsp;&nbsp;:&nbsp;&nbsp;<span
+                      <v-list-item-subtitle style="text-align: right">
+                        수량&nbsp;&nbsp;:&nbsp;&nbsp;
+                        <span
                           style="color: black; font-size: 1.2rem"
-                          >{{ recipeInfo.amount }}</span
-                        >&nbsp;&nbsp;개
+                        >{{ recipeInfo.amount }}</span>&nbsp;&nbsp;개
                       </v-list-item-subtitle>
 
                       <!-- <v-list-item-title style="text-align: right">
                       11개</v-list-item-title
-                    > -->
+                      >-->
                     </div>
                   </v-list-item-content>
                 </v-list-item>
@@ -103,21 +103,17 @@
                 color="lime darken-1"
                 style="width: 50%"
                 @click="startReadyHistory"
-                >시작</v-btn
-              >
+              >시작</v-btn>
               <v-btn
                 v-else-if="status == '진행중'"
                 large
                 color="lime darken-1"
                 style="width: 50%"
                 @click="endEatingHistory"
-                >종료</v-btn
-              >
+              >종료</v-btn>
             </div>
           </div>
-          <div v-else align="center" class="pt-3 pb-3">
-            진행중인 레시피리스트가 없습니다.
-          </div>
+          <div v-else align="center" class="pt-3 pb-3">진행중인 레시피리스트가 없습니다.</div>
         </v-container>
       </div>
     </v-app>
@@ -130,7 +126,7 @@ export default {
   name: 'ProgressPage',
   data() {
     return {
-      status: '진행예정',
+      status: '종료',
       // statusColor: 'purple darken-1',
       historyListInfo: [],
       historyRepImg: '',
@@ -191,6 +187,9 @@ export default {
   },
   methods: {
     ...mapActions('history', ['getHistoryList', 'updateHistory']),
+    moveBack() {
+      this.$router.go(-1)
+    },
     showRecipes() {
       this.isShow = true
     },

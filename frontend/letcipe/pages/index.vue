@@ -3,14 +3,20 @@
     <v-row>
       <v-col class="logo-wrap">
         <v-col class="logo-title">
-          <h1>
+          <h4>
             당신의,
             <br />스마트한 데일리
             <br />장보기 도우미
-          </h1>
+          </h4>
         </v-col>
-        <img class="logo-horizontal" src="/icon/logo_icon_b.png" alt="logo_icon.png" />
-        <div>아직은 폰 크기로만 보아야 합니다.</div>
+
+        <img
+          class="load-spinner"
+          style="width: 60%;"
+          src="/icon/렛시피_레코드.png"
+          alt="loading-spinner-plane"
+        />
+        <h1 class="name">LET'CIPE</h1>
       </v-col>
     </v-row>
   </v-container>
@@ -48,7 +54,7 @@ export default {
   justify-content: center;
   align-items: center;
   /* background-image: url('/bg/bg_img.png'); */
-  background-color: #ffbc35;
+  /* background-color: #ffbc35; */
 }
 .logo-wrap {
   display: flex;
@@ -68,8 +74,14 @@ export default {
 }
 .logo-title {
   /* color: #364067; */
-  color: white;
+  color: black;
   text-align: center;
+}
+.load-spinner {
+  animation: spin 2s linear infinite;
+}
+.name {
+  font-weight: bolder;
 }
 
 @media (min-width: 800px) {
@@ -79,11 +91,23 @@ export default {
   .logo-horizontal {
     width: 20%;
   }
+  .load-spinner {
+    width: 30%;
+  }
 }
 
 .logo-horizontal {
   animation: slide-in-right 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards,
     logo-jello 0.9s linear 1.2s;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* .logo-horizontal {

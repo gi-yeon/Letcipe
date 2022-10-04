@@ -28,7 +28,7 @@ export const mutations = {
   CLEAR_RECIPE_DETAIL(state) {
     state.recipeDetail = {}
   },
-  CLEAR_RECIPE_ID(state, id) {
+  CLEAR_RECIPE_ID(state) {
     state.recipeID = null
   },
 }

@@ -25,10 +25,7 @@ async function signup(user, success, fail) {
 
 // 사용자 정보 조회
 async function idCheck(userid, success, fail) {
-  await api
-    .get(`/api/user/id/${userid}/exists`)
-    .then(success)
-    .catch(fail)
+  await api.get(`/api/user/id/${userid}/exists`).then(success).catch(fail)
 }
 
 async function nicknameCheck(nickname, success, fail) {
@@ -49,10 +46,7 @@ async function mypage(userid, success, fail) {
 // 사용자 수정
 async function modifyMember(userObject, success, fail) {
   // eslint-disable-next-line dot-notation
-  await fileInterceptor
-    .put('/api/user', userObject)
-    .then(success)
-    .catch(fail)
+  await fileInterceptor.put('/api/user', userObject).then(success).catch(fail)
 }
 
 async function modifyPassword(passwordObject, success, fail) {
@@ -68,13 +62,52 @@ async function deleteMember(userid, success, fail) {
 }
 
 // 내 레시피 조회
-async function myrecipe(userid, success, fail) {
-  await api.get(`/api/user/recipe/${userid}`).then(success).catch(fail)
+async function myrecipe(pageable, success, fail) {
+  await interceptor.get(`/api/user/recipe`, pageable).then(success).catch(fail)
 }
 
 // 내 레시피리스트 조회
-async function myrecipeList(userid, success, fail) {
-  await api.get(`/api/user/recipeList/${userid}`).then(success).catch(fail)
+async function myrecipeList(pageable, success, fail) {
+  await interceptor
+    .get(`/api/user/recipelist`, pageable)
+    .then(success)
+    .catch(fail)
+}
+
+// 내 레시피북마크 목록 조회
+async function myBookmarkRecipe(pageable, success, fail) {
+  await interceptor
+    .get(`/api/user/mark/recipe`, pageable)
+    .then(success)
+    .catch(fail)
+}
+
+async function myLikeRecipe(pageable, success, fail) {
+  await interceptor
+    .get(`/api/user/like/recipe`, pageable)
+    .then(success)
+    .catch(fail)
+}
+
+// 내 레시피북마크 목록 조회
+async function myBookmarkRecipeList(pageable, success, fail) {
+  await interceptor
+    .get(`/api/user/mark/recipelist`, pageable)
+    .then(success)
+    .catch(fail)
+}
+
+// 내 댓글관리
+async function mycomment(page, success, fail) {
+  await interceptor
+    .get(`/api/user/comment?page=${page}`)
+    .then(success)
+    .catch(fail)
+}
+
+// 내 댓글 갯수
+async function mycommentNum(success, fail) {
+  await interceptor.get(`/api/user/commentNum`).then(success).catch(fail)
 }
 
 // 핸드폰 인증
@@ -93,6 +126,11 @@ export {
   deleteMember,
   myrecipe,
   myrecipeList,
+  myBookmarkRecipe,
+  myBookmarkRecipeList,
+  mycomment,
+  mycommentNum,
   createCode,
-  modifyPassword
+  modifyPassword,
+  myLikeRecipe
 }
