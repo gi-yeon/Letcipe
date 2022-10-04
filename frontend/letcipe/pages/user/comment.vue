@@ -5,13 +5,13 @@
         <v-container class="mycomment-container d-flex-row">
           <div class="mycomment-head-wrap">
             <div class="d-flex justify-space-between pb-3">
-              <v-icon>mdi-window-close</v-icon>
+              <v-icon @click="moveMypage">mdi-window-close</v-icon>
               <div style="font-size: x-large">댓글 관리</div>
               <v-icon>mdi-blank</v-icon>
             </div>
           </div>
 
-          <div>
+          <!-- <div>
             <v-card-subtitle>
               <v-row
                 ><v-col>
@@ -29,12 +29,12 @@
                 ></v-row
               ></v-card-subtitle
             >
-          </div>
+          </div> -->
           <v-row>
             <v-col align="center">
               <div v-for="(comment, i) in comments" :key="i" style="width: 90%">
                 <div class="mx-auto mt-2 mb-2 d-flex align-center">
-                  <v-icon
+                  <!-- <v-icon
                     v-if="!isChecked[i]"
                     class="mr-3"
                     @click="addChecked(i)"
@@ -42,7 +42,7 @@
                   >
                   <v-icon v-else class="mr-3" @click="addChecked(i)"
                     >mdi-check-circle</v-icon
-                  >
+                  > -->
                   <v-list-item
                     three-line
                     style="border: 1px solid black !important"
@@ -72,13 +72,13 @@
                       > -->
 
                       <v-list-item-content
-                        @click="commentDetail(i)"
                         style="
                           display: inline-block;
                           text-overflow: ellipsis;
                           white-space: nowrap;
                           overflow: hidden;
                         "
+                        @click="commentDetail(i)"
                       >
                         {{ comment.content }}
                       </v-list-item-content>
@@ -210,6 +210,9 @@ export default {
         this.isChecked.push(false)
       }
     },
+    moveMypage() {
+      this.$router.push('/user/mypage')
+    },
     addChecked(index) {
       this.isAllCheck = false
       if (!this.isChecked[index]) {
@@ -243,6 +246,7 @@ export default {
     async deleteComment(id) {
       console.log('-----------------------------')
       console.log(id)
+      this.allChecked();
       console.log('-----------------------------')
       const comment = {
         commentId: id,
