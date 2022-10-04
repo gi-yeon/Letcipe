@@ -6,7 +6,7 @@
           <div v-if="nickname == null" class="title">{{ nickname }}님이 좋아할 레시피</div>
           <div v-if="nickname != null" class="title">{{ nickname }}님이 좋아할 레시피</div>
           <div class="title-imgs">
-            <div v-for="(ref, i) in refImg" :key="i" class="card">
+            <div v-for="(ref, i) in refImg" :key="i" class="card" @click="moveDetail(ref)">
               <div>{{ nickname }}맞춤 추천</div>
               <v-card>
                 <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
@@ -24,7 +24,7 @@
             <div class="my-container">
               <div>{{ nickname }}님의 현재 진행중인 레시피리스트</div>
               <v-carousel
-                hide-delimiters="true"
+                hide-delimiters
                 class="my-list-carousel"
                 height="100%"
                 style="border-radius: 10px"
@@ -157,7 +157,7 @@
             <div class="btn-group pt-4">
               <v-hover style="text-align: center;">
                 <template #default="{ hover }">
-                  <v-btn class="my-btn" large width="49%">
+                  <v-btn class="my-btn" large width="49%" @click="moveWrite">
                     <img
                       class="footer-icon"
                       width="30px"
@@ -171,7 +171,7 @@
               </v-hover>
               <v-hover style="text-align: center;">
                 <template #default="{ hover }">
-                  <v-btn class="my-btn" large width="49%">
+                  <v-btn class="my-btn" large width="49%" @click="moveCheckList">
                     <img
                       class="footer-icon"
                       width="30px"
@@ -258,7 +258,11 @@
               size="130"
               tile
               class="mr-2"
+<<<<<<< frontend/letcipe/pages/main/test.vue
+              @click="moveDetail(ref)"
+=======
               @click="moveDetail2(ref.recipe.id)"
+>>>>>>> frontend/letcipe/pages/main/test.vue
             >
               <v-img class="ref-imgs" :src="ref.recipe.repImg">
                 <div class="ref-wrap">
@@ -284,7 +288,7 @@
               size="130"
               tile
               class="mr-2"
-              @click="moveListDetail"
+              @click="moveListDetail(ref)"
             >
               <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
                 <div class="ref-wrap">
@@ -432,7 +436,7 @@ export default {
       this.time = hours + ':' + minutes + ':' + seconds
       // console.log(this.time)
     },
-    moveListDetail() {
+    moveListDetail(ref) {
       this.$router.push('/recipelist/detail')
     },
     moveDetail(data) {
@@ -442,6 +446,12 @@ export default {
     },
     moveProgress() {
       this.$router.push('/user/progress')
+    },
+    moveWrite() {
+      this.$router.push('/recipe/create')
+    },
+    moveCheckList() {
+      this.$router.push('/check')
     },
     moveDetail2(recipeId) {
       this.CLEAR_RECIPE_ID()

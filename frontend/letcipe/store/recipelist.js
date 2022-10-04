@@ -15,7 +15,8 @@ export const state = () => ({
   recipeListUser: {},
   recipeListItems: [],
   recipeListRepImg: '',
-  isSucceededtoRecipeList: false
+  isSucceededtoRecipeList: false,
+  recipeListId: '',
 })
 
 export const mutations = {
@@ -33,6 +34,12 @@ export const mutations = {
   },
   SET_ISSUCCESS_FALSE(state) {
     state.isSucceededtoRecipeList = false
+  },
+  SET_RECIPE_ID(state, id) {
+    state.recipeListId = id
+  },
+  CLEAR_RECIPE_ID(state) {
+    state.recipeListId = null
   },
 }
 
@@ -54,10 +61,10 @@ export const actions = {
       }
     )
   },
-  async createRecipeListAll({commit}, recipeList) {
+  async createRecipeListAll({ commit }, recipeList) {
     await createRecipeList(
       recipeList,
-      ({data}) => {
+      ({ data }) => {
         console.log(data)
         commit('SET_ISSUCCESS_TRUE')
       },
@@ -84,8 +91,8 @@ export const actions = {
       recipeListId,
       ({ data }) => {
         commit('SET_RECIPELIST', data)
-        // console.log(data)
-        // console.log('레시피리스트 하나 검색 성공!')
+        console.log(data)
+        console.log('레시피리스트 하나 검색 성공!')
       },
       (error) => {
         console.log(error)
@@ -146,7 +153,7 @@ export const actions = {
       recipeListId,
       ({ data }) => {
         // console.log(data)
-        // console.log('레시피리스트  북마크 설정 성공!')
+        console.log('레시피리스트  북마크 설정 성공!')
       },
       (error) => {
         console.log(error)
@@ -158,7 +165,7 @@ export const actions = {
       recipeListId,
       ({ data }) => {
         // console.log(data)
-        // console.log('레시피리스트  북마크 해제 성공!')
+        console.log('레시피리스트  북마크 해제 성공!')
       },
       (error) => {
         console.log(error)

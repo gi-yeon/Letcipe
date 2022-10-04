@@ -5,7 +5,6 @@
         <div class="check-head-wrap">
           <v-toolbar flat>
             <v-icon @click="moveMypage">mdi-window-close</v-icon>
-
             <v-toolbar-title @click="test()">장바구니</v-toolbar-title>
 
             <v-spacer></v-spacer>
