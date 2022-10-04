@@ -176,7 +176,8 @@
                 </v-col>
               </v-row>
 
-              <v-card-subtitle v-if="isSelected.length != 0">선택한 재료 목록</v-card-subtitle>
+              <v-card-subtitle v-if="isSelected.length < 2">두 개 이상의 재료를 선택해 주세요</v-card-subtitle>
+              <v-card-subtitle v-if="isSelected.length >= 2">선택한 재료 목록</v-card-subtitle>
               <div align="center">
                 <v-row class="pb-5" style="width: 90%">
                   <div v-for="(item, i) in isSelected" :key="i">
