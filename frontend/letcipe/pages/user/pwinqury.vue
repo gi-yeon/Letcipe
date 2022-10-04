@@ -4,15 +4,15 @@
       <v-container class="find-user">
         <div class="find-title">아이디/비밀번호 찾기</div>
         <div class="find-wrap">
-          <v-toolbar flat color="letcipe">
+          <v-toolbar flat>
             <template #extension>
-              <v-tabs v-model="tabs" fixed-tabs>
-                <v-tabs-slider color="black"></v-tabs-slider>
-                <v-tab href="#mobile-tabs-5-1" class="white--text">
+              <v-tabs v-model="tabs" fixed-tabs color="letcipe">
+                <v-tabs-slider></v-tabs-slider>
+                <v-tab href="#mobile-tabs-5-1" color="letcipe">
                   <v-icon>mdi-account-box-outline</v-icon>
                 </v-tab>
 
-                <v-tab href="#mobile-tabs-5-2" class="white--text">
+                <v-tab href="#mobile-tabs-5-2" color="letcipe">
                   <v-icon>mdi-key-variant</v-icon>
                 </v-tab>
               </v-tabs>
