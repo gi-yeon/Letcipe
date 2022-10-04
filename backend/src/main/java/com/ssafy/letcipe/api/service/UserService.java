@@ -381,6 +381,7 @@ public class UserService {
         return new ResGetUserRecipesDto(dtoList);
     }
 
+    @Transactional
     public ResGetUserRecipeListsDto readRecipeListBookmark(Long userId, Pageable pageable) {
         User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
         List<RecipeListBookmark> recipeListBookmarkList = recipeListBookmarkRepository.findAllByUser(pageable, user);
