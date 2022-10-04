@@ -16,9 +16,12 @@
                     <img v-else alt="Avatar" src="/icons/유저_mo.png" />
                   </v-avatar>
                 </div>
-                <div class="user-info">
+                <div v-if="nickname !== null && nickname !== ''" class="user-info">
                   <div class="user-name" style="font-size: 18px">{{ nickname }}</div>
                   <div class="user-name" style="font-size: 13px">{{ userJob }}</div>
+                </div>
+                <div v-else class="user-info">
+                  <div class="user-name" style="font-size: 18px">로그인을 해주세요.</div>
                 </div>
               </div>
               <div class="user-chip">
@@ -315,7 +318,7 @@ export default {
       this.$router.push('/search')
     },
     moveLike() {
-      console.log('라이크 페이지는 아직 없습니다.')
+      this.$router.push('/user/like')
     },
     logout() {},
   },
@@ -388,6 +391,11 @@ export default {
   padding-top: 2%;
   padding-bottom: 2%;
   width: 96%;
+}
+@media (max-width: 900px) {
+  .user-name {
+    width: 150px;
+  }
 }
 
 /* 모바일 screen */

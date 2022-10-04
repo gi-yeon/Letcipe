@@ -4,11 +4,15 @@
       <v-container class="cart-container d-flex-row">
         <div class="cart-head-wrap">
           <div class="d-flex justify-space-between pb-3">
-            <v-icon>mdi-window-close</v-icon>
+            <div>
+              <v-icon @click="moveBack">mdi-window-close</v-icon>
+            </div>
             <div style="font-size: x-large">장바구니</div>
-            <v-icon>mdi-blank</v-icon>
+            <div>
+              <v-icon style="color: white">mdi-window-close</v-icon>
+            </div>
           </div>
-          <div class="d-flex justify-space-between pb-7" @click="moveWirte">
+          <div class="recipelist-title-btn d-flex justify-space-between pb-7" @click="moveWirte">
             <div>레시피리스트 제목을 입력해주세요</div>
             <v-icon>mdi-chevron-right</v-icon>
           </div>
@@ -22,13 +26,7 @@
               </div>
             </div>
             <div>
-              <v-btn
-                small
-                color="letcipe"
-                class="white--text"
-                @click="checkedDelete"
-                >선택 삭제</v-btn
-              >
+              <v-btn small color="letcipe" class="white--text" @click="checkedDelete">선택 삭제</v-btn>
             </div>
           </div>
         </div>
@@ -44,27 +42,21 @@
               three-line
               style="background-color: white"
               class="pl-3 pr-3"
+              @click="moveDetail(recipeInfo)"
             >
               <v-icon
                 v-if="!checkedRecipe[i]"
                 class="mr-3"
                 @click="addRecipe(i)"
-                >mdi-check-circle-outline</v-icon
-              >
-              <v-icon v-else class="mr-3" @click="addRecipe(i)"
-                >mdi-check-circle</v-icon
-              >
+              >mdi-check-circle-outline</v-icon>
+              <v-icon v-else class="mr-3" @click="addRecipe(i)">mdi-check-circle</v-icon>
               <v-list-item-avatar tile size="100">
                 <v-img :src="recipeInfo.recipe.repImg"></v-img>
               </v-list-item-avatar>
               <v-list-item-content class="pl-4">
                 <v-list-item-title class="d-flex justify-space-between">
-                  <div>
-                    {{ recipeInfo.recipe.title }}
-                  </div>
-                  <v-icon @click="deleteRecipe(recipeInfo.recipe.id)"
-                    >mdi-window-close</v-icon
-                  >
+                  <div>{{ recipeInfo.recipe.title }}</div>
+                  <v-icon @click="deleteRecipe(recipeInfo.recipe.id)">mdi-window-close</v-icon>
                 </v-list-item-title>
 
                 <v-list-item-subtitle
@@ -74,19 +66,15 @@
                     white-space: nowrap;
                     display: inline-block;
                   "
-                >
-                  {{ recipeInfo.recipe.content }}
-                </v-list-item-subtitle>
+                >{{ recipeInfo.recipe.content }}</v-list-item-subtitle>
                 <div class="d-flex justify-space-between">
                   <div style="margin: auto 0">
-                    <v-icon small color="pink lighten-1"
-                      >mdi-cards-heart</v-icon
-                    >
+                    <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
                     {{ recipeInfo.recipe.recipeLike }}
                   </div>
                   <!-- <v-list-item-subtitle style="text-align: right"
                     >선택한 재료 4개를 포함하고 있어요.</v-list-item-subtitle
-                  > -->
+                  >-->
                   <div>
                     <v-btn
                       class="mx-2"
@@ -117,7 +105,7 @@
                       <v-icon class="mx-2" color="letcipe"
                         >mdi-plus-circle</v-icon
                       >
-                    </div> -->
+                    </div>-->
                   </div>
                 </div>
               </v-list-item-content>
@@ -134,14 +122,9 @@
           <v-divider></v-divider>
 
           <div v-for="(item, index) in ingreList" :key="index">
-            <div
-              v-if="item.amount > 0"
-              class="d-flex justify-space-between pa-2"
-            >
+            <div v-if="item.amount > 0" class="d-flex justify-space-between pa-2">
               <!-- <div style="font-size: x-large"> -->
-              <div>
-                {{ item.ingredient.name }}
-              </div>
+              <div>{{ item.ingredient.name }}</div>
               <div>
                 <!-- <div style="font-size: x-large"> -->
                 <div>
@@ -169,15 +152,18 @@
                 </div>
                 <div style="float: right">
                   {{ Math.ceil(item.amount * item.ingredient.gml)
-                  }}<span v-if="item.ingredient.measure == 'ml'">ml</span>
+                  }}
+                  <span
+                    v-if="item.ingredient.measure == 'ml'"
+                  >ml</span>
                   <span v-else>g</span>
                   <!-- {{ cartIngre.get(key).amount
-                  }}{{ cartIngre.get(key).measure }} -->
+                  }}{{ cartIngre.get(key).measure }}-->
                   <!-- <v-icon
                     v-if="!(item.ingredient.id in amountByRecipe)"
                     @click="deleteIngre(item)"
                     >mdi-close</v-icon
-                  ><v-icon v-else color="white">mdi-close</v-icon> -->
+                  ><v-icon v-else color="white">mdi-close</v-icon>-->
                 </div>
               </div>
             </div>
@@ -193,8 +179,7 @@
                   v-bind="attrs"
                   v-on="on"
                   @click="clearItem"
-                  >재료 추가</v-btn
-                >
+                >재료 추가</v-btn>
               </template>
 
               <v-card>
@@ -209,7 +194,7 @@
                           <!-- <v-text-field
                             v-model="editedItem.name"
                             label="재료명"
-                            ></v-text-field>-->
+                          ></v-text-field>-->
                           <v-autocomplete
                             ref="keyword"
                             v-model="keyword"
@@ -234,21 +219,19 @@
                           >
                             <template #no-data>
                               <v-list-item>
-                                <v-list-item-title>
-                                  일치하는 재료가 없습니다.
-                                </v-list-item-title>
+                                <v-list-item-title>일치하는 재료가 없습니다.</v-list-item-title>
                               </v-list-item>
                             </template>
                             <template #item="{ item }">
                               <v-list-item-content @click="selectIngre(item)">
-                                <v-list-item-title
-                                  v-text="item.name"
-                                ></v-list-item-title>
+                                <v-list-item-title v-text="item.name"></v-list-item-title>
                               </v-list-item-content>
                               <v-list-item-action @click="selectIngre(item)">
-                                <v-chip :color="colors[item.category]" label>{{
+                                <v-chip :color="colors[item.category]" label>
+                                  {{
                                   item.category
-                                }}</v-chip>
+                                  }}
+                                </v-chip>
                               </v-list-item-action>
                             </template>
                           </v-autocomplete>
@@ -265,11 +248,7 @@
                           ></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="6" md="4">
-                          <v-text-field
-                            v-model="editedItem.ingredient.measure"
-                            disabled
-                            label="단위"
-                          ></v-text-field>
+                          <v-text-field v-model="editedItem.ingredient.measure" disabled label="단위"></v-text-field>
                         </v-col>
                       </v-row>
                     </v-container>
@@ -288,8 +267,7 @@
                     "
                     text
                     @click="saveIngre"
-                    >재료 저장</v-btn
-                  >
+                  >재료 저장</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -316,22 +294,16 @@
             color="letcipe"
             class="white--text"
             @click="clickStartCart"
-            >장보기</v-btn
-          >
+          >장보기</v-btn>
         </div>
 
         <v-dialog v-model="dialogStartCartError" persistent max-width="290">
           <v-card>
             <v-card-title>Caution</v-card-title>
-            <v-card-text>{{ errorMsg }} </v-card-text>
+            <v-card-text>{{ errorMsg }}</v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn
-                color="green darken-1"
-                text
-                @click="dialogStartCartError = false"
-                >확인</v-btn
-              >
+              <v-btn color="green darken-1" text @click="dialogStartCartError = false">확인</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -469,6 +441,7 @@ export default {
       'ADD_INGRELIST',
       'ADD_INGRE_AMOUNT',
     ]),
+    ...mapMutations('recipe', ['CLEAR_RECIPE_ID', 'SET_RECIPE_ID']),
     ...mapActions('ingredients', ['searchIngredient']),
     ...mapActions('cart', [
       'readCart',
@@ -485,6 +458,15 @@ export default {
 
     initialize() {
       this.ingredients = []
+    },
+    moveBack() {
+      this.$router.go(-1)
+    },
+    moveDetail(data) {
+      this.CLEAR_RECIPE_ID()
+      this.SET_RECIPE_ID(data.recipe.id)
+      this.$router.push('/recipe/detail')
+      console.log(data)
     },
     close() {
       this.dialog = false
@@ -883,6 +865,9 @@ export default {
 .cart-count-wrap {
   padding: 2%;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
+.recipelist-title-btn {
+  cursor: pointer;
 }
 
 .fadeInUp {

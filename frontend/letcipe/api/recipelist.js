@@ -1,7 +1,4 @@
 import api from '../config/interceptor'
-import { fileInstance } from '.'
-
-const file = fileInstance()
 
 // 레시피리스트 목록 검색
 async function searchRecipeList(query, page, size, success, fail) {
@@ -13,7 +10,7 @@ async function searchRecipeList(query, page, size, success, fail) {
 
 // 레시피리스트 등록
 async function createRecipeList(recipelist, success, fail) {
-  await file
+  await api
     .post(`/api/recipelist`, JSON.stringify(recipelist))
     .then(success)
     .catch(fail)

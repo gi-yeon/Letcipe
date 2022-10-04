@@ -6,7 +6,7 @@
           <div class="myrecipe-head-wrap">
             <div class="d-flex justify-space-between pb-3">
               <v-icon @click="moveMypage">mdi-window-close</v-icon>
-              <div style="font-size: x-large">내가 만든 레시피리스트</div>
+              <div style="font-size: x-large">내가 좋아하는 레시피</div>
               <v-icon>mdi-blank</v-icon>
             </div>
           </div>
@@ -21,47 +21,19 @@
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title class="d-flex justify-space-between">
-                    <div class="recipe-item" @click="moveDetail(mr)">{{ mr.name }}</div>
-                    <div class="d-flex-column">
-                      <div class="d-flex align-center">
-                        <v-icon small color="letcipe">mdi-calendar-clock</v-icon>
-                        <div style="font-size: x-small">{{mr.regTime }}</div>
-                      </div>
-                      <div class="d-flex justify-end">
-                        <v-icon v-if="mr.isShared === 'N'" small color="letcipe">mdi-lock</v-icon>
-                        <v-icon v-if="mr.isShared === 'Y'" small color="letcipe">mdi-lock-open</v-icon>
-                        <v-icon
-                          style="z-index: 1"
-                          small
-                          color="info"
-                          @click="editItem(mr)"
-                        >mdi-pencil</v-icon>
-                        <v-icon style="z-index: 1" small @click="deleteItem(mr)">mdi-delete</v-icon>
-                      </div>
+                    <div class="recipe-item" @click="moveDetail(mr)">{{ mr.title }}</div>
+                    <div>
+                      <v-icon v-if="mr.nickName===nickname" style="z-index: 1" small color="info" @click="editItem(mr)">mdi-pencil</v-icon>
+                      <v-icon v-if="mr.nickName===nickname" style="z-index: 1" small @click="deleteItem(mr)">mdi-delete</v-icon>
                     </div>
                   </v-list-item-title>
 
-                  <v-list-item-subtitle
-                    class="recipe-item"
-                    @click="moveDetail(mr)"
-                  >{{ mr.description }}</v-list-item-subtitle>
+                  <v-list-item-subtitle class="recipe-item" @click="moveDetail(mr)">{{ mr.content }}</v-list-item-subtitle>
                   <div class="d-flex justify-space-between">
                     <v-list-item-subtitle class="d-flex align-center">
-                      <!-- <div class="d-flex align-center">
-                        <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
-                        <div>{{mr.recipeLike }}</div>
-                      </div>-->
-
-                      <div>
-                        <div class="d-flex align-center">
-                          <v-icon
-                            small
-                            :color="mr.bookmark? `yellow lighten-1`: `gray`"
-                            style="cursor: pointer"
-                            @click="createBookmark(mr)"
-                          >mdi-bookmark</v-icon>
-                          <div>{{mr.bookmarkCnt }}</div>
-                        </div>
+                      <div class="d-flex align-center">
+                        <v-icon v-if="recipeLike[i]" small color="pink lighten-1" @click="saveLike(i, mr)">mdi-heart</v-icon>
+                        <v-icon v-else small color="grey" @click="saveLike(i, mr)">mdi-heart-outline</v-icon>
                       </div>
                     </v-list-item-subtitle>
                     <v-list-item-subtitle style="text-align: right">
@@ -75,7 +47,7 @@
           </div>
           <div v-else>
             <div>
-              <v-list-item three-line>레시피 리스트를 만들어주세요.</v-list-item>
+              <v-list-item three-line>좋아하는 레시피가 없습니다.</v-list-item>
               <v-divider></v-divider>
             </div>
           </div>
@@ -92,11 +64,11 @@
     </v-app>
   </div>
 </template>
-    
-    <script>
+      
+      <script>
 import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
-  name: 'MyrecipeListPage',
+  name: 'MyLikePage',
   data() {
     return {
       TotalPage: 0,
@@ -116,10 +88,11 @@ export default {
       isSelected: [],
       selectedIngre: '',
       recipeList: [],
+      recipeLike: [],
     }
   },
   computed: {
-    ...mapState('user', ['myRecipe', 'myRecipeList']),
+    ...mapState('user', ['nickname', 'mylikeRecipe']),
   },
 
   watch: {},
@@ -132,43 +105,20 @@ export default {
       resolve()
     })
     promise.then(async () => {
-      await this.myrecipeList(pageable)
-      // console.log(this.myRecipeList)/
-      this.myRecipeList?.forEach((mr) => {
-        const recipeListItem = {
-          id: mr.id,
-          bookmark: mr.bookmark,
-          name: mr.name,
-          isShared: mr.isShared,
-          bookmarkCnt: mr.recipeListBookmark,
-          repImg: mr.recipeListItems[0].recipe.repImg,
-          description: mr.description,
-          content: mr.recipeListItems[0].recipe.title + '외',
-          regTime: mr.regTime.split('T')[0],
-          review: mr.review,
-          cnt: 0,
-        }
-        mr.recipeListItems.forEach((m) => {
-          recipeListItem.cnt += m.amount
-        })
-        this.recipeList.push(recipeListItem)
+      // 이부분만 고쳐서 쓰면됩니다.
+      await this.myLikeRecipe(pageable)
+      this.mylikeRecipe.forEach((lr) => {
+        this.recipeLike.push(true)
+        this.recipeList.push(lr)
       })
-      //   this.TotalPage = this.myRecipe.length / 5
-      //   console.log(this.TotalPage)
-      //   console.log(this.myRecipes)
-      console.log(this.recipeList)
+      this.TotalPage = this.recipeList.length / 5
     })
   },
   methods: {
-    ...mapActions('recipe', ['patchRecipeDetail']),
-    ...mapActions('user', ['myrecipe', 'myrecipeList']),
+    ...mapActions('recipe', ['patchRecipeDetail', 'countRecipeLikes', 'decountRecipeLikes',]),
+    ...mapActions('user', ['myLikeRecipe']),
     ...mapActions('cartr', ['createCart']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
-    ...mapActions('recipelist', [
-      'deleteRecipeList',
-      'deleteRecipeListBookmark',
-      'createRecipeListBookmark',
-    ]),
     editItem(mr) {
       this.CLEAR_RECIPE_ID()
       this.SET_RECIPE_ID(mr.id)
@@ -182,7 +132,7 @@ export default {
     moveDetail(mr) {
       this.CLEAR_RECIPE_ID()
       this.SET_RECIPE_ID(mr.id)
-      this.$router.push('/recipelist/detail')
+      this.$router.push('/recipe/detail')
     },
     moveMypage() {
       this.$router.push('/user/mypage')
@@ -192,14 +142,19 @@ export default {
       const list = { cartItem }
       this.createCart(list)
     },
-    createBookmark(mr) {
-      this.createRecipeListBookmark(mr.id)
+    saveLike(i, mr) {
+      if(this.recipeLike[i]) {
+        this.decountRecipeLikes(mr.id)
+      } else {
+        this.countRecipeLikes(mr.id)
+      }
+      this.$set(this.recipeLike, i, !this.recipeLike[i])
     },
   },
 }
 </script>
-    
-    <style scoped>
+      
+      <style scoped>
 .myrecipe-page {
   /* padding-top: 70px; */
   padding-bottom: 70px;
@@ -227,4 +182,4 @@ export default {
   display: none;
 }
 </style>
-    
+      

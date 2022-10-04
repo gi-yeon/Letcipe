@@ -12,6 +12,7 @@
                   label="아이디"
                   :rules="rules.id_rule"
                   hide-details="auto"
+                  solo
                   @keyup.enter="loginTemp"
                 ></v-text-field>
               </div>
@@ -23,6 +24,7 @@
                   :append-icon="showPW ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="showPW ? 'text' : 'password'"
                   hide-details="auto"
+                  solo
                   @click:append="showPW = !showPW"
                   @keyup.enter="loginTemp"
                 ></v-text-field>
@@ -35,8 +37,8 @@
           </div>
           <div>
             <div class="btn-wrap">
-              <v-btn class="btn" color="#AAC821" @click="loginTemp">로그인</v-btn>
-              <v-btn class="btn" color="#AAC821" @click="moveAgree">회원가입</v-btn>
+              <v-btn class="btn" color="letcipe" @click="loginTemp">로그인</v-btn>
+              <v-btn class="btn" color="letcipe" @click="moveAgree">회원가입</v-btn>
             </div>
           </div>
         </div>
@@ -134,17 +136,12 @@ export default {
   /* padding-bottom: 15%; */
 }
 .login-input {
-  background-color: white;
-  border: 0.5px solid #aac821;
-  margin-bottom: 3%;
-  margin-top: 3%;
-  border-radius: 10px;
 }
 .login-wrap {
   width: 40%;
 }
 .find-wrap {
-  color: #51600d;
+  color: #67470c;
   display: flex;
   justify-content: flex-end;
   cursor: pointer;
@@ -152,7 +149,7 @@ export default {
 .btn-wrap {
   display: flex;
   flex-direction: column;
-  color: #aac821;
+  color: #ffa500;
 }
 .btn {
   padding-top: 3%;
@@ -182,11 +179,6 @@ export default {
     padding-bottom: 15%;
   }
   .login-input {
-    background-color: white;
-    border: 0.5px solid #73842b;
-    margin-bottom: 3%;
-    margin-top: 3%;
-    border-radius: 10px;
   }
 
   .login-wrap {
