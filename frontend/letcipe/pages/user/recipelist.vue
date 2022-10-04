@@ -143,10 +143,11 @@ export default {
           bookmarkCnt: mr.recipeListBookmark,
           repImg: mr.recipeListItems[0].recipe.repImg,
           description: mr.description,
-          content: mr.recipeListItems[0].recipe.title + '외',
+          content: mr.recipeListItems[0].recipe.title + ' 외',
           regTime: mr.regTime.split('T')[0],
           review: mr.review,
           cnt: 0,
+          items: mr.recipeListItems,
         }
         mr.recipeListItems.forEach((m) => {
           recipeListItem.cnt += m.amount
@@ -162,7 +163,7 @@ export default {
   methods: {
     ...mapActions('recipe', ['patchRecipeDetail']),
     ...mapActions('user', ['myrecipe', 'myrecipeList']),
-    ...mapActions('cartr', ['createCart']),
+    ...mapActions('cart', ['createCart']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     ...mapActions('recipelist', [
       'deleteRecipeList',
@@ -188,12 +189,26 @@ export default {
       this.$router.push('/user/mypage')
     },
     addCart(mr) {
-      const cartItem = [mr.id]
-      const list = { cartItem }
-      this.createCart(list)
+      //  이부분 물어보기 지수한테.
+      const recipeList = []
+      mr.items.forEach((i) => {
+        const id = i.recipe.id
+        recipeList.push(id)
+      })
+      const addrecipes = {
+        list: recipeList,
+      }
+      this.createCart(addrecipes)
     },
     createBookmark(mr) {
-      this.createRecipeListBookmark(mr.id)
+      if (mr.bookmark) {
+        this.deleteRecipeListBookmark(mr.id)
+        mr.bookmarkCnt--
+      } else {
+        this.createRecipeListBookmark(mr.id)
+        mr.bookmarkCnt++
+      }
+      mr.bookmark = !mr.bookmark
     },
   },
 }
@@ -225,6 +240,14 @@ export default {
 }
 :deep(.v-text-field__details) {
   display: none;
+}
+
+@media (max-width: 415px) {
+  .recipe-item {
+    width: 85px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 </style>
     

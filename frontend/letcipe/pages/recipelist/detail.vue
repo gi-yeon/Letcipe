@@ -29,7 +29,24 @@
                   {{ recipeListWriter.job }} &nbsp;&nbsp;{{
                   recipeListWriter.nickname
                   }}
-                  <v-btn style="border: 1px solid black">+ 전체담기</v-btn>
+                  <v-dialog v-model="dialog2" persistent max-width="290">
+                    <template #activator="{ on, attrs }">
+                      <v-btn
+                        style="border: 1px solid black"
+                        v-bind="attrs"
+                        @click="AllAdd()"
+                        v-on="on"
+                      >+ 전체담기</v-btn>
+                    </template>
+                    <v-card>
+                      <v-card-title class="text-h5">Caution</v-card-title>
+                      <v-card-text>레시피 전체 담기 성공!</v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="green darken-1" text @click="dialog2 = false">확인</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
                 </v-row>
               </div>
               <v-row align="center" class="mx-0">
@@ -45,8 +62,44 @@
               <v-row align="center" class="mx-0">등록일자 : {{ regTime }}</v-row>
             </v-card-text>
             <br />
-            <div align="center">
-              <v-btn style="width: 90%; border: 1px solid black">선택 담기</v-btn>
+            <div align="center" class="d-flex justify-center">
+              <!-- <v-btn style="width: 90%; border: 1px solid black" @click="partAdd()">선택 담기</v-btn> -->
+
+              <v-dialog v-model="dialog" persistent max-width="290">
+                <template #activator="{ on, attrs }">
+                  <v-btn
+                    height="48px"
+                    style="width: 90%; border: 1px solid black"
+                    v-bind="attrs"
+                    @click="partAdd()"
+                    v-on="on"
+                  >선택 담기</v-btn>
+                </template>
+                <!-- <v-card v-if="isAll">
+                    <v-card-title class="text-h5">Caution</v-card-title>
+                    <v-card-text>레시피 전체 담기 성공!</v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="green darken-1" text @click="dialog = false">확인</v-btn>
+                    </v-card-actions>
+                </v-card>-->
+                <v-card v-if="isNothing">
+                  <v-card-title class="text-h5">Caution</v-card-title>
+                  <v-card-text>선택된 레시피가 없습니다. 레시피를 선택해주세요.</v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="green darken-1" text @click="dialog = false">확인</v-btn>
+                  </v-card-actions>
+                </v-card>
+                <v-card v-if="!isNothing">
+                  <v-card-title class="text-h5">Caution</v-card-title>
+                  <v-card-text>레시피 장바구니에 담기 성공!</v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="green darken-1" text @click="dialog = false">확인</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
             </div>
             <v-card-subtitle class="mx-0 mr-3 ml-3 d-flex justify-space-between">
               <div v-if="!isAllCheck" @click="allAddCart">
@@ -74,7 +127,7 @@
                       "
                       :elevation="hover ? 24 : 6"
                       :class="hover ? 'grey lighten-5' : 'white'"
-                      class="mx-auto mt-2 mb-2 d-flex align-center"
+                      class="d-flex align-center mx-auto mt-2 mb-2"
                     >
                       <div class="ml-4">{{ i + 1 }}</div>
                       <v-list-item three-line>
@@ -120,6 +173,8 @@ export default {
   name: 'RecipeListDetail',
   data() {
     return {
+      dialog: false,
+      dialog2: false,
       recipeListWriter: {},
       regTime: '',
       Bookmarks: 0,
@@ -128,6 +183,7 @@ export default {
       cart: [],
       isAllCheck: false,
       id: '',
+      isNothing: false,
     }
   },
 
@@ -150,7 +206,7 @@ export default {
       'recipeListRepImg',
       'recipeListId',
     ]),
-    ...mapState('user', ['userId']),
+    ...mapState('user', ['userId', 'myRecipe', 'myRecipeList']),
   },
   created() {},
   methods: {
@@ -159,6 +215,7 @@ export default {
       'createRecipeListBookmark',
       'deleteRecipeListBookmark',
     ]),
+    ...mapActions('cart', ['createCart']),
     moveBack() {
       this.$router.go(-1)
     },
@@ -192,8 +249,6 @@ export default {
           this.cart.push(this.recipeListItems[i])
         }
       }
-      console.log(this.checkedRecipe)
-      console.log(this.cart)
     },
     allAddCart() {
       if (!this.isAllCheck) {
@@ -214,8 +269,50 @@ export default {
       }
       console.log(this.cart)
     },
+    AllAdd() {
+      // this.allAddCart()
+      const cartid = []
+      this.recipeListItems?.forEach((item) => {
+        cartid.push(item.recipe.id)
+      })
+      const addrecipes = {
+        list: cartid,
+      }
+      this.createCart(addrecipes)
+      // console.log(addrecipes)
+    },
+    partAdd() {
+      const cartid = []
+      this.cart?.forEach((item) => {
+        cartid.push(item.recipe.id)
+      })
+      const addrecipes = {
+        list: cartid,
+      }
+      if (addrecipes.list.length === 0) {
+        this.isNothing = true
+      } else {
+        this.isNothing = false
+        this.createCart(addrecipes)
+      }
+      // console.log(addrecipes)
+    },
   },
 }
 </script>
 
-<style></style>
+<style scoped>
+.fadeInUp {
+  animation: fadeInUp 1s ease backwards;
+}
+@keyframes fadeInUp {
+  0% {
+    transform: translate(0px, 100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0px, 0);
+    opacity: 1;
+  }
+}
+</style>
