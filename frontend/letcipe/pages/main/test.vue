@@ -24,7 +24,7 @@
             <div class="my-container">
               <div>{{ nickname }}님의 현재 진행중인 레시피리스트</div>
               <v-carousel
-                hide-delimiters="true"
+                hide-delimiters
                 class="my-list-carousel"
                 height="100%"
                 style="border-radius: 10px"
