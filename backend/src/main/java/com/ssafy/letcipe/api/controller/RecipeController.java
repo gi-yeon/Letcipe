@@ -124,25 +124,24 @@ public class RecipeController {
 
     @GetMapping("/hot")
     @Transactional
-    ResponseEntity searchHot(Pageable pageable, HttpServletRequest request) throws SQLException {
-        // TODO 토큰에서 유저 id 가져와야 함, 없다면 -1 등으로 표기
-        Long userId;
-        try {
-            userId = jwtService.getUserId(request);
-        } catch (Exception e) {
-            userId = -1L;
-        }
-        ResGetHotRecipeComponentDto hot= userService.getAttribute(userId);
+    ResponseEntity searchHot(Pageable pageable) throws SQLException {
         LocalDate now=LocalDate.now();
-        List<ResGetCartReport> cartReport =reportService.getCartReport(
-                hot.getAttribute(),
-                now.minusDays(8),
-                now.minusDays(1),
-                pageable);
-        ResGetHotRecipeDto responseDto= ResGetHotRecipeDto.builder()
-                .title(hot.getTitle())
-                .report(cartReport)
-                .build();
+        List<ResGetCartReport> cartReport;
+        ResGetHotRecipeDto responseDto = null;
+        for (int loop = 0; loop < 5; loop++) {
+        ResGetHotRecipeComponentDto hot= userService.getAttribute2(-1L);
+            cartReport = reportService.getCartReport(
+                    hot.getAttribute(),
+                    now.minusDays(30),
+                    now.minusDays(1),
+                    pageable);
+            responseDto = ResGetHotRecipeDto.builder()
+                    .title(hot.getTitle())
+                    .report(cartReport)
+                    .build();
+
+            if (cartReport.size() > 0) break;
+        }
         return ResponseEntity.ok(responseDto);
     }
 
@@ -152,9 +151,22 @@ public class RecipeController {
     }
 
     @GetMapping("/recommend")
-    public ResponseEntity getCartReport(ReqGetCartReport reqDto, Pageable pageable) {
-        List<ResGetCartReport> cartReport = reportService.getCartReport(reqDto.getAttributes(), LocalDate.parse(reqDto.getBeginDate()), LocalDate.parse(reqDto.getEndDate()),pageable);
-        return ResponseEntity.ok(cartReport);
+    public ResponseEntity getCartReport(String attributes, Pageable pageable) {
+//        List<ResGetCartReport> cartReport = reportService.getCartReport(reqDto.getAttributes(), LocalDate.parse(reqDto.getBeginDate()), LocalDate.parse(reqDto.getEndDate()), pageable);
+        LocalDate now=LocalDate.now();
+        ResGetHotRecipeComponentDto hot = new ResGetHotRecipeComponentDto(attributes);
+        List<ResGetCartReport> cartReport = reportService.getCartReport(
+                attributes,
+                now.minusDays(30),
+                now.minusDays(1),
+                pageable);
+
+        ResGetHotRecipeDto responseDto = ResGetHotRecipeDto.builder()
+                .title(hot.getTitle())
+                .report(cartReport)
+                .build();
+
+        return ResponseEntity.ok(responseDto);
     }
 
 }
