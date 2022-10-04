@@ -3,23 +3,42 @@
     <v-app class="cart-write-page">
       <v-container class="write-container">
         <div class="write-head-wrap d-flex justify-space-between pb-3" @click="moveCart">
-          <v-icon>mdi-chevron-left</v-icon>
+          <div style="cursor: pointer" @click="moveCart">
+            <v-icon>mdi-chevron-left</v-icon>
+          </div>
           <div style="font-size: x-large">레시피리스트 작성</div>
-          <v-icon>mdi-blank</v-icon>
+          <div>
+            <v-icon>mdi-blank</v-icon>
+          </div>
         </div>
         <div class="write-body-wrap fadeInUp">
           <div>
             <div>리스트 이름</div>
-            <v-textarea v-model="recipeList.name" placeholder="이름을 지어주세요." auto-grow solo rows="1" row-height="15"></v-textarea>
+            <v-textarea
+              v-model="recipeList.name"
+              placeholder="이름을 지어주세요."
+              auto-grow
+              solo
+              rows="1"
+              row-height="15"
+            ></v-textarea>
           </div>
           <div>
             <div>내용</div>
-            <v-textarea solo name="input-7-4" placeholder="내용을 입력해주세요" v-model="recipeList.description"></v-textarea>
-            <div class="d-flex" @click="recipeList.isShared = (recipeList.isShared == 'N')? 'Y':'N'">
+            <v-textarea
+              v-model="recipeList.description"
+              name="input-7-4"
+              placeholder="내용을 입력해주세요"
+              solo
+            ></v-textarea>
+            <div
+              class="d-flex"
+              @click="recipeList.isShared = (recipeList.isShared == 'N')? 'Y':'N'"
+            >
               <v-icon v-if="recipeList.isShared === 'N'">mdi-lock</v-icon>
               <v-icon v-if="recipeList.isShared === 'Y'" color="letcipe">mdi-lock-open</v-icon>
-              <div v-if="recipeList.isShared === 'N'">공개하기</div>
-              <div v-if="recipeList.isShared === 'Y'">비공개하기</div>
+              <div v-if="recipeList.isShared === 'N'">비공개</div>
+              <div v-if="recipeList.isShared === 'Y'">공개</div>
             </div>
           </div>
         </div>
@@ -61,7 +80,7 @@
 </template>
 
 <script>
-import { mapActions, mapState} from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
   name: 'WritePage',
   data() {
@@ -69,24 +88,18 @@ export default {
       dialog: false,
       checkName: true,
       recipeList: {
-        name:'',
-        description:'',
+        name: '',
+        description: '',
         isShared: 'N',
-      }
+      },
     }
   },
   computed: {
-    ...mapState('recipelist', [
-      'isSucceededtoRecipeList'
-    ]),
+    ...mapState('recipelist', ['isSucceededtoRecipeList']),
   },
   methods: {
-    ...mapActions('cart', [
-      'readCart',
-    ]),
-    ...mapActions('recipelist', [
-      'createRecipeListAll'
-    ]),
+    ...mapActions('cart', ['readCart']),
+    ...mapActions('recipelist', ['createRecipeListAll']),
     choiceImg(ref) {
       this.stepImg.forEach((img) => {
         if (img.stepNum !== ref.stepNum) {
