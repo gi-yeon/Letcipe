@@ -1,11 +1,10 @@
 package com.ssafy.letcipe.api.service;
 
-import com.ssafy.letcipe.api.dto.recipeList.ReqCreateRecipeListDto;
-import com.ssafy.letcipe.api.dto.recipeList.ReqUpdateRecipeListDto;
-import com.ssafy.letcipe.api.dto.recipeList.ResGetRecipeListDto;
-import com.ssafy.letcipe.api.dto.recipeList.ResSearchRecipeListDto;
+import com.ssafy.letcipe.api.dto.recipeList.*;
 import com.ssafy.letcipe.api.dto.recipeListItem.ReqPostRecipeListItemDto;
 import com.ssafy.letcipe.api.dto.recipeListItem.ReqDeleteRecipeListItemDto;
+import com.ssafy.letcipe.domain.cart.Cart;
+import com.ssafy.letcipe.domain.cart.CartRepository;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipe.RecipeRepository;
 import com.ssafy.letcipe.domain.recipeList.RecipeList;
@@ -14,6 +13,7 @@ import com.ssafy.letcipe.domain.recipeListBookmark.RecipeListBookmark;
 import com.ssafy.letcipe.domain.recipeListBookmark.RecipeListBookmarkRepository;
 import com.ssafy.letcipe.domain.recipeListItem.RecipeListItem;
 import com.ssafy.letcipe.domain.recipeListItem.RecipeListItemRepository;
+import com.ssafy.letcipe.domain.type.StatusType;
 import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.exception.AuthorityViolationException;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +31,7 @@ public class RecipeListService {
     private final RecipeListBookmarkRepository recipeListBookmarkRepository;
     private final RecipeRepository recipeRepository;
     private final RecipeListItemRepository recipeListItemRepository;
+    private final CartRepository cartRepository;
     private final UserService userService;
 
     public RecipeList findRecipeList(Long recipeListId) {
@@ -45,7 +46,7 @@ public class RecipeListService {
     }
 
     @Transactional
-    public void createRecipeList(Long userId, ReqCreateRecipeListDto reqCreateRecipeListDto) {
+    public ResCreateRecipeListDto createRecipeList(Long userId, ReqCreateRecipeListDto reqCreateRecipeListDto) {
         User user = userService.findUser(userId);
         RecipeList recipeList = RecipeList.builder()
                 .user(user)
@@ -53,7 +54,21 @@ public class RecipeListService {
                 .description(reqCreateRecipeListDto.getDescription())
                 .isShared(reqCreateRecipeListDto.getIsShared())
                 .build();
-        recipeListRepository.save(recipeList);
+        recipeList = recipeListRepository.save(recipeList);
+
+        List<Cart> carts = cartRepository.findAllByUser(user);
+
+        for(Cart cart: carts){
+            if(cart.getRecipe().getStatusType() == StatusType.N) {
+                recipeListItemRepository.save(RecipeListItem.builder()
+                        .recipeList(recipeList)
+                        .recipe(cart.getRecipe())
+                        .build()
+                );
+            }
+        }
+
+        return ResCreateRecipeListDto.builder().recipeListId(recipeList.getId()).build();
     }
 
     @Transactional
@@ -117,4 +132,11 @@ public class RecipeListService {
         }
         return result;
     }
+
+    @Transactional
+    public Integer totalNumRecipeList(String keyword) {
+      return recipeListRepository.countRecipeListByNameContaining(keyword);
+    }
+
+
 }

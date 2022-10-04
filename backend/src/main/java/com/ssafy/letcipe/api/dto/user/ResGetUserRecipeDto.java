@@ -17,6 +17,7 @@ public class ResGetUserRecipeDto {
     String repImg;
     int recipeLike;
     int recipeBookmark;
+    String nickName;
 
     public ResGetUserRecipeDto(Recipe recipe){
         this.id = recipe.getId();
@@ -27,5 +28,10 @@ public class ResGetUserRecipeDto {
         this.repImg = recipe.getRepImg();
         this.recipeLike = recipe.getLikes().size();
         this.recipeBookmark = recipe.getBookmarks().size();
+        this.nickName = recipe.getUser().getNickname();
     }
+
+
+
+
 }

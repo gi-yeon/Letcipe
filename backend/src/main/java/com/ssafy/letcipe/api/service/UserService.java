@@ -2,10 +2,15 @@ package com.ssafy.letcipe.api.service;
 
 import com.ssafy.letcipe.api.dto.recipe.ResGetHotRecipeComponentDto;
 import com.ssafy.letcipe.api.dto.user.*;
+import com.ssafy.letcipe.domain.comment.BoardType;
+import com.ssafy.letcipe.domain.comment.Comment;
+import com.ssafy.letcipe.domain.comment.CommentRepository;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipe.RecipeRepository;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmark;
 import com.ssafy.letcipe.domain.recipeBookmark.RecipeBookmarkRepository;
+import com.ssafy.letcipe.domain.recipeLike.RecipeLike;
+import com.ssafy.letcipe.domain.recipeLike.RecipeLikeRepository;
 import com.ssafy.letcipe.domain.recipeList.RecipeList;
 import com.ssafy.letcipe.domain.recipeList.RecipeListRepository;
 import com.ssafy.letcipe.domain.recipeListBookmark.RecipeListBookmark;
@@ -31,6 +36,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +46,10 @@ public class UserService {
     private final RecipeRepository recipeRepository;
     private final RecipeListRepository recipeListRepository;
     private final RecipeBookmarkRepository recipeBookmarkRepository;
+
+    private final RecipeLikeRepository recipeLikeRepository;
     private final RecipeListBookmarkRepository recipeListBookmarkRepository;
+    private final CommentRepository commentRepository;
     private final EncryptUtils encryptUtils;
     private final StringUtils stringUtils;
 
@@ -71,6 +80,102 @@ public class UserService {
         str.add("" + fam);
         str.add(job.getDesc().toUpperCase());
         int flag = rnd.nextInt(16);
+        StringBuilder att = new StringBuilder();
+        StringBuilder title = new StringBuilder();
+        boolean[] check = new boolean[4];
+        int cnt = 0;
+        for (int i = 0; i < 4; i++) {
+            if (flag % 2 == 0) {
+                att.append(str.get(i));
+                check[i] = true;
+                cnt++;
+            } else {
+                att.append("-");
+            }
+            att.append(",");
+            flag /= 2;
+        }
+        if (check[2]) {
+            if (str.get(2).equals("1")) {
+                title.append("혼자 사는 ");
+            } else {
+                title.append(str.get(2)).append("명이서 사는 ");
+            }
+            if (cnt == 1)
+                title.append("사람이 ");
+        }
+        if (check[1])
+            if (check[0] || check[3])
+                title.append(str.get(1) + "대 ");
+            else
+                title.append(str.get(1) + "대가 ");
+        if (check[0])
+            if (check[3])
+                title.append(str.get(0).equals("F") ? "여성 " : "남성 ");
+            else
+                title.append(str.get(0).equals("F") ? "여성이 " : "남성이 ");
+        if (check[3]) {
+            switch (str.get(3)) {
+                case "STUDENT":
+                    title.append("학생이 ");
+                    break;
+                case "JUBU":
+                    title.append("주부가 ");
+                    break;
+                case "WORKER":
+                    title.append("직장인이 ");
+                    break;
+                case "COOK":
+                    title.append("요리사가 ");
+                    break;
+            }
+        }
+        if(cnt==0){
+            title.append("모두가 ");
+        }
+        title.append("좋아하는 레시피들");
+        att.setLength(att.length() - 1);
+        ResGetHotRecipeComponentDto hotRecipeDto = ResGetHotRecipeComponentDto.builder()
+                .title(title.toString())
+                .attribute(att.toString())
+                .build();
+        return hotRecipeDto;
+    }
+
+    /**
+     * getAttribute에서 일부 변경된 메서드
+     * 가구원수 속성값이 1이거나 -로만 나타납니다.
+     * @param userId
+     * @return
+     */
+    @Transactional
+    public ResGetHotRecipeComponentDto getAttribute2(Long userId) {
+        JobType job;
+        GenderType gen;
+        int fam;
+        int age;
+        List<String> str = new ArrayList<>();
+        Random rnd = new Random();
+        if (userId == -1L) {
+            job = JobType.values()[rnd.nextInt(4)];
+            gen = GenderType.values()[rnd.nextInt(2)];
+            fam = rnd.nextInt(1) + 1;
+            age = (rnd.nextInt(4) + 1) * 10;
+        } else {
+            User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException());
+            job = user.getJob();
+            gen = user.getGender();
+            fam = user.getFamily();
+            age = (LocalDate.now().getYear() - user.getBirth().getYear()) / 10 * 10;
+        }
+        str.add(gen.getDesc().substring(0, 1).toUpperCase());
+        str.add("" + age);
+        str.add("" + fam);
+        str.add(job.getDesc().toUpperCase());
+        int flag = rnd.nextInt(16);
+        if (fam != 1) {
+            flag |= 0b0100;
+        }
         StringBuilder att = new StringBuilder();
         StringBuilder title = new StringBuilder();
         boolean[] check = new boolean[4];
@@ -218,6 +323,7 @@ public class UserService {
                 .job(user.getJob())
                 .family(user.getFamily())
                 .birth(user.getBirth())
+                .userType(user.getUserType())
                 .build();
     }
 
@@ -245,24 +351,26 @@ public class UserService {
     @Transactional
     public ResGetUserRecipesDto readUserRecipe(Long userId, Pageable pageable) {
         User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
-        List<Recipe> recipeList = recipeRepository.findAllByUser(pageable, user);
+        List<Recipe> recipeList = recipeRepository.findAllByUserAndStatusType(pageable, user,StatusType.N);
         List<ResGetUserRecipeDto> dtoList = new ArrayList<>();
         for (Recipe recipe : recipeList) {
             dtoList.add(new ResGetUserRecipeDto(recipe));
         }
         return new ResGetUserRecipesDto(dtoList);
     }
-
+    @Transactional
     public ResGetUserRecipeListsDto readUserRecipeList(Long userId, Pageable pageable) {
         User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
         List<RecipeList> recipeListList = recipeListRepository.findAllByUser(pageable, user);
         List<ResGetUserRecipeListDto> dtoList = new ArrayList<>();
         for (RecipeList recipeList : recipeListList) {
-            dtoList.add(new ResGetUserRecipeListDto(recipeList));
+            boolean isBookmark = recipeListBookmarkRepository.existsByUserIdAndRecipeListId(userId, recipeList.getId());
+            dtoList.add(new ResGetUserRecipeListDto(recipeList, isBookmark));
         }
         return new ResGetUserRecipeListsDto(dtoList);
     }
 
+    @Transactional
     public ResGetUserRecipesDto readRecipeBookmark(Long userId, Pageable pageable) {
         User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
         List<RecipeBookmark> recipeBookmarkList = recipeBookmarkRepository.findAllByUser(pageable, user);
@@ -278,9 +386,22 @@ public class UserService {
         List<RecipeListBookmark> recipeListBookmarkList = recipeListBookmarkRepository.findAllByUser(pageable, user);
         List<ResGetUserRecipeListDto> dtoList = new ArrayList<>();
         for (RecipeListBookmark recipeListBookmark : recipeListBookmarkList) {
-            dtoList.add(new ResGetUserRecipeListDto(recipeListBookmark.getRecipeList()));
+            dtoList.add(new ResGetUserRecipeListDto(recipeListBookmark.getRecipeList(), true));
         }
         return new ResGetUserRecipeListsDto(dtoList);
+    }
+
+    public List<ResGetUserCommentDto> getUserComment(Long userId, Pageable pageable) {
+        List<Comment> commentList = commentRepository.findAllByUserIdAndBoardTypeAndStatusType(pageable, userId, BoardType.RECIPE, StatusType.N);
+        List<ResGetUserCommentDto> dtoList = new ArrayList<>();
+        for (Comment comment : commentList) {
+            dtoList.add(new ResGetUserCommentDto(comment));
+        }
+        return dtoList;
+    }
+
+    public Long getCommentNum(Long userId) {
+        return commentRepository.countByUserIdAndBoardTypeAndStatusType(userId, BoardType.RECIPE, StatusType.N);
     }
 
     public String readUserId(ReqGetUserIdDto requestDto) {
@@ -349,4 +470,14 @@ public class UserService {
         if (userRepository.existsByNickname(nickname)) throw new BadRequestException("이미 사용중인 닉네임 입니다.");
     }
 
+    @Transactional
+    public ResGetUserRecipesDto readRecipeLike(Long userId, Pageable pageable) {
+        User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
+        List<RecipeLike> recipeLikeList = recipeLikeRepository.findAllByUser(pageable, user);
+        List<ResGetUserRecipeDto> dtoList = new ArrayList<>();
+        for (RecipeLike recipelike : recipeLikeList) {
+            dtoList.add(new ResGetUserRecipeDto(recipelike.getRecipe()));
+        }
+        return new ResGetUserRecipesDto(dtoList);
+    }
 }

@@ -18,10 +18,17 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
             "or t.name like concat('%',:keyword,'%')) and r.statusType = 0")
     List<Recipe> findByKeyword(Pageable pageable, String keyword) throws SQLException;
 
+    @Query("select distinct r from Recipe r left join fetch r.tags rp left join fetch rp.tag t " +
+            "where (r.title like concat('%',:keyword,'%')" +
+            "or t.name like concat('%',:keyword,'%')) and r.statusType = 0")
+    List<Recipe> totalNumByKeyword(String keyword) throws SQLException;
+
     @Query("select l.recipe from RecipeLike l group by l order by count(l) desc")
     List<Recipe> findBestRecipes(Pageable pageable) throws SQLException;
 
     List<Recipe> findAllByUser(Pageable pageable, User user);
 
     Optional<Recipe> findByStatusTypeAndId(StatusType n, Long boardId);
+
+    List<Recipe> findAllByUserAndStatusType(Pageable pageable, User user, StatusType n);
 }
