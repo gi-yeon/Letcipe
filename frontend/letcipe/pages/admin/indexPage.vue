@@ -1,31 +1,32 @@
 <template>
   <div id="app">
-    <Bar :chart-data="chartData" :chart-options="chartOptions" />
-    <Line :chart-data="chartData" :chart-options="chartOptions" />
-    <Pie :chart-data="chartData" :chart-options="chartOptions" />
+    <v-btn @click="test"></v-btn>
+    <Bar ref="bar" :chart-data="chartData" :chart-options="chartOptions" />
   </div>
 </template>
 
 <script>
 // DataPage.vue
-import { Bar, Line, Pie } from 'vue-chartjs'
+import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, ArcElement, LineElement, CategoryScale, LinearScale } from 'chart.js'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, LineElement, CategoryScale, LinearScale)
 
 export default {
   name: 'BarChart',
-  components: { Bar, Line, Pie },
+  components: { Bar },
   data() {
       return {
+        labes: [],
+        data: [],
         chartData: {
           labels: [
-            "a","b","c","d"
-          ],
-          datasets: [{
-            label: 'Title',
-            data: [15, 23,47, 55]
-          }]
+          "a","b","c","d"
+        ],
+        datasets: [{
+          label: 'Title',
+          data: [15, 23,47, 55]
+        }]
         },
         chartOptions: {
         responsive: true,
@@ -65,6 +66,14 @@ export default {
         },
       },
       };
+    },
+  methods: {
+    test() {
+      alert()
+      this.chartData.labels.push("e")
+      this.chartData.datasets[0].data.push(30)
+      this.$refs.bar.updateChart()
     }
+  }
 }
 </script>
