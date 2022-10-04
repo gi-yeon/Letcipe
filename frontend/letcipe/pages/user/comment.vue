@@ -48,7 +48,9 @@
                     style="border: 1px solid black !important"
                     align="left"
                   >
-                    <v-list-item-content>
+                    <v-list-item-content
+                      class="mx-auto mt-2 mb-2 d-flex align-center"
+                    >
                       <v-row>
                         <v-col>
                           <v-list-item-subtitle>{{
@@ -72,13 +74,13 @@
                       > -->
 
                       <v-list-item-content
-                        @click="commentDetail(i)"
                         style="
                           display: inline-block;
                           text-overflow: ellipsis;
                           white-space: nowrap;
                           overflow: hidden;
                         "
+                        @click="commentDetail(i)"
                       >
                         {{ comment.content }}
                       </v-list-item-content>
@@ -241,9 +243,7 @@ export default {
       console.log(this.checkedComment)
     },
     async deleteComment(id) {
-      console.log('-----------------------------')
       console.log(id)
-      console.log('-----------------------------')
       const comment = {
         commentId: id,
       }
@@ -278,7 +278,7 @@ export default {
   position: sticky;
   height: 100%;
   color: black;
-
+  text-overflow: ellipsis;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }
 </style>
