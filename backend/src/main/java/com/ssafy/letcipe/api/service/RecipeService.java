@@ -247,7 +247,7 @@ public class RecipeService {
             return result;
 
         // 재료를 1개 이상 포함하는 레시피 목록
-        List<RecipeIngredientCountDto> recipeContainsIngredient = customRepository.findRecipeContains(pageable,token);
+        List<RecipeIngredientCountDto> recipeContainsIngredient = customRepository.findRecipeContains(token);
         // 재료를 모두 포함하는 리스트만 추리기
         for (int i= 0 ;i<recipeContainsIngredient.size();i++) {
             if (recipeContainsIngredient.get(i).getCount() != token.length)
@@ -256,8 +256,10 @@ public class RecipeService {
         recipeContainsIngredient.forEach(i -> {
             result.add(getRecipeDto(i.getRecipe()));
         });
-        System.out.println(result);
-        return result;
+        int total = result.size();
+        int from = pageable.getPageNumber()*pageable.getPageSize();
+        int to = from+pageable.getPageSize();
+        return result.subList(from,Math.min(to,total));
     }
 
     @Transactional
