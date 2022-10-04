@@ -14,7 +14,8 @@ export const state = () => ({
   cart: [],     // 레시피 정보들
   ingreList : [],       // 전부 계산된 재료들
   amountByRecipe : {},
-  isSucceededtoHistory : false
+  isSucceededtoHistory : false,
+  isSucceededtoRecipeList : false,
 })
 
 export const mutations = {
@@ -26,9 +27,16 @@ export const mutations = {
   },
   SET_INGRE(state, ingreList){
     state.ingreList = ingreList
+    console.log(state.ingreList)
   },
   CLEAR_INGRE(state){
     state.ingreList = []
+  },
+  ADD_INGRE_AMOUNT(state, ingreInfo){
+    console.log(ingreInfo)
+    console.log(state.ingreList[ingreInfo.index])
+     state.ingreList[ingreInfo.index].amount = Number(state.ingreList[ingreInfo.index].amount) + Number(ingreInfo.amount);
+     console.log(state.ingreList)
   },
   CALC_PLUS_INGRE(state, index){
     state.ingreList[index].amount += 1
@@ -43,7 +51,6 @@ export const mutations = {
   SET_BYRECIPE_AMOUNT(state,updateAmountObject){
     console.log("recipe" + updateAmountObject.ingreId + "====" + updateAmountObject.updateAmount)
     state.amountByRecipe[updateAmountObject.ingreId] = updateAmountObject.updateAmount
-    
   },
 
   SET_RECIPE_INGRE(state, amountByRecipe){
@@ -54,6 +61,10 @@ export const mutations = {
   },
   SET_ISSUCCEEDEDTOHISTORY(state, isSucceededtoHistory){
    state.isSucceededtoHistory = isSucceededtoHistory
+  },
+  ADD_INGRELIST(state, ingreItem){
+    console.log(state.ingreList)
+    state.ingreList.push(ingreItem);
   }
 }
 
@@ -121,6 +132,7 @@ export const actions = {
         console.log(data)
         commit('SET_INGRE',data.list)
         commit('SET_RECIPE_INGRE', data.amountByRecipe)
+      
          console.log('장바구니 재료 읽어오기 성공!' )
       },
       (error) => {
@@ -129,12 +141,12 @@ export const actions = {
     )
   },
 
-  async createCartIngredient({ commit }, IngreId) {
+  async createCartIngredient({ commit }, createObject) {
     await createCartIngredient(
-      IngreId,
+      createObject,
       ({ data }) => {
-        // console.log(data)
-        // console.log('장바구니 추가재료 추가 성공!')
+        console.log(data)
+        console.log('장바구니 추가재료 추가 성공!')
       },
       (error) => {
         console.log(error)

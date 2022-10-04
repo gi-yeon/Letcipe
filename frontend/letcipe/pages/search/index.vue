@@ -5,22 +5,20 @@
         <v-container class="search-container d-flex-row">
           <div class="search-head-wrap">
             <div class="d-flex justify-space-between pb-3">
-              <v-icon>mdi-window-close</v-icon>
+              <div>
+                <v-icon @click="moveBack">mdi-window-close</v-icon>
+              </div>
               <div style="font-size: x-large">검색하기</div>
-              <v-icon>mdi-blank</v-icon>
+              <div>
+                <v-icon>mdi-blank</v-icon>
+              </div>
             </div>
           </div>
-          <v-tabs
-            v-model="tab"
-            centered
-            icons-and-text
-            color="red accent-3"
-            hide-slider
-          >
+          <v-tabs v-model="tab" centered icons-and-text color="letcipe" hide-slider>
             <v-tabs-slider></v-tabs-slider>
 
             <v-tab href="#tab-1" style="width: 50%">
-              이름으로 검색
+              이름 또는 태그로 검색
               <v-icon>mdi-hamburger</v-icon>
             </v-tab>
 
@@ -38,28 +36,26 @@
                     <v-btn
                       style="width: 90%"
                       depressed
-                      :color="byRecipe ? 'red accent-3' : 'black'"
+                      :color="byRecipe ? 'letcipe' : 'black'"
                       text
                       small
                       class="pt-0 pb-0"
                       @click="byRecipe = true"
-                      >레시피</v-btn
-                    >
+                    >레시피</v-btn>
                     <v-btn
                       style="width: 90%"
-                      :color="byRecipe ? 'black' : 'red accent-3'"
+                      :color="byRecipe ? 'black' : 'letcipe'"
                       text
                       small
                       class="pt-0 pb-0"
                       @click="byRecipe = false"
-                      >레시피 리스트</v-btn
-                    >
+                    >레시피 리스트</v-btn>
                   </v-row>
                 </v-col>
                 <v-col class="d-flex pr-0 pl-0" align="center">
                   <v-text-field
                     v-model="byname"
-                    label="이름으로 검색"
+                    label="이름 또는 태그로 검색"
                     outlined
                     class="pt-3 pb-3"
                     color="letcipe"
@@ -71,36 +67,23 @@
               </v-row>
               <v-divider></v-divider>
               <div v-if="recipes != null && recipes.length > 0">
-                <v-card-subtitle
-                  >"{{ searchedName }}" 검색 결과</v-card-subtitle
-                >
+                <v-card-subtitle>"{{ searchedName }}" 검색 결과</v-card-subtitle>
                 <div v-for="(recipeInfo, i) in recipes" :key="i">
-                  <v-list-item three-line>
+                  <v-list-item three-line @click="moveDetail(recipeInfo)">
                     <v-list-item-avatar tile size="100">
                       <v-img :src="recipeInfo['repImg']"></v-img>
                     </v-list-item-avatar>
                     <v-list-item-content>
-                      <v-list-item-title>
-                        {{ recipeInfo['title'] }}
-                      </v-list-item-title>
+                      <v-list-item-title>{{ recipeInfo['title'] }}</v-list-item-title>
 
-                      <v-list-item-subtitle>
-                        {{ recipeInfo['content'] }}
-                      </v-list-item-subtitle>
+                      <v-list-item-subtitle>{{ recipeInfo['content'] }}</v-list-item-subtitle>
                       <div class="d-flex justify-space-between">
                         <v-list-item-subtitle>
-                          <v-icon small color="pink lighten-1"
-                            >mdi-cards-heart</v-icon
-                          >
+                          <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
                           {{ recipeInfo['recipeLike'] }}
                         </v-list-item-subtitle>
                         <v-list-item-subtitle style="text-align: right">
-                          <v-btn
-                            small
-                            color="letcipe"
-                            @click="addRecipe(recipeInfo['id'])"
-                            >+담기</v-btn
-                          >
+                          <v-btn small color="letcipe" @click="addRecipe(recipeInfo['id'])">+담기</v-btn>
                         </v-list-item-subtitle>
                       </div>
                     </v-list-item-content>
@@ -109,9 +92,9 @@
                 </div>
                 <div class="text-center">
                   <v-pagination
-                    v-model="Page"
+                    v-model="currentPage"
                     color="letcipe"
-                    :length="TotalPage"
+                    :length="Math.ceil(totalPage / 5)"
                     prev-icon="mdi-menu-left"
                     next-icon="mdi-menu-right"
                     @input="handlePage"
@@ -119,36 +102,23 @@
                 </div>
               </div>
               <div v-if="recipeLists != null && recipeLists.length > 0">
-                <v-card-subtitle
-                  >"{{ searchedName }}" 검색 결과</v-card-subtitle
-                >
+                <v-card-subtitle>"{{ searchedName }}" 검색 결과</v-card-subtitle>
                 <div v-for="(recipeListInfo, i) in recipeLists" :key="i">
-                  <v-list-item three-line>
+                  <v-list-item three-line @click="moveDetail(recipeListInfo)">
                     <v-list-item-avatar tile size="100">
-                      <v-img
-                        :src="recipeListInfo.recipeListItems[0].repImg"
-                      ></v-img>
+                      <v-img :src="recipeListInfo.recipeListItems[0].repImg"></v-img>
                     </v-list-item-avatar>
                     <v-list-item-content>
-                      <v-list-item-title>
-                        {{ recipeListInfo['name'] }}
-                      </v-list-item-title>
+                      <v-list-item-title>{{ recipeListInfo['name'] }}</v-list-item-title>
 
-                      <v-list-item-subtitle>
-                        {{ recipeListInfo['description'] }}
-                      </v-list-item-subtitle>
+                      <v-list-item-subtitle>{{ recipeListInfo['description'] }}</v-list-item-subtitle>
                       <div class="d-flex justify-space-between">
                         <v-list-item-subtitle style="margin: auto">
                           by
                           {{ recipeListInfo['nickname'] }}
                         </v-list-item-subtitle>
                         <v-list-item-subtitle style="text-align: right">
-                          <v-btn
-                            small
-                            color="letcipe"
-                            @click="addRecipeList(recipeListInfo)"
-                            >+전체담기</v-btn
-                          >
+                          <v-btn small color="letcipe" @click="addRecipeList(recipeListInfo)">+전체담기</v-btn>
                         </v-list-item-subtitle>
                       </div>
                     </v-list-item-content>
@@ -164,7 +134,7 @@
                     next-icon="mdi-menu-right"
                     @input="handlePage"
                   ></v-pagination>
-                </div> -->
+                </div>-->
               </div>
             </v-tab-item>
             <v-tab-item :value="`tab-2`">
@@ -191,40 +161,30 @@
                   >
                     <template #no-data>
                       <v-list-item>
-                        <v-list-item-title
-                          >일치하는 재료가 없습니다.</v-list-item-title
-                        >
+                        <v-list-item-title>일치하는 재료가 없습니다.</v-list-item-title>
                       </v-list-item>
                     </template>
                     <template #item="{ item }">
                       <v-list-item-content @click="selectIngre(item)">
-                        <v-list-item-title
-                          v-text="item.name"
-                        ></v-list-item-title>
+                        <v-list-item-title v-text="item.name"></v-list-item-title>
                       </v-list-item-content>
                       <v-list-item-action @click="selectIngre(item)">
-                        <v-chip :color="colors[item.category]" label>
-                          {{ item.category }}
-                        </v-chip>
+                        <v-chip :color="colors[item.category]" label>{{ item.category }}</v-chip>
                       </v-list-item-action>
                     </template>
                   </v-autocomplete>
                 </v-col>
               </v-row>
 
-              <v-card-subtitle v-if="isSelected.length != 0"
-                >선택한 재료 목록</v-card-subtitle
-              >
+              <v-card-subtitle v-if="isSelected.length < 2">두 개 이상의 재료를 선택해 주세요</v-card-subtitle>
+              <v-card-subtitle v-if="isSelected.length >= 2">선택한 재료 목록</v-card-subtitle>
               <div align="center">
                 <v-row class="pb-5" style="width: 90%">
                   <div v-for="(item, i) in isSelected" :key="i">
                     <v-col>
-                      <v-chip
-                        label
-                        :color="colors[item.category]"
-                        @click="deleteIngre(i)"
-                      >
-                        {{ item.name }}<v-icon small>mdi-window-close</v-icon>
+                      <v-chip label :color="colors[item.category]" @click="deleteIngre(i)">
+                        {{ item.name }}
+                        <v-icon small>mdi-window-close</v-icon>
                       </v-chip>
                     </v-col>
                   </div>
@@ -240,33 +200,26 @@
               >
                 <v-card-subtitle>재료 기반 추천 레시피</v-card-subtitle>
                 <div v-for="(recipeInfo, i) in recipesIngre" :key="i">
-                  <v-list-item three-line style="background-color: white">
+                  <v-list-item
+                    three-line
+                    style="background-color: white"
+                    @click="moveDetail(recipeInfo)"
+                  >
                     <v-list-item-avatar tile size="100">
                       <v-img :src="recipeInfo['repImg']"></v-img>
                     </v-list-item-avatar>
                     <v-list-item-content>
-                      <v-list-item-title>
-                        {{ recipeInfo['title'] }}
-                      </v-list-item-title>
+                      <v-list-item-title>{{ recipeInfo['title'] }}</v-list-item-title>
 
-                      <v-list-item-subtitle>
-                        {{ recipeInfo['content'] }}
-                      </v-list-item-subtitle>
+                      <v-list-item-subtitle>{{ recipeInfo['content'] }}</v-list-item-subtitle>
                       <div class="d-flex justify-space-between">
                         <v-list-item-subtitle>
-                          <v-icon small color="pink lighten-1"
-                            >mdi-cards-heart</v-icon
-                          >
+                          <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
                           {{ recipeInfo['recipeLike'] }}
                         </v-list-item-subtitle>
 
                         <v-list-item-subtitle style="text-align: right">
-                          <v-btn
-                            small
-                            color="letcipe"
-                            @click="addRecipe(recipeInfo['id'])"
-                            >+담기</v-btn
-                          >
+                          <v-btn small color="letcipe" @click="addRecipe(recipeInfo['id'])">+담기</v-btn>
                         </v-list-item-subtitle>
                       </div>
                     </v-list-item-content>
@@ -277,7 +230,7 @@
                   <v-pagination
                     v-model="currentPage"
                     color="letcipe"
-                    :length="TotalPage"
+                    :length="Math.ceil(totalPage / 5)"
                     prev-icon="mdi-menu-left"
                     next-icon="mdi-menu-right"
                     @input="handlePage"
@@ -299,15 +252,10 @@
           <v-dialog v-model="dialogSameIngre" persistent max-width="290">
             <v-card>
               <v-card-title>Caution</v-card-title>
-              <v-card-text>이미 추가된 재료입니다.</v-card-text>
+              <v-card-text>이미 추가된 레시피입니다.</v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn
-                  color="green darken-1"
-                  text
-                  @click="dialogSameIngre = false"
-                  >확인</v-btn
-                >
+                <v-btn color="green darken-1" text @click="dialogSameIngre = false">확인</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -318,12 +266,11 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
   name: 'SearchMain',
   data() {
     return {
-      TotalPage: 1,
       currentPage: 1,
       byname: '',
       searchedName: '',
@@ -368,11 +315,25 @@ export default {
   },
   computed: {
     ...mapState('ingredients', ['ingredientsList']),
-    ...mapState('search', ['recipes', 'recipesIngre', 'recipeLists']),
+    ...mapState('search', [
+      'recipes',
+      'recipesIngre',
+      'recipeLists',
+      'totalPage',
+    ]),
     ...mapState('cart', ['cart', 'ingreList', 'amountByRecipe']),
   },
 
-  watch: {},
+  watch: {
+    tab() {
+      console.log('====')
+      this.CLEAR_RECIPE()
+      this.CLEAR_RECIPE_INGRE()
+      this.CLEAR_RECIPE_LIST()
+      this.byname = ''
+      this.isSelecte = []
+    },
+  },
   created() {
     const promise = new Promise((resolve, reject) => {
       resolve()
@@ -380,17 +341,84 @@ export default {
     promise.then(async () => {
       await this.readCart()
     })
+    this.CLEAR_RECIPE()
+    this.CLEAR_RECIPE_INGRE()
+    this.CLEAR_RECIPE_LIST()
   },
   methods: {
+    ...mapMutations('search', [
+      'CLEAR_RECIPE',
+      'CLEAR_RECIPE_INGRE',
+      'CLEAR_RECIPE_LIST',
+    ]),
+    ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     ...mapActions('ingredients', ['searchIngredient']),
     ...mapActions('search', ['getRecipes', 'getRecipesIngre', 'getRecipeList']),
     ...mapActions('cart', ['createCart', 'readCart']),
+    moveBack() {
+      this.$router.go(-1)
+    },
+    moveDetail(data) {
+      this.CLEAR_RECIPE_ID()
+      this.SET_RECIPE_ID(data.id)
+      this.$router.push('/recipe/detail')
+    },
     ingre(keyword) {
       if (keyword != null && keyword.length > 0) {
         keyword = keyword.trim()
         if (keyword.length > 0 && keyword != null) {
           this.searchIngredient(keyword)
         }
+      }
+    },
+    // nextPage() {
+    //   this.TotalPage++
+    //   this.currentPage = this.currentPage + 1
+    //   console.log('----------------')
+    // },
+    handlePage(page) {
+      if (this.tab === 'tab-1') {
+        if (this.byRecipe) {
+          const searchObject = {
+            keyword: this.byname,
+            size: 5,
+            page: this.currentPage - 1,
+          }
+          const promise = new Promise((resolve, reject) => {
+            resolve()
+          })
+          promise.then(async () => {
+            await this.getRecipes(searchObject)
+          })
+          this.currentPage = 1
+        } else {
+          const searchObject = {
+            keyword: this.byname,
+            size: 5,
+            page: this.currentPage - 1,
+          }
+          const promise = new Promise((resolve, reject) => {
+            resolve()
+          })
+          promise.then(async () => {
+            await this.getRecipeList(searchObject)
+          })
+          this.currentPage = 1
+        }
+        this.searchedName = this.byname
+      } else {
+        const searchObject = {
+          ingredients: this.selectedIngre,
+          size: 5,
+          page: this.currentPage - 1,
+        }
+        const promise = new Promise((resolve, reject) => {
+          resolve()
+        })
+        promise.then(async () => {
+          await this.getRecipesIngre(searchObject)
+        })
+        this.currentPage = 1
       }
     },
     selectIngre(item) {
@@ -409,7 +437,7 @@ export default {
         const searchObject = {
           ingredients: this.selectedIngre,
           size: 5,
-          page: 0,
+          page: this.currentPage - 1,
         }
         this.getRecipesIngre(searchObject)
       }
@@ -427,7 +455,7 @@ export default {
         const searchObject = {
           ingredients: this.selectedIngre,
           size: 5,
-          page: 0,
+          page: this.currentPage - 1,
         }
         this.getRecipesIngre(searchObject)
       }
@@ -437,14 +465,14 @@ export default {
         const searchObject = {
           keyword: this.byname,
           size: 5,
-          page: 0,
+          page: this.currentPage - 1,
         }
         this.getRecipes(searchObject)
       } else {
         const searchObject = {
           keyword: this.byname,
           size: 5,
-          page: 0,
+          page: this.currentPage - 1,
         }
         this.getRecipeList(searchObject)
       }

@@ -5,9 +5,13 @@
         <v-container>
           <div class="detail-head-wrap">
             <div class="d-flex justify-space-between pb-3">
-              <v-icon>mdi-window-close</v-icon>
+              <div>
+                <v-icon @click="moveBack">mdi-window-close</v-icon>
+              </div>
               <div style="font-size: x-large">레시피</div>
-              <v-icon>mdi-blank</v-icon>
+              <div>
+                <v-icon>mdi-blank</v-icon>
+              </div>
             </div>
           </div>
 
@@ -15,9 +19,11 @@
             <div class="recipe-img-wrap" align="center">
               <v-img class="recipe-imgs" :src="recipeDetail.repImg">
                 <div class="ref-wrap">
-                  <v-card-title class="text-h6 ref-title">{{
+                  <v-card-title class="text-h6 ref-title">
+                    {{
                     recipeDetail.title
-                  }}</v-card-title>
+                    }}
+                  </v-card-title>
 
                   <!-- 레시피도 서브타이틀 넣을지? 현재 erd에 작성 안되어있음 -->
                   <!-- <v-card-subtitle class="text-md-h3 ref-subtitle"
@@ -27,40 +33,25 @@
               </v-img>
             </div>
 
-            <v-card-title class="text-md-h3">
-              {{ recipeDetail.title }}
-            </v-card-title>
+            <v-card-title class="text-md-h3">{{ recipeDetail.title }}</v-card-title>
             <v-card-subtitle class="text-md-h5">맛있겠다!</v-card-subtitle>
 
             <v-card-text>
               <v-row align="center" class="d-flex mx-0">
-                <v-icon
-                  v-if="isLike"
-                  small
-                  color="pink lighten-1"
-                  @click="saveLike"
-                  >mdi-heart</v-icon
-                >
-                <v-icon v-else small color="grey" @click="saveLike"
-                  >mdi-heart-outline</v-icon
-                >
+                <v-icon v-if="isLike" small color="pink lighten-1" @click="saveLike">mdi-heart</v-icon>
+                <v-icon v-else small color="grey" @click="saveLike">mdi-heart-outline</v-icon>
                 &nbsp;{{ Likes }}&nbsp;&nbsp;
                 <v-icon
                   v-if="isBookmark"
                   small
                   color="yellow lighten-1"
                   @click="saveBookmark"
-                  >mdi-bookmark</v-icon
-                >
-                <v-icon v-else small color="grey" @click="saveBookmark"
-                  >mdi-bookmark-outline</v-icon
-                >
+                >mdi-bookmark</v-icon>
+                <v-icon v-else small color="grey" @click="saveBookmark">mdi-bookmark-outline</v-icon>
                 &nbsp;{{ Bookmarks }}
               </v-row>
 
-              <v-row align="center" class="mx-0"
-                >등록일자 : {{ regTime }}
-              </v-row>
+              <v-row align="center" class="mx-0">등록일자 : {{ regTime }}</v-row>
               <div class="my-4 text-subtitle-1">
                 <!-- <v-avatar
                   v-if="profileImg !== null || profileImg !== ''"
@@ -69,10 +60,7 @@
                   <img alt="Avatar" :src="profileImg" />
                 </v-avatar>-->
                 <v-avatar size="27px" color="letcipe">
-                  <v-img
-                    v-if="writer.profileImage"
-                    :src="writer.profileImage"
-                  ></v-img>
+                  <v-img v-if="writer.profileImage" :src="writer.profileImage"></v-img>
                   <v-icon v-else dark>mdi-account-circle</v-icon>
                 </v-avatar>
                 <span style="color: #ffa500">{{ writer.job }}</span>
@@ -116,18 +104,12 @@
                 </template>
               </v-simple-table>
               <v-card-title class="text-md-h4">레시피</v-card-title>
-              <div
-                v-for="(stepInfo, i) in recipeSteps"
-                :key="i"
-                style="width: 80%; margin: auto"
-              >
+              <div v-for="(stepInfo, i) in recipeSteps" :key="i" style="width: 80%; margin: auto">
                 <div class="stepDetail">
                   <v-img :src="stepInfo.img"></v-img>
                   <h2
                     style="display: inline; color: #ffa500; font-size: xx-large"
-                  >
-                    {{ stepInfo.step }}
-                  </h2>
+                  >{{ stepInfo.step }}</h2>
                   {{ stepInfo.content }}
                 </div>
               </div>
@@ -138,9 +120,7 @@
 
             <v-card-text>
               <v-chip-group column>
-                <v-chip v-for="(tag, i) in recipeDetail.tags" :key="i">
-                  {{ tag.name }}
-                </v-chip>
+                <v-chip v-for="(tag, i) in recipeDetail.tags" :key="i">{{ tag.name }}</v-chip>
               </v-chip-group>
             </v-card-text>
 
@@ -166,11 +146,7 @@
 
               <v-row>
                 <v-col align="center">
-                  <div
-                    v-for="(comment, i) in comments"
-                    :key="i"
-                    style="width: 80%"
-                  >
+                  <div v-for="(comment, i) in comments" :key="i" style="width: 80%">
                     <div class="mx-auto pt-2 pb-2 d-flex align-center">
                       <v-list-item
                         three-line
@@ -180,26 +156,26 @@
                         <v-list-item-content>
                           <v-row>
                             <v-col>
-                              <v-list-item-subtitle class="recipe-comment">
-                                {{ comment.nickName }}
-                              </v-list-item-subtitle>
+                              <v-list-item-subtitle class="recipe-comment">{{ comment.nickName }}</v-list-item-subtitle>
                             </v-col>
                             <v-col align="right">
-                              <v-list-item-subtitle class="recipe-comment"
-                                >{{ comment.regTime.split('T')[0]
-                                }}<v-icon
+                              <v-list-item-subtitle class="recipe-comment">
+                                {{ comment.regTime.split('T')[0]
+                                }}
+                                <v-icon
                                   v-if="comment.nickName === nickname"
                                   size="small"
                                   @click="deleteComment(comment.id)"
-                                  >mdi-close</v-icon
-                                >
+                                >mdi-close</v-icon>
                               </v-list-item-subtitle>
                             </v-col>
                           </v-row>
 
-                          <v-list-item-content class="recipe-comment">{{
+                          <v-list-item-content class="recipe-comment">
+                            {{
                             comment.content
-                          }}</v-list-item-content>
+                            }}
+                          </v-list-item-content>
                         </v-list-item-content>
                       </v-list-item>
                     </div>
@@ -320,6 +296,9 @@ export default {
       promise.then(async () => {
         await this.getComment(this.recipeInfo)
       })
+    },
+    moveBack() {
+      this.$router.go(-1)
     },
     saveBookmark() {
       if (this.userId === 0) return
