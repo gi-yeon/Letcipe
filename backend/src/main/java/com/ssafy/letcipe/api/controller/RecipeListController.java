@@ -89,4 +89,9 @@ public class RecipeListController {
     public ResponseEntity<Integer> totalNumRecipeList(@RequestParam String keyword) {
         return ResponseEntity.ok(recipeListService.totalNumRecipeList(keyword));
     }
+
+    @GetMapping("/best")
+    public ResponseEntity getBestRecipeList(Pageable pageable) {
+        return ResponseEntity.ok(recipeListService.getBestRecipeList(pageable));
+    }
 }
