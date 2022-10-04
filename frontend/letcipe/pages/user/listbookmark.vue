@@ -16,27 +16,43 @@
           <div v-if="recipeList.length > 0">
             <div v-for="(mr, i) in recipeList" :key="i">
               <v-list-item three-line>
-                <v-list-item-avatar class="recipe-item" tile size="100" @click="moveDetail(mr)">
+                <v-list-item-avatar
+                  class="recipe-item"
+                  tile
+                  size="100"
+                  @click="moveDetail(mr)"
+                >
                   <v-img :src="mr.repImg"></v-img>
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title class="d-flex justify-space-between">
-                    <div class="recipe-item" @click="moveDetail(mr)">{{ mr.name }}</div>
+                    <div class="recipe-item" @click="moveDetail(mr)">
+                      {{ mr.name }}
+                    </div>
                     <div class="d-flex-column">
                       <div class="d-flex align-center">
-                        <v-icon small color="letcipe">mdi-calendar-clock</v-icon>
-                        <div style="font-size: x-small">{{mr.regTime }}</div>
+                        <v-icon small color="letcipe"
+                          >mdi-calendar-clock</v-icon
+                        >
+                        <div style="font-size: x-small">{{ mr.regTime }}</div>
                       </div>
                       <div class="d-flex justify-end">
-                        <v-icon v-if="mr.isShared === 'N'" small color="letcipe">mdi-lock</v-icon>
-                        <v-icon v-if="mr.isShared === 'Y'" small color="letcipe">mdi-lock-open</v-icon>
+                        <v-icon v-if="mr.isShared === 'N'" small color="letcipe"
+                          >mdi-lock</v-icon
+                        >
+                        <v-icon v-if="mr.isShared === 'Y'" small color="letcipe"
+                          >mdi-lock-open</v-icon
+                        >
                         <v-icon
                           style="z-index: 1"
                           small
                           color="info"
                           @click="editItem(mr)"
-                        >mdi-pencil</v-icon>
-                        <v-icon style="z-index: 1" small @click="deleteItem(mr)">mdi-delete</v-icon>
+                          >mdi-pencil</v-icon
+                        >
+                        <v-icon style="z-index: 1" small @click="deleteItem(mr)"
+                          >mdi-delete</v-icon
+                        >
                       </div>
                     </div>
                   </v-list-item-title>
@@ -44,7 +60,8 @@
                   <v-list-item-subtitle
                     class="recipe-item"
                     @click="moveDetail(mr)"
-                  >{{ mr.description }}</v-list-item-subtitle>
+                    >{{ mr.description }}</v-list-item-subtitle
+                  >
                   <div class="d-flex justify-space-between">
                     <v-list-item-subtitle class="d-flex align-center">
                       <!-- <div class="d-flex align-center">
@@ -56,16 +73,23 @@
                         <div class="d-flex align-center">
                           <v-icon
                             small
-                            :color="mr.bookmark? `yellow lighten-1`: `gray`"
+                            :color="mr.bookmark ? `yellow lighten-1` : `gray`"
                             style="cursor: pointer"
                             @click="createBookmark(mr)"
-                          >mdi-bookmark</v-icon>
-                          <div>{{mr.bookmarkCnt }}</div>
+                            >mdi-bookmark</v-icon
+                          >
+                          <div>{{ mr.bookmarkCnt }}</div>
                         </div>
                       </div>
                     </v-list-item-subtitle>
                     <v-list-item-subtitle style="text-align: right">
-                      <v-btn style="z-index: 1" small color="letcipe" @click="addCart(mr)">+담기</v-btn>
+                      <v-btn
+                        style="z-index: 1"
+                        small
+                        color="letcipe"
+                        @click="addCart(mr)"
+                        >+담기</v-btn
+                      >
                     </v-list-item-subtitle>
                   </div>
                 </v-list-item-content>
@@ -75,7 +99,9 @@
           </div>
           <div v-else>
             <div>
-              <v-list-item three-line>즐겨찾기에 추가된 레시피 리스트가 없습니다.</v-list-item>
+              <v-list-item three-line
+                >즐겨찾기에 추가된 레시피 리스트가 없습니다.</v-list-item
+              >
               <v-divider></v-divider>
             </div>
           </div>
@@ -92,8 +118,8 @@
     </v-app>
   </div>
 </template>
-    
-    <script>
+
+<script>
 import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
   name: 'MyrecipeListBookmark',
@@ -163,11 +189,11 @@ export default {
     ...mapActions('recipe', ['patchRecipeDetail']),
     ...mapActions('user', ['myBookmarkRecipeList']),
     ...mapActions('cartr', ['createCart']),
-    ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
+    ...mapMutations('recipelist', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     editItem(mr) {
       this.CLEAR_RECIPE_ID()
       this.SET_RECIPE_ID(mr.id)
-      this.$router.push('/recipe/modify')
+      this.$router.push('/recipelist/modify')
     },
     deleteItem(mr) {
       //     this.checkedList.splice(index, 1)
@@ -177,7 +203,7 @@ export default {
     moveDetail(mr) {
       this.CLEAR_RECIPE_ID()
       this.SET_RECIPE_ID(mr.id)
-      this.$router.push('/recipe/detail')
+      this.$router.push('/recipelist/detail')
     },
     moveMypage() {
       this.$router.push('/user/mypage')
@@ -190,8 +216,8 @@ export default {
   },
 }
 </script>
-    
-    <style scoped>
+
+<style scoped>
 .myrecipe-page {
   /* padding-top: 70px; */
   padding-bottom: 70px;
@@ -226,4 +252,3 @@ export default {
   }
 }
 </style>
-    

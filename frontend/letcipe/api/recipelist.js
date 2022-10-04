@@ -22,16 +22,19 @@ async function getRecipeList(recipeListId, success, fail) {
 }
 
 // 레시피리스트 수정
-async function updateRecipeList(recipeListId, updateRL, success, fail) {
+async function updateRecipeList(object, success, fail) {
   await api
-    .put(`/api/recipelist/${recipeListId}`, JSON.stringify(updateRL))
+    .put(
+      `/api/recipelist/${object.recipeListId}`,
+      object.ReqUpdateRecipeListDto
+    )
     .then(success)
     .catch(fail)
 }
 
 // 레시피리스트 삭제
 async function deleteRecipeList(recipeListId, success, fail) {
-  await api.patch(`/api/recipelist/${recipeListId}`).then(success).catch(fail)
+  await api.delete(`/api/recipelist/${recipeListId}`).then(success).catch(fail)
 }
 
 // 레시피리스트에 레시피 추가

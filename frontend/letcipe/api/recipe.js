@@ -1,10 +1,9 @@
 import interceptor from '../config/interceptor'
-import { fileInstance } from '.'
+import fileInterceptor from '../config/fileInterceptor'
 // import { fileInstance } from './multipart'
 
 // const Api = apiInstance
 const api = interceptor
-const fileapi = fileInstance()
 
 // 레시피 상세 조회
 async function RecipeDetail(recipeId, success, fail) {
@@ -13,12 +12,16 @@ async function RecipeDetail(recipeId, success, fail) {
 
 // 레시피 등록
 async function createRecipeDetail(formData, success, fail) {
-  await fileapi.post(`/api/recipe`, formData).then(success).catch(fail)
+  await fileInterceptor.post(`/api/recipe`, formData).then(success).catch(fail)
 }
 
 // 레시피 수정
-async function updateRecipeDetail(recipeId, formData, success, fail) {
-  await api.put(`/api/recipe/${recipeId}`, formData).then(success).catch(fail)
+async function updateRecipeDetail(object, success, fail) {
+  console.log(object)
+  await fileInterceptor
+    .put(`/api/recipe/${object.recipeId}`, object.formData)
+    .then(success)
+    .catch(fail)
 }
 
 // 레시피 삭제

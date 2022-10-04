@@ -72,13 +72,13 @@
                       > -->
 
                       <v-list-item-content
-                        @click="commentDetail(i)"
                         style="
                           display: inline-block;
                           text-overflow: ellipsis;
                           white-space: nowrap;
                           overflow: hidden;
                         "
+                        @click="commentDetail(i)"
                       >
                         {{ comment.content }}
                       </v-list-item-content>
