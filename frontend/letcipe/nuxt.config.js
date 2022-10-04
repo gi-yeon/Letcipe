@@ -77,6 +77,13 @@ export default {
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
     baseURL: '/',
+    retry: {
+      retries: 4, // 최대 재전송 횟수 4회
+      shouldResetTimeout: true, // 재전송 간 타임아웃을 리셋하기
+      retryDelay: (retry) => {
+        return retry * 1000 // 재전송 횟수 * 0.1초만큼 재전송 시작 시간을 지연시키기
+      },
+    },
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
