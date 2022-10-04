@@ -94,11 +94,6 @@ public class AdminController {
         //if (!jwtService.isAdmin(request)) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         LocalDate sdate=LocalDate.parse(begin);
         LocalDate edate=LocalDate.parse(end);
-        System.out.println(reqDto);
-        System.out.println(sdate);
-        System.out.println(edate);
-        System.out.println(pageable);
-        System.out.println(pageable.toString());
         ResGetRecipeChartReport response = reportService. getRecipeChartReport(
                 reqDto,
                 sdate,
