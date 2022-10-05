@@ -284,10 +284,51 @@
                   color="#aac821"
                 ></v-textarea>
               </div>
+              <v-dialog v-model="saveDialog" persistent max-width="290">
+                <template #activator="{ on, attrs }">
+                  <v-btn
+                    :disabled="step.content.trim() == ''"
+                    height="20px"
+                    v-bind="attrs"
+                    @click="saveRecipe()"
+                    v-on="on"
+                    >스탭추가</v-btn
+                  >
+                </template>
+                <v-card v-if="!isSucceededtoRecipe">
+                  <v-card-title class="text-h5">Caution</v-card-title>
+                  <v-card-text v-if="title.trim() == ''"
+                    >제목은 필수 입력값입니다. 레시피 제목을
+                    입력해주세요.</v-card-text
+                  >
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="green darken-1"
+                      text
+                      @click="saveDialog = false"
+                      >확인</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+                <v-card v-if="isSucceededtoRecipe">
+                  <v-card-title class="text-h5">Caution</v-card-title>
+                  <v-card-text>성공적으로 레시피가 생성되었습니다!</v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="green darken-1"
+                      text
+                      @click=";[(saveDialog = false), moveBack()]"
+                      >확인</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
             </div>
-            <div class="d-flex justify-center">
+            <!-- <div class="d-flex justify-center">
               <v-btn dark class="mt-4 mb-6" @click="addStep">스탭 추가</v-btn>
-            </div>
+            </div> -->
             <v-divider></v-divider>
             <v-divider></v-divider>
             <v-card-title class="recipe-component">태그</v-card-title>
@@ -297,14 +338,64 @@
               </v-input>
             </div>
             <br />
-
             <div class="d-flex justify-center">
-              <v-btn dark class="mr-6 ml-6 mb-5" @click="saveRecipe()"
-                >저장</v-btn
-              >
-              <v-btn dark class="mr-6 ml-6 mb-5" @click="saveRecipe()"
-                >저장 후 공개</v-btn
-              >
+              <v-dialog v-model="saveDialog" persistent max-width="290">
+                <template #activator="{ on, attrs }">
+                  <v-btn
+                    dark
+                    class="mr-6 ml-6 mb-5"
+                    v-bind="attrs"
+                    @click="saveRecipe()"
+                    v-on="on"
+                    >저장</v-btn
+                  >
+                </template>
+                <v-card v-if="!isSucceededtoRecipe">
+                  <v-card-title class="text-h5">Caution</v-card-title>
+                  <v-card-text v-if="title.trim() == ''"
+                    >제목은 필수 입력값입니다. 레시피 제목을
+                    입력해주세요.</v-card-text
+                  >
+                  <v-card-text v-else-if="content.trim() == ''"
+                    >내용은 필수 입력값입니다. 레시피 내용을
+                    입력해주세요.</v-card-text
+                  >
+                  <v-card-text v-else-if="serving.trim() == ''"
+                    >식사 제공량은 필수 입력값입니다. 몇 인분인지
+                    입력해주세요.</v-card-text
+                  >
+                  <v-card-text v-else-if="image == null"
+                    >대표 사진은 필수 입력값입니다. 레시피 대표 사진을
+                    입력해주세요.</v-card-text
+                  >
+                  <v-card-text v-else-if="category.trim() == ''"
+                    >카테고리는 필수 입력값입니다. 카테고리를
+                    입력해주세요.</v-card-text
+                  >
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="green darken-1"
+                      text
+                      @click="saveDialog = false"
+                      >확인</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+                <v-card v-if="isSucceededtoRecipe">
+                  <v-card-title class="text-h5">Caution</v-card-title>
+                  <v-card-text>성공적으로 레시피가 생성되었습니다!</v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="green darken-1"
+                      text
+                      @click=";[(saveDialog = false), moveBack()]"
+                      >확인</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
               <v-btn dark class="mr-6 ml-6 mb-5" @click="moveBack">취소</v-btn>
             </div>
           </v-card>
@@ -345,6 +436,8 @@ export default {
       steps: [{ no: 1, image: null, imageUrl: null, content: '' }],
       tags: ['바부'],
       dialog: false,
+      saveDialog: false,
+      stepDialog: false,
       isLoading: false,
       keyword: null,
       search: null,
@@ -405,7 +498,7 @@ export default {
   },
   computed: {
     ...mapState('ingredients', ['ingredientsList']),
-    ...mapState('recipe', ['recipeDetail']),
+    ...mapState('recipe', ['recipeDetail', 'isSucceededtoRecipe']),
     ...mapState('user', ['userid']),
     formTitle() {
       return this.editedIndex === -1 ? '재료 추가' : '재료 수정'
@@ -628,6 +721,7 @@ export default {
       this.createRecipeDetail(formdata)
     },
     moveBack() {
+      this.isSucceededtoRecipe = false
       this.$router.go(-1)
     },
   },

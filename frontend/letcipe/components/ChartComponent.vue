@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       chartData: {
-        labels: ['a', 'b'],
+        labels: [],
         datasets: [
           {
             label: '',
@@ -78,26 +78,37 @@ export default {
       },
     }
   },
+  // async fetch() {
+  //   await this.getData()
+  // },
   computed: {
     ...mapState('search', ['charts']),
   },
-  created() {
-    this.chartData.labels = this.charts.recipeName
-    this.chartData.datasets[0].data = this.charts.count
-  },
+  created() {},
   mounted() {
     console.log('before')
-    console.log(this.chartData)
+    // console.log(this.chartData)
     this.chartData.labels = this.charts.recipeName
     this.chartData.datasets[0].data = this.charts.count
-    console.log(this.chartData)
+    // console.log(this.chartData)
   },
   methods: {
     getData() {
       console.log('부모에서 호출')
+      console.log('vue입니다')
+      console.log(this.charts)
+      this.charts.recipeName.forEach((name) => {
+        this.chartData.labels.push(name)
+        console.log(this.chartData.labels)
+      })
+      this.charts.count.forEach((cnt) => {
+        this.chartData.datasets[0].data.push(cnt)
+        console.log(cnt)
+      })
       // this.chartData.labels = this.charts.recipeName
       // this.chartData.datasets[0].data = this.charts.count
-      this.$forceUpdate()
+      console.log('eeeeeee')
+      console.log(this.chartData.labels)
     },
   },
 }

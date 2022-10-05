@@ -203,14 +203,15 @@ export default {
         attr: attribute,
         begin: this.s_date,
         end: this.e_date,
-        size: 2,
+        size: 10,
         page: 0,
       }
       console.log(params)
       await this.getCharts(params)
       console.log('여기')
-      console.log(this.charts)
+      // console.log(this.charts)
       console.log(this.$refs.chartChild)
+      console.log(this.charts)
       this.$refs.chartChild.getData()
     },
     select_gen(e) {

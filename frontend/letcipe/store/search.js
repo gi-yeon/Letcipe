@@ -179,7 +179,7 @@ export const actions = {
         page: object.page,
       },
       ({ data }) => {
-        console.log(data)
+        console.log('ㅇㅇㅇㅇㅇㅇ' + data)
         commit('SET_CHARTS', data)
       },
       (error) => {
