@@ -4,18 +4,13 @@
       <v-col class="logo-wrap">
         <v-col class="logo-title">
           <h4>
-            당신의,
-            <br />스마트한 데일리
+            스마트한 데일리
             <br />장보기 도우미
+            <br />EAT, PLAY, SHARE
           </h4>
         </v-col>
 
-        <img
-          class="load-spinner"
-          style="width: 60%;"
-          src="/icon/렛시피_레코드.png"
-          alt="loading-spinner-plane"
-        />
+        <img class="load-spinner" src="/icon/렛시피_레코드.png" alt="loading-spinner-plane" />
         <h1 class="name">LET'CIPE</h1>
       </v-col>
     </v-row>
@@ -79,6 +74,7 @@ export default {
 }
 .load-spinner {
   animation: spin 2s linear infinite;
+  width: 30%;
 }
 .name {
   font-weight: bolder;
@@ -92,7 +88,10 @@ export default {
     width: 20%;
   }
   .load-spinner {
-    width: 30%;
+    width: 10%;
+  }
+  .img {
+    width: 10%;
   }
 }
 
