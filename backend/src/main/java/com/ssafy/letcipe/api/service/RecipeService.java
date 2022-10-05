@@ -243,7 +243,7 @@ public class RecipeService {
 
         // 재료목록 파싱
         String[] token = ingCSV.split(",");
-        if (token.length == 0)
+        if (token.length <= 1)
             return result;
 
         // 재료를 1개 이상 포함하는 레시피 목록
