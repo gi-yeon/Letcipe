@@ -126,7 +126,7 @@ import {
         (error) => {
           console.log(error)
         }
-      ),
+      )
       await getTotalNumRecipe(
         {
           ingredients : object.ingredients,
@@ -169,16 +169,19 @@ import {
         }
       )
     },
-    async getCharts({ commit }, object) {
+      async getCharts({ commit }, object) {
         commit('CLEAR_CHARTS')
+        console.log(object)
         await getChartInfo(
           {
+            reqDto: object.attr,
+            begin: object.begin,
+            end: object.end,
             size: object.size,
             page: object.page,
           },
           ({ data }) => {
-            console.log(data)
-            // commit('SET_CHARTS', data.report)
+            commit('SET_CHARTS', data)
           },
           (error) => {
             console.log(error)
