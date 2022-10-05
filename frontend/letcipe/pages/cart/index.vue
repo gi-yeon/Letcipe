@@ -12,7 +12,10 @@
               <v-icon style="color: white">mdi-window-close</v-icon>
             </div>
           </div>
-          <div class="recipelist-title-btn d-flex justify-space-between pb-7" @click="moveWirte">
+          <div
+            class="recipelist-title-btn d-flex justify-space-between pb-7"
+            @click="moveWirte"
+          >
             <div>레시피리스트 제목을 입력해주세요</div>
             <v-icon>mdi-chevron-right</v-icon>
           </div>
@@ -26,7 +29,13 @@
               </div>
             </div>
             <div>
-              <v-btn small color="letcipe" class="white--text" @click="checkedDelete">선택 삭제</v-btn>
+              <v-btn
+                small
+                color="letcipe"
+                class="white--text"
+                @click="checkedDeleteAlert"
+                >선택 삭제</v-btn
+              >
             </div>
           </div>
         </div>
@@ -37,7 +46,15 @@
             <div>내가 담은 레시피</div>
           </div>
           <v-divider></v-divider>
-          <div v-for="(recipeInfo, i) in cart" :key="i">
+          <div v-if="cart == null || cart.length === 0">
+            <!-- <div class="d-flex justify-center">
+              <v-img src="/cart_icon/담은카트.png" size="10"></v-img>
+            </div> -->
+            <div class="d-flex justify-center pt-3 pb-3">
+              담긴 레시피가 없습니다.
+            </div>
+          </div>
+          <div v-for="(recipeInfo, i) in cart" v-else :key="i">
             <v-list-item
               three-line
               style="background-color: white"
@@ -48,15 +65,20 @@
                 v-if="!checkedRecipe[i]"
                 class="mr-3"
                 @click="addRecipe(i)"
-              >mdi-check-circle-outline</v-icon>
-              <v-icon v-else class="mr-3" @click="addRecipe(i)">mdi-check-circle</v-icon>
+                >mdi-check-circle-outline</v-icon
+              >
+              <v-icon v-else class="mr-3" @click="addRecipe(i)"
+                >mdi-check-circle</v-icon
+              >
               <v-list-item-avatar tile size="100">
                 <v-img :src="recipeInfo.recipe.repImg"></v-img>
               </v-list-item-avatar>
               <v-list-item-content class="pl-4">
                 <v-list-item-title class="d-flex justify-space-between">
                   <div>{{ recipeInfo.recipe.title }}</div>
-                  <v-icon @click="deleteRecipe(recipeInfo.recipe.id)">mdi-window-close</v-icon>
+                  <v-icon @click="deleteRecipe(recipeInfo.recipe.id)"
+                    >mdi-window-close</v-icon
+                  >
                 </v-list-item-title>
 
                 <v-list-item-subtitle
@@ -66,10 +88,13 @@
                     white-space: nowrap;
                     display: inline-block;
                   "
-                >{{ recipeInfo.recipe.content }}</v-list-item-subtitle>
+                  >{{ recipeInfo.recipe.content }}</v-list-item-subtitle
+                >
                 <div class="d-flex justify-space-between">
                   <div style="margin: auto 0">
-                    <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
+                    <v-icon small color="pink lighten-1"
+                      >mdi-cards-heart</v-icon
+                    >
                     {{ recipeInfo.recipe.recipeLike }}
                   </div>
                   <!-- <v-list-item-subtitle style="text-align: right"
@@ -120,54 +145,95 @@
             <div>장보기 목록</div>
           </div>
           <v-divider></v-divider>
+          <div v-if="ingreList == null || ingreList.length === 0">
+            <!-- <div class="d-flex justify-center">
+              <v-img src="/cart_icon/담은카트.png" size="10"></v-img>
+            </div> -->
+            <div class="d-flex justify-center pt-3 pb-3">
+              담긴 재료가 없습니다.
+            </div>
+          </div>
+          <div v-else class="ingre-wrap">
+            <div
+              v-for="(cg, index) in cartCategory"
+              :key="index"
+              class="ingre-category pl-3 pr-3"
+            >
+              <div class="d-flex justify-space-between align-center">
+                <div class="d-flex justify-center mt-2 mb-2">
+                  <img
+                    class="category-images"
+                    :src="`/cart_icon/${cg}.png`"
+                    alt="flour"
+                  />
 
-          <div v-for="(item, index) in ingreList" :key="index">
-            <div v-if="item.amount > 0" class="d-flex justify-space-between pa-2">
-              <!-- <div style="font-size: x-large"> -->
-              <div>{{ item.ingredient.name }}</div>
-              <div>
-                <!-- <div style="font-size: x-large"> -->
-                <div>
-                  <v-btn
-                    class="mx-2"
-                    fab
-                    dark
-                    x-small
-                    color="letcipe"
-                    @click="subIngreAmount(index)"
-                  >
-                    <v-icon dark>mdi-minus</v-icon>
-                  </v-btn>
-                  {{ Math.ceil(item.amount) }}{{ item.ingredient.measure }}
-                  <v-btn
-                    class="mx-2"
-                    fab
-                    dark
-                    x-small
-                    color="letcipe"
-                    @click="plusIngreAmount(index)"
-                  >
-                    <v-icon dark>mdi-plus</v-icon>
-                  </v-btn>
+                  <div>{{ cg }}</div>
                 </div>
-                <div style="float: right">
-                  {{ Math.ceil(item.amount * item.ingredient.gml)
-                  }}
-                  <span
-                    v-if="item.ingredient.measure == 'ml'"
-                  >ml</span>
-                  <span v-else>g</span>
-                  <!-- {{ cartIngre.get(key).amount
+                <!-- <div class="d-flex align-center">
+                        <div>전체선택</div>
+                        <v-checkbox color="letcipe"></v-checkbox>
+                      </div>-->
+              </div>
+              <v-divider></v-divider>
+              <div v-for="(item, i) in ingreList" :key="i" class="pl-3 pr-3">
+                <!-- <div
+              v-if="item.amount > 0 && ingreList[i].ingredient.category === cg"
+              class="d-flex justify-space-between pa-2"
+            > -->
+                <div
+                  v-if="
+                    item.amount > 0 && ingreList[i].ingredient.category === cg
+                  "
+                  class="check-wrap d-flex justify-space-between align-center mt-1"
+                >
+                  <!-- <div style="font-size: x-large"> -->
+                  <div>{{ item.ingredient.name }}</div>
+                  <div>
+                    <!-- <div style="font-size: x-large"> -->
+                    <div>
+                      <v-btn
+                        class="mx-2"
+                        fab
+                        dark
+                        x-small
+                        color="letcipe"
+                        @click="subIngreAmount(i)"
+                      >
+                        <v-icon dark>mdi-minus</v-icon>
+                      </v-btn>
+                      {{ Math.ceil(item.amount) }}{{ item.ingredient.measure }}
+                      <v-btn
+                        class="mx-2"
+                        fab
+                        dark
+                        x-small
+                        color="letcipe"
+                        @click="plusIngreAmount(index)"
+                      >
+                        <v-icon dark>mdi-plus</v-icon>
+                      </v-btn>
+                    </div>
+                    <div style="float: right">
+                      {{ Math.ceil(item.amount * item.ingredient.gml) }}
+                      <span v-if="item.ingredient.measure == 'ml'">ml</span>
+                      <span v-else>g</span>
+                      <!-- {{ cartIngre.get(key).amount
                   }}{{ cartIngre.get(key).measure }}-->
-                  <!-- <v-icon
+                      <!-- <v-icon
                     v-if="!(item.ingredient.id in amountByRecipe)"
                     @click="deleteIngre(item)"
                     >mdi-close</v-icon
                   ><v-icon v-else color="white">mdi-close</v-icon>-->
+                    </div>
+                  </div>
                 </div>
+                <v-divider
+                  v-if="
+                    item.amount > 0 && ingreList[i].ingredient.category === cg
+                  "
+                ></v-divider>
               </div>
             </div>
-            <v-divider v-if="item.amount > 0"></v-divider>
           </div>
           <div class="d-flex justify-center">
             <v-dialog v-model="dialog" max-width="500px">
@@ -179,7 +245,8 @@
                   v-bind="attrs"
                   v-on="on"
                   @click="clearItem"
-                >재료 추가</v-btn>
+                  >재료 추가</v-btn
+                >
               </template>
 
               <v-card>
@@ -219,18 +286,20 @@
                           >
                             <template #no-data>
                               <v-list-item>
-                                <v-list-item-title>일치하는 재료가 없습니다.</v-list-item-title>
+                                <v-list-item-title
+                                  >일치하는 재료가 없습니다.</v-list-item-title
+                                >
                               </v-list-item>
                             </template>
                             <template #item="{ item }">
                               <v-list-item-content @click="selectIngre(item)">
-                                <v-list-item-title v-text="item.name"></v-list-item-title>
+                                <v-list-item-title
+                                  v-text="item.name"
+                                ></v-list-item-title>
                               </v-list-item-content>
                               <v-list-item-action @click="selectIngre(item)">
                                 <v-chip :color="colors[item.category]" label>
-                                  {{
-                                  item.category
-                                  }}
+                                  {{ item.category }}
                                 </v-chip>
                               </v-list-item-action>
                             </template>
@@ -248,7 +317,11 @@
                           ></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="6" md="4">
-                          <v-text-field v-model="editedItem.ingredient.measure" disabled label="단위"></v-text-field>
+                          <v-text-field
+                            v-model="editedItem.ingredient.measure"
+                            disabled
+                            label="단위"
+                          ></v-text-field>
                         </v-col>
                       </v-row>
                     </v-container>
@@ -267,7 +340,8 @@
                     "
                     text
                     @click="saveIngre"
-                  >재료 저장</v-btn>
+                    >재료 저장</v-btn
+                  >
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -294,16 +368,37 @@
             color="letcipe"
             class="white--text"
             @click="clickStartCart"
-          >장보기</v-btn>
+            >장보기</v-btn
+          >
         </div>
 
         <v-dialog v-model="dialogStartCartError" persistent max-width="290">
           <v-card>
-            <v-card-title>Caution</v-card-title>
+            <v-card-title>{{ dialogTitle }}</v-card-title>
             <v-card-text>{{ errorMsg }}</v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="dialogStartCartError = false">확인</v-btn>
+              <v-btn
+                color="green darken-1"
+                text
+                @click="dialogStartCartError = false"
+                >확인</v-btn
+              >
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-dialog v-model="dialogAlert" persistent max-width="290">
+          <v-card>
+            <v-card-title>{{ dialogTitle }}</v-card-title>
+            <v-card-text>{{ errorMsg }}</v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="green darken-1" text @click="dialogAlert = false"
+                >취소</v-btn
+              >
+              <v-btn color="green darken-1" text @click="checkedDelete"
+                >확인</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -326,9 +421,9 @@ export default {
       isAllCheck: false,
       checked: [],
       checkedRecipe: [], // 체크된 재료를 구분 false 체크 x
-      cartCategory: [],
+      cartCategory: new Set(),
       cartKeyList: [],
-
+      category: [],
       ingreIndexList: {}, // ingreList에 저장된 재료들의 인덱스를 저장하는 객체
       ingre_rule: [
         (v) => !!v || '재료량은 필수 입력사항입니다.',
@@ -416,7 +511,9 @@ export default {
       console.log(this.ingreList)
       for (let i = 0; i < this.ingreList.length; i++) {
         // 각 재료의 인덱스 저장
+        console.log(this.ingreList[i])
         this.ingreIndexList[this.ingreList[i].ingredient.id] = i
+        this.cartCategory.add(this.ingreList[i].ingredient.category)
       }
       await this.getHistoryList()
       this.historyListInfo = this.historyList
@@ -504,7 +601,7 @@ export default {
       this.editedItem.ingredient.gml = item.gml
       this.editedItem.ingredient.category = item.category
     },
-    saveIngre() {
+    async saveIngre() {
       if (this.$refs.form.validate()) {
         console.log(this.$refs.form.validate())
         // const tempEditedItem = {
@@ -530,7 +627,7 @@ export default {
               operator: '+',
             }
             for (let i = 0; i < this.editedItem.amount; i++) {
-              this.patchCartIngredient(createObject)
+              await this.patchCartIngredient(createObject)
             }
 
             this.IngreValid = true
@@ -584,6 +681,9 @@ export default {
 
         this.close()
       }
+      this.dialogTitle = '재료 추가 성공'
+      this.errorMsg = '재료가 추가되었습니다.'
+      this.dialogStartCartError = true
     },
     initSelectIndex() {
       this.focusIndex = null
@@ -711,6 +811,11 @@ export default {
       this.deleteCart(recipeId)
       this.$router.go()
     },
+    checkedDeleteAlert() {
+      this.dialogTitle = 'Caution'
+      this.errorMsg = '정말로 삭제하시겠습니까?'
+      this.dialogAlert = true
+    },
     checkedDelete() {
       if (this.checked.length > 0) {
         for (let i = 0; i < this.checked.length; i++) {
@@ -801,6 +906,7 @@ export default {
     clickStartCart() {
       if (this.checked.length > 0) {
         if (this.isProgressHistory) {
+          this.dialogTitle = 'Caution'
           this.errorMsg =
             '이미 진행 예정이거나 진행 중인 레시피 리스트가 있습니다.'
           this.dialogStartCartError = true
@@ -809,6 +915,7 @@ export default {
           this.$router.go()
         }
       } else {
+        this.dialogTitle = 'Caution'
         this.errorMsg = '하나 이상의 레시피를 담아주세요.'
         this.dialogStartCartError = true
       }
@@ -869,9 +976,18 @@ export default {
 .recipelist-title-btn {
   cursor: pointer;
 }
-
+.category-images {
+  width: 20px;
+}
 .fadeInUp {
   animation: fadeInUp 1s ease backwards;
+}
+.ingre-wrap {
+  padding: 4%;
+}
+.ingre-category {
+  padding: 4%;
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }
 @keyframes fadeInUp {
   0% {
