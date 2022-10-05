@@ -30,7 +30,6 @@
                 </div>
               </v-img>
             </div>
-
             <v-card-title class="d-flex justify-space-between text-md-h3">
               <div>
                 {{ recipeDetail.title }}
@@ -38,7 +37,6 @@
 
               <v-btn color="letcipe" @click="addCart">+ 담기</v-btn>
             </v-card-title>
-
             <v-card-subtitle class="text-md-h5">맛있겠다!</v-card-subtitle>
 
             <v-card-text>
@@ -71,7 +69,7 @@
                 >등록일자 : {{ regTime }}</v-row
               >
               <v-row class="d-flex justify-space-between">
-                <div class="my-4 text-subtitle-1 pl-4">
+                <div class="my-4 pl-4">
                   <v-avatar size="27px" color="letcipe">
                     <v-img
                       v-if="writer.profileImage"
@@ -96,7 +94,6 @@
                 </div>
               </v-row></v-card-text
             >
-
             <v-divider class="mx-4"></v-divider>
 
             <div>
@@ -163,11 +160,35 @@
 
             <div align="center">
               <v-row class="d-flex justify-center">
-                <v-btn color="letcipe" @click="addCart">+ 담기</v-btn>
+                <v-dialog v-model="dialog" persistent max-width="290">
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      :disabled="userId <= 0"
+                      color="letcipe"
+                      height="48px"
+                      style="color: white"
+                      v-bind="attrs"
+                      @click="addCart"
+                      v-on="on"
+                    >
+                      + 담기</v-btn
+                    >
+                  </template>
+                  <v-card>
+                    <v-card-title class="text-h5">Caution</v-card-title>
+                    <v-card-text>성공적으로 레시피를 담았습니다!</v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="green darken-1" text @click="dialog = false"
+                        >확인</v-btn
+                      >
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
               </v-row>
               <v-row align="center">
                 <v-col cols="1"></v-col>
-                  <v-col cols="10" class="pr-0 pl-0">
+                <v-col cols="10" class="pr-0 pl-0">
                   <v-text-field
                     v-model="enterComment"
                     color="letcipe"
@@ -180,7 +201,6 @@
                 </v-col>
                 <v-col cols="1"></v-col>
               </v-row>
-
               <v-row>
                 <v-col align="center">
                   <div
@@ -254,6 +274,7 @@ export default {
       writer: {},
       content: '',
       regTime: '',
+      dialog: false,
       Likes: 0,
       isLike: false,
       Bookmarks: 0,
@@ -265,7 +286,11 @@ export default {
   },
   computed: {
     ...mapState('comment', ['comments', 'commentNum']),
-    ...mapState('recipe', ['recipeDetail', 'recipeID']),
+    ...mapState('recipe', [
+      'recipeDetail',
+      'recipeID',
+      'isSucceededtoRecipeDetail',
+    ]),
     ...mapState('user', ['userId', 'nickname']),
   },
 
@@ -400,6 +425,7 @@ export default {
       await this.getComment(this.recipeInfo)
     },
     addCart() {
+      console.log(this.userId)
       const recipeList = []
       recipeList.push(this.recipeID)
       console.log(this.recipeID)

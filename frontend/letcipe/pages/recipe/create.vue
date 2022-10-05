@@ -286,8 +286,50 @@
               </div>
             </div>
             <div class="d-flex justify-center">
-              <v-btn dark class="mt-4 mb-6" @click="addStep">스탭 추가</v-btn>
+              <v-btn
+                :disabled="
+                  steps[steps.length - 1].content.trim() == '' ||
+                  steps[steps.length - 1].imageUrl == null
+                "
+                class="mr-6 ml-6 mb-5"
+                @click="addStep()"
+                >스탭추가</v-btn
+              >
             </div>
+            <!-- <v-snackbar v-model="stepDialog" :timeout="1500" max-width="290">
+              <template #activator="{ on, attrs }">
+                <div class="d-flex justify-center">
+                  <v-btn
+                    :disabled="step.content.trim() == ''"
+                    class="mr-6 ml-6 mb-5"
+                    v-bind="attrs"
+                    @click="addStep()"
+                    v-on="on"
+                    >스탭추가</v-btn
+                  >
+                </div>
+              </template>
+              <v-card>
+                <v-card-title class="text-h5">Caution</v-card-title>
+                <v-card-text v-if="step.image == null"
+                  >스텝 이미지는 필수 입력값입니다. 스탭 이미지를
+                  넣어주세요.</v-card-text
+                >
+                <v-card-text v-else-if="step.content.trim() == ''"
+                  >스텝 내용은 필수 입력값입니다. 스탭 내용을
+                  입력해주세요.</v-card-text
+                >
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="saveDialog = false"
+                    >확인</v-btn
+                  >
+                </v-card-actions>
+              </v-card>
+            </v-snackbar> -->
+            <!-- <div class="d-flex justify-center">
+              <v-btn dark class="mt-4 mb-6" @click="addStep">스탭 추가</v-btn>
+            </div> -->
             <v-divider></v-divider>
             <v-divider></v-divider>
             <v-card-title class="recipe-component">태그</v-card-title>
@@ -297,15 +339,32 @@
               </v-input>
             </div>
             <br />
-
             <div class="d-flex justify-center">
-              <v-btn dark class="mr-6 ml-6 mb-5" @click="saveRecipe()"
+              <v-btn
+                :disabled="userId <= 0"
+                color="black"
+                class="mr-6 ml-6 mb-5"
+                style="color: white"
+                v-bind="attrs"
+                @click="canSave()"
+                v-on="on"
                 >저장</v-btn
               >
-              <v-btn dark class="mr-6 ml-6 mb-5" @click="saveRecipe()"
-                >저장 후 공개</v-btn
+              <v-snackbar
+                v-model="saveSnackBar"
+                centered
+                style="z-index: 1"
+                :timeout="1500"
               >
-              <v-btn dark class="mr-6 ml-6 mb-5" @click="moveBack">취소</v-btn>
+                {{ snackBarMsg }}
+              </v-snackbar>
+              <v-btn
+                color="black"
+                class="mr-6 ml-6 mb-5"
+                style="color: white"
+                @click="moveBack"
+                >취소</v-btn
+              >
             </div>
           </v-card>
         </v-container>
@@ -343,8 +402,11 @@ export default {
       stepUrl: [],
       stepImage: [],
       steps: [{ no: 1, image: null, imageUrl: null, content: '' }],
-      tags: ['바부'],
+      tags: [],
       dialog: false,
+      saveSnackBar: false,
+      snackBarMsg: '',
+      stepDialog: false,
       isLoading: false,
       keyword: null,
       search: null,
@@ -405,8 +467,8 @@ export default {
   },
   computed: {
     ...mapState('ingredients', ['ingredientsList']),
-    ...mapState('recipe', ['recipeDetail']),
-    ...mapState('user', ['userid']),
+    ...mapState('recipe', ['recipeDetail', 'isSucceededtoRecipe']),
+    ...mapState('user', ['userId']),
     formTitle() {
       return this.editedIndex === -1 ? '재료 추가' : '재료 수정'
     },
@@ -449,6 +511,40 @@ export default {
         )
       } else {
         this.steps[index].imageUrl = null
+      }
+    },
+    async canSave() {
+      const sleep = (milliseconds) => {
+        return new Promise((resolve) => setTimeout(resolve, milliseconds))
+      }
+      let msg = ''
+      let flag = false
+      if (this.title.trim() === '') {
+        msg = '레시피 제목을 입력해주세요.'
+      } else if (this.content.trim() === '') {
+        msg = '레시피 내용을 입력해주세요.'
+      } else if (this.image === null) {
+        msg = '대표 사진을 입력해주세요.'
+      } else if (this.serving.trim() === '') {
+        msg = '몇 인분인지 입력해주세요.'
+      } else if (this.category.trim() === '') {
+        msg = '카테고리를 입력해주세요.'
+      } else if (this.steps.length <= 0) {
+        msg = ''
+      } else if (this.steps[this.steps.length - 1].imageUrl == null) {
+        msg = this.steps.length + '단계 이미지를 입력해주세요'
+      } else if (this.steps[this.steps.length - 1].content.trim() === '') {
+        msg = this.steps.length + '단계 내용을 입력해주세요'
+      } else {
+        flag = true
+        msg = '성공적으로 레시피가 생성되었습니다!'
+      }
+      this.snackBarMsg = msg
+      this.saveSnackBar = true
+      if (flag) {
+        await this.saveRecipe()
+        await sleep(1000)
+        this.$router.push('/user/recipe')
       }
     },
     addStep() {
@@ -618,8 +714,12 @@ export default {
       for (let i = 0; i < keys.length; i++) {
         ingreVal.push(this.tags[keys[i]].value)
       }
-      for (let i = 0; i < this.tags.length; i++) {
-        formdata.append(`tagList[${i}]`, ingreVal[i])
+      if (this.tags.length > 0) {
+        for (let i = 0; i < this.tags.length; i++) {
+          formdata.append(`tagList[${i}]`, ingreVal[i])
+        }
+      } else {
+        formdata.append(`tagList`, [])
       }
       for (const p of formdata.entries()) {
         console.log(p[0] + ',' + p[1])
@@ -628,6 +728,7 @@ export default {
       this.createRecipeDetail(formdata)
     },
     moveBack() {
+      this.isSucceededtoRecipe = false
       this.$router.go(-1)
     },
   },

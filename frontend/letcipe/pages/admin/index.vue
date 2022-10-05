@@ -118,30 +118,50 @@
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex'
 import { Bar, Pie } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, ArcElement, LineElement, CategoryScale, LinearScale } from 'chart.js'
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  ArcElement,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+} from 'chart.js'
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, LineElement, CategoryScale, LinearScale)
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  ArcElement,
+  LineElement,
+  CategoryScale,
+  LinearScale
+)
 
 export default {
   name: 'AdminIndex',
   components: {
-    Bar, Pie
+    Bar,
+    Pie,
   },
   data() {
     return {
       chartData: {
-          labels: [],
-        datasets: [{
-          label: 'Title',
-          data: [],
-          backgroundColor: [],
-            borderColor: [
-              'rgba(255, 159, 64, 1)',
-            ],
+        labels: [],
+        datasets: [
+          {
+            label: 'Title',
+            data: [],
+            backgroundColor: [],
+            borderColor: ['rgba(255, 159, 64, 1)'],
             borderWidth: 2,
-        }]
-        },
-        chartOptions: {
+          },
+        ],
+      },
+      chartOptions: {
         responsive: true,
         legend: {
           display: false,
@@ -273,11 +293,6 @@ export default {
     select_job(e) {
       this.attr.job = e
     },
-    test() {
-      this.chartData.labels.push("e")
-      this.chartData.datasets[0].data.push(30)
-      this.$refs.bar.updateChart()
-    }
   },
 }
 </script>
