@@ -19,13 +19,13 @@ public class SMSController {
     private final DefaultMessageService messageService;
 
     public SMSController(){
-        this.messageService= NurigoApp.INSTANCE.initialize("NCS5ZEO4I8IMUNWH","FWEUCTS8ALSENJ7BLZ6IGNINOU9HXFET","https://api.coolsms.co.kr");
+        this.messageService= NurigoApp.INSTANCE.initialize("NCSQK3QR94HHZNTO","VZV7ESKWC1LV7KXUDIYOOXFXLCJFSE9L","https://api.coolsms.co.kr");
     }
     @PostMapping("")
     public ResponseEntity sendOne(@RequestBody ReqPostSMSDto requestDto) {
         Message message = new Message();
         // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
-        message.setFrom("01030935583");
+        message.setFrom("01087562387");
         message.setTo(requestDto.getPhoneNo());
         Integer randCode = (int)(Math.random()*1000000);
         message.setText("SSAFY 7기 특화 프로젝트 A705 인증코드 [" + randCode+"]");
