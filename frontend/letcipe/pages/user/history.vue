@@ -48,33 +48,14 @@
                           {{ mr.title }}
                         </div>
                       </v-list-item-subtitle>
-
-                      <v-dialog v-model="dialog1" persistent max-width="290">
-                        <template #activator="{ on, attrs }">
-                          <v-btn
-                            style="z-index: 1"
-                            v-bind="attrs"
-                            small
-                            color="letcipe"
-                            @click="addAll()"
-                            v-on="on"
-                            >+전체담기</v-btn
-                          >
-                        </template>
-                        <v-card>
-                          <v-card-title class="text-h5">Caution</v-card-title>
-                          <v-card-text>레시피 전체 담기 성공!</v-card-text>
-                          <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn
-                              color="green darken-1"
-                              text
-                              @click="dialog1 = false"
-                              >확인</v-btn
-                            >
-                          </v-card-actions>
-                        </v-card>
-                      </v-dialog>
+                      <v-btn
+                        style="z-index: 1"
+                        small
+                        color="letcipe"
+                        @click="addAll(mr)"
+                        v-on="on"
+                        >+전체담기</v-btn
+                      >
                     </div>
                   </v-list-item-subtitle>
 
@@ -292,6 +273,20 @@
             </v-dialog>
           </v-row>
         </div>
+
+        <v-snackbar
+          v-model="snackbar"
+          :timeout="timeout"
+        >
+          {{ reviewModifySuccess? "리뷰 수정에 성공했습니다":"리뷰 수정에 실패했습니다" }}
+        </v-snackbar>
+
+        <v-snackbar
+          v-model="snackbar2"
+          :timeout="timeout"
+        >
+          {{ isSucceededtoCart? "모두 담기에 성공했습니다":"모두 담기에 실패했습니다" }}
+        </v-snackbar>
       </div>
     </v-app>
   </div>
@@ -325,11 +320,15 @@ export default {
       dialog2: false,
       dialog4: false,
       history: '',
+      timeout: 2000,
+      snackbar: false,
+      snackbar2: false
     }
   },
   computed: {
     ...mapState('user', ['myRecipe']),
-    ...mapState('history', ['historyList']),
+    ...mapState('history', ['historyList', 'reviewModifySuccess']),
+    ...mapState('cart', ['isSucceededtoCart'])
   },
 
   watch: {},
@@ -358,7 +357,6 @@ export default {
           this.recipeList.push(myHistory)
         }
       })
-      console.log(this.historyList)
     })
   },
   methods: {
@@ -385,6 +383,8 @@ export default {
         review: mr.review,
       }
       this.modifyReview(review)
+      this.snackbar = true
+      console.log(this.reviewModifySuccess)
     },
     moveDetail(mr) {
       this.CLEAR_RECIPE_ID()
@@ -400,8 +400,17 @@ export default {
       const list = { cartItem }
       this.createCart(list)
     },
-    addAll() {
-      console.log('부탁해요~')
+    addAll(mr) {
+      const recipeList = []
+      mr.items.forEach((i) => {
+        const id = i.recipe.id
+        recipeList.push(id)
+      })
+      const addrecipes = {
+        list: recipeList,
+      }
+      this.createCart(addrecipes)
+      this.snackbar2 = true
     },
     showRecipes(mr) {
       mr.isShow = true
@@ -411,14 +420,11 @@ export default {
     },
     openDialog(mr){
       this.history = mr
-      console.log(this.history.review)
       if(this.history.review){
         this.dialog = true
       } else {
         this.dialog4 = true
       }
-      console.log(this.dialog)
-      console.log(this.dialog4)
     },
   },
 }
