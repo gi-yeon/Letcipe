@@ -516,8 +516,6 @@ export default {
           }
           this.userPlayList.push(playRecipe)
         })
-        console.log(111111111111111)
-        console.log(this.userPlayList)
       }
       if (this.historyID !== null) {
         await this.getHistory(this.historyID)
