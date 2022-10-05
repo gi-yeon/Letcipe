@@ -855,6 +855,7 @@ export default {
         }
         this.$router.go()
       }
+      this.dialogAlert = false
     },
     subIngreAmount(index) {
       const ingredientInfo = this.ingreList[index]
