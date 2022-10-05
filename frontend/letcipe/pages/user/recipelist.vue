@@ -50,7 +50,7 @@
                           @click="editItem(mr)"
                           >mdi-pencil</v-icon
                         >
-                        <v-icon style="z-index: 1" small @click="deleteItem(mr)"
+                        <v-icon style="z-index: 1" small @click="openDialog(mr)"
                           >mdi-delete</v-icon
                         >
                       </div>
@@ -114,6 +114,26 @@
               <v-divider></v-divider>
             </div>
           </div>
+
+          <v-dialog v-model="dialog" persistent max-width="290">
+            <v-card>
+              <v-card-title class="text-h5">Caution</v-card-title>
+              <v-card-text>해당 레시피리스트를 삭제하시겠습니까?</v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="green darken-1" text @click="dialog = false"
+                  >취소</v-btn
+                >
+                <v-btn
+                  color="green darken-1"
+                  text
+                  @click="deleteItem(selectedRecipeList.id)"
+                  >삭제</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
           <v-pagination
             v-model="currentPage"
             color="letcipe"
@@ -151,6 +171,8 @@ export default {
       isSelected: [],
       selectedIngre: '',
       recipeList: [],
+      dialog: false,
+      selectedRecipe: {},
     }
   },
   computed: {
@@ -209,10 +231,10 @@ export default {
       this.SET_RECIPE_ID(mr.id)
       this.$router.push('/recipe/modify')
     },
-    deleteItem(mr) {
-      //     this.checkedList.splice(index, 1)
-      //   this.checklist.push(c)
-      this.patchRecipeDetail(mr.id)
+    async deleteItem(id) {
+      await this.deleteRecipeList(id)
+      await this.myrecipeList(this.pageable)
+      this.dialog = false
     },
     moveDetail(mr) {
       this.CLEAR_RECIPE_ID()
@@ -232,6 +254,10 @@ export default {
         list: recipeList,
       }
       this.createCart(addrecipes)
+    },
+    openDialog(mr) {
+      this.dialog = true
+      this.selectedRecipeList = mr
     },
     saveBookmark(mr) {
       if (mr.bookmark) {
