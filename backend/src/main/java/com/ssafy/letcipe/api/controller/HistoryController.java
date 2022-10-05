@@ -68,6 +68,7 @@ public class HistoryController {
         historyService.putReview(userId, historyReviewDto);
         return ResponseEntity.ok().build();
     }
+
     @DeleteMapping("/review")
     public ResponseEntity deleteReview(@RequestParam Long historyId, HttpServletRequest request){
         Long userId = jwtService.getUserId(request);

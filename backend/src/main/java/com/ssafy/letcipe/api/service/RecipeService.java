@@ -112,9 +112,11 @@ public class RecipeService {
     @Transactional
     public void updateRecipe(ReqPutRecipeDto updateDto, long recipe_id) throws NullPointerException, FileNotFoundException, FileUploadException {
         // 대표 이미지 null check
+
         if (updateDto.getRepImg() == null || updateDto.getRepImg().isEmpty()) {
             throw new FileNotFoundException("대표 이미지가 없습니다.");
         }
+
 
         Recipe recipe = getRecipe(recipe_id);
 
