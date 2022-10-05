@@ -32,114 +32,13 @@
                       </div>
                     </div>
                     <div>
-                      <!-- <v-icon
+                      <v-icon
                         style="z-index: 1"
                         small
                         color="info"
-                        @click="writeReview(mr)"
+                        @click="openDialog(mr)"
                         >mdi-pencil</v-icon
-                      > -->
-                      <div align="center" class="d-flex justify-center">
-                        <!-- <v-btn style="width: 90%; border: 1px solid black" @click="partAdd()">선택 담기</v-btn> -->
-
-                        <v-dialog
-                          v-if="historyList[i].review === null"
-                          v-model="dialog"
-                          persistent
-                          max-width="290"
-                        >
-                          <template #activator="{ on, attrs }">
-                            <v-icon
-                              style="z-index: 2"
-                              small
-                              color="info"
-                              v-bind="attrs"
-                              v-on="on"
-                              >mdi-pencil</v-icon
-                            >
-                          </template>
-
-                          <v-card>
-                            <v-card-title style="font-size: xx-large"
-                              >REVIEW</v-card-title
-                            >
-                            <v-card-text class="text--primary">
-                              <div class="d-flex align-center">
-                                <v-icon small color="letcipe"
-                                  >mdi-calendar-clock</v-icon
-                                >
-                                <div style="font-size: medium">
-                                  {{ mr.regTime }} 일의 기록
-                                </div>
-                              </div>
-                              <v-textarea
-                                v-model="mr.review"
-                                name="input-7-4"
-                                placeholder="내용을 입력해주세요"
-                                solo
-                              ></v-textarea>
-                            </v-card-text>
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
-                              <v-btn
-                                color="letcipe"
-                                text
-                                @click=";[(dialog = false), writeReview(mr)]"
-                                >확인</v-btn
-                              >
-                            </v-card-actions>
-                          </v-card>
-                        </v-dialog>
-                        <v-dialog
-                          v-if="historyList[i].review !== null"
-                          v-model="dialog"
-                          persistent
-                          max-width="290"
-                        >
-                          <template #activator="{ on, attrs }">
-                            <v-icon
-                              style="z-index: 1"
-                              small
-                              color="info"
-                              v-bind="attrs"
-                              v-on="on"
-                              >mdi-pencil</v-icon
-                            >
-                          </template>
-
-                          <v-card>
-                            <v-card-title style="font-size: xx-large"
-                              >REVIEW 수정</v-card-title
-                            >
-                            <v-card-text class="text--primary">
-                              <div class="d-flex align-center">
-                                <v-icon small color="letcipe"
-                                  >mdi-calendar-clock</v-icon
-                                >
-                                <div style="font-size: medium">
-                                  {{ mr.regTime }} 일의 기록
-                                </div>
-                              </div>
-                              <v-textarea
-                                v-model="mr.review"
-                                name="input-7-4"
-                                placeholder="내용을 입력해주세요"
-                                clearable
-                                solo
-                              ></v-textarea>
-                            </v-card-text>
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
-                              <v-btn
-                                color="letcipe"
-                                text
-                                @click=";[(dialog = false), modify(mr)]"
-                                >확인</v-btn
-                              >
-                            </v-card-actions>
-                          </v-card>
-                        </v-dialog>
-                      </div>
+                      > 
                     </div>
                   </v-list-item-title>
                   <v-list-item-subtitle class="recipe-item">
@@ -324,6 +223,75 @@
             circle
           ></v-pagination>
         </v-container>
+        <div>
+          <v-row class="justify-center pa-8">
+            <v-dialog v-model="dialog4" max-width="290">
+              <v-card>
+                <v-icon @click="()=>{dialog4 = false}">mdi-window-close</v-icon>
+                <v-card-title style="font-size: xx-large"
+                  >REVIEW</v-card-title
+                >
+                <v-card-text class="text--primary">
+                  <div class="d-flex align-center">
+                    <v-icon small color="letcipe"
+                      >mdi-calendar-clock</v-icon
+                    >
+                  <div style="font-size: medium">
+                    {{ history.regTime }} 일의 기록
+                  </div>
+                  </div>
+                <v-textarea
+                  v-model="history.review"
+                  name="input-7-4"
+                  placeholder="내용을 입력해주세요"
+                  solo
+                ></v-textarea>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                color="letcipe"
+                text
+                @click=";[(dialog4 = false), modify(history)]"
+                  >확인</v-btn
+                >
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+
+            <v-dialog v-model="dialog" max-width="290">
+              <v-card>
+                <v-icon @click="()=>{dialog = false}">mdi-window-close</v-icon>
+                <v-card-title style="font-size: xx-large"
+                  >REVIEW 수정</v-card-title>
+                  <v-card-text class="text--primary">
+                    <div class="d-flex align-center">
+                      <v-icon small color="letcipe"
+                        >mdi-calendar-clock</v-icon>
+                    <div style="font-size: medium">
+                      {{ history.regTime }} 일의 기록
+                    </div>
+                    </div>
+                    <v-textarea
+                      v-model="history.review"
+                      name="input-7-4"
+                      placeholder="내용을 입력해주세요"
+                      clearable
+                      solo
+                    ></v-textarea>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="letcipe"
+                      text
+                      @click=";[(dialog = false), modify(history)]"
+                    >확인</v-btn>
+                  </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-row>
+        </div>
       </div>
     </v-app>
   </div>
@@ -355,6 +323,8 @@ export default {
       dialog: false,
       dialog1: false,
       dialog2: false,
+      dialog4: false,
+      history: '',
     }
   },
   computed: {
@@ -388,9 +358,6 @@ export default {
           this.recipeList.push(myHistory)
         }
       })
-      //   this.TotalPage = this.myRecipe.length / 5
-      //   console.log(this.TotalPage)
-      //   console.log(this.myRecipes)
       console.log(this.historyList)
     })
   },
@@ -441,6 +408,17 @@ export default {
     },
     hideRecipes(mr) {
       mr.isShow = false
+    },
+    openDialog(mr){
+      this.history = mr
+      console.log(this.history.review)
+      if(this.history.review){
+        this.dialog = true
+      } else {
+        this.dialog4 = true
+      }
+      console.log(this.dialog)
+      console.log(this.dialog4)
     },
   },
 }
