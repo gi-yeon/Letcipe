@@ -5,7 +5,9 @@
         <v-container class="mycomment-container d-flex-row">
           <div class="mycomment-head-wrap">
             <div class="d-flex justify-space-between pb-3">
-              <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              <div>
+                <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              </div>
               <div style="font-size: x-large">댓글 관리</div>
               <v-icon>mdi-blank</v-icon>
             </div>
@@ -56,7 +58,7 @@
                           }}</v-list-item-subtitle></v-col
                         ><v-col align="right">
                           <v-list-item-subtitle>{{
-                            comment.regTime
+                            comment.regTime.split('T')[0]
                           }}</v-list-item-subtitle></v-col
                         ></v-row
                       >
@@ -244,9 +246,8 @@ export default {
       console.log(this.checkedComment)
     },
     async deleteComment(id) {
-      console.log('-----------------------------')
       console.log(id)
-      this.allChecked();
+      this.allChecked()
       console.log('-----------------------------')
       const comment = {
         commentId: id,
@@ -256,6 +257,7 @@ export default {
     },
     commentDetail(index) {
       this.selectedComment = this.comments[index]
+      this.selectedComment.regTime = this.selectedComment.regTime.split('T')[0]
       this.commentDialog = true
     },
     moveBoard() {

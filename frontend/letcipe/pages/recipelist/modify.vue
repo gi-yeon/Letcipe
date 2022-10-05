@@ -287,7 +287,6 @@ export default {
       Bookmarks: 0,
       isBookmark: false,
       checkedRecipe: [],
-      cart: [],
       isAllCheck: false,
       id: '',
       isNothing: false,
@@ -326,6 +325,7 @@ export default {
       'deleteRecipeListBookmark',
       'deleteRecipeList',
       'updateRecipeList',
+      'deleteRecipeListItem',
     ]),
     ...mapActions('cart', ['createCart']),
     ...mapMutations('recipelist', [
@@ -354,18 +354,8 @@ export default {
       }
     },
     addCart(index) {
-      this.cart = []
-      if (this.isAllCheck) {
-        this.isAllCheck = false
-      }
+      this.isAllCheck = false
       this.checkedRecipe[index] = !this.checkedRecipe[index]
-      // this.cart.push(this.recipeListItems[index])
-      // this.cart.splice(index, 1)
-      for (let i = 0; i < this.checkedRecipe.length; i++) {
-        if (this.checkedRecipe[i]) {
-          this.cart.push(this.recipeListItems[i])
-        }
-      }
     },
     allAddCart() {
       if (!this.isAllCheck) {
@@ -387,12 +377,19 @@ export default {
       console.log(this.cart)
     },
     async deleteList() {
-      await this.deleteRecipeList(this.recipeListId).then(
-        this.$router.push('/user/mypage')
-      )
+      await this.deleteRecipeList(this.recipeListId)
+      this.$router.push('/user/mypage')
     },
     partDelete() {
-      this.deleteRecipeListItem()
+      for (let index = 0; index < this.checkedRecipe.length; index++) {
+        if (this.checkedRecipe[index]) {
+          const data = {
+            recipeListId: this.recipeListId,
+            recipeId: this.recipeListItems[index].recipe.id,
+          }
+          this.deleteRecipeListItem(data)
+        }
+      }
     },
     modifyItem(recipeListRes) {
       if (this.newName !== null) {
