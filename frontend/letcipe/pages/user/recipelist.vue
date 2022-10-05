@@ -284,14 +284,17 @@ export default {
     },
     modifyStatus(mr) {
       console.log(mr)
-      const rb = {
-        name: mr.name,
-        description: mr.description,
-        isShared: mr.isShared,
+
+      const object = {
+        id: mr.id,
+        ReqUpdateRecipeListDto: {
+          name: mr.name,
+          description: mr.description,
+          isShared: mr.isShared,
+        },
       }
-      console.log(rb)
-      // console.log(mr)
-      this.updateRecipeList(mr.id, rb)
+      console.log(object)
+      this.updateRecipeList(object)
       if (mr.isShared === 'Y') {
         mr.isShared = 'N'
       } else {
