@@ -34,23 +34,6 @@
                     <div class="recipe-item" @click="moveDetail(mr)">
                       {{ mr.title }}
                     </div>
-                    <div>
-                      <v-icon
-                        v-if="mr.nickName === nickname"
-                        style="z-index: 1"
-                        small
-                        color="info"
-                        @click="editItem(mr)"
-                        >mdi-pencil</v-icon
-                      >
-                      <v-icon
-                        v-if="mr.nickName === nickname"
-                        style="z-index: 1"
-                        small
-                        @click="deleteItem(mr)"
-                        >mdi-delete</v-icon
-                      >
-                    </div>
                   </v-list-item-title>
 
                   <v-list-item-subtitle
@@ -159,6 +142,7 @@ export default {
       recipeList: [],
       recipeLike: [],
       dialog: false,
+
       recipe: null,
     }
   },
@@ -191,19 +175,10 @@ export default {
       'countRecipeLikes',
       'decountRecipeLikes',
     ]),
+
     ...mapActions('user', ['myLikeRecipe']),
     ...mapActions('cart', ['createCart']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
-    editItem(mr) {
-      this.CLEAR_RECIPE_ID()
-      this.SET_RECIPE_ID(mr.id)
-      this.$router.push('/recipe/modify')
-    },
-    deleteItem(mr) {
-      //     this.checkedList.splice(index, 1)
-      //   this.checklist.push(c)
-      this.patchRecipeDetail(mr.id)
-    },
     moveDetail(mr) {
       this.CLEAR_RECIPE_ID()
       this.SET_RECIPE_ID(mr.id)

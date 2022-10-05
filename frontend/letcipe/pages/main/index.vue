@@ -2,36 +2,6 @@
   <div id="app">
     <v-app id="inspire">
       <v-container class="main-container">
-        <div class="title-wrap">
-          <div v-if="nickname == null" class="title">
-            {{ nickname }}님이 좋아할 레시피
-          </div>
-          <div v-if="nickname != null" class="title">
-            {{ nickname }}님이 좋아할 레시피
-          </div>
-          <div class="title-imgs">
-            <div
-              v-for="(ref, i) in refImg"
-              :key="i"
-              class="card"
-              @click="moveDetail(ref)"
-            >
-              <div>{{ nickname }}맞춤 추천</div>
-              <v-card>
-                <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
-                  <div class="ref-wrap">
-                    <v-card-title class="ref-title">{{
-                      ref.title
-                    }}</v-card-title>
-                    <v-card-subtitle class="ref-subtitle">{{
-                      ref.sub_title
-                    }}</v-card-subtitle>
-                  </div>
-                </v-img>
-              </v-card>
-            </div>
-          </div>
-        </div>
         <div class="my-middle-wrap">
           <div class="my-middle">
             <div class="my-container">
@@ -272,28 +242,16 @@
             <div>전체보기</div>
           </div>
           <div class="chart-chips-group">
-            <!-- <v-chip
-              v-for="(tag, i) in tag_set"
-              :key="i"
-              class="tag-set ma-1"
-              color="letcipe"
-              outlined
-            >{{ tag }}</v-chip>-->
             <v-sheet class="chip-sheet mx-auto">
-              <v-slide-group multiple overflow>
-                <v-slide-item
-                  v-for="(tag, i) in tag_set"
-                  :key="i"
-                  v-slot="{ active, toggle }"
-                >
+              <v-slide-group v-model="selectTag" mandatory overflow >
+                <v-slide-item v-for="(tag, i) in tag_set" :key="i" v-slot="{ active, toggle }">
                   <v-chip
                     class="mx-2"
                     :input-value="active"
                     active-class="letcipe white--text"
                     rounded
                     @click="toggle"
-                    >{{ tag }}</v-chip
-                  >
+                  >{{tag}}</v-chip>
                 </v-slide-item>
               </v-slide-group>
             </v-sheet>
@@ -301,40 +259,31 @@
 
           <v-row>
             <v-col>
-              <v-hover v-for="(data, i) in lecipeData" :key="i">
+              <v-hover v-for="(data, i) in recipeChart[selectTag]" :key="i">
                 <template #default="{ hover }">
                   <v-card
                     :elevation="hover ? 24 : 6"
-                    :class="hover ? 'letcipe lighten-2' : 'white'"
+                    :class="
+                        hover ? 'letcipe lighten-2' : 'white'
+                      "
                     class="lecipe-list-group mx-auto mt-2 mb-2 d-flex align-center"
-                    @click="moveDetail(data)"
+                    @click="moveDetail2(data.recipe.id)"
                   >
-                    <div class="ml-4" style="color: #ffa500">{{ i + 1 }}</div>
+                    <div class="ml-4" style="color: #FFA500;">{{ i+1 }}</div>
                     <v-list-item three-line>
                       <v-list-item-avatar tile size="57">
-                        <v-img
-                          elevation="10"
-                          :src="data.imgUrl"
-                          style="border-radius: 5px"
-                        ></v-img>
+                        <v-img elevation="10" :src="data.recipe.repImg" style="border-radius: 5px"></v-img>
                       </v-list-item-avatar>
                       <v-list-item-content>
-                        <v-list-item-title class="recipe-item mb-1">
-                          {{ data.title }}
+                        <v-list-item-title class="mb-1">
+                          {{
+                          data.recipe.title
+                          }}
                         </v-list-item-title>
-                        <v-list-item-subtitle>{{
-                          data.sub_title
-                        }}</v-list-item-subtitle>
+                        <v-list-item-subtitle>{{ data.recipe.content }}</v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
-                    <v-btn
-                      class="mr-3"
-                      fab
-                      dark
-                      x-small
-                      color="letcipe"
-                      outlined
-                    >
+                    <v-btn class="mr-3" fab dark x-small color="letcipe" outlined>
                       <v-icon color="letcipe">mdi-heart</v-icon>
                     </v-btn>
                   </v-card>
@@ -344,25 +293,25 @@
           </v-row>
         </div>
         <div class="ingrediant-base-group mt-2 mb-3">
-          <div>최근 먹은 두부 토마토 파스타</div>
+          <div v-if="nickname!=''">{{nickname}} 님을 위한 레시피 추천</div>
+          <div v-else>이런 레시피 어때요?</div>
           <div class="chart-header">
-            <div>같은 재료가 들어간 레시피 더보기</div>
-            <div>전체보기</div>
+            <div>{{recommendTitle}}</div>
           </div>
           <div class="rec-imgs-group d-flex justify-space-between">
             <v-avatar
-              v-for="(ref, i) in refImg"
+              v-for="(ref, i) in recommendRecipes"
               :key="i"
               size="130"
               tile
               class="mr-2"
-              @click="moveDetail(ref)"
+              @click="moveDetail2(ref.recipe.id)"
             >
-              <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
+              <v-img class="ref-imgs" :src="ref.recipe.repImg">
                 <div class="ref-wrap">
-                  <v-card-title class="ref-title">{{ ref.title }}</v-card-title>
+                  <v-card-title class="ref-title">{{ ref.recipe.title }}</v-card-title>
                   <v-card-subtitle class="ref-subtitle">{{
-                    ref.sub_title
+                    ref.recipe.content
                   }}</v-card-subtitle>
                 </div>
               </v-img>
@@ -370,12 +319,32 @@
           </div>
         </div>
         <div class="lecipe-base-group mt-3 mb-2">
-          <div>이런 레시피리스트 어때요?</div>
           <div class="chart-header">
-            <div>{{ nickname }}님 맞춤 추천</div>
-            <div>전체보기</div>
+            <div>인기있는 레시피 리스트!</div>
           </div>
-          <div class="rec-imgs-group d-flex justify-space-between">
+          <div v-for="(recipeList,i) in recipeLists" :key="i">
+            <div class="chart-header">
+              {{recipeList.name}}
+            </div>
+            <div class="chart-header">
+              {{recipeList.description}}
+            </div>
+            <div class="rec-imgs-group d-flex justify-space-between">
+              <v-avatar
+                v-for="(item, j) in recipeList.recipeListItems"
+                :key="j"
+                size="130"
+                tile
+                class="mr-2"
+                @click="moveListDetail"
+              >
+                <!-- <v-img class="ref-imgs" :src="item.recipe.repImg"></v-img> -->
+                <v-img class="ref-imgs" :src="item.recipe.repImg">
+              </v-img>
+              </v-avatar>
+            </div>
+          </div>
+          <!-- <div class="rec-imgs-group d-flex justify-space-between">
             <v-avatar
               v-for="(ref, i) in refImg"
               :key="i"
@@ -387,13 +356,11 @@
               <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
                 <div class="ref-wrap">
                   <v-card-title class="ref-title">{{ ref.title }}</v-card-title>
-                  <v-card-subtitle class="ref-subtitle">{{
-                    ref.sub_title
-                  }}</v-card-subtitle>
+                  <v-card-subtitle class="ref-subtitle">{{ ref.sub_title }}</v-card-subtitle>
                 </div>
               </v-img>
             </v-avatar>
-          </div>
+          </div> -->
         </div>
       </v-container>
     </v-app>
@@ -402,6 +369,8 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex'
+import { getCartReport, getUserRecommend, getBestRecipeLists} from "@/api/recommend";
+
 export default {
   name: 'MainPage',
   data() {
@@ -443,6 +412,8 @@ export default {
       ],
       tag_set: [],
       lecipeData: [],
+      recipeChart:[],
+      selectTag:"",
       time: '',
       historyID: null,
       eating: null,
@@ -458,6 +429,9 @@ export default {
       isRemoved: false,
       isComplete: false,
       selectedIngre: [],
+      recommendTitle:"",
+      recommendRecipes:[],
+      recipeLists:[],
     }
   },
   computed: {
@@ -468,28 +442,10 @@ export default {
   created() {
     setInterval(this.findnow.bind(this), 1000)
     this.category = []
-    const searching = {
-      size: 5,
-      page: 0,
-    }
     const promise = new Promise((resolve, reject) => {
       resolve()
     })
     promise.then(async () => {
-      this.lecipeData = []
-      await this.getHotRecipes(searching)
-      // await this.getRecipes(seraching)
-
-      this.tag_set.push(this.hotTitle)
-      this.hotRecipes.forEach((r) => {
-        const chartData = {
-          recipeId: r.recipe.id,
-          imgUrl: r.recipe.repImg,
-          sub_title: r.recipe.content,
-          title: r.recipe.title,
-        }
-        this.lecipeData.push(chartData)
-      })
       console.log('이거슨감자' + this.recipeLists)
 
       await this.getHistoryList()
@@ -540,6 +496,28 @@ export default {
           }
         })
       }
+      getCartReport("-,-,1,-",(response) => {
+      this.tag_set.push(response.data.title);
+      this.recipeChart.push(response.data.report);
+      });
+      getCartReport("-,-,-,JUBU",(response) => {
+        this.tag_set.push(response.data.title);
+        this.recipeChart.push(response.data.report);
+      });
+      getCartReport("-,-,-,COOK",(response) => {
+        this.tag_set.push(response.data.title);
+        this.recipeChart.push(response.data.report);
+      });
+      getUserRecommend(
+        (response) => {
+          this.recommendTitle = response.data.title;
+          this.recommendRecipes = response.data.report;
+      });
+      getBestRecipeLists(1,
+        (response) => {
+          this.recipeLists = response.data;
+        }
+      );
     })
   },
   methods: {
@@ -565,6 +543,11 @@ export default {
     moveDetail(data) {
       this.CLEAR_RECIPE_ID()
       this.SET_RECIPE_ID(data.recipeId)
+      this.$router.push('/recipe/detail')
+    },
+    moveDetail2(recipeId) {
+      this.CLEAR_RECIPE_ID()
+      this.SET_RECIPE_ID(recipeId)
       this.$router.push('/recipe/detail')
     },
     moveProgress() {
