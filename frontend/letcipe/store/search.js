@@ -139,7 +139,7 @@ export const actions = {
         console.log(error)
       }
     )
-  }, 
+  },
   async getRecipeList({ commit }, object) {
     commit('CLEAR_RECIPE_LIST');
     commit('CLEAR_RECIPE');
@@ -159,7 +159,7 @@ export const actions = {
     )
     await getTotalNumRecipeList(
       object.keyword,
-  
+
       ({data}) => {
     console.log(data)
         commit('SET_TOTAL_PAGE', data)
@@ -196,44 +196,6 @@ export const actions = {
           console.log(error)
         }
       )
-    }, 
-    async getRecipeList({ commit }, object) {
-      commit('CLEAR_RECIPE_LIST');
-      commit('CLEAR_RECIPE');
-      console.log(object)
-      await getRecipeList(
-           object.keyword,
-          object.size,
-          object.page
-         ,
-        ({ data }) => {
-          commit('SET_RECIPE_LIST', data)
-          console.log(data)
-          // commit('SET_CHARTS', data.report)
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
     },
-      async getCharts({ commit }, object) {
-        commit('CLEAR_CHARTS')
-        console.log(object)
-        await getChartInfo(
-          {
-            reqDto: object.attr,
-            begin: object.begin,
-            end: object.end,
-            size: object.size,
-            page: object.page,
-          },
-          ({ data }) => {
-            commit('SET_CHARTS', data)
-          },
-          (error) => {
-            console.log(error)
-          }
-        )
-      },
   }
-  
+
