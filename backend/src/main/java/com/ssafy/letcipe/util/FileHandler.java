@@ -76,7 +76,12 @@ public class FileHandler {
     }
 
     public void deleteImageFile(String url) throws FileNotFoundException {
-        String fileName = url.substring(url.lastIndexOf('/'));
+        String fileName;
+        try {
+            fileName = url.substring(url.lastIndexOf('/'));
+        } catch (Exception e) {
+            throw new FileNotFoundException("서버에 저장된 파일이 없습니다.");
+        }
         String path = new String(BASE_PATH + sep + fileName);
         File file;
         try {

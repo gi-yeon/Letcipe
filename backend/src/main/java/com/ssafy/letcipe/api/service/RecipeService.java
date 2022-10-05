@@ -8,6 +8,7 @@ import com.ssafy.letcipe.api.dto.recipeIngredient.ResGetRecipeIngredientDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqDeleteRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqPostRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeStep.ReqPostRecipeStepDto;
+import com.ssafy.letcipe.api.dto.recipeStep.ReqPutRecipeStepDto;
 import com.ssafy.letcipe.domain.ingredient.Ingredient;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipe.RecipeIngredientCountDto;
@@ -22,6 +23,8 @@ import com.ssafy.letcipe.domain.tag.Tag;
 import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.exception.AuthorityViolationException;
 import com.ssafy.letcipe.util.FileHandler;
+import com.ssafy.letcipe.util.StringUtils;
+import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -110,24 +113,31 @@ public class RecipeService {
     }
 
     @Transactional
-    public void updateRecipe(ReqPutRecipeDto updateDto, long recipe_id) throws NullPointerException, FileNotFoundException, FileUploadException {
-        // 대표 이미지 null check
-        if (updateDto.getRepImg() == null || updateDto.getRepImg().isEmpty()) {
-            throw new FileNotFoundException("대표 이미지가 없습니다.");
-        }
-
+    public void updateRecipe(ReqPutRecipeDto updateDto, long recipe_id) throws NullPointerException, FileNotFoundException, FileUploadException{
+        log.info("업데이트:{}",updateDto);
         Recipe recipe = getRecipe(recipe_id);
 
+        // 대표 이미지 null check
+        String newRepImg;
+        if (updateDto.getRepImg() == null || updateDto.getRepImg().isEmpty()) {
+            newRepImg = updateDto.getRepImgUrl();
+            if (StringUtil.isNullOrEmpty(newRepImg))
+                throw new FileNotFoundException("대표 이미지가 없습니다.");
+        } else {
+            // 새로운 대표 이미지 업로드
+            newRepImg = fileHandler.uploadImage(updateDto.getRepImg());
+        }
         // 기존 대표 이미지 삭제
-        fileHandler.deleteImageFile(recipe.getRepImg());
-        // 새로운 대표 이미지 업로드
-        String newRepImg = fileHandler.uploadImage(updateDto.getRepImg());
+        try {
+            fileHandler.deleteImageFile(recipe.getRepImg());
+        } catch (FileNotFoundException e) {
+            log.info("서버에 업로드된 이미지가 아님");
+        }
 
         // 기존 스텝 삭제
         recipeStepService.deleteRecipeSteps(recipe);
-
         // 새로운 스텝 추가
-        for (ReqPostRecipeStepDto step : updateDto.getStepDtoList()) {
+        for (ReqPutRecipeStepDto step : updateDto.getStepDtoList()) {
             recipeStepService.createRecipeStep(recipe, step);
         }
 
@@ -304,4 +314,6 @@ public class RecipeService {
         }
         return result;
     }
+
+
 }
