@@ -254,6 +254,9 @@ export default {
         isShared: mr.isShared,
       }
       console.log(rb)
+      // const object = {
+
+      // }
       // console.log(mr)
       this.updateRecipeList(mr.id, rb)
       if (mr.isShared === 'Y') {
