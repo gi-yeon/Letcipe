@@ -12,6 +12,7 @@ import {
 export const state = () => ({
   historyList: [],
   history: {},
+  reviewModifySuccess: false,
 })
 
 export const mutations = {
@@ -21,6 +22,12 @@ export const mutations = {
   },
   SET_HISTORY(state, history) {
     state.history = history
+  },
+  SET_REVIEWMODIFY_TRUE(state) {
+    state.reviewModifySuccess = true
+  }, 
+  SET_REVIEWMODIFY_FALSE(state) {
+    state.reviewModifySuccess = false
   },
   CLEAR_HISTORY_LIST(state) {
     state.historyList = []
@@ -112,9 +119,11 @@ export const actions = {
       hitoryReview,
       ({ data }) => {
         // console.log(data)
+        commit('SET_REVIEWMODIFY_TRUE')
         console.log('히스토리 리뷰 수정 성공!')
       },
       (error) => {
+        commit('SET_REVIEWMODIFY_FALSE')
         console.log(error)
       }
     )
