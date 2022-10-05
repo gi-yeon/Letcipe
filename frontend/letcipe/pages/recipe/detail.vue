@@ -20,9 +20,7 @@
               <v-img class="recipe-imgs" :src="recipeDetail.repImg">
                 <div class="ref-wrap">
                   <v-card-title class="text-h6 ref-title">
-                    {{
-                    recipeDetail.title
-                    }}
+                    {{ recipeDetail.title }}
                   </v-card-title>
 
                   <!-- 레시피도 서브타이틀 넣을지? 현재 erd에 작성 안되어있음 -->
@@ -33,40 +31,66 @@
               </v-img>
             </div>
 
-            <v-card-title class="text-md-h3">{{ recipeDetail.title }}</v-card-title>
-            <v-card-subtitle class="text-md-h5">맛있겠다!</v-card-subtitle>
+            <v-card-title class="text-md-h3">{{
+              recipeDetail.title
+            }}</v-card-title>
+            <!-- <v-card-subtitle class="text-md-h5">맛있겠다!</v-card-subtitle> -->
 
             <v-card-text>
               <v-row align="center" class="d-flex mx-0">
-                <v-icon v-if="isLike" small color="pink lighten-1" @click="saveLike">mdi-heart</v-icon>
-                <v-icon v-else small color="grey" @click="saveLike">mdi-heart-outline</v-icon>
+                <v-icon
+                  v-if="isLike"
+                  small
+                  color="pink lighten-1"
+                  @click="saveLike"
+                  >mdi-heart</v-icon
+                >
+                <v-icon v-else small color="grey" @click="saveLike"
+                  >mdi-heart-outline</v-icon
+                >
                 &nbsp;{{ Likes }}&nbsp;&nbsp;
                 <v-icon
                   v-if="isBookmark"
                   small
                   color="yellow lighten-1"
                   @click="saveBookmark"
-                >mdi-bookmark</v-icon>
-                <v-icon v-else small color="grey" @click="saveBookmark">mdi-bookmark-outline</v-icon>
+                  >mdi-bookmark</v-icon
+                >
+                <v-icon v-else small color="grey" @click="saveBookmark"
+                  >mdi-bookmark-outline</v-icon
+                >
                 &nbsp;{{ Bookmarks }}
               </v-row>
 
-              <v-row align="center" class="mx-0">등록일자 : {{ regTime }}</v-row>
-              <div class="my-4 text-subtitle-1">
-                <!-- <v-avatar
-                  v-if="profileImg !== null || profileImg !== ''"
-                  size="36px"
+              <v-row align="center" class="mx-0"
+                >등록일자 : {{ regTime }}</v-row
+              >
+              <v-row class="d-flex justify-space-between">
+                <div class="my-4 text-subtitle-1 pl-4">
+                  <v-avatar size="27px" color="letcipe">
+                    <v-img
+                      v-if="writer.profileImage"
+                      :src="writer.profileImage"
+                    ></v-img>
+                    <v-icon v-else dark>mdi-account-circle</v-icon>
+                  </v-avatar>
+
+                  <span style="color: #ffa500">{{ writer.job }}</span>
+                  &nbsp;&nbsp;{{ writer.nickname }}
+                </div>
+                <div
+                  v-if="writer.nickname === nickname"
+                  class="my-4 text-subtitle-1 pr-4"
                 >
-                  <img alt="Avatar" :src="profileImg" />
-                </v-avatar>-->
-                <v-avatar size="27px" color="letcipe">
-                  <v-img v-if="writer.profileImage" :src="writer.profileImage"></v-img>
-                  <v-icon v-else dark>mdi-account-circle</v-icon>
-                </v-avatar>
-                <span style="color: #ffa500">{{ writer.job }}</span>
-                &nbsp;&nbsp;{{ writer.nickname }}
-              </div>
-            </v-card-text>
+                  <v-btn small color="letcipe" dark @click="editMyRecipe"
+                    >수정</v-btn
+                  >
+                  <v-btn small color="letcipe" dark @click="deleteMyRecipe"
+                    >삭제</v-btn
+                  >
+                </div>
+              </v-row></v-card-text
+            >
 
             <v-divider class="mx-4"></v-divider>
 
@@ -104,12 +128,18 @@
                 </template>
               </v-simple-table>
               <v-card-title class="text-md-h4">레시피</v-card-title>
-              <div v-for="(stepInfo, i) in recipeSteps" :key="i" style="width: 80%; margin: auto">
+              <div
+                v-for="(stepInfo, i) in recipeSteps"
+                :key="i"
+                style="width: 80%; margin: auto"
+              >
                 <div class="stepDetail">
                   <v-img :src="stepInfo.img"></v-img>
                   <h2
                     style="display: inline; color: #ffa500; font-size: xx-large"
-                  >{{ stepInfo.step }}</h2>
+                  >
+                    {{ stepInfo.step }}
+                  </h2>
                   {{ stepInfo.content }}
                 </div>
               </div>
@@ -120,7 +150,9 @@
 
             <v-card-text>
               <v-chip-group column>
-                <v-chip v-for="(tag, i) in recipeDetail.tags" :key="i">{{ tag.name }}</v-chip>
+                <v-chip v-for="(tag, i) in recipeDetail.tags" :key="i">{{
+                  tag.name
+                }}</v-chip>
               </v-chip-group>
             </v-card-text>
 
@@ -146,7 +178,11 @@
 
               <v-row>
                 <v-col align="center">
-                  <div v-for="(comment, i) in comments" :key="i" style="width: 80%">
+                  <div
+                    v-for="(comment, i) in comments"
+                    :key="i"
+                    style="width: 80%"
+                  >
                     <div class="mx-auto pt-2 pb-2 d-flex align-center">
                       <v-list-item
                         three-line
@@ -156,25 +192,25 @@
                         <v-list-item-content>
                           <v-row>
                             <v-col>
-                              <v-list-item-subtitle class="recipe-comment">{{ comment.nickName }}</v-list-item-subtitle>
+                              <v-list-item-subtitle class="recipe-comment">{{
+                                comment.nickName
+                              }}</v-list-item-subtitle>
                             </v-col>
                             <v-col align="right">
                               <v-list-item-subtitle class="recipe-comment">
-                                {{ comment.regTime.split('T')[0]
-                                }}
+                                {{ comment.regTime.split('T')[0] }}
                                 <v-icon
                                   v-if="comment.nickName === nickname"
                                   size="small"
                                   @click="deleteComment(comment.id)"
-                                >mdi-close</v-icon>
+                                  >mdi-close</v-icon
+                                >
                               </v-list-item-subtitle>
                             </v-col>
                           </v-row>
 
                           <v-list-item-content class="recipe-comment">
-                            {{
-                            comment.content
-                            }}
+                            {{ comment.content }}
                           </v-list-item-content>
                         </v-list-item-content>
                       </v-list-item>
@@ -201,7 +237,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 export default {
   name: 'RecipeDetail',
   data() {
@@ -238,8 +274,10 @@ export default {
     }
     promise.then(async () => {
       // 레시피 디테일 불러오는 부분
+      await this.readUser()
       this.recipeSteps = []
       await this.RecipeDetail(this.recipeID)
+      console.log(this.recipeDetail)
       console.log(this.recipeDetail.user.nickname)
       this.recipeSteps = this.recipeDetail.recipeSteps
       this.recipeIngredient = this.recipeDetail.ingredients
@@ -268,6 +306,7 @@ export default {
     })
   },
   methods: {
+    ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     ...mapActions('comment', [
       'getComment',
       'postComment',
@@ -281,8 +320,10 @@ export default {
       'deleteBookmarks',
       'countRecipeLikes',
       'decountRecipeLikes',
+      'patchRecipeDetail',
     ]),
     ...mapActions('cart', ['createCart']),
+    ...mapActions('user', ['readUser']),
     handlePage(page) {
       this.recipeInfo = {
         boardType: 'RECIPE',
@@ -322,6 +363,7 @@ export default {
       }
       this.isLike = !this.isLike
     },
+
     async addComment() {
       if (this.userId === 0) {
         console.log('로그인이 필요합니다!')
@@ -360,6 +402,15 @@ export default {
         list: recipeList,
       }
       this.createCart(addrecipes)
+    },
+    editMyRecipe() {
+      this.CLEAR_RECIPE_ID()
+      this.SET_RECIPE_ID(this.recipeDetail.id)
+      console.log(this.recipeID)
+      this.$router.push('/recipe/modify')
+    },
+    deleteMyRecipe() {
+      this.patchRecipeDetail(this.recipeDetail.id)
     },
   },
 }
