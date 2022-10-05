@@ -5,7 +5,9 @@
         <v-container class="mycomment-container d-flex-row">
           <div class="mycomment-head-wrap">
             <div class="d-flex justify-space-between pb-3">
-              <v-icon>mdi-window-close</v-icon>
+              <div>
+                <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              </div>
               <div style="font-size: x-large">댓글 관리</div>
               <v-icon>mdi-blank</v-icon>
             </div>
@@ -58,7 +60,7 @@
                           }}</v-list-item-subtitle></v-col
                         ><v-col align="right">
                           <v-list-item-subtitle>{{
-                            comment.regTime
+                            comment.regTime.split('T')[0]
                           }}</v-list-item-subtitle></v-col
                         ></v-row
                       >
@@ -74,12 +76,14 @@
                       > -->
 
                       <v-list-item-content
+                        class="ref-content"
                         style="
                           display: inline-block;
                           text-overflow: ellipsis;
                           white-space: nowrap;
                           overflow: hidden;
                         "
+                        @click="commentDetail(i)"
                       >
                         {{ comment.content }}
                       </v-list-item-content>
@@ -256,6 +260,7 @@ export default {
     },
     commentDetail(index) {
       this.selectedComment = this.comments[index]
+      this.selectedComment.regTime = this.selectedComment.regTime.split('T')[0]
       this.commentDialog = true
     },
     moveBoard() {
@@ -272,10 +277,12 @@ export default {
   /* padding-top: 70px; */
   padding-bottom: 70px;
   padding: 4%;
+  text-overflow: ellipsis;
 }
 .mycomment-page-head {
   padding: 4%;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  text-overflow: ellipsis;
   /* border: 1px solid gray; */
 }
 .mycomment-container {
@@ -284,5 +291,8 @@ export default {
   color: black;
   text-overflow: ellipsis;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
+.ref-content {
+  text-overflow: ellipsis;
 }
 </style>
