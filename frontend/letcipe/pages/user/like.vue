@@ -14,7 +14,7 @@
 
           <!-- <div :page="currentPage" :items="myRecipes" :items-per-page="perPage" class="text-center"> -->
           <div v-if="recipeList.length > 0">
-            <div v-for="(mr, i) in myBookMarkRecipeList" :key="i">
+            <div v-for="(mr, i) in recipeList" :key="i">
               <v-list-item three-line>
                 <v-list-item-avatar class="recipe-item" tile size="100" @click="moveDetail(mr)">
                   <v-img :src="mr.repImg"></v-img>
@@ -23,8 +23,8 @@
                   <v-list-item-title class="d-flex justify-space-between">
                     <div class="recipe-item" @click="moveDetail(mr)">{{ mr.title }}</div>
                     <div>
-                      <v-icon style="z-index: 1" small color="info" @click="editItem(mr)">mdi-pencil</v-icon>
-                      <v-icon style="z-index: 1" small @click="deleteItem(mr)">mdi-delete</v-icon>
+                      <v-icon v-if="mr.nickName===nickname" style="z-index: 1" small color="info" @click="editItem(mr)">mdi-pencil</v-icon>
+                      <v-icon v-if="mr.nickName===nickname" style="z-index: 1" small @click="deleteItem(mr)">mdi-delete</v-icon>
                     </div>
                   </v-list-item-title>
 
@@ -32,18 +32,12 @@
                   <div class="d-flex justify-space-between">
                     <v-list-item-subtitle class="d-flex align-center">
                       <div class="d-flex align-center">
-                        <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
-                        <div>{{mr.recipeLike }}</div>
-                      </div>
-                      <div>
-                        <div class="d-flex align-center">
-                          <v-icon small color="yellow lighten-1">mdi-bookmark</v-icon>
-                          <div>{{mr.recipeBookmark }}</div>
-                        </div>
+                        <v-icon v-if="recipeLike[i]" small color="pink lighten-1" @click="saveLike(i, mr)">mdi-heart</v-icon>
+                        <v-icon v-else small color="grey" @click="saveLike(i, mr)">mdi-heart-outline</v-icon>
                       </div>
                     </v-list-item-subtitle>
                     <v-list-item-subtitle style="text-align: right">
-                      <v-btn style="z-index: 1" small color="letcipe" @click="addCart(mr)">+담기</v-btn>
+                      <v-btn style="z-index: 1" small color="letcipe" @click="openDialog(mr)">+담기</v-btn>
                     </v-list-item-subtitle>
                   </div>
                 </v-list-item-content>
@@ -66,11 +60,27 @@
             circle
           ></v-pagination>
         </v-container>
+
+        <div>
+          <v-row class="justify-center pa-8">
+            <v-dialog v-model="dialog" max-width="290">
+              <v-card>
+                <v-card-title class="text-h5">장바구니에 담을까요?</v-card-title>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="addCart()">담기</v-btn>
+
+                  <v-btn color="red darken-1" text @click="dialog = false">닫기</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-row>
+        </div>
       </div>
     </v-app>
   </div>
 </template>
-      
+
       <script>
 import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
@@ -94,10 +104,13 @@ export default {
       isSelected: [],
       selectedIngre: '',
       recipeList: [],
+      recipeLike: [],
+      dialog: false,
+      recipe:null,
     }
   },
   computed: {
-    ...mapState('user', ['myBookMarkRecipeList']),
+    ...mapState('user', ['nickname', 'mylikeRecipe']),
   },
 
   watch: {},
@@ -111,19 +124,18 @@ export default {
     })
     promise.then(async () => {
       // 이부분만 고쳐서 쓰면됩니다.
-      await this.myBookmarkRecipeList(pageable)
-      this.myBookMarkRecipeList?.forEach((mr) => {
-        this.recipeList.push(mr)
+      await this.myLikeRecipe(pageable)
+      this.mylikeRecipe.forEach((lr) => {
+        this.recipeLike.push(true)
+        this.recipeList.push(lr)
       })
-
-      console.log(this.myBookMarkRecipeList)
-      console.log(this.recipeList.length)
+      this.TotalPage = this.recipeList.length / 5
     })
   },
   methods: {
-    ...mapActions('recipe', ['patchRecipeDetail']),
-    ...mapActions('user', ['myBookmarkRecipeList']),
-    ...mapActions('cartr', ['createCart']),
+    ...mapActions('recipe', ['patchRecipeDetail', 'countRecipeLikes', 'decountRecipeLikes',]),
+    ...mapActions('user', ['myLikeRecipe']),
+    ...mapActions('cart', ['createCart']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     editItem(mr) {
       this.CLEAR_RECIPE_ID()
@@ -143,16 +155,30 @@ export default {
     moveMypage() {
       this.$router.push('/user/mypage')
     },
-    addCart(mr) {
-      const cartItem = [mr.id]
-      const list = { cartItem }
+    openDialog(recipe) {
+      this.dialog = true;
+      this.recipe = recipe;
+    },
+    addCart() {
+      const cartItem = [this.recipe.id]
+      const list = { list:cartItem }
+      console.log(list);
       this.createCart(list)
+      this.dialog = false;
+    },
+    saveLike(i, mr) {
+      if(this.recipeLike[i]) {
+        this.decountRecipeLikes(mr.id)
+      } else {
+        this.countRecipeLikes(mr.id)
+      }
+      this.$set(this.recipeLike, i, !this.recipeLike[i])
     },
   },
 }
 </script>
-      
-      <style scoped>
+
+<style scoped>
 .myrecipe-page {
   /* padding-top: 70px; */
   padding-bottom: 70px;
@@ -180,4 +206,3 @@ export default {
   display: none;
 }
 </style>
-      

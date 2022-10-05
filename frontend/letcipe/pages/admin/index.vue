@@ -1,26 +1,288 @@
 <template>
-  <div>
+  <div data-app>
     <v-container>
       <v-row>
-        <chart-component></chart-component>
+        <v-col cols="12" lg="2">
+          <v-menu
+            ref="menu1"
+            v-model="menu1"
+            :close-on-content-click="false"
+            :return-value.sync="s_date"
+            transition="scale-transition"
+            offset-y
+            min-width="290px"
+          >
+            <template #activator="{ on, attrs }">
+              <v-text-field
+                v-model="s_date"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker v-model="s_date" no-title scrollable :max="e_date">
+              <v-spacer></v-spacer>
+              <v-btn text color="primary" @click="menu1 = false">Cancel</v-btn>
+              <v-btn text color="primary" @click="s_date_search(s_date)"
+                >OK</v-btn
+              >
+            </v-date-picker>
+          </v-menu>
+        </v-col>
+
+        <v-col cols="12" lg="2">
+          <v-menu
+            ref="menu2"
+            v-model="menu2"
+            :close-on-content-click="false"
+            :return-value.sync="e_date"
+            transition="scale-transition"
+            offset-y
+            min-width="290px"
+          >
+            <template #activator="{ on, attrs }">
+              <v-text-field
+                v-model="e_date"
+                prepend-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              v-model="e_date"
+              no-title
+              scrollable
+              :min="s_date"
+              :max="date"
+            >
+              <v-spacer></v-spacer>
+              <v-btn text color="primary" @click="menu2 = false">Cancel</v-btn>
+              <v-btn text color="primary" @click="e_date_search(e_date)"
+                >OK</v-btn
+              >
+            </v-date-picker>
+          </v-menu>
+        </v-col>
       </v-row>
+    </v-container>
+    <v-container>
+      <v-row>
+        <v-col class="d-flex" cols="12" sm="2">
+          <v-select
+            :items="genItems"
+            item-text="state"
+            item-value="abbr"
+            label="성별"
+            @change="select_gen"
+          ></v-select>
+        </v-col>
+        <v-col class="d-flex" cols="12" sm="2">
+          <v-select
+            :items="ageItems"
+            item-text="state"
+            item-value="abbr"
+            label="나이 대"
+            @change="select_age"
+          ></v-select>
+        </v-col>
+        <v-col class="d-flex" cols="12" sm="2">
+          <v-select
+            :items="famItems"
+            item-text="state"
+            item-value="abbr"
+            label="가구 수"
+            @change="select_fam"
+          ></v-select>
+        </v-col>
+        <v-col class="d-flex" cols="12" sm="3">
+          <v-select
+            :items="jobItems"
+            item-text="state"
+            item-value="abbr"
+            label="직업 분류"
+            @change="select_job"
+          ></v-select>
+        </v-col>
+        <v-col class="d-flex" cols="12" sm="1">
+          <v-btn x-large @click="getChartData">검색</v-btn>
+        </v-col>
+      </v-row>
+      <Bar ref="bar" :chart-data="chartData" :chart-options="chartOptions" />
+      <Pie ref="bar" :chart-data="chartData" :chart-options="chartOptions" />
     </v-container>
   </div>
 </template>
 
 <script>
-import ChartComponent from '@/components/ChartComponent.vue'
+import { mapState, mapActions, mapMutations } from 'vuex'
+import { Bar, Pie } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, ArcElement, LineElement, CategoryScale, LinearScale } from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, ArcElement, LineElement, CategoryScale, LinearScale)
+
 export default {
   name: 'AdminIndex',
-  components: { ChartComponent },
-  data() {
-    return {}
+  components: {
+    Bar, Pie
   },
+  data() {
+    return {
+      chartData: {
+          labels: [],
+        datasets: [{
+          label: 'Title',
+          data: [],
+          backgroundColor: [],
+            borderColor: [
+              'rgba(255, 159, 64, 1)',
+            ],
+            borderWidth: 2,
+        }]
+        },
+        chartOptions: {
+        responsive: true,
+        legend: {
+          display: false,
+        },
+        title: {
+          display: true,
+          text: "Let'cipe analytics data",
+          fontSize: 24,
+          fontColor: '#fb7280',
+        },
+        tooltips: {
+          backgroundColor: '#17BF62',
+        },
+        scales: {
+          xAxes: [
+            {
+              gridLines: {
+                display: true,
+              },
+            },
+          ],
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+                max: 100,
+                min: 0,
+                stepSize: 1,
+              },
+              gridLines: {
+                display: true,
+              },
+            },
+          ],
+        },
+      },
+      date: new Date().toISOString().substr(0, 10),
+      s_date: new Date().toISOString().substr(0, 10),
+      e_date: new Date().toISOString().substr(0, 10),
+      menu1: false,
+      menu2: false,
+      genItems: [
+        { state: '선택 안 함', abbr: '-' },
+        { state: '남성', abbr: 'M' },
+        { state: '여성', abbr: 'F' },
+      ],
+      ageItems: [
+        { state: '선택 안 함', abbr: '-' },
+        { state: '10대', abbr: '10' },
+        { state: '20대', abbr: '20' },
+        { state: '30대', abbr: '30' },
+        { state: '40대', abbr: '40' },
+        { state: '50대', abbr: '50' },
+        { state: '60대', abbr: '60' },
+      ],
+      famItems: [
+        { state: '선택 안 함', abbr: '-' },
+        { state: '1인 가구', abbr: '1' },
+        { state: '2인 가구', abbr: '2' },
+        { state: '3인 가구', abbr: '3' },
+        { state: '4인 가구', abbr: '4' },
+      ],
+      jobItems: [
+        { state: '선택 안 함', abbr: '-' },
+        { state: '학생', abbr: 'STUDENT' },
+        { state: '주부', abbr: 'JUBU' },
+        { state: '직장인', abbr: 'WORKER' },
+        { state: '요리사', abbr: 'COOK' },
+      ],
+      attr: {
+        gen: '-',
+        age: '-',
+        fam: '-',
+        job: '-',
+      },
+    }
+  },
+  computed: {
+    ...mapState('search', ['charts']),
+  },
+  created() {
+    // this.CLEAR_CHARTS()
+  },
+  methods: {
+    ...mapActions('search', ['getCharts']),
+    ...mapMutations('search', ['CLEAR_CHARTS']),
 
-  mounted() {},
-
-  methods: {},
+    s_date_search(v) {
+      this.s_date = v
+      this.menu1 = false
+      this.$refs.menu1.save(v)
+    },
+    e_date_search(v) {
+      this.e_date = v
+      this.menu2 = false
+      this.$refs.menu2.save(v)
+    },
+    async getChartData() {
+      const attribute =
+        this.attr.gen +
+        ',' +
+        this.attr.age +
+        ',' +
+        this.attr.fam +
+        ',' +
+        this.attr.job
+      const params = {
+        attr: attribute,
+        begin: this.s_date,
+        end: this.e_date,
+        size: 10,
+        page: 0,
+      }
+      await this.getCharts(params)
+      this.chartData.labels = this.charts.recipeName
+      this.chartData.datasets[0].data = this.charts.count
+      this.$refs.bar.updateChart()
+    },
+    select_gen(e) {
+      console.log(e)
+      this.attr.gen = e
+    },
+    select_age(e) {
+      this.attr.age = e
+    },
+    select_fam(e) {
+      this.attr.fam = e
+    },
+    select_job(e) {
+      this.attr.job = e
+    },
+    test() {
+      this.chartData.labels.push("e")
+      this.chartData.datasets[0].data.push(30)
+      this.$refs.bar.updateChart()
+    }
+  },
 }
 </script>
-
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.row {
+  justify-content: center;
+}
+</style>

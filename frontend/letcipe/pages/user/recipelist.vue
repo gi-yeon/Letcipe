@@ -59,7 +59,7 @@
                           @click="editItem(mr)"
                           >mdi-pencil</v-icon
                         >
-                        <v-icon style="z-index: 1" small @click="deleteItem(mr)"
+                        <v-icon style="z-index: 1" small @click="openDialog(mr)"
                           >mdi-delete</v-icon
                         >
                       </div>
@@ -74,18 +74,27 @@
                   <div class="d-flex justify-space-between">
                     <v-list-item-subtitle class="d-flex align-center">
                       <!-- <div class="d-flex align-center">
-                        <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
-                        <div>{{mr.recipeLike }}</div>
-                      </div>-->
+                          <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
+                          <div>{{mr.recipeLike }}</div>
+                        </div>-->
 
                       <div>
                         <div class="d-flex align-center">
                           <v-icon
+                            v-if="mr.bookmark"
                             small
                             :color="mr.bookmark ? `yellow lighten-1` : `gray`"
                             style="cursor: pointer"
-                            @click="createBookmark(mr)"
+                            @click="saveBookmark(mr)"
                             >mdi-bookmark</v-icon
+                          >
+                          <v-icon
+                            v-else
+                            small
+                            :color="mr.bookmark ? `yellow lighten-1` : `gray`"
+                            style="cursor: pointer"
+                            @click="saveBookmark(mr)"
+                            >mdi-bookmark-outline</v-icon
                           >
                           <div>{{ mr.bookmarkCnt }}</div>
                         </div>
@@ -114,6 +123,26 @@
               <v-divider></v-divider>
             </div>
           </div>
+
+          <v-dialog v-model="dialog" persistent max-width="290">
+            <v-card>
+              <v-card-title class="text-h5">Caution</v-card-title>
+              <v-card-text>해당 레시피리스트를 삭제하시겠습니까?</v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="green darken-1" text @click="dialog = false"
+                  >취소</v-btn
+                >
+                <v-btn
+                  color="green darken-1"
+                  text
+                  @click="deleteItem(selectedRecipeList.id)"
+                  >삭제</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
           <v-pagination
             v-model="currentPage"
             color="letcipe"
@@ -151,6 +180,8 @@ export default {
       isSelected: [],
       selectedIngre: '',
       recipeList: [],
+      dialog: false,
+      selectedRecipe: {},
     }
   },
   computed: {
@@ -168,7 +199,7 @@ export default {
     })
     promise.then(async () => {
       await this.myrecipeList(pageable)
-      // console.log(this.myRecipeList)/
+      console.log(this.myRecipeList)
       this.myRecipeList?.forEach((mr) => {
         const recipeListItem = {
           id: mr.id,
@@ -211,10 +242,10 @@ export default {
       this.SET_RECIPE_ID(mr.id)
       this.$router.push('/recipelist/modify')
     },
-    deleteItem(mr) {
-      //     this.checkedList.splice(index, 1)
-      //   this.checklist.push(c)
-      this.patchRecipeDetail(mr.id)
+    async deleteItem(id) {
+      await this.deleteRecipeList(id)
+      await this.myrecipeList(this.pageable)
+      this.dialog = false
     },
     moveDetail(mr) {
       this.CLEAR_RECIPE_ID()
@@ -236,15 +267,20 @@ export default {
       }
       this.createCart(addrecipes)
     },
-    createBookmark(mr) {
+    openDialog(mr) {
+      this.dialog = true
+      this.selectedRecipeList = mr
+    },
+    saveBookmark(mr) {
       if (mr.bookmark) {
+        mr.bookmark = false
         this.deleteRecipeListBookmark(mr.id)
         mr.bookmarkCnt--
       } else {
+        mr.bookmark = true
         this.createRecipeListBookmark(mr.id)
         mr.bookmarkCnt++
       }
-      mr.bookmark = !mr.bookmark
     },
     modifyStatus(mr) {
       console.log(mr)
@@ -254,9 +290,6 @@ export default {
         isShared: mr.isShared,
       }
       console.log(rb)
-      // const object = {
-
-      // }
       // console.log(mr)
       this.updateRecipeList(mr.id, rb)
       if (mr.isShared === 'Y') {

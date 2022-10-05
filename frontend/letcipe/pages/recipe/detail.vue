@@ -70,24 +70,32 @@
               <v-row align="center" class="mx-0"
                 >등록일자 : {{ regTime }}</v-row
               >
-              <div class="my-4 text-subtitle-1">
-                <!-- <v-avatar
-                  v-if="profileImg !== null || profileImg !== ''"
-                  size="36px"
+              <v-row class="d-flex justify-space-between">
+                <div class="my-4 text-subtitle-1 pl-4">
+                  <v-avatar size="27px" color="letcipe">
+                    <v-img
+                      v-if="writer.profileImage"
+                      :src="writer.profileImage"
+                    ></v-img>
+                    <v-icon v-else dark>mdi-account-circle</v-icon>
+                  </v-avatar>
+
+                  <span style="color: #ffa500">{{ writer.job }}</span>
+                  &nbsp;&nbsp;{{ writer.nickname }}
+                </div>
+                <div
+                  v-if="writer.nickname === nickname"
+                  class="my-4 text-subtitle-1 pr-4"
                 >
-                  <img alt="Avatar" :src="profileImg" />
-                </v-avatar>-->
-                <v-avatar size="27px" color="letcipe">
-                  <v-img
-                    v-if="writer.profileImage"
-                    :src="writer.profileImage"
-                  ></v-img>
-                  <v-icon v-else dark>mdi-account-circle</v-icon>
-                </v-avatar>
-                <span style="color: #ffa500">{{ writer.job }}</span>
-                &nbsp;&nbsp;{{ writer.nickname }}
-              </div>
-            </v-card-text>
+                  <v-btn small color="letcipe" dark @click="editMyRecipe"
+                    >수정</v-btn
+                  >
+                  <v-btn small color="letcipe" dark @click="deleteMyRecipe"
+                    >삭제</v-btn
+                  >
+                </div>
+              </v-row></v-card-text
+            >
 
             <v-divider class="mx-4"></v-divider>
 
@@ -159,7 +167,7 @@
               </v-row>
               <v-row align="center">
                 <v-col cols="1"></v-col>
-                <v-col cols="10" class="pr-0 pl-0">
+                  <v-col cols="10" class="pr-0 pl-0">
                   <v-text-field
                     v-model="enterComment"
                     color="letcipe"
@@ -234,7 +242,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 export default {
   name: 'RecipeDetail',
   data() {
@@ -271,8 +279,10 @@ export default {
     }
     promise.then(async () => {
       // 레시피 디테일 불러오는 부분
+      await this.readUser()
       this.recipeSteps = []
       await this.RecipeDetail(this.recipeID)
+      console.log(this.recipeDetail)
       console.log(this.recipeDetail.user.nickname)
       this.recipeSteps = this.recipeDetail.recipeSteps
       this.recipeIngredient = this.recipeDetail.ingredients
@@ -301,6 +311,7 @@ export default {
     })
   },
   methods: {
+    ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     ...mapActions('comment', [
       'getComment',
       'postComment',
@@ -314,8 +325,10 @@ export default {
       'deleteBookmarks',
       'countRecipeLikes',
       'decountRecipeLikes',
+      'patchRecipeDetail',
     ]),
     ...mapActions('cart', ['createCart']),
+    ...mapActions('user', ['readUser']),
     handlePage(page) {
       this.recipeInfo = {
         boardType: 'RECIPE',
@@ -355,6 +368,7 @@ export default {
       }
       this.isLike = !this.isLike
     },
+
     async addComment() {
       if (this.userId === 0) {
         console.log('로그인이 필요합니다!')
@@ -393,6 +407,15 @@ export default {
         list: recipeList,
       }
       this.createCart(addrecipes)
+    },
+    editMyRecipe() {
+      this.CLEAR_RECIPE_ID()
+      this.SET_RECIPE_ID(this.recipeDetail.id)
+      console.log(this.recipeID)
+      this.$router.push('/recipe/modify')
+    },
+    deleteMyRecipe() {
+      this.patchRecipeDetail(this.recipeDetail.id)
     },
   },
 }
