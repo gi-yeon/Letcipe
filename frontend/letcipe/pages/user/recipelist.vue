@@ -16,27 +16,43 @@
           <div v-if="recipeList.length > 0">
             <div v-for="(mr, i) in recipeList" :key="i">
               <v-list-item three-line>
-                <v-list-item-avatar class="recipe-item" tile size="100" @click="moveDetail(mr)">
+                <v-list-item-avatar
+                  class="recipe-item"
+                  tile
+                  size="100"
+                  @click="moveDetail(mr)"
+                >
                   <v-img :src="mr.repImg"></v-img>
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title class="d-flex justify-space-between">
-                    <div class="recipe-item" @click="moveDetail(mr)">{{ mr.name }}</div>
+                    <div class="recipe-item" @click="moveDetail(mr)">
+                      {{ mr.name }}
+                    </div>
                     <div class="d-flex-column">
                       <div class="d-flex align-center">
-                        <v-icon small color="letcipe">mdi-calendar-clock</v-icon>
-                        <div style="font-size: x-small">{{mr.regTime }}</div>
+                        <v-icon small color="letcipe"
+                          >mdi-calendar-clock</v-icon
+                        >
+                        <div style="font-size: x-small">{{ mr.regTime }}</div>
                       </div>
                       <div class="d-flex justify-end">
-                        <v-icon v-if="mr.isShared === 'N'" small color="letcipe">mdi-lock</v-icon>
-                        <v-icon v-if="mr.isShared === 'Y'" small color="letcipe">mdi-lock-open</v-icon>
+                        <v-icon v-if="mr.isShared === 'N'" small color="letcipe"
+                          >mdi-lock</v-icon
+                        >
+                        <v-icon v-if="mr.isShared === 'Y'" small color="letcipe"
+                          >mdi-lock-open</v-icon
+                        >
                         <v-icon
                           style="z-index: 1"
                           small
                           color="info"
                           @click="editItem(mr)"
-                        >mdi-pencil</v-icon>
-                        <v-icon style="z-index: 1" small @click="deleteItem(mr)">mdi-delete</v-icon>
+                          >mdi-pencil</v-icon
+                        >
+                        <v-icon style="z-index: 1" small @click="deleteItem(mr)"
+                          >mdi-delete</v-icon
+                        >
                       </div>
                     </div>
                   </v-list-item-title>
@@ -44,7 +60,8 @@
                   <v-list-item-subtitle
                     class="recipe-item"
                     @click="moveDetail(mr)"
-                  >{{ mr.description }}</v-list-item-subtitle>
+                    >{{ mr.description }}</v-list-item-subtitle
+                  >
                   <div class="d-flex justify-space-between">
                     <v-list-item-subtitle class="d-flex align-center">
                       <!-- <div class="d-flex align-center">
@@ -55,17 +72,33 @@
                       <div>
                         <div class="d-flex align-center">
                           <v-icon
+                            v-if="mr.bookmark"
                             small
-                            :color="mr.bookmark? `yellow lighten-1`: `gray`"
+                            :color="mr.bookmark ? `yellow lighten-1` : `gray`"
                             style="cursor: pointer"
-                            @click="createBookmark(mr)"
-                          >mdi-bookmark</v-icon>
-                          <div>{{mr.bookmarkCnt }}</div>
+                            @click="saveBookmark(mr)"
+                            >mdi-bookmark</v-icon
+                          >
+                          <v-icon
+                            v-else
+                            small
+                            :color="mr.bookmark ? `yellow lighten-1` : `gray`"
+                            style="cursor: pointer"
+                            @click="saveBookmark(mr)"
+                            >mdi-bookmark-outline</v-icon
+                          >
+                          <div>{{ mr.bookmarkCnt }}</div>
                         </div>
                       </div>
                     </v-list-item-subtitle>
                     <v-list-item-subtitle style="text-align: right">
-                      <v-btn style="z-index: 1" small color="letcipe" @click="addCart(mr)">+담기</v-btn>
+                      <v-btn
+                        style="z-index: 1"
+                        small
+                        color="letcipe"
+                        @click="addCart(mr)"
+                        >+담기</v-btn
+                      >
                     </v-list-item-subtitle>
                   </div>
                 </v-list-item-content>
@@ -75,7 +108,9 @@
           </div>
           <div v-else>
             <div>
-              <v-list-item three-line>레시피 리스트를 만들어주세요.</v-list-item>
+              <v-list-item three-line
+                >레시피 리스트를 만들어주세요.</v-list-item
+              >
               <v-divider></v-divider>
             </div>
           </div>
@@ -92,8 +127,8 @@
     </v-app>
   </div>
 </template>
-    
-    <script>
+
+<script>
 import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
   name: 'MyrecipeListPage',
@@ -133,7 +168,7 @@ export default {
     })
     promise.then(async () => {
       await this.myrecipeList(pageable)
-      // console.log(this.myRecipeList)/
+      console.log(this.myRecipeList)
       this.myRecipeList?.forEach((mr) => {
         const recipeListItem = {
           id: mr.id,
@@ -162,7 +197,7 @@ export default {
   methods: {
     ...mapActions('recipe', ['patchRecipeDetail']),
     ...mapActions('user', ['myrecipe', 'myrecipeList']),
-    ...mapActions('cartr', ['createCart']),
+    ...mapActions('cart', ['createCart']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     ...mapActions('recipelist', [
       'deleteRecipeList',
@@ -188,18 +223,32 @@ export default {
       this.$router.push('/user/mypage')
     },
     addCart(mr) {
-      const cartItem = [mr.id]
-      const list = { cartItem }
-      this.createCart(list)
+      const recipeList = []
+      const temp = mr.recipeListItems
+      for (let index = 0; index < temp.length; index++) {
+        recipeList.push(temp[index].recipe.id)
+      }
+      const addrecipes = {
+        list: recipeList,
+      }
+      this.createCart(addrecipes)
     },
-    createBookmark(mr) {
-      this.createRecipeListBookmark(mr.id)
+    saveBookmark(mr) {
+      if (mr.bookmark) {
+        mr.bookmark = false
+        this.deleteRecipeListBookmark(mr.id)
+        mr.bookmarkCnt--
+      } else {
+        mr.bookmark = true
+        this.createRecipeListBookmark(mr.id)
+        mr.bookmarkCnt++
+      }
     },
   },
 }
 </script>
-    
-    <style scoped>
+
+<style scoped>
 .myrecipe-page {
   /* padding-top: 70px; */
   padding-bottom: 70px;
@@ -227,4 +276,3 @@ export default {
   display: none;
 }
 </style>
-    

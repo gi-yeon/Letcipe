@@ -121,6 +121,7 @@ export const mutations = {
     state.profileImage = ''
     state.userGender = ''
     state.userJob = ''
+    state.myRecipeList = []
   },
   CLEAR_MY_RECIPE(state) {
     state.myRecipe = []
@@ -136,7 +137,7 @@ export const mutations = {
   },
   CLEAR_MY_LIKE_RECIPE() {
     state.mylikeRecipe = []
-  }
+  },
 }
 
 export const getters = {}
@@ -371,5 +372,5 @@ export const actions = {
         console.log(error)
       }
     )
-  }
+  },
 }
