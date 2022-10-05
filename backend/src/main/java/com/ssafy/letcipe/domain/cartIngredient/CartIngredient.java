@@ -44,12 +44,6 @@ public class CartIngredient {
         }
     }
 
-    public CartIngredient(User user, Ingredient ingredient, Integer amount) {
-        this.user = user;
-        this.ingredient = ingredient;
-        this.amount = amount;
-    }
-
     public void update(char operator) {
         switch (operator) {
             case '+':

@@ -11,6 +11,5 @@ import java.util.List;
 public interface RecipeListRepository extends JpaRepository<RecipeList, Long> {
     List<RecipeList> findByNameContaining(Pageable pageable, String keyword);
 
-    Integer countRecipeListByNameContaining(String keyword);
     List<RecipeList> findAllByUser(Pageable pageable, User user);
 }

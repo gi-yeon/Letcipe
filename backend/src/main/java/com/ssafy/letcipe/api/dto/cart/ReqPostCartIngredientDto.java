@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReqPostCartIngredientDto {
     Long ingredientId;
-    Integer amount;
+    char operator;
 }

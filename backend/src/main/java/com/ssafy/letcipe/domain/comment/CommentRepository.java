@@ -23,8 +23,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     int updateStatusType(@Param("statusType") StatusType statusType, @Param("boardId") Long boardId, @Param("boardType") BoardType boardType);
 
     List<Comment> findByStatusTypeAndBoardTypeAndBoardId(StatusType statusType, BoardType boardType, Long boardId);
-
-    List<Comment> findAllByUserIdAndBoardTypeAndStatusType(Pageable pageable, Long userId, BoardType boardType, StatusType statusType);
-
-    Long countByUserIdAndBoardTypeAndStatusType(Long userId, BoardType boardType, StatusType statusType);
 }

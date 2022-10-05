@@ -42,7 +42,6 @@ public class HistoryController {
     @PutMapping("")
     public ResponseEntity<?> updateHistory(@RequestBody ReqUpdateHistoryDto reqUpdateHistoryDto, HttpServletRequest request){
         Long userId = jwtService.getUserId(request);
-
         historyService.updateHistory(userId, reqUpdateHistoryDto);
         return ResponseEntity.ok().build();
     }

@@ -24,7 +24,8 @@ public class RecipeListController {
     @PostMapping("")
     public ResponseEntity<?> createRecipeList(@RequestBody ReqCreateRecipeListDto reqCreateRecipeListDto, HttpServletRequest request) {
         Long userId = jwtService.getUserId(request);
-        return ResponseEntity.ok(recipeListService.createRecipeList(userId, reqCreateRecipeListDto));
+        recipeListService.createRecipeList(userId, reqCreateRecipeListDto);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{recipe_list_id}")
@@ -83,10 +84,5 @@ public class RecipeListController {
     @GetMapping("")
     public ResponseEntity<?> searchRecipeList(@RequestParam String keyword, Pageable pageable) {
         return ResponseEntity.ok(recipeListService.searchRecipeList(pageable, keyword));
-    }
-
-    @GetMapping("/totalNum")
-    public ResponseEntity<Integer> totalNumRecipeList(@RequestParam String keyword) {
-        return ResponseEntity.ok(recipeListService.totalNumRecipeList(keyword));
     }
 }
