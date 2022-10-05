@@ -17,34 +17,47 @@
           <div>
             <div v-for="(mr, i) in myRecipe" :key="i">
               <v-list-item three-line>
-                <v-list-item-avatar class="recipe-item" tile size="100" @click="moveDetail(mr)">
+                <v-list-item-avatar
+                  class="recipe-item"
+                  tile
+                  size="100"
+                  @click="moveDetail(mr)"
+                >
                   <v-img :src="mr.repImg"></v-img>
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title class="d-flex justify-space-between">
-                    <div class="recipe-item" @click="moveDetail(mr)">{{ mr.title }}</div>
+                    <div class="recipe-item" @click="moveDetail(mr)">
+                      {{ mr.title }}
+                    </div>
                     <div>
-                      <v-icon style="z-index: 1" small color="info" @click="editItem(mr)">mdi-pencil</v-icon>
-                      <v-icon style="z-index: 1" small @click="deleteItem(mr)">mdi-delete</v-icon>
+                      <v-icon
+                        style="z-index: 1"
+                        small
+                        color="info"
+                        @click="editItem(mr)"
+                        >mdi-pencil</v-icon
+                      >
+                      <v-icon style="z-index: 1" small @click="openDialog(mr)"
+                        >mdi-delete</v-icon
+                      >
                     </div>
                   </v-list-item-title>
 
-                  <v-list-item-subtitle class="recipe-item" @click="moveDetail(mr)">{{ mr.content }}</v-list-item-subtitle>
+                  <v-list-item-subtitle
+                    class="recipe-item"
+                    @click="moveDetail(mr)"
+                    >{{ mr.content }}</v-list-item-subtitle
+                  >
                   <div class="d-flex justify-space-between">
-                    <v-list-item-subtitle class="d-flex align-center">
-                      <div class="d-flex align-center">
-                        <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
-                        <div>{{mr.recipeLike }}</div>
-                      </div>
-                      <div>
-                        <div class="d-flex align-center">
-                          <v-icon small color="yellow lighten-1">mdi-bookmark</v-icon>
-                          <div>{{mr.recipeBookmark }}</div>
-                        </div>
-                      </div>
-                    </v-list-item-subtitle>
                     <v-list-item-subtitle style="text-align: right">
-                      <v-btn style="z-index: 1" small color="letcipe" @click="addCart(mr)">+담기</v-btn>
+                      <v-btn
+                        style="z-index: 1"
+                        small
+                        color="letcipe"
+                        @click="addCart(mr)"
+                        >+담기</v-btn
+                      >
                     </v-list-item-subtitle>
                   </div>
                 </v-list-item-content>
@@ -52,6 +65,26 @@
               <v-divider></v-divider>
             </div>
           </div>
+
+          <v-dialog v-model="dialog" persistent max-width="290">
+            <v-card>
+              <v-card-title class="text-h5">Caution</v-card-title>
+              <v-card-text>{{ selectedRecipe.title }}</v-card-text>
+              <v-card-text>해당 레시피를 삭제하시겠습니까?</v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="green darken-1" text @click="dialog = false"
+                  >취소</v-btn
+                >
+                <v-btn
+                  color="green darken-1"
+                  text
+                  @click="deleteItem(selectedRecipe.id)"
+                  >삭제</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
 
           <v-pagination
             v-model="currentPage"
@@ -66,13 +99,16 @@
     </v-app>
   </div>
 </template>
-  
-  <script>
+
+<script>
 import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
   name: 'MyrecipePage',
   data() {
     return {
+      pageable: {
+        page: 0,
+      },
       TotalPage: 0,
       perPage: 5,
       currentPage: 1,
@@ -90,6 +126,8 @@ export default {
       isSelected: [],
       selectedIngre: '',
       myRecipes: [],
+      dialog: false,
+      selectedRecipe: {},
     }
   },
   computed: {
@@ -99,14 +137,11 @@ export default {
   watch: {},
 
   created() {
-    const pageable = {
-      page: 0,
-    }
     const promise = new Promise((resolve, reject) => {
       resolve()
     })
     promise.then(async () => {
-      await this.myrecipe(pageable)
+      await this.myrecipe(this.pageable)
       //   this.myRecipe.forEach((mr) => {
       //     this.myRecipes.push(mr)
       //   })
@@ -118,17 +153,17 @@ export default {
   methods: {
     ...mapActions('recipe', ['patchRecipeDetail']),
     ...mapActions('user', ['myrecipe']),
-    ...mapActions('cartr', ['createCart']),
+    ...mapActions('cart', ['createCart']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     editItem(mr) {
       this.CLEAR_RECIPE_ID()
       this.SET_RECIPE_ID(mr.id)
       this.$router.push('/recipe/modify')
     },
-    deleteItem(mr) {
-      //     this.checkedList.splice(index, 1)
-      //   this.checklist.push(c)
-      this.patchRecipeDetail(mr.id)
+    async deleteItem(id) {
+      await this.patchRecipeDetail(id)
+      await this.myrecipe(this.pageable)
+      this.dialog = false
     },
     moveDetail(mr) {
       this.CLEAR_RECIPE_ID()
@@ -138,16 +173,29 @@ export default {
     moveMypage() {
       this.$router.push('/user/mypage')
     },
+    // addCart(mr) {
+    //   const cartItem = [mr.id]
+    //   const list = { cartItem }
+    //   this.createCart(list)
+    // },
+    openDialog(mr) {
+      this.dialog = true
+      this.selectedRecipe = mr
+    },
     addCart(mr) {
-      const cartItem = [mr.id]
-      const list = { cartItem }
-      this.createCart(list)
+      const recipeList = []
+      recipeList.push(mr.id)
+      console.log(mr.id)
+      const addrecipes = {
+        list: recipeList,
+      }
+      this.createCart(addrecipes)
     },
   },
 }
 </script>
-  
-  <style scoped>
+
+<style scoped>
 .myrecipe-page {
   /* padding-top: 70px; */
   padding-bottom: 70px;
@@ -175,4 +223,3 @@ export default {
   display: none;
 }
 </style>
-  

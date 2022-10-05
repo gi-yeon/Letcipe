@@ -34,10 +34,24 @@ async function checkHistoryIngredient(historyIngredientId, success, fail) {
     .catch(fail)
 }
 
+// 히스토리 리뷰
+async function createReview(hitoryReview, success, fail) {
+  await api.post(`/api/history/review`, hitoryReview).then(success).catch(fail)
+}
+async function modifyReview(hitoryReview, success, fail) {
+  await api.put(`/api/history/review`, hitoryReview).then(success).catch(fail)
+}
+async function deleteReview(hitoryId, success, fail) {
+  await api.delete(`/api/history/review`, hitoryId).then(success).catch(fail)
+}
+
 export {
   getHistoryList,
   getHistory,
   deleteHistory,
   updateHistory,
   checkHistoryIngredient,
+  createReview,
+  modifyReview,
+  deleteReview,
 }
