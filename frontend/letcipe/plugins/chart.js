@@ -26,4 +26,3 @@ Vue.component('bar-chart', {
     this.renderChart(this.data, this.options)
   },
 })
->>>>>>> frontend
