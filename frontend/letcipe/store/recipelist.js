@@ -41,6 +41,9 @@ export const mutations = {
   CLEAR_RECIPE_ID(state) {
     state.recipeListId = null
   },
+  SET_RECIPELIST_NAME(state, newName) {
+    state.recipeListRes.name = newName
+  },
 }
 
 export const getters = {}
@@ -99,10 +102,9 @@ export const actions = {
       }
     )
   },
-  async updateRecipeList({ commit }, recipeListId, updateRL) {
+  async updateRecipeList({ commit }, object) {
     await updateRecipeList(
-      recipeListId,
-      updateRL,
+      object,
       ({ data }) => {
         // console.log(data)
         // console.log('레시피리스트 하나 수정 성공!')
@@ -117,7 +119,7 @@ export const actions = {
       recipeListId,
       ({ data }) => {
         // console.log(data)
-        // console.log('레시피리스트 삭제 성공!')
+        console.log('레시피리스트 삭제 성공!')
       },
       (error) => {
         console.log(error)

@@ -31,10 +31,15 @@
               </v-img>
             </div>
 
-            <v-card-title class="text-md-h3">{{
-              recipeDetail.title
-            }}</v-card-title>
-            <!-- <v-card-subtitle class="text-md-h5">맛있겠다!</v-card-subtitle> -->
+            <v-card-title class="d-flex justify-space-between text-md-h3">
+              <div>
+                {{ recipeDetail.title }}
+              </div>
+
+              <v-btn color="letcipe" @click="addCart">+ 담기</v-btn>
+            </v-card-title>
+
+            <v-card-subtitle class="text-md-h5">맛있겠다!</v-card-subtitle>
 
             <v-card-text>
               <v-row align="center" class="d-flex mx-0">
@@ -162,7 +167,7 @@
               </v-row>
               <v-row align="center">
                 <v-col cols="1"></v-col>
-                <v-col cols="10" class="pr-0 pl-0">
+                  <v-col cols="10" class="pr-0 pl-0">
                   <v-text-field
                     v-model="enterComment"
                     color="letcipe"
