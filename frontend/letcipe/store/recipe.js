@@ -89,12 +89,6 @@ export const actions = {
   async patchRecipeDetail({ commit }, recipeId) {
     await patchRecipeDetail(
       recipeId,
-      ({ data }) => {
-        commit('')
-      },
-      (error) => {
-        console.log(error)
-      }
     )
   },
   async countRecipeLikes({ commit }, recipeId) {
