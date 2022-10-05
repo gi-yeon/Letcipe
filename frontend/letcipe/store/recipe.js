@@ -74,10 +74,9 @@ export const actions = {
       }
     )
   },
-  async updateRecipeDetail({ commit }, recipeId, formData) {
+  async updateRecipeDetail({ commit }, object) {
     await updateRecipeDetail(
-      recipeId,
-      formData,
+      object,
       ({ data }) => {
         commit('')
         console.log('수정 성공!')

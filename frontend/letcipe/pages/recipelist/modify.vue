@@ -1,14 +1,14 @@
 <template>
   <div id="app">
     <v-app id="inspire">
-      <div id="recipedetail-container">
+      <div id="recipedetail-modify-container">
         <v-container style="width: 100%">
           <div class="detail-head-wrap">
             <div class="d-flex justify-space-between pb-3">
               <div>
                 <v-icon @click="moveBack">mdi-window-close</v-icon>
               </div>
-              <div style="font-size: x-large">레시피리스트</div>
+              <div style="font-size: x-large">레시피리스트 수정</div>
               <div>
                 <v-icon>mdi-blank</v-icon>
               </div>
@@ -18,7 +18,50 @@
             <v-img :src="recipeListRepImg"></v-img>
 
             <v-card-title class="text-md-h3" style="text-overflow: ellipsis">
-              {{ recipeListRes.name }}
+              <div class="d-flex align-center">
+                <div>
+                  {{ recipeListRes.name }}
+                </div>
+
+                <v-dialog v-model="dialogTitle" persistent max-width="290">
+                  <template #activator="{ on, attrs }">
+                    <v-icon
+                      style="z-index: 2"
+                      color="info"
+                      v-bind="attrs"
+                      v-on="on"
+                      >mdi-pencil</v-icon
+                    >
+                  </template>
+
+                  <v-card>
+                    <v-card-title style="font-size: xx-large"
+                      >제목 수정<v-icon color="letcipe"
+                        >mdi-pencil</v-icon
+                      ></v-card-title
+                    >
+                    <v-card-text class="text--primary">
+                      <v-text-field
+                        v-model="newName"
+                        name="input-7-4"
+                        placeholder="내용을 입력해주세요"
+                        solo
+                      ></v-text-field>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="letcipe"
+                        text
+                        @click="
+                          ;[(dialogTitle = false), modifyItem(recipeListRes)]
+                        "
+                        >확인</v-btn
+                      >
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </div>
             </v-card-title>
 
             <v-card-text>
@@ -32,14 +75,14 @@
                       <v-btn
                         style="border: 1px solid black"
                         v-bind="attrs"
-                        @click="AllAdd()"
+                        @click="deleteList()"
                         v-on="on"
-                        >+ 전체담기</v-btn
+                        >삭제</v-btn
                       >
                     </template>
                     <v-card>
                       <v-card-title class="text-h5">Caution</v-card-title>
-                      <v-card-text>레시피 전체 담기 성공!</v-card-text>
+                      <v-card-text>레시피 리스트가 삭제됩니다.</v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn
@@ -83,19 +126,19 @@
                     height="48px"
                     style="width: 90%; border: 1px solid black"
                     v-bind="attrs"
-                    @click="partAdd()"
+                    @click="partDelete()"
                     v-on="on"
-                    >선택 담기</v-btn
+                    >선택 삭제</v-btn
                   >
                 </template>
                 <!-- <v-card v-if="isAll">
-                    <v-card-title class="text-h5">Caution</v-card-title>
-                    <v-card-text>레시피 전체 담기 성공!</v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="green darken-1" text @click="dialog = false">확인</v-btn>
-                    </v-card-actions>
-                </v-card>-->
+                      <v-card-title class="text-h5">Caution</v-card-title>
+                      <v-card-text>레시피 전체 담기 성공!</v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="green darken-1" text @click="dialog = false">확인</v-btn>
+                      </v-card-actions>
+                  </v-card>-->
                 <v-card v-if="isNothing">
                   <v-card-title class="text-h5">Caution</v-card-title>
                   <v-card-text
@@ -184,6 +227,45 @@
                 </v-hover>
               </v-col>
             </v-row>
+            <div class="d-flex justify-center pt-2 pb-3">
+              <v-btn
+                class="mr-3"
+                style="border: 1px solid black"
+                @click="moveBack"
+              >
+                취소
+              </v-btn>
+              <!-- <v-btn style="border: 1px solid black" @click="modifyItem(recipeListRes)">
+                저장
+              </v-btn> -->
+              <v-dialog v-model="modifyDialog" persistent max-width="290">
+                <template #activator="{ on, attrs }">
+                  <v-btn
+                    class="ml-3"
+                    style="border: 1px solid black"
+                    v-bind="attrs"
+                    v-on="on"
+                    >저장</v-btn
+                  >
+                </template>
+
+                <v-card>
+                  <v-card-title class="text-h5">Caution</v-card-title>
+                  <v-card-text>변경사항이 저장됩니다.</v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="green darken-1"
+                      text
+                      @click="
+                        ;[(modifyDialog = false), modifyItem(recipeListRes)]
+                      "
+                      >확인</v-btn
+                    >
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </div>
           </v-card>
         </v-container>
       </div>
@@ -192,10 +274,10 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 
 export default {
-  name: 'RecipeListDetail',
+  name: 'RecipeListModify',
   data() {
     return {
       dialog: false,
@@ -209,6 +291,9 @@ export default {
       isAllCheck: false,
       id: '',
       isNothing: false,
+      dialogTitle: false,
+      newName: null,
+      modifyDialog: false,
     }
   },
 
@@ -239,8 +324,15 @@ export default {
       'getRecipeList',
       'createRecipeListBookmark',
       'deleteRecipeListBookmark',
+      'deleteRecipeList',
+      'updateRecipeList',
     ]),
     ...mapActions('cart', ['createCart']),
+    ...mapMutations('recipelist', [
+      'SET_RECIPELIST_NAME',
+      'SET_RECIPE_ID',
+      'CLEAR_RECIPE_ID',
+    ]),
     moveBack() {
       this.$router.go(-1)
     },
@@ -294,33 +386,31 @@ export default {
       }
       console.log(this.cart)
     },
-    AllAdd() {
-      // this.allAddCart()
-      const cartid = []
-      this.recipeListItems?.forEach((item) => {
-        cartid.push(item.recipe.id)
-      })
-      const addrecipes = {
-        list: cartid,
-      }
-      this.createCart(addrecipes)
-      // console.log(addrecipes)
+    async deleteList() {
+      await this.deleteRecipeList(this.recipeListId).then(
+        this.$router.push('/user/mypage')
+      )
     },
-    partAdd() {
-      const cartid = []
-      this.cart?.forEach((item) => {
-        cartid.push(item.recipe.id)
-      })
-      const addrecipes = {
-        list: cartid,
+    partDelete() {
+      this.deleteRecipeListItem()
+    },
+    modifyItem(recipeListRes) {
+      if (this.newName !== null) {
+        this.SET_RECIPELIST_NAME(this.newName)
       }
-      if (addrecipes.list.length === 0) {
-        this.isNothing = true
-      } else {
-        this.isNothing = false
-        this.createCart(addrecipes)
+
+      const object = {
+        recipeListId: this.recipeListId,
+        ReqUpdateRecipeListDto: {
+          name: recipeListRes.name,
+          description: recipeListRes.description,
+          isShared: recipeListRes.isShared,
+        },
       }
-      // console.log(addrecipes)
+      this.updateRecipeList(object)
+      this.CLEAR_RECIPE_ID()
+      this.SET_RECIPE_ID(this.recipeListId)
+      this.$router.push('/recipelist/modify')
     },
   },
 }

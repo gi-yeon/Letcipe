@@ -6,7 +6,8 @@
           <v-card-title
             class="justify-center"
             style="background-color: white; font-size: 1.7rem"
-          >레시피 수정</v-card-title>
+            >레시피 수정</v-card-title
+          >
           <v-divider></v-divider>
           <v-card>
             <v-card-title class="recipe-component">레시피 제목</v-card-title>
@@ -22,7 +23,9 @@
                 color="#aac821"
               ></v-text-field>
             </div>
-            <v-card-title class="recipe-component">레시피 대표 사진</v-card-title>
+            <v-card-title class="recipe-component"
+              >레시피 대표 사진</v-card-title
+            >
             <div class="recipe-input d-flex justify-center">
               <v-file-input
                 v-model="image"
@@ -34,7 +37,12 @@
               ></v-file-input>
             </div>
             <div class="d-flex justify-center">
-              <v-img v-if="url != null" max-width="50%" :src="url" class="d-flex justify-center"></v-img>
+              <v-img
+                v-if="url != null"
+                max-width="50%"
+                :src="url"
+                class="d-flex justify-center"
+              ></v-img>
             </div>
 
             <v-card-title class="recipe-component">요리 소개</v-card-title>
@@ -73,7 +81,8 @@
                   hide-details="auto"
                   outlined
                   color="#aac821"
-                ></v-text-field>&nbsp;분
+                ></v-text-field
+                >&nbsp;분
               </v-card-subtitle>
               <v-card-subtitle class="d-flex justify-left align-center">
                 요리량&nbsp;&nbsp;&nbsp;
@@ -84,7 +93,8 @@
                   hide-details="auto"
                   outlined
                   color="#aac821"
-                ></v-text-field>&nbsp;인분
+                ></v-text-field
+                >&nbsp;인분
               </v-card-subtitle>
             </div>
             <v-divider></v-divider>
@@ -117,7 +127,14 @@
             <div class="d-flex justify-center">
               <v-dialog v-model="dialog" max-width="500px">
                 <template #activator="{ on, attrs }">
-                  <v-btn dark class="mb-5 mt-6" v-bind="attrs" v-on="on" @click="clearItem">재료 추가</v-btn>
+                  <v-btn
+                    dark
+                    class="mb-5 mt-6"
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="clearItem"
+                    >재료 추가</v-btn
+                  >
                 </template>
 
                 <v-card>
@@ -157,17 +174,22 @@
                               <template #no-data>
                                 <v-list-item>
                                   <v-list-item-title>
-                                    일치하는 재료가
-                                    없습니다.
+                                    일치하는 재료가 없습니다.
                                   </v-list-item-title>
                                 </v-list-item>
                               </template>
                               <template #item="{ item }">
                                 <v-list-item-content @click="selectIngre(item)">
-                                  <v-list-item-title v-text="item.name"></v-list-item-title>
+                                  <v-list-item-title
+                                    v-text="item.name"
+                                  ></v-list-item-title>
                                 </v-list-item-content>
                                 <v-list-item-action @click="selectIngre(item)">
-                                  <v-chip :color="colors[item.category]" label>{{ item.category }}</v-chip>
+                                  <v-chip
+                                    :color="colors[item.category]"
+                                    label
+                                    >{{ item.category }}</v-chip
+                                  >
                                 </v-list-item-action>
                               </template>
                             </v-autocomplete>
@@ -183,7 +205,11 @@
                             ></v-text-field>
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
-                            <v-text-field v-model="editedItem.unit" disabled label="단위"></v-text-field>
+                            <v-text-field
+                              v-model="editedItem.unit"
+                              disabled
+                              label="단위"
+                            ></v-text-field>
                           </v-col>
                         </v-row>
                       </v-container>
@@ -192,7 +218,9 @@
 
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="close">취소</v-btn>
+                    <v-btn color="blue darken-1" text @click="close"
+                      >취소</v-btn
+                    >
                     <v-btn
                       color="blue darken-1"
                       :disabled="
@@ -203,7 +231,8 @@
                       "
                       text
                       @click="saveIngre"
-                    >재료 저장</v-btn>
+                      >재료 저장</v-btn
+                    >
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -213,8 +242,12 @@
             <v-card-title class="recipe-component">요리 순서</v-card-title>
             <div v-for="(step, i) in steps" :key="i">
               <div class="d-flex justify-space-between">
-                <v-card-title class="text-subtitle-2 recipe-component">Step {{ step.no }}</v-card-title>
-                <v-icon class="mr-5" color="red" @click="deleteStep(i)">mdi-minus-circle</v-icon>
+                <v-card-title class="text-subtitle-2 recipe-component"
+                  >Step {{ step.no }}</v-card-title
+                >
+                <v-icon class="mr-5" color="red" @click="deleteStep(step, i)"
+                  >mdi-minus-circle</v-icon
+                >
               </div>
               <div class="recipe-input d-flex justify-center">
                 <v-file-input
@@ -257,10 +290,15 @@
             <div class="d-flex ma-5">
               <div v-if="tags.length > 0" class="tags">
                 <input ref="fake" type="text" class="fake" />
-                <span v-for="(t, index) in tags" :key="index" class="tag active">
-                  {{ t
-                  }}
-                  <v-icon size="small" color="white" @click="deleteTag(index)">mdi-close</v-icon>
+                <span
+                  v-for="(t, index) in tags"
+                  :key="index"
+                  class="tag active"
+                >
+                  {{ t }}
+                  <v-icon size="small" color="white" @click="deleteTag(index)"
+                    >mdi-close</v-icon
+                  >
                 </span>
               </div>
             </div>
@@ -272,8 +310,12 @@
             <br />
 
             <div class="d-flex justify-center">
-              <v-btn dark class="mr-6 ml-6 mb-5" @click="saveRecipe()">저장</v-btn>
-              <v-btn dark class="mr-6 ml-6 mb-5" @click="saveRecipe()">저장 후 공개</v-btn>
+              <v-btn dark class="mr-6 ml-6 mb-5" @click="saveRecipe()"
+                >저장</v-btn
+              >
+              <v-btn dark class="mr-6 ml-6 mb-5" @click="saveRecipe()"
+                >저장 후 공개</v-btn
+              >
               <v-btn dark class="mr-6 ml-6 mb-5" @click="moveBack">취소</v-btn>
             </div>
           </v-card>
@@ -287,24 +329,24 @@
 import { mapActions, mapState } from 'vuex'
 
 import HashTags from '@/components/Hashtags.vue'
-const convertURIToImageData = (url) => {
-  return new Promise((resolve, reject) => {
-    if (!url) {
-      return reject
-    }
-    const canvas = document.createElement('canvas')
-    const context = canvas.getContext('2d')
-    const image = new Image()
-    image.onload = () => {
-      canvas.width = image.width
-      canvas.height = image.height
-      context.drawImage(image, 0, 0, canvas.width, canvas.height)
-      resolve(context.getImageData(0, 0, canvas.width, canvas.height))
-    }
-    image.crossOrigin = 'Anonymous'
-    image.src = url
-  })
-}
+// const convertURIToImageData = (url) => {
+//   return new Promise((resolve, reject) => {
+//     if (!url) {
+//       return reject
+//     }
+//     const canvas = document.createElement('canvas')
+//     const context = canvas.getContext('2d')
+//     const image = new Image()
+//     image.onload = () => {
+//       canvas.width = image.width
+//       canvas.height = image.height
+//       context.drawImage(image, 0, 0, canvas.width, canvas.height)
+//       resolve(context.getImageData(0, 0, canvas.width, canvas.height))
+//     }
+//     image.crossOrigin = 'Anonymous'
+//     image.src = url
+//   })
+// }
 
 export default {
   name: 'ModifyRecipe',
@@ -415,14 +457,15 @@ export default {
       console.log(this.recipeDetail)
       if (this.recipeDetail !== null) {
         this.title = this.recipeDetail.title
-        this.url = convertURIToImageData(this.recipeDetail.repImg)
+        this.url = this.recipeDetail.repImg
         this.content = this.recipeDetail.content
         this.category = this.recipeDetail.category
         this.cookingTime = this.recipeDetail.cookingTime
         this.serving = this.recipeDetail.serving
         // this.steps = this.recipeDetail.recipeSteps
         // console.log(this.steps)
-        console.log('이것' + this.url)
+        console.log('이것')
+        console.log(this.url)
         this.recipeDetail.recipeSteps.forEach((rs) => {
           const step = {
             no: rs.step,
@@ -433,6 +476,7 @@ export default {
           this.steps.push(step)
         })
         // console.log(this.steps)
+        console.log(this.recipeDetail)
         // console.log(this.recipeDetail.ingredients.length)
         // console.log(this.recipeDetail.ingredients[0])
 
@@ -487,9 +531,9 @@ export default {
       this.steps.push(newStep)
       console.log(this.steps)
     },
-    deleteStep(index) {
-      if (this.stepNum > 1) {
-        this.stepNum = this.stepNum - 1
+    deleteStep(step, index) {
+      if (step.no > 1) {
+        step.no = step.no - 1
         this.steps.splice(index, 1)
 
         for (let i = index; i < this.steps.length; i++) {
@@ -637,22 +681,21 @@ export default {
       formdata.append('cookingTime', this.cookingTime)
       formdata.append('serving', this.serving)
 
-      formdata.append('repImg', this.image)
-
+      if (this.image === null) {
+        formdata.append('repImg', this.url)
+      } else {
+        formdata.append('repImg', this.image)
+      }
       console.log(this.steps.length)
       for (let i = 0; i < this.steps.length; i++) {
+        formdata.append(`stepDtoList[${i}].step`, this.steps[i].no)
         if (this.steps[i].image === null) {
-          formdata.append(
-            `stepDtoList[${i}].step[${i}].img`,
-            this.steps[i].image
-          )
+          formdata.append(`stepDtoList[${i}].img`, this.steps[i].imageUrl)
         } else if (this.steps[i].image != null) {
-          formdata.append(`stepDtoList[${i}].step[${i}].img`, this.steps[i].img)
+          formdata.append(`stepDtoList[${i}].img`, this.steps[i].image)
+          console.log(this.steps[i].image)
         }
-        formdata.append(
-          `stepDtoList[${i}].step[${i}].content`,
-          this.steps[i].content
-        )
+        formdata.append(`stepDtoList[${i}].content`, this.steps[i].content)
       }
       for (let i = 0; i < this.ingredients.length; i++) {
         formdata.append(`ingredients[${i}].id`, this.ingredients[i].id)
@@ -676,8 +719,12 @@ export default {
         console.log(p[0] + ',' + p[1])
       }
       console.log(formdata)
-
-      this.updateRecipeDetail(1798, formdata)
+      const object = {
+        recipeId: 1798,
+        formData: formdata,
+      }
+      this.updateRecipeDetail(object)
+      console.log(JSON.stringify(object.formData))
     },
     moveBack() {
       this.$router.go(-1)

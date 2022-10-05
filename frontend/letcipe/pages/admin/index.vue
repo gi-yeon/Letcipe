@@ -109,23 +109,95 @@
           <v-btn x-large @click="getChartData">검색</v-btn>
         </v-col>
       </v-row>
-      <v-row>
-        <chart-component ref="chartChild"></chart-component>
-      </v-row>
+      <Bar ref="bar" :chart-data="chartData" :chart-options="chartOptions" />
+      <Pie ref="bar" :chart-data="chartData" :chart-options="chartOptions" />
     </v-container>
   </div>
 </template>
 
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex'
-import ChartComponent from '@/components/ChartComponent.vue'
+import { Bar, Pie } from 'vue-chartjs'
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  ArcElement,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+} from 'chart.js'
+
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  ArcElement,
+  LineElement,
+  CategoryScale,
+  LinearScale
+)
+
 export default {
   name: 'AdminIndex',
   components: {
-    ChartComponent,
+    Bar,
+    Pie,
   },
   data() {
     return {
+      chartData: {
+        labels: [],
+        datasets: [
+          {
+            label: 'Title',
+            data: [],
+            backgroundColor: [],
+            borderColor: ['rgba(255, 159, 64, 1)'],
+            borderWidth: 2,
+          },
+        ],
+      },
+      chartOptions: {
+        responsive: true,
+        legend: {
+          display: false,
+        },
+        title: {
+          display: true,
+          text: "Let'cipe analytics data",
+          fontSize: 24,
+          fontColor: '#fb7280',
+        },
+        tooltips: {
+          backgroundColor: '#17BF62',
+        },
+        scales: {
+          xAxes: [
+            {
+              gridLines: {
+                display: true,
+              },
+            },
+          ],
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+                max: 100,
+                min: 0,
+                stepSize: 1,
+              },
+              gridLines: {
+                display: true,
+              },
+            },
+          ],
+        },
+      },
       date: new Date().toISOString().substr(0, 10),
       s_date: new Date().toISOString().substr(0, 10),
       e_date: new Date().toISOString().substr(0, 10),
@@ -196,9 +268,6 @@ export default {
         this.attr.fam +
         ',' +
         this.attr.job
-      console.log(attribute)
-      console.log(this.s_date)
-      console.log(this.e_date)
       const params = {
         attr: attribute,
         begin: this.s_date,
@@ -206,13 +275,10 @@ export default {
         size: 10,
         page: 0,
       }
-      console.log(params)
       await this.getCharts(params)
-      console.log('여기')
-      // console.log(this.charts)
-      console.log(this.$refs.chartChild)
-      console.log(this.charts)
-      this.$refs.chartChild.getData()
+      this.chartData.labels = this.charts.recipeName
+      this.chartData.datasets[0].data = this.charts.count
+      this.$refs.bar.updateChart()
     },
     select_gen(e) {
       console.log(e)

@@ -4,6 +4,9 @@ import {
   deleteHistory,
   updateHistory,
   checkHistoryIngredient,
+  createReview,
+  modifyReview,
+  deleteReview,
 } from '@/api/history'
 
 export const state = () => ({
@@ -86,6 +89,42 @@ export const actions = {
       ({ data }) => {
         // console.log(data)
         console.log('히스토리 장보기목록 checked 성공!')
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  },
+  async createReview({ commit }, hitoryReview) {
+    await createReview(
+      hitoryReview,
+      ({ data }) => {
+        console.log(data)
+        console.log('히스토리 리뷰 등록 성공!')
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  },
+  async modifyReview({ commit }, hitoryReview) {
+    await modifyReview(
+      hitoryReview,
+      ({ data }) => {
+        // console.log(data)
+        console.log('히스토리 리뷰 수정 성공!')
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  },
+  async deleteReview({ commit }, hitoryReview) {
+    await deleteReview(
+      hitoryReview,
+      ({ data }) => {
+        // console.log(data)
+        console.log('히스토리 리뷰 삭제 성공!')
       },
       (error) => {
         console.log(error)

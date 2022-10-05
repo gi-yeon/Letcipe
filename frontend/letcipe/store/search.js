@@ -157,7 +157,6 @@ export const actions = {
     )
     await getTotalNumRecipeList(
       object.keyword,
-
       ({ data }) => {
         console.log(data)
         commit('SET_TOTAL_PAGE', data)
@@ -179,7 +178,6 @@ export const actions = {
         page: object.page,
       },
       ({ data }) => {
-        console.log('ㅇㅇㅇㅇㅇㅇ' + data)
         commit('SET_CHARTS', data)
       },
       (error) => {

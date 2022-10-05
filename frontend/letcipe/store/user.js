@@ -121,6 +121,7 @@ export const mutations = {
     state.profileImage = ''
     state.userGender = ''
     state.userJob = ''
+    state.myRecipeList = []
   },
   CLEAR_MY_RECIPE(state) {
     state.myRecipe = []
@@ -292,9 +293,9 @@ export const actions = {
     await myBookmarkRecipeList(
       pageable,
       ({ data }) => {
-        // console.log(data)
-        // console.log("북마크 레시피목록 가져오기 성공!")
-        commit('SET_MY_BOOKMARK_RECIPELIST', data.recipes)
+        console.log(data)
+        console.log('북마크 레시피목록 가져오기 성공!')
+        commit('SET_MY_BOOKMARK_RECIPELIST', data.recipeLists)
       },
       (error) => {
         console.log(error)
