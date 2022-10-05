@@ -18,7 +18,16 @@ async function getUserRecommend(success, fail) {
     .catch(fail)
 }
 
+// 북마크 수가 많은 레시피 리스트 5개 불러오기
+async function getBestRecipeLists(size,success, fail) {
+  await api
+    .get(`/api/recipelist/best?size=${size}`)
+    .then(success)
+    .catch(fail)
+}
+
 export {
   getCartReport,
-  getUserRecommend
+  getUserRecommend,
+  getBestRecipeLists
 }

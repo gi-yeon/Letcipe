@@ -2,157 +2,239 @@
   <div id="app">
     <v-app id="inspire">
       <v-container class="main-container">
-        <div class="title-wrap">
-          <div v-if="nickname == null" class="title">
-            {{ nickname }}님이 좋아할 레시피
+        <div class="my-middle-wrap">
+          <div class="my-middle">
+            <div class="my-container">
+              <div>{{ nickname }}님의 현재 진행중인 레시피리스트</div>
+              <v-carousel
+                hide-delimiters
+                class="my-list-carousel"
+                height="100%"
+                style="border-radius: 10px"
+              >
+                <v-carousel-item
+                  v-for="(item, i) in userPlayList"
+                  :key="i"
+                  @click="moveProgress"
+                >
+                  <v-container>
+                    <v-row style="margin: -25px">
+                      <v-col cols="12">
+                        <v-hover>
+                          <template #default="{ hover }">
+                            <v-card
+                              :elevation="hover ? 24 : 6"
+                              :class="hover ? 'letcipe lighten-2' : 'white'"
+                              class="my-card mx-auto"
+                            >
+                              <div
+                                class="d-flex flex-no-wrap justify-center pa-3"
+                              >
+                                <div>
+                                  <div class="my-lecipe">
+                                    <v-avatar class="ma-3" size="100">
+                                      <v-img :src="item.url">
+                                        <v-icon x-large>mdi-play</v-icon>
+                                      </v-img>
+                                    </v-avatar>
+                                  </div>
+                                  <v-card-title
+                                    class="my-title text-h5"
+                                    v-text="item.title"
+                                  ></v-card-title>
+                                  <v-card-subtitle
+                                    class="my-sub-title"
+                                    v-text="item.sub_title"
+                                  ></v-card-subtitle>
+                                </div>
+                              </div>
+                            </v-card>
+                          </template>
+                        </v-hover>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-carousel-item>
+              </v-carousel>
+            </div>
           </div>
-          <div v-if="nickname != null" class="title">
-            {{ nickname }}님이 좋아할 레시피
-          </div>
-          <div class="title-imgs">
-            <div v-for="(ref, i) in refImg" :key="i" class="card" >
-              <div>{{ nickname }}맞춤 추천</div>
-              <v-card>
-                <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
-                  <div class="ref-wrap">
-                    <v-card-title class="ref-title">{{
-                      ref.title
-                    }}</v-card-title>
-                    <v-card-subtitle class="ref-subtitle">{{
-                      ref.sub_title
-                    }}</v-card-subtitle>
-                  </div>
-                </v-img>
-              </v-card>
+          <div class="my-middle">
+            <div class="check-wrap">
+              <div>{{ nickname }}님의 장보기목록</div>
+              <v-container elevation="3" class="check-container">
+                <div class="check-head-wrap">
+                  <v-tabs v-model="tabs" fixed-tabs>
+                    <v-tabs-slider color="black"></v-tabs-slider>
+                    <v-tab href="#mobile-tabs-5-1" class="letcipe--text">
+                      <div>
+                        <v-icon color="letcipe">mdi-cart-outline</v-icon
+                        >구매할식재료
+                      </div>
+                    </v-tab>
+
+                    <v-tab href="#mobile-tabs-5-2" class="letcipe--text">
+                      <div>
+                        <v-icon color="letcipe">mdi-cart-plus</v-icon>담은식재료
+                      </div>
+                    </v-tab>
+                  </v-tabs>
+                </div>
+                <v-tabs-items v-model="tabs" class="check-tabs-wrap">
+                  <v-tab-item
+                    v-for="i in 2"
+                    :key="i"
+                    :value="'mobile-tabs-5-' + i"
+                  >
+                    <v-card flat>
+                      <v-card-text
+                        v-if="i === 1"
+                        class="check-item-wrap fadeInUp"
+                      >
+                        <div class="shopping-wrap">
+                          <div
+                            v-if="checklist.length > 0"
+                            class="before-shopping"
+                          >
+                            <div
+                              v-for="(c, index) in checklist"
+                              :key="index"
+                              class="pl-3 pr-3"
+                            >
+                              <div
+                                class="d-flex justify-space-between align-center mt-1"
+                              >
+                                <div class="ingre-name">
+                                  <v-checkbox
+                                    v-model="checklist[index]"
+                                    class="mt-0 pt-0"
+                                    :label="c.name"
+                                    color="letcipe"
+                                    :value="c.name"
+                                    hide-details
+                                    @click="bought(c, index)"
+                                  ></v-checkbox>
+                                </div>
+                                <div class="ingre-amount">
+                                  {{ c.amount }}{{ c.measure }}
+                                </div>
+                              </div>
+
+                              <v-divider></v-divider>
+                            </div>
+                          </div>
+                          <div v-else class="shopping-wrap">
+                            <div
+                              class="before-shopping-none"
+                              style="
+                                align-self: center !important;
+                                text-align: center !important;
+                              "
+                            >
+                              <div>진행중인 장보기목록이 없습니다.</div>
+                            </div>
+                          </div>
+                        </div>
+                      </v-card-text>
+                      <v-card-text
+                        v-if="i === 2"
+                        class="check-item-wrapfadeInUp"
+                      >
+                        <div
+                          v-if="checkedList.length > 0"
+                          class="shopping-wrap"
+                        >
+                          <div class="after-shopping">
+                            <div
+                              v-for="(c, index) in checkedList"
+                              :key="index"
+                              class="pl-3 pr-3"
+                            >
+                              <div
+                                class="d-flex justify-space-between align-center mt-1"
+                              >
+                                <div class="ingre-name">
+                                  <v-checkbox
+                                    v-model="checkedList[index]"
+                                    class="mt-0 pt-0"
+                                    :label="c.name"
+                                    color="letcipe"
+                                    true-value
+                                    hide-details
+                                    @click="needtobuy(c, index)"
+                                  ></v-checkbox>
+                                </div>
+                                <div class="ingre-amount">
+                                  {{ c.amount }}{{ c.measure }}
+                                </div>
+                              </div>
+                              <v-divider></v-divider>
+                            </div>
+                          </div>
+                        </div>
+                        <div v-else class="shopping-wrap">
+                          <div
+                            class="after-shopping-none"
+                            style="
+                              align-self: center !important;
+                              text-align: center !important;
+                            "
+                          >
+                            <div>담은 식재료가 없습니다.</div>
+                          </div>
+                        </div>
+                      </v-card-text>
+                    </v-card>
+                  </v-tab-item>
+                </v-tabs-items>
+              </v-container>
+            </div>
+            <div class="btn-group pt-4">
+              <v-hover style="text-align: center">
+                <template #default="{ hover }">
+                  <v-btn class="my-btn" large width="49%" @click="moveWrite">
+                    <img
+                      class="footer-icon"
+                      width="30px"
+                      :src="hover ? `/icons/연필_h.gif` : `/icons/연필_o.png`"
+                      alt
+                      :style="
+                        hover
+                          ? `filter: brightness(0.9);`
+                          : `filter: brightness(1);`
+                      "
+                    />
+                    <span style="font-size: medium">레시피 만들기</span>
+                  </v-btn>
+                </template>
+              </v-hover>
+              <v-hover style="text-align: center">
+                <template #default="{ hover }">
+                  <v-btn
+                    class="my-btn"
+                    large
+                    width="49%"
+                    @click="moveCheckList"
+                  >
+                    <img
+                      class="footer-icon"
+                      width="30px"
+                      :src="hover ? `/icons/종이_h.gif` : `/icons/종이_o.png`"
+                      alt
+                      :style="
+                        hover
+                          ? `filter: brightness(0.9);`
+                          : `filter: brightness(1);`
+                      "
+                    />
+
+                    <span style="font-size: medium">장보기목록</span>
+                  </v-btn>
+                </template>
+              </v-hover>
             </div>
           </div>
         </div>
-        <div class="my-container">
-          <div>{{ nickname }}님의 현재 진행중인 레시피리스트</div>
-          <v-carousel height="100%" style="border-radius: 30px">
-            <v-carousel-item v-for="(item, i) in userPlayList" :key="i">
-              <v-container>
-                <v-row style="margin: -25px">
-                  <v-col cols="12">
-                    <v-hover>
-                      <template #default="{ hover }">
-                        <v-card
-                          :elevation="hover ? 24 : 6"
-                          :class="hover ? 'lime lighten-3' : 'lime lighten-2'"
-                          class="my-card mx-auto"
-                        >
-                          <div class="d-flex flex-no-wrap justify-center pa-3">
-                            <div>
-                              <div class="my-lecipe">
-                                <v-avatar class="ma-3" size="100">
-                                  <v-img
-                                    :src="'https://2bob.co.kr/' + item.url"
-                                  >
-                                    <v-icon x-large>mdi-play</v-icon>
-                                  </v-img>
-                                </v-avatar>
-                              </div>
-                              <v-card-title
-                                class="my-title text-h5"
-                                v-text="item.title"
-                              ></v-card-title>
-                              <v-card-subtitle
-                                v-text="item.sub_title"
-                              ></v-card-subtitle>
-                            </div>
-                          </div>
-                        </v-card>
-                      </template>
-                    </v-hover>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-carousel-item>
-          </v-carousel>
-        </div>
-        <div class="cart-group">
-          <div>{{ nickname }}님의 장보기 리스트</div>
-          <v-card
-            flat
-            color="green lighten-2"
-            height="250px"
-            style="overflow: scroll; border-radius: 25px"
-          >
-            <v-card-text>
-              <v-container fluid>
-                <div style="color: white">
-                  <v-icon>mdi-cart</v-icon>장보기 목록
-                </div>
-                <v-row v-for="(c, index) in checklist" :key="index">
-                  <v-col>
-                    <v-checkbox
-                      v-model="checklist[index]"
-                      :label="c"
-                      color="indigo darken-3"
-                      :value="c"
-                      hide-details
-                    ></v-checkbox>
-                  </v-col>
-                  <!-- <v-row align="center">
-                    <v-checkbox
-                      v-model="enabled"
-                      hide-details
-                      class="shrink mr-2 mt-0"
-                    ></v-checkbox>
-                    <v-text-field
-                      :disabled="!enabled"
-                      label="I only work if you check the box"
-                    ></v-text-field>
-                  </v-row>-->
-                </v-row>
-              </v-container>
-            </v-card-text>
-          </v-card>
-        </div>
-        <div class="btn-group">
-          <v-hover>
-            <template #default="{ hover }">
-              <v-btn
-                :elevation="hover ? 24 : 6"
-                class="mx-2"
-                fab
-                dark
-                x-large
-                color="amber"
-              >
-                <v-icon dark>mdi-android</v-icon>
-              </v-btn>
-            </template>
-          </v-hover>
-          <v-hover>
-            <template #default="{ hover }">
-              <v-btn
-                :elevation="hover ? 24 : 6"
-                class="mx-2"
-                fab
-                dark
-                x-large
-                color="amber"
-              >
-                <v-icon dark>mdi-android</v-icon>
-              </v-btn>
-            </template>
-          </v-hover>
-          <v-hover>
-            <template #default="{ hover }">
-              <v-btn
-                :elevation="hover ? 24 : 6"
-                class="mx-2"
-                fab
-                dark
-                x-large
-                color="amber"
-              >
-                <v-icon dark>mdi-android</v-icon>
-              </v-btn>
-            </template>
-          </v-hover>
-        </div>
+
         <div class="chart-group mt-7 mb-7">
           <div>오늘 {{ time }} 기준</div>
           <div class="chart-header">
@@ -160,47 +242,49 @@
             <div>전체보기</div>
           </div>
           <div class="chart-chips-group">
-            <v-chip
-              v-for="(tag, i) in tag_set"
-              :key="i"
-              class="tag-set ma-1"
-              color="green"
-              outlined
-              >{{ tag }}</v-chip
-            >
+            <v-sheet class="chip-sheet mx-auto">
+              <v-slide-group v-model="selectTag" mandatory overflow >
+                <v-slide-item v-for="(tag, i) in tag_set" :key="i" v-slot="{ active, toggle }">
+                  <v-chip
+                    class="mx-2"
+                    :input-value="active"
+                    active-class="letcipe white--text"
+                    rounded
+                    @click="toggle"
+                  >{{tag}}</v-chip>
+                </v-slide-item>
+              </v-slide-group>
+            </v-sheet>
           </div>
+
           <v-row>
             <v-col>
-              <v-hover v-for="(data, i) in lecipeData" :key="i">
+              <v-hover v-for="(data, i) in recipeChart[selectTag]" :key="i">
                 <template #default="{ hover }">
                   <v-card
                     :elevation="hover ? 24 : 6"
                     :class="
-                      hover ? 'light-green lighten-3' : 'light-green lighten-2'
-                    "
+                        hover ? 'letcipe lighten-2' : 'white'
+                      "
                     class="lecipe-list-group mx-auto mt-2 mb-2 d-flex align-center"
-                    @click="moveDetail(data)"
+                    @click="moveDetail2(data.recipe.id)"
                   >
-                    <div class="ml-4">{{ i }}</div>
+                    <div class="ml-4" style="color: #FFA500;">{{ i+1 }}</div>
                     <v-list-item three-line>
                       <v-list-item-avatar tile size="57">
-                        <v-img
-                          elevation="10"
-                          :src="data.imgUrl"
-                          style="border-radius: 5px"
-                        ></v-img>
+                        <v-img elevation="10" :src="data.recipe.repImg" style="border-radius: 5px"></v-img>
                       </v-list-item-avatar>
                       <v-list-item-content>
                         <v-list-item-title class="mb-1">
-                          {{ data.title }}
+                          {{
+                          data.recipe.title
+                          }}
                         </v-list-item-title>
-                        <v-list-item-subtitle>{{
-                          data.sub_title
-                        }}</v-list-item-subtitle>
+                        <v-list-item-subtitle>{{ data.recipe.content }}</v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
-                    <v-btn class="mr-3" fab dark x-small color="pink" outlined>
-                      <v-icon dark>mdi-heart</v-icon>
+                    <v-btn class="mr-3" fab dark x-small color="letcipe" outlined>
+                      <v-icon color="letcipe">mdi-heart</v-icon>
                     </v-btn>
                   </v-card>
                 </template>
@@ -208,12 +292,11 @@
             </v-col>
           </v-row>
         </div>
-
         <div class="ingrediant-base-group mt-2 mb-3">
-          <div>이런 레시피 어때요?</div>
+          <div v-if="nickname!=''">{{nickname}} 님을 위한 레시피 추천</div>
+          <div v-else>이런 레시피 어때요?</div>
           <div class="chart-header">
             <div>{{recommendTitle}}</div>
-            <div>전체보기</div>
           </div>
           <div class="rec-imgs-group d-flex justify-space-between">
             <v-avatar
@@ -236,30 +319,48 @@
           </div>
         </div>
         <div class="lecipe-base-group mt-3 mb-2">
-          <div>이런 레시피리스트 어때요?</div>
           <div class="chart-header">
-            <div>{{ nickname }}님 맞춤 추천</div>
-            <div>전체보기</div>
+            <div>인기있는 레시피 리스트!</div>
           </div>
-          <div class="rec-imgs-group d-flex justify-space-between">
+          <div v-for="(recipeList,i) in recipeLists" :key="i">
+            <div class="chart-header">
+              {{recipeList.name}}
+            </div>
+            <div class="chart-header">
+              {{recipeList.description}}
+            </div>
+            <div class="rec-imgs-group d-flex justify-space-between">
+              <v-avatar
+                v-for="(item, j) in recipeList.recipeListItems"
+                :key="j"
+                size="130"
+                tile
+                class="mr-2"
+                @click="moveListDetail"
+              >
+                <!-- <v-img class="ref-imgs" :src="item.recipe.repImg"></v-img> -->
+                <v-img class="ref-imgs" :src="item.recipe.repImg">
+              </v-img>
+              </v-avatar>
+            </div>
+          </div>
+          <!-- <div class="rec-imgs-group d-flex justify-space-between">
             <v-avatar
               v-for="(ref, i) in refImg"
               :key="i"
               size="130"
               tile
               class="mr-2"
-              @click="moveListDetail"
+              @click="moveListDetail(ref)"
             >
               <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
                 <div class="ref-wrap">
                   <v-card-title class="ref-title">{{ ref.title }}</v-card-title>
-                  <v-card-subtitle class="ref-subtitle">{{
-                    ref.sub_title
-                  }}</v-card-subtitle>
+                  <v-card-subtitle class="ref-subtitle">{{ ref.sub_title }}</v-card-subtitle>
                 </div>
               </v-img>
             </v-avatar>
-          </div>
+          </div> -->
         </div>
       </v-container>
     </v-app>
@@ -268,35 +369,18 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex'
-import { getUserRecommend} from "@/api/recommend";
+import { getCartReport, getUserRecommend, getBestRecipeLists} from "@/api/recommend";
+
 export default {
   name: 'MainPage',
   data() {
     return {
       userPlayList: [
         {
-          url: 'data/recipe/20191212142613-HV8JG.jpg',
-          sub_title: '만소~만소',
-          title: '만두소시지꼬치',
-          content:
-            '소떡소떡을 응용한 만두요리예요. 떡 대신 만두가 실하게 자리잡았답니다. 추억의 케첩 양념에 고소함을 더할 마요네즈도 꼭 곁들여주세요.',
-          ingrediants: {
-            must: '냉동 납작만두(15개), 소시지(12개), 마요네즈(2)',
-            option: '고추장(1)+케첩(4)+올리고당(2)',
-            souce: '',
-          },
-        },
-        {
-          url: 'data/recipe/20170419170950-RSFQM.jpg',
-          sub_title: '알싸한 파로 승부 걸었다',
-          title: '매운파골뱅이무침',
-          content:
-            '고춧가루와 고추만 맵다고 생각했다면 큰 오산. 골뱅이무침에 소면 대신 파채를 듬뿍 곁들여보세요. 아삭하고 알싸한 파의 매운맛,이번에 제대로 경험할 거예요.',
-          ingrediants: {
-            must: '콩나물(2줌=150g),통조림 골뱅이(1캔=400g), 대파(4대×20cm=대파채 4컵 분량=180g)',
-            option: '풋고추(1개)',
-            souce: '소금(0.2)',
-          },
+          url: 'https://img.icons8.com/emoji/344/orange-circle-emoji.png',
+          sub_title: '아직 진행중인 레시피리스트가 없습니다.',
+          title: '레시피를 진행해주세요',
+          serving: 0,
         },
       ],
       refImg: [
@@ -328,57 +412,123 @@ export default {
       ],
       tag_set: [],
       lecipeData: [],
-      checklist: ['양파', '오이', '토마토', '대파', '쪽마늘'],
+      recipeChart:[],
+      selectTag:"",
       time: '',
+      historyID: null,
+      eating: null,
+      tabs: null,
+      check: false,
+      checklist: [],
+      checkedList: [],
+      dialog1: false,
+      dialog2: false,
+      category: [],
+      ingredients: [],
+      isSelected: false,
+      isRemoved: false,
+      isComplete: false,
+      selectedIngre: [],
       recommendTitle:"",
       recommendRecipes:[],
+      recipeLists:[],
     }
   },
   computed: {
-    ...mapState('user', ['userId', 'nickname','userGender','birth','userJob']),
+    ...mapState('user', ['userId', 'nickname']),
     ...mapState('search', ['recipes', 'recipeLists', 'hotRecipes', 'hotTitle']),
+    ...mapState('history', ['history', 'historyList']),
   },
   created() {
     setInterval(this.findnow.bind(this), 1000)
-    const searching = {
-      size: 5,
-      page: 0,
-    }
+    this.category = []
     const promise = new Promise((resolve, reject) => {
       resolve()
     })
     promise.then(async () => {
-      this.lecipeData = []
-      await this.getHotRecipes(searching)
-      // await this.getRecipeList(seraching)
-      // await this.getRecipes(seraching)
-      this.tag_set.push(this.hotTitle)
-      this.hotRecipes.forEach((r) => {
-        const chartData = {
-          recipeId: r.recipe.id,
-          imgUrl: r.recipe.repImg,
-          sub_title: r.recipe.content,
-          title: r.recipe.title,
-        }
-        this.lecipeData.push(chartData)
-      })
       console.log('이거슨감자' + this.recipeLists)
-    })
 
-    console.log("새로운요청")
-    getUserRecommend(
-      (response) => {
-        console.log("새로운 요청 성공")
-        console.log(response);
-        this.recommendTitle = response.data.title;
-        this.recommendRecipes = response.data.report;
-      },
-      (fail) => {
-        console.log(fail);
+      await this.getHistoryList()
+      this.historyList?.forEach((h) => {
+        if (h.process === 'READY') {
+          this.historyID = h.id
+        } else if (h.process === 'EATING') {
+          this.eating = h.id
+        }
+      })
+      if (this.historyID !== null || this.eating !== null) {
+        this.userPlayList = []
+        if (this.historyID !== null) {
+          await this.getHistory(this.historyID)
+        } else {
+          await this.getHistory(this.eating)
+        }
+        this.history.historyItems?.forEach((h) => {
+          const playRecipe = {
+            url: h.recipe.repImg,
+            sub_title: h.recipe.content,
+            title: h.recipe.title,
+            serving: h.recipe.serving,
+          }
+          this.userPlayList.push(playRecipe)
+        })
+        console.log(111111111111111)
+        console.log(this.userPlayList)
       }
-    );
+      if (this.historyID !== null) {
+        await this.getHistory(this.historyID)
+        this.history.historyIngredients.forEach((jaeryo) => {
+          if (jaeryo.isPurchased === 'N') {
+            this.checklist.push(jaeryo)
+          } else {
+            this.checkedList.push(jaeryo)
+          }
+          if (this.category.length === 0) {
+            this.category.push(jaeryo.categoryName)
+          } else {
+            let cnt = 0
+            this.category?.forEach((cg) => {
+              if (cg === jaeryo.categoryName) {
+                cnt++
+              }
+            })
+            if (cnt === 0) {
+              this.category.push(jaeryo.categoryName)
+            }
+          }
+        })
+      }
+      getCartReport("-,-,1,-",(response) => {
+      this.tag_set.push(response.data.title);
+      this.recipeChart.push(response.data.report);
+      });
+      getCartReport("-,-,-,JUBU",(response) => {
+        this.tag_set.push(response.data.title);
+        this.recipeChart.push(response.data.report);
+      });
+      getCartReport("-,-,-,COOK",(response) => {
+        this.tag_set.push(response.data.title);
+        this.recipeChart.push(response.data.report);
+      });
+      getUserRecommend(
+        (response) => {
+          this.recommendTitle = response.data.title;
+          this.recommendRecipes = response.data.report;
+      });
+      getBestRecipeLists(1,
+        (response) => {
+          this.recipeLists = response.data;
+        }
+      );
+    })
   },
   methods: {
+    ...mapActions('history', [
+      'getHistory',
+      'getHistoryList',
+      'checkHistoryIngredient',
+      'updateHistory',
+    ]),
     ...mapActions('search', ['getRecipes', 'getRecipeList', 'getHotRecipes']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     findnow() {
@@ -389,7 +539,7 @@ export default {
       this.time = hours + ':' + minutes + ':' + seconds
       // console.log(this.time)
     },
-    moveListDetail() {
+    moveListDetail(ref) {
       this.$router.push('/recipelist/detail')
     },
     moveDetail(data) {
@@ -402,7 +552,43 @@ export default {
       this.SET_RECIPE_ID(recipeId)
       this.$router.push('/recipe/detail')
     },
-  }
+    moveProgress() {
+      this.$router.push('/user/progress')
+    },
+    moveWrite() {
+      this.$router.push('/recipe/create')
+    },
+    moveCheckList() {
+      this.$router.push('/check')
+    },
+    bought(c, index) {
+      this.checklist.splice(index, 1)
+      this.checkedList.push(c)
+      this.checkHistoryIngredient(c.id)
+    },
+    needtobuy(c, index) {
+      this.checkedList.splice(index, 1)
+      this.checklist.push(c)
+      this.checkHistoryIngredient(c.id)
+    },
+    checkAll() {
+      this.checklist.forEach((c) => {
+        this.checkHistoryIngredient(c.id)
+        this.checkedList.push(c)
+      })
+      this.checklist = []
+    },
+    removeAll() {
+      this.checkedList.forEach((c) => {
+        this.checkHistoryIngredient(c.id)
+        this.checklist.push(c)
+      })
+      this.checkedList = []
+    },
+    createRecipe() {
+      this.$router.push('/recipe/create')
+    },
+  },
 }
 </script>
 
@@ -450,6 +636,33 @@ export default {
   cursor: pointer;
   transform: translate3d(0, 0, 0);
 }
+
+/* 체크리스트 */
+.check-container {
+  height: 280px;
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
+
+.check-container {
+}
+.check-item-wrap {
+  height: 200px;
+  overflow: scroll;
+}
+.before-shopping {
+  padding: 4%;
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
+.after-shopping {
+  padding: 4%;
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
+.before-shopping-none,
+.after-shopping-none {
+  height: 165px;
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
+
 .card {
   margin-right: 10%;
   width: 150px;
@@ -478,9 +691,7 @@ export default {
 .ref-subtitle {
   /* color: rgb(0, 0, 0); */
   color: aliceblue;
-  height: 50px;
   text-align: right;
-  overflow: hidden;
 }
 .my-container {
   padding-top: 10%;
@@ -489,8 +700,16 @@ export default {
 .my-title {
   font-family: 'LeeSeoyun' !important;
 }
+.my-sub-title {
+  text-overflow: ellipsis;
+  height: 2.3rem;
+  word-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
 .my-card {
-  border-radius: 30px;
+  border-radius: 10px;
   cursor: pointer;
 }
 
@@ -500,9 +719,12 @@ export default {
 }
 
 /* 캐러셀 css */
-/* .v-carousel__controls {
-      display: none;
-    } */
+.v-carousel__controls {
+  display: none !important;
+}
+.my-list-carousel {
+  box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
 /* btn-group css */
 
 /* cart-group css */
@@ -544,6 +766,43 @@ export default {
 .container {
   max-width: 100%;
 }
+
+@media (min-width: 900px) {
+  .my-middle-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .my-middle {
+    width: 48%;
+  }
+
+  .chip-sheet {
+    max-width: 100%;
+  }
+  .my-list-carousel {
+    height: 300px;
+  }
+  .my-card {
+    height: 340px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+  /* .check-container {
+    height: 190px;
+    box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  }
+  .check-item-wrap {
+    height: 110px;
+    overflow: scroll;
+  }
+  .after-shopping-none {
+    height: 165px;
+    box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  } */
+}
 /* 모바일 screen */
 @media (max-width: 400px) {
   .ref-imgs {
@@ -554,6 +813,161 @@ export default {
   .imgs {
     justify-content: space-between;
     overflow-x: auto;
+  }
+
+  .main-container {
+    height: 100%;
+    padding: 10%;
+    /* background-image: url('/bg/bg_img.png'); */
+    background-repeat: repeat;
+    background-color: white;
+    /* background-color: rgba(255, 255, 221, 0.771); */
+    color: black;
+    margin-top: 70px;
+    margin-bottom: 70px;
+  }
+  .title {
+    font-size: x-large;
+    font-family: 'LeeSeoyun';
+  }
+  .v-application .title {
+    font-family: 'LeeSeoyun' !important;
+    font-size: x-large !important;
+  }
+  .title-wrap {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .title-imgs {
+    display: flex;
+    overflow: auto;
+    cursor: pointer;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* 체크리스트 */
+  .check-container {
+    height: 280px;
+    box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  }
+
+  .check-container {
+  }
+  .check-item-wrap {
+    height: 200px;
+    overflow: scroll;
+  }
+  .before-shopping {
+    padding: 4%;
+    box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  }
+  .after-shopping {
+    padding: 4%;
+    box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  }
+  .after-shopping-none {
+    height: 165px;
+    box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  }
+
+  .card {
+    margin-right: 10%;
+    width: 150px;
+  }
+
+  .ref-wrap {
+    width: 150px;
+    height: 80px;
+    background-color: rgba(49, 49, 49, 0.422);
+  }
+  .ref-title {
+    /* color: rgb(0, 0, 0); */
+    color: aliceblue;
+    text-align: right;
+    font-size: large;
+    font-weight: bolder;
+    display: block;
+    overflow: auto;
+    text-overflow: ellipsis;
+  }
+  .ref-subtitle {
+    /* color: rgb(0, 0, 0); */
+    color: aliceblue;
+    text-align: right;
+  }
+  .my-container {
+    padding-top: 10%;
+    padding-bottom: 10%;
+  }
+  .my-title {
+    font-family: 'LeeSeoyun' !important;
+  }
+  .my-card {
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .my-lecipe {
+    display: flex;
+    justify-content: center;
+  }
+
+  /* 캐러셀 css */
+  .v-carousel__controls {
+    display: none !important;
+  }
+  .my-list-carousel {
+    box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+  }
+  /* btn-group css */
+
+  /* cart-group css */
+  .cart-group {
+    margin-top: 3%;
+    margin-bottom: 3%;
+  }
+  /* btn-group css */
+  .btn-group {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* chart-group css */
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+  }
+  .chart-chips-group {
+    display: flex;
+    overflow-x: auto;
+  }
+  .tag-set {
+    padding: 0 12px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+  }
+  .lecipe-list-group {
+    cursor: pointer;
+  }
+
+  /* rec-imgs-group css */
+  .rec-imgs-group {
+    overflow: auto;
+  }
+  .container {
+    max-width: 100%;
+  }
+  .chip-sheet {
+    max-width: 700px;
+  }
+  .recipe-item {
+    width: 85px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 </style>

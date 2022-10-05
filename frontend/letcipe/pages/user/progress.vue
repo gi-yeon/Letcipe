@@ -7,9 +7,13 @@
         <v-container class="progressrecipelist-container d-flex-row">
           <div class="progressrecipelist-head-wrap">
             <div class="d-flex justify-space-between pb-3">
-              <v-icon>mdi-window-close</v-icon>
+              <div>
+                <v-icon @click="moveBack">mdi-window-close</v-icon>
+              </div>
               <div style="font-size: x-large">진행중인 레시피리스트</div>
-              <v-icon>mdi-blank</v-icon>
+              <div>
+                <v-icon>mdi-blank</v-icon>
+              </div>
             </div>
           </div>
           <v-divider></v-divider>
@@ -23,24 +27,23 @@
                 <!-- <v-list-item-title
                 style="display: inline; float: left"
                 :color="statusColor"
-                >{{ historyInfo }} -->
-                <v-list-item-title style="display: inline; float: left"
-                  >{{ historyInfo.regTime }}
-                  <span style="font-size: 1rem; float: right; color: green">{{
-                    status
-                  }}</span>
+                >{{ historyInfo }}-->
+                <v-list-item-title style="display: inline; float: left">
+                  {{ historyInfo.regTime }}
+                  <span style="font-size: 1rem; float: right; color: green">
+                    {{ status }}
+                  </span>
                 </v-list-item-title>
 
                 <br />
 
                 <!-- <v-list-item-subtitle
                 >생성일 : {{ letcipeList.reg_time }}</v-list-item-subtitle
-              > -->
+                >-->
                 <v-list-item-subtitle style="text-align: right">
                   총&nbsp;
-                  <span style="color: black; font-size: 1rem">{{
-                    containsNum
-                  }}</span
+                  <span style="color: black; font-size: 1rem">
+                    {{ containsNum }} </span
                   >&nbsp;개의 레시피를 포함&nbsp;
                   <v-icon v-if="!isShow" @click="showRecipes"
                     >mdi-chevron-down</v-icon
@@ -64,13 +67,13 @@
                     <v-img :src="recipeInfo.recipe.repImg"></v-img>
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title>
-                      {{ recipeInfo.recipe.title }}
-                    </v-list-item-title>
+                    <v-list-item-title>{{
+                      recipeInfo.recipe.title
+                    }}</v-list-item-title>
 
-                    <v-list-item-subtitle>
-                      {{ recipeInfo.recipe.content }}
-                    </v-list-item-subtitle>
+                    <v-list-item-subtitle>{{
+                      recipeInfo.recipe.content
+                    }}</v-list-item-subtitle>
                     <div class="d-flex justify-space-between">
                       <v-list-item-subtitle style="margin: auto 0">
                         <v-icon small color="pink lighten-1"
@@ -79,16 +82,17 @@
                         {{ recipeInfo.recipe.recipeLike }}
                       </v-list-item-subtitle>
 
-                      <v-list-item-subtitle style="text-align: right"
-                        >수량&nbsp;&nbsp;:&nbsp;&nbsp;<span
-                          style="color: black; font-size: 1.2rem"
-                          >{{ recipeInfo.amount }}</span
+                      <v-list-item-subtitle style="text-align: right">
+                        수량&nbsp;&nbsp;:&nbsp;&nbsp;
+                        <span style="color: black; font-size: 1.2rem">{{
+                          recipeInfo.amount
+                        }}</span
                         >&nbsp;&nbsp;개
                       </v-list-item-subtitle>
 
                       <!-- <v-list-item-title style="text-align: right">
                       11개</v-list-item-title
-                    > -->
+                      >-->
                     </div>
                   </v-list-item-content>
                 </v-list-item>
@@ -118,6 +122,45 @@
           <div v-else align="center" class="pt-3 pb-3">
             진행중인 레시피리스트가 없습니다.
           </div>
+
+          <v-dialog v-model="dialog" persistent max-width="290">
+            <v-card v-if="startDialog">
+              <v-card-title class="text-h5">Caution</v-card-title>
+              <v-card-text>레시피 리스트가 시작되었습니다.</v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="green darken-1"
+                  text
+                  @click="
+                    {
+                      dialog = false
+                      $router.go()
+                    }
+                  "
+                  >확인</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+            <v-card v-if="endDialog">
+              <v-card-title class="text-h5">Caution</v-card-title>
+              <v-card-text>레시피 리스트가 종료되었습니다.</v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="green darken-1"
+                  text
+                  @click="
+                    {
+                      dialog = false
+                      $router.go()
+                    }
+                  "
+                  >확인</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </v-container>
       </div>
     </v-app>
@@ -130,13 +173,16 @@ export default {
   name: 'ProgressPage',
   data() {
     return {
-      status: '진행예정',
+      status: '종료',
       // statusColor: 'purple darken-1',
       historyListInfo: [],
       historyRepImg: '',
       historyInfo: {},
       containsNum: 0,
       isShow: false,
+      dialog: false,
+      startDialog: false,
+      endDialog: false,
     }
   },
   // async fetch() {
@@ -191,6 +237,9 @@ export default {
   },
   methods: {
     ...mapActions('history', ['getHistoryList', 'updateHistory']),
+    moveBack() {
+      this.$router.go(-1)
+    },
     showRecipes() {
       this.isShow = true
     },
@@ -203,7 +252,8 @@ export default {
         process: 'EATING',
       }
       this.updateHistory(history)
-      this.$router.go()
+      this.startDialog = true
+      this.setDialog()
     },
     endEatingHistory() {
       const history = {
@@ -211,7 +261,11 @@ export default {
         process: 'END',
       }
       this.updateHistory(history)
-      this.$router.go()
+      this.endDialog = true
+      this.setDialog()
+    },
+    setDialog() {
+      this.dialog = true
     },
   },
 }

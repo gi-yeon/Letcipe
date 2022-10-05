@@ -23,21 +23,6 @@
                 <v-list-item-content>
                   <v-list-item-title class="d-flex justify-space-between">
                     <div class="recipe-item" @click="moveDetail(mr)">{{ mr.title }}</div>
-                    <div>
-                      <v-icon
-                        v-if="nickname === mr.nickName"
-                        style="z-index: 1"
-                        small
-                        color="info"
-                        @click="editItem(mr)"
-                      >mdi-pencil</v-icon>
-                      <v-icon
-                        v-if="nickname === mr.nickName"
-                        style="z-index: 1"
-                        small
-                        @click="deleteItem(mr)"
-                      >mdi-delete</v-icon>
-                    </div>
                   </v-list-item-title>
 
                   <v-list-item-subtitle class="recipe-item" @click="moveDetail(mr)">{{ mr.content }}</v-list-item-subtitle>
@@ -55,7 +40,7 @@
                       </div>
                     </v-list-item-subtitle>
                     <v-list-item-subtitle style="text-align: right">
-                      <v-btn style="z-index: 1" small color="letcipe">+담기</v-btn>
+                      <v-btn style="z-index: 1" small color="letcipe" @click="openDialog(mr)">+담기</v-btn>
                     </v-list-item-subtitle>
                   </div>
                 </v-list-item-content>
@@ -78,11 +63,27 @@
             circle
           ></v-pagination>
         </v-container>
+
+        <div>
+          <v-row class="justify-center pa-8">
+            <v-dialog v-model="dialog" max-width="290">
+              <v-card>
+                <v-card-title class="text-h5">장바구니에 담을까요?</v-card-title>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="addCart()">담기</v-btn>
+
+                  <v-btn color="red darken-1" text @click="dialog = false">닫기</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-row>
+        </div>
       </div>
     </v-app>
   </div>
 </template>
-    
+
     <script>
 import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
@@ -106,6 +107,8 @@ export default {
       isSelected: [],
       selectedIngre: '',
       recipeBookmarks: [],
+      dialog:false,
+      recipe:null,
     }
   },
   computed: {
@@ -142,16 +145,7 @@ export default {
     ]),
     ...mapActions('user', ['myBookmarkRecipe']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
-    editItem(mr) {
-      this.CLEAR_RECIPE_ID()
-      this.SET_RECIPE_ID(mr.id)
-      this.$router.push('/recipe/modify')
-    },
-    deleteItem(mr) {
-      //     this.checkedList.splice(index, 1)
-      //   this.checklist.push(c)
-      this.patchRecipeDetail(mr.id)
-    },
+    ...mapActions('cart', ['createCart']),
     moveDetail(mr) {
       this.CLEAR_RECIPE_ID()
       this.SET_RECIPE_ID(mr.id)
@@ -160,10 +154,21 @@ export default {
     moveMypage() {
       this.$router.push('/user/mypage')
     },
+    openDialog(recipe) {
+      this.dialog = true;
+      this.recipe = recipe;
+    },
+    addCart() {
+      const cartItem = [this.recipe.id]
+      const list = { list:cartItem }
+      console.log(list);
+      this.createCart(list)
+      this.dialog = false;
+    },
   },
 }
 </script>
-    
+
     <style scoped>
 .bookmark-page {
   /* padding-top: 70px; */
@@ -192,4 +197,3 @@ export default {
   display: none;
 }
 </style>
-    

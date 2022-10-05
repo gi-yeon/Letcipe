@@ -121,6 +121,7 @@ export const mutations = {
     state.profileImage = ''
     state.userGender = ''
     state.userJob = ''
+    state.myRecipeList = []
   },
   CLEAR_MY_RECIPE(state) {
     state.myRecipe = []
@@ -136,7 +137,7 @@ export const mutations = {
   },
   CLEAR_MY_LIKE_RECIPE() {
     state.mylikeRecipe = []
-  }
+  },
 }
 
 export const getters = {}
@@ -264,9 +265,9 @@ export const actions = {
     await myrecipeList(
       pageable,
       ({ data }) => {
-        // console.log(data)
-        // console.log("내가만든 레시피리스트 가져오기 성공!")
-        commit('SET_MY_RECIPELIST', data.recipeList)
+        console.log(data)
+        console.log('내가만든 레시피리스트 가져오기 성공!')
+        commit('SET_MY_RECIPELIST', data.recipeLists)
       },
       (error) => {
         console.log(error)
@@ -292,9 +293,9 @@ export const actions = {
     await myBookmarkRecipeList(
       pageable,
       ({ data }) => {
-        // console.log(data)
-        // console.log("북마크 레시피목록 가져오기 성공!")
-        commit('SET_MY_BOOKMARK_RECIPELIST', data.recipes)
+        console.log(data)
+        console.log('북마크 레시피목록 가져오기 성공!')
+        commit('SET_MY_BOOKMARK_RECIPELIST', data.recipeLists)
       },
       (error) => {
         console.log(error)
@@ -371,5 +372,5 @@ export const actions = {
         console.log(error)
       }
     )
-  }
+  },
 }

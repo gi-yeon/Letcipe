@@ -80,7 +80,6 @@
                           white-space: nowrap;
                           overflow: hidden;
                         "
-                        @click="commentDetail(i)"
                       >
                         {{ comment.content }}
                       </v-list-item-content>
@@ -212,6 +211,9 @@ export default {
         this.isChecked.push(false)
       }
     },
+    moveMypage() {
+      this.$router.push('/user/mypage')
+    },
     addChecked(index) {
       this.isAllCheck = false
       if (!this.isChecked[index]) {
@@ -244,6 +246,8 @@ export default {
     },
     async deleteComment(id) {
       console.log(id)
+      this.allChecked()
+      console.log('-----------------------------')
       const comment = {
         commentId: id,
       }
