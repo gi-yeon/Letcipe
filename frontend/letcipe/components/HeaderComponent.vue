@@ -82,11 +82,7 @@
       <v-divider></v-divider>
 
       <v-list>
-        <v-list-item-group
-          v-model="model"
-          active-class="border"
-          color="letcipe"
-        >
+        <v-list-item-group active-class="deep-letcipe--text text--accent-4">
           <v-list-item
             v-for="item in items"
             :key="item.title"

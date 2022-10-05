@@ -85,14 +85,14 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <v-pagination
+          <!-- <v-pagination
             v-model="currentPage"
             color="letcipe"
             :length="TotalPage"
             :per-page="perPage"
             :total-visivle="TotalPage"
             circle
-          ></v-pagination>
+          ></v-pagination> -->
         </v-container>
       </div>
     </v-app>
@@ -102,16 +102,16 @@
 <script>
 import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
-  name: 'MyrecipePage',
+  name: 'MyrecipeTestPage',
   data() {
     return {
       pageable: {
-        page: 0,
+        page: 1,
+        size: 10,
       },
       TotalPage: 0,
       perPage: 5,
       currentPage: 1,
-      myrecipe: [],
       byname: '',
       searchedName: '',
       dialogSameIngre: false,
@@ -128,6 +128,7 @@ export default {
       myRecipes: [],
       dialog: false,
       selectedRecipe: {},
+      scrolling: false,
     }
   },
   computed: {
@@ -135,14 +136,16 @@ export default {
   },
 
   watch: {},
-
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll)
+  },
   created() {
     const promise = new Promise((resolve, reject) => {
       resolve()
     })
     promise.then(async () => {
       await this.myrecipe(this.pageable)
-      this.myrecipe = this.myRecipe
+      this.myRecipes = this.myRecipe
       //   this.myRecipe.forEach((mr) => {
       //     this.myRecipes.push(mr)
       //   })
@@ -191,6 +194,37 @@ export default {
         list: recipeList,
       }
       this.createCart(addrecipes)
+    },
+    plusPage() {
+      const p = this.pageable.page
+      this.pageable = {
+        page: p + 1,
+        size: 10,
+      }
+    },
+    handleScroll() {
+      if (
+        window.scrollY + window.innerHeight >=
+          document.body.scrollHeight + 100 &&
+        this.scrolling === false
+      ) {
+        console.log(this.pageable)
+        // console.log(this.)
+        this.plusPage()
+        let newMyrecipe = []
+        this.myrecipe(this.pageable).then(
+          setTimeout(() => {
+            newMyrecipe = this.myRecipe
+            newMyrecipe.forEach((mr) => {
+              this.myRecipes.push(mr)
+            })
+          }, 1000)
+        )
+        // console.log(1)
+        // console.log(window.scrollY + window.innerHeight)
+        // console.log(window.innerHeight)
+        // console.log(document.body.scrollHeight - 80)
+      }
     },
   },
 }

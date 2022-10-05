@@ -64,10 +64,21 @@
               <v-select
                 v-model="category"
                 class="text-md-h6"
-                :items="caregoryItems"
+                :items="categoryItems"
                 outlined
                 placeholder="카테고리 선택"
-              ></v-select>
+              >
+                <template #selection="{ item }">
+                  <img style="width: 30px" :src="item.img" />{{
+                    item.name
+                  }}</template
+                >
+                <template #item="{ item }">
+                  <img style="width: 30px" :src="item.img" />&nbsp;{{
+                    item.name
+                  }}
+                </template>
+              </v-select>
             </div>
 
             <v-card-title class="recipe-component">추가 정보</v-card-title>
@@ -330,60 +341,133 @@ export default {
       url: null,
       content: '',
       category: '',
-      caregoryItems: [
-        '밥요리',
-        '국 탕',
-        '찌개 전골',
-        '밑반찬',
-        '볶음요리',
-        '구이(고기/생선)',
-        '찜 조림',
-        '손님상',
-        '아이반찬',
-        '김치 장아찌',
-        '도시락',
-        '튀김',
-        '면요리',
-        '샐러드',
-        '김밥 초밥',
-        '야식 술안주',
-        '스파게티',
-        '간식 분식',
-        '토스트 샌드위치',
-        '베이킹',
-        '디저트',
-        '주스 음료',
-        '술 칵테일',
-        '명절요리',
-        '기타요리',
+      categoryItems: [
+        {
+          name: '밥요리',
+          img: 'https://img.icons8.com/emoji/344/cooked-rice-emoji.png',
+          category: 'R0001',
+        },
+        {
+          name: '국 탕',
+          img: 'https://img.icons8.com/emoji/344/pot-of-food-emoji.png',
+          category: 'R0002',
+        },
+        {
+          name: '찌개 전골',
+          img: 'https://img.icons8.com/emoji/344/shallow-pan-of-food-emoji.png',
+          category: 'R0003',
+        },
+        {
+          name: '밑반찬',
+          img: 'https://img.icons8.com/color/344/petri-dish.png',
+          category: 'R0004',
+        },
+        {
+          name: '볶음요리',
+          img: 'https://img.icons8.com/external-vitaliy-gorbachev-flat-vitaly-gorbachev/344/external-pan-camping-vitaliy-gorbachev-flat-vitaly-gorbachev.png',
+          category: 'R0005',
+        },
+        {
+          name: '구이(고기/생선)',
+          img: 'https://img.icons8.com/flat-round/2x/fish.png',
+          category: 'R0006',
+        },
+        {
+          name: '찜 조림',
+          img: 'https://img.icons8.com/external-basicons-color-edtgraphics/344/external-household-cookware-basicons-color-edtgraphics-3.png',
+          category: 'R0007',
+        },
+        {
+          name: '손님상',
+          img: 'https://img.icons8.com/color/2x/food-bar.png',
+          category: 'R0008',
+        },
+        {
+          name: '아이반찬',
+          img: 'https://img.icons8.com/emoji/344/baby-light-skin-tone.png',
+          category: 'R0009',
+        },
+        {
+          name: '김치 장아찌',
+          img: 'https://img.icons8.com/external-justicon-flat-justicon/344/external-kimchi-korea-justicon-flat-justicon.png',
+          category: 'R0010',
+        },
+        {
+          name: '도시락',
+          img: 'https://img.icons8.com/external-photo3ideastudio-flat-photo3ideastudio/2x/external-bento-japan-photo3ideastudio-flat-photo3ideastudio.png',
+          category: 'R0011',
+        },
+        {
+          name: '튀김',
+          img: 'https://img.icons8.com/external-flat-gradient-andi-nur-abdillah/344/external-fried-food-flat-gradient-flat-gradient-andi-nur-abdillah-2.png',
+          category: 'R0012',
+        },
+        {
+          name: '면요리',
+          img: 'https://img.icons8.com/external-nawicon-flat-nawicon/2x/external-noodle-fast-food-nawicon-flat-nawicon.png',
+          category: 'R0013',
+        },
+        {
+          name: '샐러드',
+          img: 'https://img.icons8.com/emoji/344/green-salad-emoji.png',
+          category: 'R0014',
+        },
+        {
+          name: '김밥 초밥',
+          img: 'https://img.icons8.com/external-sbts2018-flat-sbts2018/344/external-sushi-fast-food-sbts2018-flat-sbts2018.png',
+          category: 'R0015',
+        },
+        {
+          name: '야식 술안주',
+          img: 'https://img.icons8.com/external-wanicon-flat-wanicon/344/external-chicken-takeaway-wanicon-flat-wanicon.png',
+          category: 'R0016',
+        },
+        {
+          name: '스파게티',
+          img: 'https://img.icons8.com/emoji/344/spaghetti-emoji.png',
+          category: 'R0017',
+        },
+        {
+          name: '간식 분식',
+          img: 'https://img.icons8.com/external-flaticons-flat-flat-icons/344/external-tteokbokki-world-cuisine-flaticons-flat-flat-icons.png',
+          category: 'R0018',
+        },
+        {
+          name: '토스트 샌드위치',
+          img: 'https://img.icons8.com/emoji/344/sandwich-emoji.png',
+          category: 'R0019',
+        },
+        {
+          name: '베이킹',
+          img: 'https://img.icons8.com/emoji/344/bread-emoji.png',
+          category: 'R0020',
+        },
+        {
+          name: '디저트',
+          img: 'https://img.icons8.com/color/344/dessert.png',
+          category: 'R0021',
+        },
+        {
+          name: '주스 음료',
+          img: 'https://img.icons8.com/color-glass/344/carton-of-orange-juice.png',
+          category: 'R0022',
+        },
+        {
+          name: '술 칵테일',
+          img: 'https://img.icons8.com/fluency/344/beer.png',
+          category: 'R0023',
+        },
+        {
+          name: '명절요리',
+          img: 'https://img.icons8.com/external-flat-wichaiwi/344/external-food-soft-power-flat-wichaiwi.png',
+          category: 'R0024',
+        },
+        {
+          name: '기타요리',
+          img: 'https://img.icons8.com/fluency/344/bagel.png',
+          category: 'R0025',
+        },
       ],
-      categories: {
-        밥요리: 'R0001',
-        '국 탕': 'R0002',
-        '찌개 전골': 'R0003',
-        밑반찬: 'R0004',
-        볶음요리: 'R0005',
-        '구이(고기/생선)': 'R0006',
-        '찜 조림': 'R0007',
-        손님상: 'R0008',
-        아이반찬: 'R0009',
-        '김치 장아찌': 'R0010',
-        도시락: 'R0011',
-        튀김: 'R0012',
-        면요리: 'R0013',
-        샐러드: 'R0014',
-        '김밥 초밥': 'R0015',
-        '야식 술안주': 'R0016',
-        스파게티: 'R0017',
-        '간식 분식': 'R0018',
-        '토스트 샌드위치': 'R0019',
-        베이킹: 'R0020',
-        디저트: 'R0021',
-        '주스 음료': 'R0022',
-        '술 칵테일': 'R0023',
-        명절요리: 'R0024',
-        기타요리: 'R0025',
-      },
 
       cookingTime: '',
       serving: '',
@@ -652,7 +736,7 @@ export default {
       const formdata = new FormData()
       formdata.append('title', this.title)
       formdata.append('content', this.content)
-      formdata.append('category', this.category)
+      formdata.append('category', this.category.category)
       formdata.append('cookingTime', this.cookingTime)
       formdata.append('serving', this.serving)
       formdata.append('repImg', this.image)
@@ -684,6 +768,11 @@ export default {
     },
     moveBack() {
       this.$router.go(-1)
+    },
+    test() {
+      // console.log(item)
+      console.log(this.category)
+      console.log()
     },
   },
 }
