@@ -361,7 +361,7 @@ public class UserService {
     @Transactional
     public ResGetUserRecipeListsDto readUserRecipeList(Long userId, Pageable pageable) {
         User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
-        List<RecipeList> recipeListList = recipeListRepository.findAllByUser(pageable, user);
+        List<RecipeList> recipeListList = recipeListRepository.findAllByUserAndIsDeleted(pageable, user, StatusType.N);
         List<ResGetUserRecipeListDto> dtoList = new ArrayList<>();
         for (RecipeList recipeList : recipeListList) {
             boolean isBookmark = recipeListBookmarkRepository.existsByUserIdAndRecipeListId(userId, recipeList.getId());
@@ -376,21 +376,25 @@ public class UserService {
         List<RecipeBookmark> recipeBookmarkList = recipeBookmarkRepository.findAllByUser(pageable, user);
         List<ResGetUserRecipeDto> dtoList = new ArrayList<>();
         for (RecipeBookmark recipeBookmark : recipeBookmarkList) {
-            dtoList.add(new ResGetUserRecipeDto(recipeBookmark.getRecipe()));
+            if (recipeBookmark.getRecipe().getStatusType() == StatusType.N)
+                dtoList.add(new ResGetUserRecipeDto(recipeBookmark.getRecipe()));
         }
         return new ResGetUserRecipesDto(dtoList);
     }
 
+    @Transactional
     public ResGetUserRecipeListsDto readRecipeListBookmark(Long userId, Pageable pageable) {
         User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
         List<RecipeListBookmark> recipeListBookmarkList = recipeListBookmarkRepository.findAllByUser(pageable, user);
         List<ResGetUserRecipeListDto> dtoList = new ArrayList<>();
         for (RecipeListBookmark recipeListBookmark : recipeListBookmarkList) {
-            dtoList.add(new ResGetUserRecipeListDto(recipeListBookmark.getRecipeList(), true));
+            if (recipeListBookmark.getRecipeList().getIsDeleted() == StatusType.N)
+                dtoList.add(new ResGetUserRecipeListDto(recipeListBookmark.getRecipeList(), true));
         }
         return new ResGetUserRecipeListsDto(dtoList);
     }
 
+    @Transactional
     public List<ResGetUserCommentDto> getUserComment(Long userId, Pageable pageable) {
         List<Comment> commentList = commentRepository.findAllByUserIdAndBoardTypeAndStatusType(pageable, userId, BoardType.RECIPE, StatusType.N);
         List<ResGetUserCommentDto> dtoList = new ArrayList<>();
@@ -443,6 +447,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public ResLoginUserDto updateToken(String token, String refreshToken) {
         if (jwtService.checkJwtToken(token)) {
             throw new AuthorityViolationException("접근할 수 없음");
@@ -476,7 +481,8 @@ public class UserService {
         List<RecipeLike> recipeLikeList = recipeLikeRepository.findAllByUser(pageable, user);
         List<ResGetUserRecipeDto> dtoList = new ArrayList<>();
         for (RecipeLike recipelike : recipeLikeList) {
-            dtoList.add(new ResGetUserRecipeDto(recipelike.getRecipe()));
+            if (recipelike.getRecipe().getStatusType() == StatusType.N)
+                dtoList.add(new ResGetUserRecipeDto(recipelike.getRecipe()));
         }
         return new ResGetUserRecipesDto(dtoList);
     }

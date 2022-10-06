@@ -19,6 +19,7 @@ import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,7 +59,8 @@ public class RecipeController {
     }
 
     @PutMapping("/{recipe_id}")
-    public ResponseEntity updateRecipe(@PathVariable long recipe_id, @ModelAttribute ReqPutRecipeDto dto, HttpServletRequest request) throws FileNotFoundException, FileUploadException {
+    @Transactional
+    public ResponseEntity updateRecipe(@PathVariable long recipe_id, @ModelAttribute @Validated ReqPutRecipeDto dto, HttpServletRequest request) throws FileNotFoundException, FileUploadException {
         Long userId = jwtService.getUserId(request); // TODO 토큰에서 유저 id 가져와야 함
         recipeService.updateRecipe(dto, recipe_id);
         return ResponseEntity.ok().build();
