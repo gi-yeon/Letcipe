@@ -31,4 +31,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     Optional<Recipe> findByStatusTypeAndId(StatusType n, Long boardId);
 
     List<Recipe> findAllByUserAndStatusType(Pageable pageable, User user, StatusType n);
+
+    Long countByUserIdAndStatusType(Long userId, StatusType n);
 }

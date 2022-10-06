@@ -404,6 +404,10 @@ public class UserService {
         return dtoList;
     }
 
+    public Long getRecipeNum(Long userId) {
+        return recipeRepository.countByUserIdAndStatusType(userId, StatusType.N);
+    }
+
     public Long getCommentNum(Long userId) {
         return commentRepository.countByUserIdAndBoardTypeAndStatusType(userId, BoardType.RECIPE, StatusType.N);
     }

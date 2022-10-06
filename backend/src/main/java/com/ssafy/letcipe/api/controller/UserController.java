@@ -134,6 +134,11 @@ public class UserController {
         Long userId = jwtService.getUserId(request);
         return ResponseEntity.ok(userService.getUserComment(userId, pageable));
     }
+    @GetMapping("recipeNum")
+    public ResponseEntity<Long> getRecipeNum(HttpServletRequest request){
+        Long userId = jwtService.getUserId(request);
+        return ResponseEntity.ok(userService.getRecipeNum(userId));
+    }
     @GetMapping("commentNum")
     public ResponseEntity<Long> getCommentNum(HttpServletRequest request){
         Long userId = jwtService.getUserId(request);
