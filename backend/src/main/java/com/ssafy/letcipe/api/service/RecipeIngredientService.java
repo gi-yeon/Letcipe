@@ -29,7 +29,6 @@ public class RecipeIngredientService {
     @Transactional
     public void deleteRecipeIngredients(Recipe recipe) {
         for (RecipeIngredient recipeIngredient : recipe.getIngredients()) {
-            System.out.println("recipeIngredient delete = " + recipeIngredient.getId());
             recipeIngredientRepository.deleteById(recipeIngredient.getId());
         }
         recipeIngredientRepository.flush();
