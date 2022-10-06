@@ -664,12 +664,14 @@ export default {
         msg = '레시피 내용을 입력해주세요.'
       } else if (this.image === null) {
         msg = '대표 사진을 입력해주세요.'
-      } else if (this.serving.trim() === '') {
+      } else if (this.serving === '') {
         msg = '몇 인분인지 입력해주세요.'
       } else if (this.category.trim() === '') {
         msg = '카테고리를 입력해주세요.'
       } else if (this.steps.length <= 0) {
         msg = ''
+      } else if (this.ingredients.length <= 0) {
+        msg = '재료를 입력해 주세요.'
       } else if (this.steps[this.steps.length - 1].imageUrl == null) {
         msg = this.steps.length + '단계 이미지를 입력해주세요'
       } else if (this.steps[this.steps.length - 1].content.trim() === '') {

@@ -39,6 +39,7 @@
             <div class="d-flex justify-center">
               <v-img
                 v-if="url != null"
+                ref="repImg"
                 max-width="50%"
                 :src="url"
                 class="d-flex justify-center"
@@ -310,14 +311,22 @@
             <br />
 
             <div class="d-flex justify-center">
-              <v-btn dark class="mr-6 ml-6 mb-5" @click="saveRecipe()"
+              <v-btn dark class="mr-6 ml-6 mb-5" @click="canSave()"
                 >저장</v-btn
               >
-              <v-btn dark class="mr-6 ml-6 mb-5" @click="saveRecipe()"
+              <v-btn dark class="mr-6 ml-6 mb-5" @click="canSave()"
                 >저장 후 공개</v-btn
               >
               <v-btn dark class="mr-6 ml-6 mb-5" @click="moveBack">취소</v-btn>
             </div>
+            <v-snackbar
+                v-model="saveSnackBar"
+                centered
+                style="z-index: 1"
+                :timeout="1500"
+              >
+                {{ snackBarMsg }}
+              </v-snackbar>
           </v-card>
         </v-container>
       </div>
@@ -371,7 +380,7 @@ export default {
       stepUrl: [],
       stepImage: [],
       steps: [],
-      tags: ['바부'],
+      tags: [],
       focusIndex: null,
       dialog: false,
       isLoading: false,
@@ -429,6 +438,8 @@ export default {
         unit: 'g',
       },
       stepNum: 1,
+      snackBarMsg:"",
+      saveSnackBar:false,
     }
   },
   computed: {
@@ -465,7 +476,6 @@ export default {
         // this.steps = this.recipeDetail.recipeSteps
         // console.log(this.steps)
         console.log('이것')
-        console.log(this.url)
         this.recipeDetail.recipeSteps.forEach((rs) => {
           const step = {
             no: rs.step,
@@ -646,8 +656,9 @@ export default {
       }
     },
     setTags(tags) {
-      console.log(tags)
       this.tags.push(tags[0].value)
+      console.log("현재태그")
+      console.log(tags)
     },
     ingre(keyword) {
       if (keyword != null && keyword.length > 0) {
@@ -673,16 +684,55 @@ export default {
     initSelectIndex() {
       this.focusIndex = null
     },
+    async canSave() {
+      const sleep = (milliseconds) => {
+        return new Promise((resolve) => setTimeout(resolve, milliseconds))
+      }
+      let msg = ''
+      let flag = false
+      if (this.title.trim() === '') {
+        msg = '레시피 제목을 입력해주세요.'
+      } else if (this.content.trim() === '') {
+        msg = '레시피 내용을 입력해주세요.'
+      } else if (this.image === null && this.imageUrl === '') {
+        msg = '대표 사진을 입력해주세요.'
+      } else if (this.serving === '') {
+        msg = '몇 인분인지 입력해주세요.'
+      } else if (this.category.trim() === '') {
+        msg = '카테고리를 입력해주세요.'
+      } else if (this.steps.length <= 0) {
+        msg = ''
+      } else if (this.steps[this.steps.length - 1].imageUrl == null || this.steps[this.steps.length - 1].imageUrl === '') {
+        msg = this.steps.length + '단계 이미지를 입력해주세요'
+      } else if (this.steps[this.steps.length - 1].content.trim() === '') {
+        msg = this.steps.length + '단계 내용을 입력해주세요'
+      } else {
+        flag = true
+        msg = '성공적으로 레시피가 저장되었습니다!'
+      }
+      this.snackBarMsg = msg
+      if (!flag)
+      this.saveSnackBar = true
+      if (flag) {
+        await this.saveRecipe()
+        this.saveSnackBar = true
+        await sleep(1000)
+        this.$router.push('/user/recipe')
+      }
+    },
     saveRecipe() {
       // console.log(this.ingredients)
       const formdata = new FormData()
+
       formdata.append('title', this.title)
       formdata.append('content', this.content)
       formdata.append('cookingTime', this.cookingTime)
       formdata.append('serving', this.serving)
+      formdata.append('category', this.category)
 
       if (this.image === null) {
-        formdata.append('repImg', this.url)
+        // formdata.append('repImg', this.image)
+        formdata.append('repImgUrl',this.url);
       } else {
         formdata.append('repImg', this.image)
       }
@@ -690,7 +740,8 @@ export default {
       for (let i = 0; i < this.steps.length; i++) {
         formdata.append(`stepDtoList[${i}].step`, this.steps[i].no)
         if (this.steps[i].image === null) {
-          formdata.append(`stepDtoList[${i}].img`, this.steps[i].imageUrl)
+          // formdata.append(`stepDtoList[${i}].img`, this.steps[i].image);
+          formdata.append(`stepDtoList[${i}].imgUrl`, this.steps[i].imageUrl)
         } else if (this.steps[i].image != null) {
           formdata.append(`stepDtoList[${i}].img`, this.steps[i].image)
           console.log(this.steps[i].image)
@@ -711,8 +762,20 @@ export default {
       // for (let i = 0; i < this.tags.length; i++) {
       //   formdata.append(`tagList[${i}]`, ingreVal[i])
       // }
+      const ingreVal = []
+      // console.log(keys)
       for (let i = 0; i < this.tags.length; i++) {
-        formdata.append(`tagList[${i}]`, this.tags[i])
+        ingreVal.push(this.tags[i]);
+      }
+      if (this.tags.length > 0) {
+        console.log("태그있어요");
+        console.log(ingreVal);
+        for (let i = 0; i < this.tags.length; i++) {
+          formdata.append(`tagList[${i}]`, ingreVal[i])
+        }
+      } else {
+        console.log("태그없음")
+        formdata.append(`tagList`, [""])
       }
 
       for (const p of formdata.entries()) {
@@ -720,7 +783,7 @@ export default {
       }
       console.log(formdata)
       const object = {
-        recipeId: 1798,
+        recipeId: this.recipeID,
         formData: formdata,
       }
       this.updateRecipeDetail(object)
