@@ -5,9 +5,14 @@
         <v-container class="myrecipe-container d-flex-row">
           <div class="myrecipe-head-wrap">
             <div class="d-flex justify-space-between pb-3">
-              <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              <div>
+                <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              </div>
+
               <div style="font-size: x-large">히스토리</div>
-              <v-icon>mdi-blank</v-icon>
+              <div>
+                <v-icon>mdi-blank</v-icon>
+              </div>
             </div>
           </div>
           <v-divider></v-divider>
@@ -38,7 +43,7 @@
                         color="info"
                         @click="openDialog(mr)"
                         >mdi-pencil</v-icon
-                      > 
+                      >
                     </div>
                   </v-list-item-title>
                   <v-list-item-subtitle class="recipe-item">
@@ -93,49 +98,30 @@
                 >
                 <v-divider></v-divider>
                 <div v-for="(recipeInfo, idx) in mr.items" :key="idx">
-                  <v-list-item
-                    three-line
-                    style="background-color: white"
-                    @click="moveDetail(recipeInfo)"
-                  >
-                    <v-list-item-avatar tile size="100">
+                  <v-list-item three-line style="background-color: white">
+                    <v-list-item-avatar
+                      tile
+                      size="100"
+                      @click="moveDetail(recipeInfo)"
+                    >
                       <v-img :src="recipeInfo.recipe.repImg"></v-img>
                     </v-list-item-avatar>
                     <v-list-item-content>
                       <div class="d-flex justify-space-between align-center">
-                        <v-list-item-title>{{
+                        <v-list-item-title @click="moveDetail(recipeInfo)">{{
                           recipeInfo.recipe.title
                         }}</v-list-item-title>
 
-                        <v-dialog v-model="dialog2" persistent max-width="290">
-                          <template #activator="{ on, attrs }">
-                            <v-btn
-                              style="z-index: 1"
-                              small
-                              color="letcipe"
-                              v-bind="attrs"
-                              @click="addCart(recipeInfo.recipe)"
-                              v-on="on"
-                              >+담기</v-btn
-                            >
-                          </template>
-                          <v-card>
-                            <v-card-title class="text-h5">Caution</v-card-title>
-                            <v-card-text>레시피 담기 성공!</v-card-text>
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
-                              <v-btn
-                                color="green darken-1"
-                                text
-                                @click="dialog2 = false"
-                                >확인</v-btn
-                              >
-                            </v-card-actions>
-                          </v-card>
-                        </v-dialog>
+                        <v-btn
+                          style="z-index: 1"
+                          small
+                          color="letcipe"
+                          @click="addCart(recipeInfo.recipe)"
+                          >+담기</v-btn
+                        >
                       </div>
 
-                      <v-list-item-subtitle>{{
+                      <v-list-item-subtitle @click="moveDetail(recipeInfo)">{{
                         recipeInfo.recipe.content
                       }}</v-list-item-subtitle>
                       <div class="d-flex justify-space-between">
@@ -208,67 +194,78 @@
           <v-row class="justify-center pa-8">
             <v-dialog v-model="dialog4" max-width="290">
               <v-card>
-                <v-icon @click="()=>{dialog4 = false}">mdi-window-close</v-icon>
-                <v-card-title style="font-size: xx-large"
-                  >REVIEW</v-card-title
+                <v-icon
+                  @click="
+                    () => {
+                      dialog4 = false
+                    }
+                  "
+                  >mdi-window-close</v-icon
                 >
+                <v-card-title style="font-size: xx-large">REVIEW</v-card-title>
                 <v-card-text class="text--primary">
                   <div class="d-flex align-center">
-                    <v-icon small color="letcipe"
-                      >mdi-calendar-clock</v-icon
-                    >
-                  <div style="font-size: medium">
-                    {{ history.regTime }} 일의 기록
+                    <v-icon small color="letcipe">mdi-calendar-clock</v-icon>
+                    <div style="font-size: medium">
+                      {{ history.regTime }} 일의 기록
+                    </div>
                   </div>
-                  </div>
-                <v-textarea
-                  v-model="history.review"
-                  name="input-7-4"
-                  placeholder="내용을 입력해주세요"
-                  solo
-                ></v-textarea>
-              </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                color="letcipe"
-                text
-                @click=";[(dialog4 = false), modify(history)]"
-                  >확인</v-btn
-                >
+                  <v-textarea
+                    v-model="history.review"
+                    name="input-7-4"
+                    placeholder="내용을 입력해주세요"
+                    solo
+                  ></v-textarea>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    color="letcipe"
+                    text
+                    @click=";[(dialog4 = false), modify(history)]"
+                    >확인</v-btn
+                  >
                 </v-card-actions>
               </v-card>
             </v-dialog>
 
             <v-dialog v-model="dialog" max-width="290">
               <v-card>
-                <v-icon @click="()=>{dialog = false}">mdi-window-close</v-icon>
+                <v-icon
+                  @click="
+                    () => {
+                      dialog = false
+                    }
+                  "
+                  >mdi-window-close</v-icon
+                >
                 <v-card-title style="font-size: xx-large"
-                  >REVIEW 수정</v-card-title>
-                  <v-card-text class="text--primary">
-                    <div class="d-flex align-center">
-                      <v-icon small color="letcipe"
-                        >mdi-calendar-clock</v-icon>
+                  >REVIEW 수정</v-card-title
+                >
+                <v-card-text class="text--primary">
+                  <div class="d-flex align-center">
+                    <v-icon small color="letcipe">mdi-calendar-clock</v-icon>
                     <div style="font-size: medium">
                       {{ history.regTime }} 일의 기록
                     </div>
-                    </div>
-                    <v-textarea
-                      v-model="history.review"
-                      name="input-7-4"
-                      placeholder="내용을 입력해주세요"
-                      clearable
-                      solo
-                    ></v-textarea>
-                  </v-card-text>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      color="letcipe"
-                      text
-                      @click=";[(dialog = false), modify(history)]"
-                    >확인</v-btn>
-                  </v-card-actions>
+                  </div>
+                  <v-textarea
+                    v-model="history.review"
+                    name="input-7-4"
+                    placeholder="내용을 입력해주세요"
+                    clearable
+                    solo
+                  ></v-textarea>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    color="letcipe"
+                    text
+                    @click=";[(dialog = false), modify(history)]"
+                    >확인</v-btn
+                  >
+                </v-card-actions>
               </v-card>
             </v-dialog>
           </v-row>
@@ -277,15 +274,32 @@
         <v-snackbar
           v-model="snackbar"
           :timeout="timeout"
+          style="z-index: 100; margin-bottom: 60px"
         >
-          {{ reviewModifySuccess? "리뷰 수정에 성공했습니다":"리뷰 수정에 실패했습니다" }}
+          {{
+            reviewModifySuccess
+              ? '리뷰 수정에 성공했습니다'
+              : '리뷰 수정에 실패했습니다'
+          }}
         </v-snackbar>
 
         <v-snackbar
           v-model="snackbar2"
           :timeout="timeout"
+          style="z-index: 100; margin-bottom: 60px"
         >
-          {{ isSucceededtoCart? "모두 담기에 성공했습니다":"모두 담기에 실패했습니다" }}
+          {{
+            isSucceededtoCart
+              ? '모두 담기에 성공했습니다'
+              : '모두 담기에 실패했습니다'
+          }}
+        </v-snackbar>
+        <v-snackbar
+          v-model="snackbar3"
+          :timeout="timeout"
+          style="z-index: 100; margin-bottom: 60px"
+        >
+          {{ text }}
         </v-snackbar>
       </div>
     </v-app>
@@ -322,13 +336,14 @@ export default {
       history: '',
       timeout: 2000,
       snackbar: false,
-      snackbar2: false
+      snackbar2: false,
+      snackbar3: false,
     }
   },
   computed: {
     ...mapState('user', ['myRecipe']),
     ...mapState('history', ['historyList', 'reviewModifySuccess']),
-    ...mapState('cart', ['isSucceededtoCart'])
+    ...mapState('cart', ['isSucceededtoCart']),
   },
 
   watch: {},
@@ -388,7 +403,8 @@ export default {
     },
     moveDetail(mr) {
       this.CLEAR_RECIPE_ID()
-      this.SET_RECIPE_ID(mr.id)
+      this.SET_RECIPE_ID(mr.recipe.id)
+      // console.log(mr)
       this.$router.push('/recipe/detail')
     },
     moveMypage() {
@@ -399,6 +415,8 @@ export default {
       const cartItem = [recipe.id]
       const list = { cartItem }
       this.createCart(list)
+      this.text = '레시피 한개 담기에 성공했습니다.'
+      this.snackbar3 = true
     },
     addAll(mr) {
       const recipeList = []
@@ -418,9 +436,9 @@ export default {
     hideRecipes(mr) {
       mr.isShow = false
     },
-    openDialog(mr){
+    openDialog(mr) {
       this.history = mr
-      if(this.history.review){
+      if (this.history.review) {
         this.dialog = true
       } else {
         this.dialog4 = true

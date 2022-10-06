@@ -63,17 +63,26 @@
               <v-divider></v-divider>
               <div v-for="(recipeInfo, i) in historyInfo.historyItems" :key="i">
                 <v-list-item three-line style="background-color: white">
-                  <v-list-item-avatar tile size="100">
+                  <v-list-item-avatar
+                    tile
+                    size="100"
+                    style="cursor: pointer"
+                    @click="moveDetail(recipeInfo)"
+                  >
                     <v-img :src="recipeInfo.recipe.repImg"></v-img>
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title>{{
-                      recipeInfo.recipe.title
-                    }}</v-list-item-title>
+                    <v-list-item-title
+                      style="cursor: pointer"
+                      @click="moveDetail(recipeInfo)"
+                      >{{ recipeInfo.recipe.title }}</v-list-item-title
+                    >
 
-                    <v-list-item-subtitle>{{
-                      recipeInfo.recipe.content
-                    }}</v-list-item-subtitle>
+                    <v-list-item-subtitle
+                      style="cursor: pointer"
+                      @click="moveDetail(recipeInfo)"
+                      >{{ recipeInfo.recipe.content }}</v-list-item-subtitle
+                    >
                     <div class="d-flex justify-space-between">
                       <v-list-item-subtitle style="margin: auto 0">
                         <v-icon small color="pink lighten-1"
@@ -266,6 +275,12 @@ export default {
     },
     setDialog() {
       this.dialog = true
+    },
+    moveDetail(recipeInfo) {
+      console.log(recipeInfo)
+      // this.CLEAR_RECIPE_ID()
+      // this.SET_RECIPE_ID(recipeInfo.id)
+      // this.$router.push('/recipelist/detail')
     },
   },
 }

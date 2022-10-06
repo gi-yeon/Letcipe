@@ -14,7 +14,13 @@
               </div>
             </div>
           </div>
-          <v-tabs v-model="tab" centered icons-and-text color="letcipe" hide-slider>
+          <v-tabs
+            v-model="tab"
+            centered
+            icons-and-text
+            color="letcipe"
+            hide-slider
+          >
             <v-tabs-slider></v-tabs-slider>
 
             <v-tab href="#tab-1" style="width: 50%">
@@ -41,7 +47,8 @@
                       small
                       class="pt-0 pb-0"
                       @click="byRecipe = true"
-                    >레시피</v-btn>
+                      >레시피</v-btn
+                    >
                     <v-btn
                       style="width: 90%"
                       :color="byRecipe ? 'black' : 'letcipe'"
@@ -49,7 +56,8 @@
                       small
                       class="pt-0 pb-0"
                       @click="byRecipe = false"
-                    >레시피 리스트</v-btn>
+                      >레시피 리스트</v-btn
+                    >
                   </v-row>
                 </v-col>
                 <v-col class="d-flex pr-0 pl-0" align="center">
@@ -67,23 +75,40 @@
               </v-row>
               <v-divider></v-divider>
               <div v-if="recipes != null && recipes.length > 0">
-                <v-card-subtitle>"{{ searchedName }}" 검색 결과</v-card-subtitle>
+                <v-card-subtitle
+                  >"{{ searchedName }}" 검색 결과</v-card-subtitle
+                >
                 <div v-for="(recipeInfo, i) in recipes" :key="i">
-                  <v-list-item three-line @click="moveDetail(recipeInfo)">
-                    <v-list-item-avatar tile size="100">
+                  <v-list-item three-line>
+                    <v-list-item-avatar
+                      tile
+                      size="100"
+                      @click="moveDetail(recipeInfo)"
+                    >
                       <v-img :src="recipeInfo['repImg']"></v-img>
                     </v-list-item-avatar>
                     <v-list-item-content>
-                      <v-list-item-title>{{ recipeInfo['title'] }}</v-list-item-title>
+                      <v-list-item-title @click="moveDetail(recipeInfo)">{{
+                        recipeInfo['title']
+                      }}</v-list-item-title>
 
-                      <v-list-item-subtitle>{{ recipeInfo['content'] }}</v-list-item-subtitle>
+                      <v-list-item-subtitle @click="moveDetail(recipeInfo)">{{
+                        recipeInfo['content']
+                      }}</v-list-item-subtitle>
                       <div class="d-flex justify-space-between">
                         <v-list-item-subtitle>
-                          <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
+                          <v-icon small color="pink lighten-1"
+                            >mdi-cards-heart</v-icon
+                          >
                           {{ recipeInfo['recipeLike'] }}
                         </v-list-item-subtitle>
                         <v-list-item-subtitle style="text-align: right">
-                          <v-btn small color="letcipe" @click="addRecipe(recipeInfo['id'])">+담기</v-btn>
+                          <v-btn
+                            small
+                            color="letcipe"
+                            @click="addRecipe(recipeInfo['id'])"
+                            >+담기</v-btn
+                          >
                         </v-list-item-subtitle>
                       </div>
                     </v-list-item-content>
@@ -102,23 +127,43 @@
                 </div>
               </div>
               <div v-if="recipeLists != null && recipeLists.length > 0">
-                <v-card-subtitle>"{{ searchedName }}" 검색 결과</v-card-subtitle>
+                <v-card-subtitle
+                  >"{{ searchedName }}" 검색 결과</v-card-subtitle
+                >
                 <div v-for="(recipeListInfo, i) in recipeLists" :key="i">
-                  <v-list-item three-line @click="moveDetail(recipeListInfo)">
-                    <v-list-item-avatar tile size="100">
-                      <v-img :src="recipeListInfo.recipeListItems[0].repImg"></v-img>
+                  <v-list-item three-line>
+                    <v-list-item-avatar
+                      tile
+                      size="100"
+                      @click="moveDetail(recipeListInfo)"
+                    >
+                      <v-img
+                        :src="recipeListInfo.recipeListItems[0].repImg"
+                      ></v-img>
                     </v-list-item-avatar>
                     <v-list-item-content>
-                      <v-list-item-title>{{ recipeListInfo['name'] }}</v-list-item-title>
+                      <v-list-item-title @click="moveDetail(recipeListInfo)">{{
+                        recipeListInfo['name']
+                      }}</v-list-item-title>
 
-                      <v-list-item-subtitle>{{ recipeListInfo['description'] }}</v-list-item-subtitle>
+                      <v-list-item-subtitle
+                        @click="moveDetail(recipeListInfo)"
+                        >{{
+                          recipeListInfo['description']
+                        }}</v-list-item-subtitle
+                      >
                       <div class="d-flex justify-space-between">
                         <v-list-item-subtitle style="margin: auto">
                           by
                           {{ recipeListInfo['nickname'] }}
                         </v-list-item-subtitle>
                         <v-list-item-subtitle style="text-align: right">
-                          <v-btn small color="letcipe" @click="addRecipeList(recipeListInfo)">+전체담기</v-btn>
+                          <v-btn
+                            small
+                            color="letcipe"
+                            @click="addRecipeList(recipeListInfo)"
+                            >+전체담기</v-btn
+                          >
                         </v-list-item-subtitle>
                       </div>
                     </v-list-item-content>
@@ -161,28 +206,42 @@
                   >
                     <template #no-data>
                       <v-list-item>
-                        <v-list-item-title>일치하는 재료가 없습니다.</v-list-item-title>
+                        <v-list-item-title
+                          >일치하는 재료가 없습니다.</v-list-item-title
+                        >
                       </v-list-item>
                     </template>
                     <template #item="{ item }">
                       <v-list-item-content @click="selectIngre(item)">
-                        <v-list-item-title v-text="item.name"></v-list-item-title>
+                        <v-list-item-title
+                          v-text="item.name"
+                        ></v-list-item-title>
                       </v-list-item-content>
                       <v-list-item-action @click="selectIngre(item)">
-                        <v-chip :color="colors[item.category]" label>{{ item.category }}</v-chip>
+                        <v-chip :color="colors[item.category]" label>{{
+                          item.category
+                        }}</v-chip>
                       </v-list-item-action>
                     </template>
                   </v-autocomplete>
                 </v-col>
               </v-row>
 
-              <v-card-subtitle v-if="isSelected.length < 2">두 개 이상의 재료를 선택해 주세요</v-card-subtitle>
-              <v-card-subtitle v-if="isSelected.length >= 2">선택한 재료 목록</v-card-subtitle>
+              <v-card-subtitle v-if="isSelected.length < 2"
+                >두 개 이상의 재료를 선택해 주세요</v-card-subtitle
+              >
+              <v-card-subtitle v-if="isSelected.length >= 2"
+                >선택한 재료 목록</v-card-subtitle
+              >
               <div align="center">
                 <v-row class="pb-5" style="width: 90%">
                   <div v-for="(item, i) in isSelected" :key="i">
                     <v-col>
-                      <v-chip label :color="colors[item.category]" @click="deleteIngre(i)">
+                      <v-chip
+                        label
+                        :color="colors[item.category]"
+                        @click="deleteIngre(i)"
+                      >
                         {{ item.name }}
                         <v-icon small>mdi-window-close</v-icon>
                       </v-chip>
@@ -200,26 +259,37 @@
               >
                 <v-card-subtitle>재료 기반 추천 레시피</v-card-subtitle>
                 <div v-for="(recipeInfo, i) in recipesIngre" :key="i">
-                  <v-list-item
-                    three-line
-                    style="background-color: white"
-                    @click="moveDetail(recipeInfo)"
-                  >
-                    <v-list-item-avatar tile size="100">
+                  <v-list-item three-line style="background-color: white">
+                    <v-list-item-avatar
+                      tile
+                      size="100"
+                      @click="moveDetail(recipeInfo)"
+                    >
                       <v-img :src="recipeInfo['repImg']"></v-img>
                     </v-list-item-avatar>
                     <v-list-item-content>
-                      <v-list-item-title>{{ recipeInfo['title'] }}</v-list-item-title>
+                      <v-list-item-title @click="moveDetail(recipeInfo)">{{
+                        recipeInfo['title']
+                      }}</v-list-item-title>
 
-                      <v-list-item-subtitle>{{ recipeInfo['content'] }}</v-list-item-subtitle>
+                      <v-list-item-subtitle @click="moveDetail(recipeInfo)">{{
+                        recipeInfo['content']
+                      }}</v-list-item-subtitle>
                       <div class="d-flex justify-space-between">
                         <v-list-item-subtitle>
-                          <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
+                          <v-icon small color="pink lighten-1"
+                            >mdi-cards-heart</v-icon
+                          >
                           {{ recipeInfo['recipeLike'] }}
                         </v-list-item-subtitle>
 
                         <v-list-item-subtitle style="text-align: right">
-                          <v-btn small color="letcipe" @click="addRecipe(recipeInfo['id'])">+담기</v-btn>
+                          <v-btn
+                            small
+                            color="letcipe"
+                            @click="addRecipe(recipeInfo['id'])"
+                            >+담기</v-btn
+                          >
                         </v-list-item-subtitle>
                       </div>
                     </v-list-item-content>
@@ -255,7 +325,12 @@
               <v-card-text>이미 추가된 레시피입니다.</v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="green darken-1" text @click="dialogSameIngre = false">확인</v-btn>
+                <v-btn
+                  color="green darken-1"
+                  text
+                  @click="dialogSameIngre = false"
+                  >확인</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-dialog>

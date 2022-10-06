@@ -272,18 +272,24 @@
                     :elevation="hover ? 24 : 6"
                     :class="hover ? 'letcipe lighten-2' : 'white'"
                     class="lecipe-list-group mx-auto mt-2 mb-2 d-flex align-center"
-                    @click="moveDetail2(data.recipe.id)"
                   >
                     <div class="ml-4" style="color: #ffa500">{{ i + 1 }}</div>
-                    <v-list-item three-line>
-                      <v-list-item-avatar tile size="57">
+                    <v-list-item
+                      three-line
+                      @click="moveDetail2(data.recipe.id)"
+                    >
+                      <v-list-item-avatar
+                        tile
+                        size="57"
+                        @click="moveDetail2(data.recipe.id)"
+                      >
                         <v-img
                           elevation="10"
                           :src="data.recipe.repImg"
                           style="border-radius: 5px"
                         ></v-img>
                       </v-list-item-avatar>
-                      <v-list-item-content>
+                      <v-list-item-content @click="moveDetail2(data.recipe.id)">
                         <v-list-item-title class="item-titles mb-1">
                           {{ data.recipe.title }}
                         </v-list-item-title>
@@ -301,7 +307,7 @@
                       x-small
                       color="letcipe"
                       outlined
-                      @click="LikeRecipe(data.recipe)"
+                      @click="createLike(data.recipe)"
                     >
                       <v-icon style="z-index: 5" color="letcipe"
                         >mdi-heart</v-icon
@@ -349,15 +355,15 @@
           <div class="chart-header">
             <div>인기있는 레시피 리스트!</div>
           </div>
-          <div v-for="(recipeList, i) in BestRecipeLists" :key="i">
+          <!-- <div v-for="(recipeList, i) in BestRecipeLists" :key="i">
             <v-card
               style="width: 200px; height: 230px"
               class="d-flex-column justify-center align-item-center pt-3"
             >
               <div class="rec-imgs-group d-flex justify-center">
-                <v-avatar size="130" fab @click="moveListDetail">
-                  <!-- <v-img class="ref-imgs" :src="item.recipe.repImg"></v-img> -->
-                  <v-img
+                <v-avatar size="130" fab @click="moveListDetail"> -->
+          <!-- <v-img class="ref-imgs" :src="item.recipe.repImg"></v-img> -->
+          <!-- <v-img
                     class="ref-imgs"
                     :src="recipeList.recipeListItems[0].recipe.repImg"
                   >
@@ -372,7 +378,7 @@
                 <v-card-subtitle>{{ recipeList.description }}</v-card-subtitle>
               </div>
             </v-card>
-          </div>
+          </div> -->
           <!-- <div class="rec-imgs-group d-flex justify-space-between">
             <v-avatar
               v-for="(ref, i) in refImg"
@@ -509,9 +515,9 @@ export default {
       if (this.historyID !== null) {
         await this.getHistory(this.historyID)
         this.history.historyIngredients.forEach((jaeryo) => {
-          if (jaeryo.isPurchased === 'N') {
+          if (jaeryo.isPurchased === 'N' && jaeryo.amount !== 0) {
             this.checklist.push(jaeryo)
-          } else {
+          } else if (jaeryo.isPurchased !== 'N' && jaeryo.amount !== 0) {
             this.checkedList.push(jaeryo)
           }
           if (this.category.length === 0) {
@@ -547,6 +553,8 @@ export default {
       })
       getBestRecipeLists(1, (response) => {
         this.BestRecipeLists = response.data
+        console.log(1111111111111)
+        console.log(this.BestRecipeLists)
       })
     })
   },
@@ -617,9 +625,11 @@ export default {
     createRecipe() {
       this.$router.push('/recipe/create')
     },
-    LikeRecipe(data) {
-      console.log(data)
+    createLike(recipe) {
+      console.log(recipe)
+      // this.countRecipeLikes(recipe.id)
     },
+    deleteLike(recipe) {},
   },
 }
 </script>
@@ -696,6 +706,7 @@ export default {
 }
 .before-shopping-none,
 .after-shopping-none {
+  background-image: url('/bg/bg_img.png');
   height: 165px;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }

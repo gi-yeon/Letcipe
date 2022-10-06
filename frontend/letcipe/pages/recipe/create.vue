@@ -144,8 +144,8 @@
                     dark
                     class="mb-5 mt-6"
                     v-bind="attrs"
-                    v-on="on"
                     @click="clearItem"
+                    v-on="on"
                     >재료 추가</v-btn
                   >
                 </template>
@@ -361,14 +361,7 @@
                 v-on="on"
                 >저장</v-btn
               >
-              <v-snackbar
-                v-model="saveSnackBar"
-                centered
-                style="z-index: 1"
-                :timeout="1500"
-              >
-                {{ snackBarMsg }}
-              </v-snackbar>
+
               <v-btn
                 color="black"
                 class="mr-6 ml-6 mb-5"
@@ -380,6 +373,13 @@
           </v-card>
         </v-container>
       </div>
+      <v-snackbar
+        v-model="saveSnackBar"
+        style="z-index: 100; margin-bottom: 60px"
+        :timeout="1500"
+      >
+        {{ snackBarMsg }}
+      </v-snackbar>
     </v-app>
   </div>
 </template>

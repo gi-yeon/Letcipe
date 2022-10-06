@@ -315,9 +315,9 @@ export default {
       if (this.historyID !== null) {
         await this.getHistory(this.historyID)
         this.history.historyIngredients.forEach((jaeryo) => {
-          if (jaeryo.isPurchased === 'N') {
+          if (jaeryo.isPurchased === 'N' && jaeryo.amount !== 0) {
             this.checklist.push(jaeryo)
-          } else {
+          } else if (jaeryo.isPurchased !== 'N' && jaeryo.amount !== 0) {
             this.checkedList.push(jaeryo)
           }
           if (this.category.length === 0) {
