@@ -19,7 +19,7 @@
           <v-card-subtitle>내가 만든 레시피</v-card-subtitle>
           <!-- <div :page="currentPage" :items="myRecipes" :items-per-page="perPage" class="text-center"> -->
           <div>
-            <div v-for="(mr, i) in myRecipe" :key="i">
+            <div v-for="(mr, i) in myRecipes" :key="i">
               <v-list-item three-line>
                 <v-list-item-avatar
                   class="recipe-item"
@@ -92,10 +92,10 @@
           <v-pagination
             v-model="currentPage"
             color="letcipe"
-            :length="TotalPage"
-            :per-page="perPage"
-            :total-visivle="5"
-            circle
+            :length="Math.ceil(recipeCnt / 10)"
+            prev-icon="mdi-menu-left"
+            next-icon="mdi-menu-right"
+            @input="handlePage"
           ></v-pagination>
         </v-container>
 
@@ -119,8 +119,6 @@ export default {
         page: 0,
         size: 10,
       },
-      TotalPage: 5,
-      perPage: 5,
       currentPage: 1,
       byname: '',
       searchedName: '',
@@ -143,7 +141,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('user', ['myRecipe']),
+    ...mapState('user', ['myRecipe', 'recipeCnt']),
     ...mapState('cart', ['isSucceededtoCart']),
   },
 
@@ -154,9 +152,9 @@ export default {
       resolve()
     })
     promise.then(async () => {
+      await this.getRecipeNum()
       await this.myrecipe(this.pageable)
-      this.myrecipe = this.myRecipe
-
+      this.myRecipes = this.myRecipe
       //   this.myRecipe.forEach((mr) => {
       //     this.myRecipes.push(mr)
       //   })
@@ -167,7 +165,7 @@ export default {
   },
   methods: {
     ...mapActions('recipe', ['patchRecipeDetail']),
-    ...mapActions('user', ['myrecipe']),
+    ...mapActions('user', ['myrecipe', 'getRecipeNum']),
     ...mapActions('cart', ['createCart']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     editItem(mr) {
@@ -207,6 +205,11 @@ export default {
       }
       this.createCart(addrecipes)
       this.snackbar = true
+    },
+    async handlePage(nowPage) {
+      this.pageable.page = nowPage
+      await this.myrecipe(this.pageable)
+      this.myRecipes = this.myRecipe
     },
   },
 }

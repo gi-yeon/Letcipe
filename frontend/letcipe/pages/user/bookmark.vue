@@ -5,9 +5,13 @@
         <v-container class="bookmark-container d-flex-row">
           <div class="bookmark-head-wrap">
             <div class="d-flex justify-space-between pb-3">
-              <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              <div>
+                <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              </div>
               <div style="font-size: x-large">즐겨찾는 레시피</div>
-              <v-icon>mdi-blank</v-icon>
+              <div>
+                <v-icon>mdi-blank</v-icon>
+              </div>
             </div>
           </div>
           <v-divider></v-divider>

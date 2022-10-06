@@ -337,6 +337,13 @@
           </v-dialog>
         </v-container>
       </div>
+      <v-snackbar
+        v-model="snackbar"
+        style="z-index: 100; margin-bottom: 60px"
+        :timeout="timeout"
+      >
+        {{ text }}
+      </v-snackbar>
     </v-app>
   </div>
 </template>
@@ -387,6 +394,9 @@ export default {
       tab: null,
       isSelected: [],
       selectedIngre: '',
+      snackbar: false,
+      timeout: 1500,
+      text: '',
     }
   },
   computed: {
@@ -561,6 +571,8 @@ export default {
         list: recipeList,
       }
       this.createCart(addrecipes)
+      this.text = '레시피 담기 성공!'
+      this.snackbar = true
     },
     addRecipeList(recipeListInfo) {
       const recipeList = []
@@ -572,6 +584,8 @@ export default {
         list: recipeList,
       }
       this.createCart(addrecipes)
+      this.text = '레시피리스트 담기 성공!'
+      this.snackbar = true
     },
   },
 }

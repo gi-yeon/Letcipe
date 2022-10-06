@@ -16,6 +16,7 @@ import {
   createCode,
   modifyPassword,
   myLikeRecipe,
+  recipeNum,
 } from '@/api/user'
 
 export const state = () => ({
@@ -40,6 +41,7 @@ export const state = () => ({
   myBookMarkRecipe: [],
   myBookMarkRecipeList: [],
   mylikeRecipe: [],
+  recipeCnt: 0,
 })
 
 export const mutations = {
@@ -108,7 +110,9 @@ export const mutations = {
   SET_MY_LIKE_RECIPE(state, myLikeRecipe) {
     state.mylikeRecipe = myLikeRecipe
   },
-
+  SET_RECIPE_CNT(state, data) {
+    state.recipeCnt = data
+  },
   CLEAR_USER(state) {
     state.userid = ''
     state.birth = ''
@@ -126,17 +130,20 @@ export const mutations = {
   CLEAR_MY_RECIPE(state) {
     state.myRecipe = []
   },
-  CLEAR_MY_RECIPELIST() {
+  CLEAR_MY_RECIPELIST(state) {
     state.myRecipeList = []
   },
-  CLEAR_MY_BOOKMARK_RECIPE() {
+  CLEAR_MY_BOOKMARK_RECIPE(state) {
     state.myBookMarkRecipe = []
   },
-  CLEAR_MY_BOOKMARK_RECIPELIST() {
+  CLEAR_MY_BOOKMARK_RECIPELIST(state) {
     state.myBookMarkRecipeList = []
   },
-  CLEAR_MY_LIKE_RECIPE() {
+  CLEAR_MY_LIKE_RECIPE(state) {
     state.mylikeRecipe = []
+  },
+  CLEAR_RECIPE_CNT(state) {
+    state.recipeCnt = 0
   },
 }
 
@@ -254,6 +261,19 @@ export const actions = {
         // console.log(data)
         // console.log("내가만든 레시피 가져오기 성공!")
         commit('SET_MY_RECIPE', data.recipes)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  },
+  async getRecipeNum({ commit }) {
+    commit('CLEAR_RECIPE_CNT')
+    await recipeNum(
+      ({ data }) => {
+        console.log(data)
+        console.log('내가만든 레시피 갯수 가져오기 성공!')
+        commit('SET_RECIPE_CNT', data.recipes)
       },
       (error) => {
         console.log(error)

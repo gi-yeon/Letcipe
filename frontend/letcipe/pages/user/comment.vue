@@ -288,7 +288,7 @@ export default {
 
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }
-@media (max-width: 415px) {
+@media (max-width: 500px) {
   .comment-wrap {
     width: 260px;
     word-break: normal;

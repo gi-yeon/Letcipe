@@ -5,9 +5,14 @@
         <v-container class="myrecipe-container d-flex-row">
           <div class="myrecipe-head-wrap">
             <div class="d-flex justify-space-between pb-3">
-              <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              <div>
+                <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              </div>
+
               <div style="font-size: x-large">즐겨찾는 레시피리스트</div>
-              <v-icon>mdi-blank</v-icon>
+              <div>
+                <v-icon>mdi-blank</v-icon>
+              </div>
             </div>
           </div>
           <v-divider></v-divider>
@@ -292,7 +297,7 @@ export default {
 :deep(.v-text-field__details) {
   display: none;
 }
-@media (max-width: 415px) {
+@media (max-width: 500px) {
   .recipe-item {
     width: 85px;
     overflow: hidden;

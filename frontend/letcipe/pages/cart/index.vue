@@ -57,92 +57,96 @@
               담긴 레시피가 없습니다.
             </div>
           </div>
-          <div v-for="(recipeInfo, i) in cart" v-else :key="i">
-            <v-list-item
-              three-line
-              style="background-color: white; z-index: 1"
-              class="pl-3 pr-3"
-            >
-              <v-icon
-                v-if="!checkedRecipe[i]"
-                class="check-btn-wrap mr-3"
-                @click="addRecipe(i)"
-                >mdi-check-circle-outline</v-icon
+          <div v-else>
+            <div v-for="(recipeInfo, i) in cart" :key="i">
+              <v-list-item
+                three-line
+                style="background-color: white; z-index: 1"
+                class="pl-3 pr-3"
               >
-              <v-icon
-                v-else
-                class="mr-3"
-                style="z-index: 2"
-                @click="addRecipe(i)"
-                >mdi-check-circle</v-icon
-              >
-              <v-list-item-avatar
-                tile
-                size="100"
-                class="recipe-avatar"
-                @click="moveDetail(recipeInfo)"
-              >
-                <v-img :src="recipeInfo.recipe.repImg"></v-img>
-              </v-list-item-avatar>
-              <v-list-item-content class="pl-4">
-                <v-list-item-title class="d-flex justify-space-between">
-                  <div style="cursor: pointer" @click="moveDetail(recipeInfo)">
-                    {{ recipeInfo.recipe.title }}
-                  </div>
-                  <v-icon
-                    style="z-index: 2"
-                    @click="deleteRecipe(recipeInfo.recipe.id)"
-                    >mdi-window-close</v-icon
-                  >
-                </v-list-item-title>
-
-                <v-list-item-subtitle
-                  style="
-                    text-overflow: ellipsis;
-                    over-flow: hidden;
-                    white-space: nowrap;
-                    display: inline-block;
-                  "
-                  @click="moveDetail(recipeInfo)"
-                  >{{ recipeInfo.recipe.content }}</v-list-item-subtitle
+                <v-icon
+                  v-if="!checkedRecipe[i]"
+                  class="check-btn-wrap mr-3"
+                  @click="addRecipe(i)"
+                  >mdi-check-circle-outline</v-icon
                 >
-                <div class="d-flex justify-space-between">
-                  <div style="margin: auto 0">
-                    <v-icon small color="pink lighten-1"
-                      >mdi-cards-heart</v-icon
+                <v-icon
+                  v-else
+                  class="mr-3"
+                  style="z-index: 2"
+                  @click="addRecipe(i)"
+                  >mdi-check-circle</v-icon
+                >
+                <v-list-item-avatar
+                  tile
+                  size="100"
+                  class="recipe-avatar"
+                  @click="moveDetail(recipeInfo)"
+                >
+                  <v-img :src="recipeInfo.recipe.repImg"></v-img>
+                </v-list-item-avatar>
+                <v-list-item-content class="pl-4">
+                  <v-list-item-title class="d-flex justify-space-between">
+                    <div
+                      style="cursor: pointer"
+                      @click="moveDetail(recipeInfo)"
                     >
-                    {{ recipeInfo.recipe.recipeLike }}
-                  </div>
-                  <!-- <v-list-item-subtitle style="text-align: right"
+                      {{ recipeInfo.recipe.title }}
+                    </div>
+                    <v-icon
+                      style="z-index: 2"
+                      @click="deleteRecipe(recipeInfo.recipe.id)"
+                      >mdi-window-close</v-icon
+                    >
+                  </v-list-item-title>
+
+                  <v-list-item-subtitle
+                    style="
+                      text-overflow: ellipsis;
+                      over-flow: hidden;
+                      white-space: nowrap;
+                      display: inline-block;
+                    "
+                    @click="moveDetail(recipeInfo)"
+                    >{{ recipeInfo.recipe.content }}</v-list-item-subtitle
+                  >
+                  <div class="d-flex justify-space-between">
+                    <div style="margin: auto 0">
+                      <v-icon small color="pink lighten-1"
+                        >mdi-cards-heart</v-icon
+                      >
+                      {{ recipeInfo.recipe.recipeLike }}
+                    </div>
+                    <!-- <v-list-item-subtitle style="text-align: right"
                     >선택한 재료 4개를 포함하고 있어요.</v-list-item-subtitle
                   >-->
-                  <div>
-                    <v-btn
-                      elevation="3"
-                      style="z-index: 5"
-                      class="mx-2"
-                      fab
-                      dark
-                      x-small
-                      color="letcipe"
-                      @click="subRecipeAmount(recipeInfo.recipe.id, i)"
-                    >
-                      <v-icon style="z-index: 5" dark>mdi-minus</v-icon>
-                    </v-btn>
-                    {{ recipeInfo.amount }}
-                    <v-btn
-                      elevation="3"
-                      style="z-index: 5"
-                      class="mx-2"
-                      fab
-                      dark
-                      x-small
-                      color="letcipe"
-                      @click="plusRecipeAmount(recipeInfo.recipe.id, i)"
-                    >
-                      <v-icon style="z-index: 5" dark>mdi-plus</v-icon>
-                    </v-btn>
-                    <!-- <div class="d-flex justify-center">
+                    <div>
+                      <v-btn
+                        elevation="3"
+                        style="z-index: 5"
+                        class="mx-2"
+                        fab
+                        dark
+                        x-small
+                        color="letcipe"
+                        @click="subRecipeAmount(recipeInfo.recipe.id, i)"
+                      >
+                        <v-icon style="z-index: 5" dark>mdi-minus</v-icon>
+                      </v-btn>
+                      {{ recipeInfo.amount }}
+                      <v-btn
+                        elevation="3"
+                        style="z-index: 5"
+                        class="mx-2"
+                        fab
+                        dark
+                        x-small
+                        color="letcipe"
+                        @click="plusRecipeAmount(recipeInfo.recipe.id, i)"
+                      >
+                        <v-icon style="z-index: 5" dark>mdi-plus</v-icon>
+                      </v-btn>
+                      <!-- <div class="d-flex justify-center">
                       <v-icon class="mx-2" color="letcipe"
                         >mdi-minus-circle</v-icon
                       >
@@ -151,12 +155,13 @@
                         >mdi-plus-circle</v-icon
                       >
                     </div>-->
+                    </div>
                   </div>
-                </div>
-              </v-list-item-content>
-            </v-list-item>
+                </v-list-item-content>
+              </v-list-item>
 
-            <v-divider></v-divider>
+              <v-divider></v-divider>
+            </div>
           </div>
         </div>
         <div class="cart-ingredient-wrap fadeInUp">
@@ -847,14 +852,13 @@ export default {
       this.errorMsg = '정말로 삭제하시겠습니까?'
       this.dialogAlert = true
     },
-   checkedDelete() {
+    checkedDelete() {
       if (this.checked.length > 0) {
         for (let i = 0; i < this.checked.length; i++) {
-         this.deleteRecipe(this.checked[i].recipe.id)
+          this.deleteRecipe(this.checked[i].recipe.id)
         }
-
       }
-       this.$router.go()
+      this.$router.go()
       this.dialogAlert = false
     },
     subIngreAmount(index) {

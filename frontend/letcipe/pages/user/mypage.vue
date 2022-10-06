@@ -16,12 +16,21 @@
                     <img v-else alt="Avatar" src="/icons/유저_mo.png" />
                   </v-avatar>
                 </div>
-                <div v-if="nickname !== null && nickname !== ''" class="user-info">
-                  <div class="user-name" style="font-size: 18px">{{ nickname }}</div>
-                  <div class="user-name" style="font-size: 13px">{{ userJob }}</div>
+                <div
+                  v-if="nickname !== null && nickname !== ''"
+                  class="user-info"
+                >
+                  <div class="user-name" style="font-size: 18px">
+                    {{ nickname }}
+                  </div>
+                  <div class="user-name" style="font-size: 13px">
+                    {{ userJob }}
+                  </div>
                 </div>
                 <div v-else class="user-info">
-                  <div class="user-name" style="font-size: 18px">로그인을 해주세요.</div>
+                  <div class="user-name" style="font-size: 18px">
+                    로그인을 해주세요.
+                  </div>
                 </div>
               </div>
               <div class="user-chip">
@@ -29,7 +38,8 @@
                   class="user-chip-info ma-2 text--center"
                   color="letcipe lighten-2"
                   @click="moveModify"
-                >내 정보</v-chip>
+                  >내 정보</v-chip
+                >
                 <!-- 
                 <v-btn outlined small rounded style="margin: 0px; color: black" @click="logout">로그아웃</v-btn>-->
               </div>
@@ -38,28 +48,40 @@
           <v-container class="my-btn-container">
             <div class="user-head-btn d-flex justify-space-between">
               <v-btn class="my-btn" large @click="moveProgress">
-                <v-hover style="text-align: center;">
+                <v-hover style="text-align: center">
                   <template #default="{ hover }">
                     <img
                       class="footer-icon"
                       width="30px"
-                      :src="hover ? `/icons/레시피북_h.gif`: `/icons/레시피북_o.png`"
+                      :src="
+                        hover
+                          ? `/icons/레시피북_h.gif`
+                          : `/icons/레시피북_o.png`
+                      "
                       alt
-                      :style="hover ? `filter: brightness(0.9);` : `filter: brightness(1);`"
+                      :style="
+                        hover
+                          ? `filter: brightness(0.9);`
+                          : `filter: brightness(1);`
+                      "
                     />
                   </template>
                 </v-hover>
                 <span style="font-size: medium">진행중인 리스트</span>
               </v-btn>
               <v-btn class="my-btn" large @click="moveCheckList">
-                <v-hover style="text-align: center;">
+                <v-hover style="text-align: center">
                   <template #default="{ hover }">
                     <img
                       class="footer-icon"
                       width="30px"
-                      :src="hover ? `/icons/종이_h.gif`: `/icons/종이_o.png`"
+                      :src="hover ? `/icons/종이_h.gif` : `/icons/종이_o.png`"
                       alt
-                      :style="hover ? `filter: brightness(0.9);` : `filter: brightness(1);`"
+                      :style="
+                        hover
+                          ? `filter: brightness(0.9);`
+                          : `filter: brightness(1);`
+                      "
                     />
                   </template>
                 </v-hover>
@@ -69,7 +91,9 @@
           </v-container>
           <v-card class="my-menu-card mx-auto" tile>
             <v-list flat>
-              <v-subheader style="font-size: large; color: #FFA500">마이메뉴</v-subheader>
+              <v-subheader style="font-size: large; color: #ffa500"
+                >마이메뉴</v-subheader
+              >
               <v-divider></v-divider>
               <v-list-item-group color="letcipe">
                 <v-hover>
@@ -79,7 +103,9 @@
                         <img
                           class="footer-icon"
                           width="30px"
-                          :src="hover ? `/icons/카트_h.gif`: `/icons/카트_o.png`"
+                          :src="
+                            hover ? `/icons/카트_h.gif` : `/icons/카트_o.png`
+                          "
                           alt
                         />
                       </v-list-item-icon>
@@ -96,7 +122,9 @@
                         <img
                           class="footer-icon"
                           width="30px"
-                          :src="hover ? `/icons/검색_h.gif`: `/icons/검색_o.png`"
+                          :src="
+                            hover ? `/icons/검색_h.gif` : `/icons/검색_o.png`
+                          "
                           alt
                         />
                       </v-list-item-icon>
@@ -113,7 +141,9 @@
                         <img
                           class="footer-icon"
                           width="30px"
-                          :src="hover ? `/icons/유저_mh.gif`: `/icons/유저_mo.png`"
+                          :src="
+                            hover ? `/icons/유저_mh.gif` : `/icons/유저_mo.png`
+                          "
                           alt
                         />
                       </v-list-item-icon>
@@ -130,12 +160,18 @@
                         <img
                           class="footer-icon"
                           width="30px"
-                          :src="hover ? `/icons/북마크_h.gif`: `/icons/북마크_o.png`"
+                          :src="
+                            hover
+                              ? `/icons/북마크_h.gif`
+                              : `/icons/북마크_o.png`
+                          "
                           alt
                         />
                       </v-list-item-icon>
                       <v-list-item-content>
-                        <v-list-item-title>즐겨찾는 레시피 리스트</v-list-item-title>
+                        <v-list-item-title
+                          >즐겨찾는 레시피 리스트</v-list-item-title
+                        >
                       </v-list-item-content>
                     </v-list-item>
                   </template>
@@ -148,12 +184,18 @@
                           class="footer-icon"
                           width="30px"
                           src="/icons/북마크_o.png"
-                          :style="hover? `filter: brightness(1.3)`:`filter: brightness(1)`"
+                          :style="
+                            hover
+                              ? `filter: brightness(1.3)`
+                              : `filter: brightness(1)`
+                          "
                           alt
                         />
                       </v-list-item-icon>
                       <v-list-item-content>
-                        <v-list-item-title>내가만든 레시피 리스트</v-list-item-title>
+                        <v-list-item-title
+                          >내가만든 레시피 리스트</v-list-item-title
+                        >
                       </v-list-item-content>
                     </v-list-item>
                   </template>
@@ -165,7 +207,11 @@
                         <img
                           class="footer-icon"
                           width="30px"
-                          :src="hover ? `/icons/스크롤_h.gif`: `/icons/스크롤_o.png`"
+                          :src="
+                            hover
+                              ? `/icons/스크롤_h.gif`
+                              : `/icons/스크롤_o.png`
+                          "
                           alt
                         />
                       </v-list-item-icon>
@@ -183,7 +229,11 @@
                           class="footer-icon"
                           width="30px"
                           src="/icons/히스토리_1.png"
-                          :style="hover? `filter: brightness(1.3)`:`filter: brightness(1)`"
+                          :style="
+                            hover
+                              ? `filter: brightness(1.3)`
+                              : `filter: brightness(1)`
+                          "
                           alt
                         />
                       </v-list-item-icon>
@@ -200,7 +250,11 @@
                         <img
                           class="footer-icon"
                           width="30px"
-                          :src="hover ? `/icons/즐겨찾기_h.gif`: `/icons/즐겨찾기_o.png`"
+                          :src="
+                            hover
+                              ? `/icons/즐겨찾기_h.gif`
+                              : `/icons/즐겨찾기_o.png`
+                          "
                           alt
                         />
                       </v-list-item-icon>
@@ -217,7 +271,11 @@
                         <img
                           class="footer-icon"
                           width="30px"
-                          :src="hover ? `/icons/좋아요_h.gif`: `/icons/좋아요_o.png`"
+                          :src="
+                            hover
+                              ? `/icons/좋아요_h.gif`
+                              : `/icons/좋아요_o.png`
+                          "
                           alt
                         />
                       </v-list-item-icon>
@@ -234,7 +292,11 @@
                         <img
                           class="footer-icon"
                           width="30px"
-                          :src="hover ? `/icons/댓글관리_h.gif`: `/icons/댓글관리_o.png`"
+                          :src="
+                            hover
+                              ? `/icons/댓글관리_h.gif`
+                              : `/icons/댓글관리_o.png`
+                          "
                           alt
                         />
                       </v-list-item-icon>
@@ -252,7 +314,11 @@
                           class="footer-icon"
                           width="30px"
                           src="/icons/보드.png"
-                          :style="hover? `filter: brightness(1.3)`:`filter: brightness(1)`"
+                          :style="
+                            hover
+                              ? `filter: brightness(1.3)`
+                              : `filter: brightness(1)`
+                          "
                           alt
                         />
                       </v-list-item-icon>
@@ -399,7 +465,7 @@ export default {
 }
 
 /* 모바일 screen */
-@media (max-width: 400px) {
+@media (max-width: 500px) {
   .mypage-container {
     height: 100%;
     /* background-image: url('/bg/bg_img.png'); */

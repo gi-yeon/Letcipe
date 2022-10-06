@@ -202,7 +202,7 @@ export default {
       recipeList: [],
       dialog: false,
       selectedRecipe: {},
-
+      selectedRecipeList: '',
       snackbar: false,
       timeout: 2000,
 
@@ -284,6 +284,7 @@ export default {
       await this.deleteRecipeList(id)
       await this.myrecipeList(this.pageable)
       this.dialog = false
+      this.$router.go()
     },
     moveDetail(mr) {
       this.CLEAR_RECIPELIST_ID()
@@ -387,7 +388,7 @@ export default {
   display: none;
 }
 
-@media (max-width: 415px) {
+@media (max-width: 500px) {
   .recipe-item {
     width: 85px;
     overflow: hidden;
