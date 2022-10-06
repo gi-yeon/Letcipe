@@ -144,8 +144,8 @@
                     dark
                     class="mb-5 mt-6"
                     v-bind="attrs"
-                    v-on="on"
                     @click="clearItem"
+                    v-on="on"
                     >재료 추가</v-btn
                   >
                 </template>
@@ -307,40 +307,7 @@
                 >스탭추가</v-btn
               >
             </div>
-            <!-- <v-snackbar v-model="stepDialog" :timeout="1500" max-width="290">
-              <template #activator="{ on, attrs }">
-                <div class="d-flex justify-center">
-                  <v-btn
-                    :disabled="step.content.trim() == ''"
-                    class="mr-6 ml-6 mb-5"
-                    v-bind="attrs"
-                    @click="addStep()"
-                    v-on="on"
-                    >스탭추가</v-btn
-                  >
-                </div>
-              </template>
-              <v-card>
-                <v-card-title class="text-h5">Caution</v-card-title>
-                <v-card-text v-if="step.image == null"
-                  >스텝 이미지는 필수 입력값입니다. 스탭 이미지를
-                  넣어주세요.</v-card-text
-                >
-                <v-card-text v-else-if="step.content.trim() == ''"
-                  >스텝 내용은 필수 입력값입니다. 스탭 내용을
-                  입력해주세요.</v-card-text
-                >
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" text @click="saveDialog = false"
-                    >확인</v-btn
-                  >
-                </v-card-actions>
-              </v-card>
-            </v-snackbar> -->
-            <!-- <div class="d-flex justify-center">
-              <v-btn dark class="mt-4 mb-6" @click="addStep">스탭 추가</v-btn>
-            </div> -->
+
             <v-divider></v-divider>
             <v-divider></v-divider>
             <v-card-title class="recipe-component">태그</v-card-title>
@@ -356,19 +323,10 @@
                 color="black"
                 class="mr-6 ml-6 mb-5"
                 style="color: white"
-                v-bind="attrs"
                 @click="canSave()"
-                v-on="on"
                 >저장</v-btn
               >
-              <v-snackbar
-                v-model="saveSnackBar"
-                centered
-                style="z-index: 1"
-                :timeout="1500"
-              >
-                {{ snackBarMsg }}
-              </v-snackbar>
+
               <v-btn
                 color="black"
                 class="mr-6 ml-6 mb-5"
@@ -380,12 +338,19 @@
           </v-card>
         </v-container>
       </div>
+      <v-snackbar
+        v-model="saveSnackBar"
+        style="z-index: 100; margin-bottom: 60px"
+        :timeout="1500"
+      >
+        {{ snackBarMsg }}
+      </v-snackbar>
     </v-app>
   </div>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState, mapMutations } from 'vuex'
 import HashTags from '@/components/Hashtags.vue'
 
 export default {
@@ -635,10 +600,10 @@ export default {
       'updateRecipeDetail',
       'patchRecipeDetail',
     ]),
+    ...mapMutations('recipe', ['SET_FAIL_RECIPE', 'SET_SUCCESS_RECIPE']),
     Preview_image() {
       if (this.image != null) {
         this.url = URL.createObjectURL(this.image)
-        console.log(this.url)
       } else {
         this.url = null
       }
@@ -697,7 +662,6 @@ export default {
         content: '',
       }
       this.steps.push(newStep)
-      console.log(this.steps)
     },
     deleteStep(index) {
       if (this.stepNum > 1) {
@@ -709,43 +673,6 @@ export default {
         }
       }
     },
-    // Preview_image(file) {
-    //   if (file) {
-    //     const fileData = (data) => {
-    //       this.image = data
-    //     }
-    //     this.fileInfo = file
-    //     const reader = new FileReader()
-    //     reader.readAsDataURL(file)
-    //     reader.addEventListener(
-    //       'load',
-    //       function () {
-    //         fileData(reader.result)
-    //       },
-    //       false
-    //     )
-    //     this.stepImage.push(this.image)
-    //   } else if (file === null) {
-    //     this.fileInfo = null
-    //     this.image = '/banner/no-image.png'
-    //     this.stepImage.push(this.image)
-    //   } else {
-    //     file = this.fileInfo
-    //     const fileData = (data) => {
-    //       this.image = data
-    //     }
-    //     const reader = new FileReader()
-    //     reader.readAsDataURL(file)
-    //     reader.addEventListener(
-    //       'load',
-    //       function () {
-    //         fileData(reader.result)
-    //       },
-    //       false
-    //     )
-    //     this.stepImage.push(this.image)
-    //   }
-    // },
     initialize() {
       this.ingredients = []
     },
@@ -781,8 +708,6 @@ export default {
     },
     saveIngre() {
       if (this.$refs.form.validate()) {
-        console.log(this.$refs.form.validate())
-
         this.IngreValid = false
         this.ingredients?.forEach((ingre) => {
           if (this.editedItem.name === ingre.name) {
@@ -802,25 +727,18 @@ export default {
         if (this.editedIndex > -1) {
           Object.assign(this.ingredients[this.editedIndex], this.editedItem)
         }
-        // if (this.editedIndex > -1) {
-        //   Object.assign(this.ingredients[this.editedIndex], this.editedItem)
-        // } else {
-        //   this.ingredients.push(this.editedItem)
-        // }
 
         this.close()
       }
     },
     setTags(tags) {
       this.tags = tags
-      console.log(this.tags)
     },
     ingre(keyword) {
       if (keyword != null && keyword.length > 0) {
         keyword = keyword.trim()
         if (keyword.length > 0 && keyword != null) {
           this.searchIngredient(keyword)
-          console.log(keyword)
         }
       }
     },
@@ -830,7 +748,6 @@ export default {
       this.editedItem.unit = item.measure
     },
     saveRecipe() {
-      // console.log(this.ingredients)
       const formdata = new FormData()
       formdata.append('title', this.title)
       formdata.append('content', this.content)
@@ -847,8 +764,7 @@ export default {
         formdata.append(`ingredients[${i}].id`, this.ingredients[i].id)
         formdata.append(`ingredients[${i}].amount`, this.ingredients[i].amount)
       }
-      // console.log('이거슨' + this.ingredients.length)
-      // console.log('이거슨' + this.ingredients)
+
       const ingreVal = []
       const keys = Object.keys(this.tags)
       // console.log(keys)
@@ -862,20 +778,19 @@ export default {
       } else {
         formdata.append(`tagList`, [])
       }
-      for (const p of formdata.entries()) {
-        console.log(p[0] + ',' + p[1])
-      }
-      console.log(formdata)
+      // for (const p of formdata.entries()) {
+      //   console.log(p[0] + ',' + p[1])
+      // }
+      // console.log(formdata)
       this.createRecipeDetail(formdata)
     },
     moveBack() {
-      this.isSucceededtoRecipe = false
+      this.SET_FAIL_DETAIL()
       this.$router.go(-1)
     },
     test() {
       // console.log(item)
       console.log(this.category)
-      console.log()
     },
   },
 }

@@ -5,7 +5,13 @@
         <div class="my-middle-wrap">
           <div class="my-middle">
             <div class="my-container">
-              <div>{{ nickname }}님의 현재 진행중인 레시피리스트</div>
+              <div
+                v-if="nickname !== null && nickname !== ''"
+                class="nickname-titles"
+              >
+                {{ nickname }}님의 현재 진행중인 레시피리스트
+              </div>
+              <div v-else>로그인을 해주세요</div>
               <v-carousel
                 hide-delimiters
                 class="my-list-carousel"
@@ -60,7 +66,13 @@
           </div>
           <div class="my-middle">
             <div class="check-wrap">
-              <div>{{ nickname }}님의 장보기목록</div>
+              <div
+                v-if="nickname !== null && nickname !== ''"
+                class="nickname-titles"
+              >
+                {{ nickname }}님의 장보기목록
+              </div>
+              <div v-else>로그인을 해주세요</div>
               <v-container elevation="3" class="check-container">
                 <div class="check-head-wrap">
                   <v-tabs v-model="tabs" fixed-tabs>
@@ -137,7 +149,7 @@
                       </v-card-text>
                       <v-card-text
                         v-if="i === 2"
-                        class="check-item-wrapfadeInUp"
+                        class="check-item-wrap fadeInUp"
                       >
                         <div
                           v-if="checkedList.length > 0"
@@ -241,7 +253,7 @@
             <div>Let'cipe차트</div>
             <div>전체보기</div>
           </div>
-          <div class="chart-chips-group">
+          <div class="chart-chips-group pt-2 pb-4">
             <v-sheet class="chip-sheet mx-auto">
               <v-slide-group v-model="selectTag" mandatory overflow>
                 <v-slide-item
@@ -270,19 +282,25 @@
                     :elevation="hover ? 24 : 6"
                     :class="hover ? 'letcipe lighten-2' : 'white'"
                     class="lecipe-list-group mx-auto mt-2 mb-2 d-flex align-center"
-                    @click="moveDetail2(data.recipe.id)"
                   >
                     <div class="ml-4" style="color: #ffa500">{{ i + 1 }}</div>
-                    <v-list-item three-line>
-                      <v-list-item-avatar tile size="57">
+                    <v-list-item
+                      three-line
+                      @click="moveDetail2(data.recipe.id)"
+                    >
+                      <v-list-item-avatar
+                        tile
+                        size="57"
+                        @click="moveDetail2(data.recipe.id)"
+                      >
                         <v-img
                           elevation="10"
                           :src="data.recipe.repImg"
                           style="border-radius: 5px"
                         ></v-img>
                       </v-list-item-avatar>
-                      <v-list-item-content>
-                        <v-list-item-title class="mb-1">
+                      <v-list-item-content @click="moveDetail2(data.recipe.id)">
+                        <v-list-item-title class="item-titles mb-1">
                           {{ data.recipe.title }}
                         </v-list-item-title>
                         <v-list-item-subtitle>{{
@@ -290,16 +308,6 @@
                         }}</v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
-                    <v-btn
-                      class="mr-3"
-                      fab
-                      dark
-                      x-small
-                      color="letcipe"
-                      outlined
-                    >
-                      <v-icon color="letcipe">mdi-heart</v-icon>
-                    </v-btn>
                   </v-card>
                 </template>
               </v-hover>
@@ -307,7 +315,9 @@
           </v-row>
         </div>
         <div class="ingrediant-base-group mt-2 mb-3">
-          <div v-if="nickname != ''">{{ nickname }} 님을 위한 레시피 추천</div>
+          <div v-if="nickname != ''" class="nickname-titles">
+            {{ nickname }} 님을 위한 레시피 추천
+          </div>
           <div v-else>이런 레시피 어때요?</div>
           <div class="chart-header">
             <div>{{ recommendTitle }}</div>
@@ -328,9 +338,6 @@
                     style="overflow: hidden; text-overflow: ellipsis"
                     >{{ ref.recipe.title }}</v-card-title
                   >
-                  <v-card-subtitle class="ref-subtitle">{{
-                    ref.recipe.content
-                  }}</v-card-subtitle>
                 </div>
               </v-img>
             </v-avatar>
@@ -340,10 +347,9 @@
           <div class="chart-header">
             <div>인기있는 레시피 리스트!</div>
           </div>
-          <v-row>
-            <v-col>
-          <div class="hot-recipe-list d-flex justify-center">
-            <div v-for="(recipeList, i) in recipeLists" :key="i">
+
+          <div class="hot-recipe-list d-flex justify-space-between">
+            <div v-for="(recipeList, i) in BestRecipeLists" :key="i">
               <v-card
                 style="width: 200px; height: 230px"
                 class="d-flex-column justify-center align-item-center pt-3"
@@ -364,30 +370,13 @@
                   <v-card-title class="justify-center">{{
                     recipeList.name
                   }}</v-card-title>
-                  <v-card-subtitle>{{ recipeList.description }}</v-card-subtitle>
+                  <v-card-subtitle style="text-align: center">{{
+                    recipeList.description
+                  }}</v-card-subtitle>
                 </div>
               </v-card>
             </div>
           </div>
-            </v-col>
-          </v-row>
-          <!-- <div class="rec-imgs-group d-flex justify-space-between">
-            <v-avatar
-              v-for="(ref, i) in refImg"
-              :key="i"
-              size="130"
-              tile
-              class="mr-2"
-              @click="moveListDetail(ref)"
-            >
-              <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
-                <div class="ref-wrap">
-                  <v-card-title class="ref-title">{{ ref.title }}</v-card-title>
-                  <v-card-subtitle class="ref-subtitle">{{ ref.sub_title }}</v-card-subtitle>
-                </div>
-              </v-img>
-            </v-avatar>
-          </div> -->
         </div>
       </v-container>
     </v-app>
@@ -414,33 +403,7 @@ export default {
           serving: 0,
         },
       ],
-      refImg: [
-        {
-          url: 'data/recipe/20210810152825-4Y20E.jpg',
-          sub_title: '끝맛이 개운한',
-          title: '오이찜닭',
-        },
-        {
-          url: 'data/recipe/20210810142007-EYPBD.jpg',
-          sub_title: '색다른 꿀조합',
-          title: '명란 오이무침',
-        },
-        {
-          url: 'data/recipe/20210713113307-VT9JZ.jpg',
-          sub_title: '식감이 재밌는',
-          title: '소고기 오이볶음밥',
-        },
-        {
-          url: 'data/recipe/20210708104052-PX6S9.jpg',
-          sub_title: '오래도록 아삭한',
-          title: '오이 물김치',
-        },
-        {
-          url: 'data/recipe/20220825153420-BD8U3.png',
-          sub_title: '다이어터를 위한 후식냉면',
-          title: '오이냉면',
-        },
-      ],
+      refImg: [],
       tag_set: [],
       lecipeData: [],
       recipeChart: [],
@@ -462,7 +425,7 @@ export default {
       selectedIngre: [],
       recommendTitle: '',
       recommendRecipes: [],
-      recipeLists: [],
+      BestRecipeLists: [],
     }
   },
   computed: {
@@ -477,8 +440,6 @@ export default {
       resolve()
     })
     promise.then(async () => {
-      console.log('이거슨감자' + this.recipeLists)
-      console.log(this.recipeLists)
       await this.getHistoryList()
       this.historyList?.forEach((h) => {
         if (h.process === 'READY') {
@@ -507,9 +468,9 @@ export default {
       if (this.historyID !== null) {
         await this.getHistory(this.historyID)
         this.history.historyIngredients.forEach((jaeryo) => {
-          if (jaeryo.isPurchased === 'N') {
+          if (jaeryo.isPurchased === 'N' && jaeryo.amount !== 0) {
             this.checklist.push(jaeryo)
-          } else {
+          } else if (jaeryo.isPurchased !== 'N' && jaeryo.amount !== 0) {
             this.checkedList.push(jaeryo)
           }
           if (this.category.length === 0) {
@@ -543,8 +504,9 @@ export default {
         this.recommendTitle = response.data.title
         this.recommendRecipes = response.data.report
       })
+
       getBestRecipeLists(5, (response) => {
-        this.recipeLists = response.data
+        this.BestRecipeLists = response.data
       })
     })
   },
@@ -556,6 +518,7 @@ export default {
       'updateHistory',
     ]),
     ...mapActions('search', ['getRecipes', 'getRecipeList', 'getHotRecipes']),
+    ...mapActions('recipe', ['countRecipeLikes', 'decountRecipeLikes']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     ...mapMutations('recipelist', ['SET_RECIPELIST_ID', 'CLEAR_RECIPELIST_ID']),
     findnow() {
@@ -567,8 +530,6 @@ export default {
       // console.log(this.time)
     },
     moveListDetail(mr) {
-      console.log("mr:");
-      console.log(mr.id);
       this.CLEAR_RECIPELIST_ID()
       this.SET_RECIPELIST_ID(mr.id)
       this.$router.push('/recipelist/detail')
@@ -675,21 +636,27 @@ export default {
 }
 
 .check-container {
+  /* background-image: url('/bg/bg_img.png'); */
+  /* background-color: white;
+  background-repeat: repeat; */
 }
 .check-item-wrap {
   height: 200px;
   overflow: scroll;
 }
 .before-shopping {
+  background-image: url('/bg/bg_img.png');
   padding: 4%;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }
 .after-shopping {
+  background-image: url('/bg/bg_img.png');
   padding: 4%;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }
 .before-shopping-none,
 .after-shopping-none {
+  background-image: url('/bg/bg_img.png');
   height: 165px;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }
@@ -825,6 +792,12 @@ export default {
     display: flex;
     justify-content: center;
   }
+  .item-titles {
+    white-space: initial;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+  }
   /* .check-container {
     height: 190px;
     box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
@@ -837,6 +810,9 @@ export default {
     height: 165px;
     box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
   } */
+  .nickname-titles {
+    font-size: x-large;
+  }
 }
 /* 모바일 screen */
 @media (max-width: 400px) {
@@ -1004,8 +980,16 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  .item-titles {
+    white-space: initial;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+  }
   .hot-recipe-list {
-    overflow: scroll;
+    overflow-x: scroll;
+    width: auto;
   }
 }
 </style>

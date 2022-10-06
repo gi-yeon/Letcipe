@@ -148,18 +148,24 @@
             color="letcipe"
             :length="TotalPage"
             :per-page="perPage"
-            :total-visivle="TotalPage"
+            prev-icon="mdi-menu-left"
+            next-icon="mdi-menu-right"
             circle
           ></v-pagination>
         </v-container>
 
         <v-snackbar
           v-model="snackbar2"
+          max-width="290"
+          style="z-index: 100; margin-bottom: 60px"
           :timeout="timeout"
         >
-          {{ isSucceededtoCart? "모두 담기에 성공했습니다":"모두 담기에 실패했습니다" }}
+          {{
+            isSucceededtoCart
+              ? '모두 담기에 성공했습니다'
+              : '모두 담기에 실패했습니다'
+          }}
         </v-snackbar>
-
       </div>
     </v-app>
   </div>
@@ -171,6 +177,10 @@ export default {
   name: 'MyrecipeListPage',
   data() {
     return {
+      pageable: {
+        page: 0,
+        size: 10,
+      },
       TotalPage: 0,
       perPage: 5,
       currentPage: 1,
@@ -190,7 +200,10 @@ export default {
       recipeList: [],
       dialog: false,
       selectedRecipe: {},
+      selectedRecipeList: '',
+      snackbar: false,
       timeout: 2000,
+
       snackbar2: false,
     }
   },
@@ -202,18 +215,18 @@ export default {
   watch: {},
 
   created() {
-    const pageable = {
-      page: 0,
-    }
     const promise = new Promise((resolve, reject) => {
       resolve()
     })
     promise.then(async () => {
-      await this.myrecipeList(pageable)
+      await this.myrecipeList(this.pageable)
       this.myRecipeList?.forEach((mr) => {
-        console.log(mr.recipeListItems)
-        const repImg =  mr.recipeListItems[0]? mr.recipeListItems[0].recipe.repImg:''
-        const content = mr.recipeListItems[0]? mr.recipeListItems[0].recipe.title:''
+        const repImg = mr.recipeListItems[0]
+          ? mr.recipeListItems[0].recipe.repImg
+          : ''
+        const content = mr.recipeListItems[0]
+          ? mr.recipeListItems[0].recipe.title
+          : ''
         const recipeListItem = {
           id: mr.id,
           bookmark: mr.bookmark,
@@ -232,8 +245,10 @@ export default {
           recipeListItem.cnt += m.amount
         })
         this.recipeList.push(recipeListItem)
+        const pages = this.recipeList.length / this.pageable.size
+        this.TotalPage = pages + 1
       })
-       })
+    })
   },
 
   methods: {
@@ -254,8 +269,9 @@ export default {
     },
     async deleteItem(id) {
       await this.deleteRecipeList(id)
-      await this.myrecipeList(this.pageable)
+      this.$router.go('/user/recipelist')
       this.dialog = false
+      this.$router.go()
     },
     moveDetail(mr) {
       this.CLEAR_RECIPELIST_ID()
@@ -276,6 +292,7 @@ export default {
         list: recipeList,
       }
       this.createCart(addrecipes)
+
       this.snackbar2 = true
     },
     openDialog(mr) {
@@ -294,17 +311,14 @@ export default {
       }
     },
     modifyStatus(mr) {
-      console.log(mr)
-
       const object = {
         id: mr.id,
         ReqUpdateRecipeListDto: {
           name: mr.name,
           description: mr.description,
-          isShared: mr.isShared==='N'?'Y':'N',
+          isShared: mr.isShared === 'N' ? 'Y' : 'N',
         },
       }
-      console.log(object)
       this.updateRecipeList(object)
       if (mr.isShared === 'Y') {
         mr.isShared = 'N'
@@ -344,7 +358,7 @@ export default {
   display: none;
 }
 
-@media (max-width: 415px) {
+@media (max-width: 500px) {
   .recipe-item {
     width: 85px;
     overflow: hidden;

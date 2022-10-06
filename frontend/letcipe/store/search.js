@@ -84,7 +84,7 @@ export const actions = {
         keyword: object.keyword,
       },
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         commit('SET_TOTAL_PAGE', data)
       },
       (error) => {
@@ -101,7 +101,7 @@ export const actions = {
         page: object.page,
       },
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         commit('SET_HOT_RECIPE', data.report)
         commit('SET_HOT_TITLE', data.title)
       },
@@ -120,7 +120,7 @@ export const actions = {
       },
       ({ data }) => {
         commit('SET_RECIPE_INGRE', data)
-        console.log(data)
+        // console.log(data)
       },
       (error) => {
         console.log(error)
@@ -131,7 +131,7 @@ export const actions = {
         ingredients: object.ingredients,
       },
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         commit('SET_TOTAL_PAGE', data)
       },
       (error) => {
@@ -142,14 +142,14 @@ export const actions = {
   async getRecipeList({ commit }, object) {
     commit('CLEAR_RECIPE_LIST')
     commit('CLEAR_RECIPE')
-    console.log(object)
+    // console.log(object)
     await getRecipeList(
       object.keyword,
       object.size,
       object.page,
       ({ data }) => {
         commit('SET_RECIPE_LIST', data)
-        console.log(data)
+        // console.log(data)
       },
       (error) => {
         console.log(error)
@@ -158,7 +158,7 @@ export const actions = {
     await getTotalNumRecipeList(
       object.keyword,
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         commit('SET_TOTAL_PAGE', data)
       },
       (error) => {
@@ -168,7 +168,7 @@ export const actions = {
   },
   async getCharts({ commit }, object) {
     commit('CLEAR_CHARTS')
-    console.log(object)
+    // console.log(object)
     await getChartInfo(
       {
         reqDto: object.attr,

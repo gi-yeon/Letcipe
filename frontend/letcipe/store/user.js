@@ -16,6 +16,7 @@ import {
   createCode,
   modifyPassword,
   myLikeRecipe,
+  recipeNum,
 } from '@/api/user'
 
 export const state = () => ({
@@ -40,6 +41,7 @@ export const state = () => ({
   myBookMarkRecipe: [],
   myBookMarkRecipeList: [],
   mylikeRecipe: [],
+  recipeCnt: 0,
 })
 
 export const mutations = {
@@ -108,7 +110,9 @@ export const mutations = {
   SET_MY_LIKE_RECIPE(state, myLikeRecipe) {
     state.mylikeRecipe = myLikeRecipe
   },
-
+  SET_RECIPE_CNT(state, data) {
+    state.recipeCnt = data
+  },
   CLEAR_USER(state) {
     state.userid = ''
     state.birth = ''
@@ -126,17 +130,20 @@ export const mutations = {
   CLEAR_MY_RECIPE(state) {
     state.myRecipe = []
   },
-  CLEAR_MY_RECIPELIST() {
+  CLEAR_MY_RECIPELIST(state) {
     state.myRecipeList = []
   },
-  CLEAR_MY_BOOKMARK_RECIPE() {
+  CLEAR_MY_BOOKMARK_RECIPE(state) {
     state.myBookMarkRecipe = []
   },
-  CLEAR_MY_BOOKMARK_RECIPELIST() {
+  CLEAR_MY_BOOKMARK_RECIPELIST(state) {
     state.myBookMarkRecipeList = []
   },
-  CLEAR_MY_LIKE_RECIPE() {
+  CLEAR_MY_LIKE_RECIPE(state) {
     state.mylikeRecipe = []
+  },
+  CLEAR_RECIPE_CNT(state) {
+    state.recipeCnt = 0
   },
 }
 
@@ -159,7 +166,7 @@ export const actions = {
     await idCheck(
       userid,
       (res) => {
-        console.log(res.status)
+        // console.log(res.status)
         commit('SET_IDCHECK_FALSE')
       },
       (error) => {
@@ -175,7 +182,7 @@ export const actions = {
     await nicknameCheck(
       nickname,
       (res) => {
-        console.log(res.status)
+        // console.log(res.status)
         commit('SET_NICKCHECK_FALSE')
       },
       (error) => {
@@ -187,7 +194,7 @@ export const actions = {
   async readUser({ commit }) {
     await readUser(
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         commit('SET_USER', data)
       },
       (error) => {
@@ -215,7 +222,7 @@ export const actions = {
     await signup(
       user,
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         commit('SET_USERJOINCHECK_TRUE')
       },
       (error) => {
@@ -260,12 +267,25 @@ export const actions = {
       }
     )
   },
+  async getRecipeNum({ commit }) {
+    commit('CLEAR_RECIPE_CNT')
+    await recipeNum(
+      ({ data }) => {
+        // console.log(data)
+        console.log('내가만든 레시피 갯수 가져오기 성공!')
+        commit('SET_RECIPE_CNT', data.recipes)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  },
   async myrecipeList({ commit }, pageable) {
     commit('CLEAR_MY_RECIPELIST')
     await myrecipeList(
       pageable,
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         console.log('내가만든 레시피리스트 가져오기 성공!')
         commit('SET_MY_RECIPELIST', data.recipeLists)
       },
@@ -279,7 +299,7 @@ export const actions = {
     await myBookmarkRecipe(
       pageable,
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         // console.log("북마크 레시피 가져오기 성공!")
         commit('SET_MY_BOOKMARK_RECIPE', data.recipes)
       },
@@ -293,7 +313,7 @@ export const actions = {
     await myBookmarkRecipeList(
       pageable,
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         console.log('북마크 레시피목록 가져오기 성공!')
         commit('SET_MY_BOOKMARK_RECIPELIST', data.recipeLists)
       },
@@ -331,7 +351,7 @@ export const actions = {
     await createCode(
       phone,
       (res) => {
-        console.log(res.data.code)
+        // console.log(res.data.code)
         commit('SET_CODE', res.data.code)
       },
       (error) => {
@@ -365,7 +385,7 @@ export const actions = {
     await myLikeRecipe(
       pageable,
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         commit('SET_MY_LIKE_RECIPE', data.recipes)
       },
       (error) => {

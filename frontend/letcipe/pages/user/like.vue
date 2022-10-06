@@ -65,7 +65,7 @@
                         style="z-index: 1"
                         small
                         color="letcipe"
-                        @click="openDialog(mr)"
+                        @click="addCart(mr)"
                         >+담기</v-btn
                       >
                     </v-list-item-subtitle>
@@ -81,37 +81,24 @@
               <v-divider></v-divider>
             </div>
           </div>
-          <v-pagination
+          <!-- <v-pagination
             v-model="currentPage"
             color="letcipe"
             :length="TotalPage"
             :per-page="perPage"
             :total-visivle="TotalPage"
             circle
-          ></v-pagination>
+          ></v-pagination> -->
         </v-container>
 
-        <div>
-          <v-row class="justify-center pa-8">
-            <v-dialog v-model="dialog" max-width="290">
-              <v-card>
-                <v-card-title class="text-h5"
-                  >장바구니에 담을까요?</v-card-title
-                >
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" text @click="addCart()"
-                    >담기</v-btn
-                  >
-
-                  <v-btn color="red darken-1" text @click="dialog = false"
-                    >닫기</v-btn
-                  >
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-row>
-        </div>
+        <v-snackbar
+          v-model="snackbar"
+          max-width="290"
+          style="z-index: 100; margin-bottom: 60px"
+          :timeout="timeout"
+        >
+          {{ text }}
+        </v-snackbar>
       </div>
     </v-app>
   </div>
@@ -141,9 +128,11 @@ export default {
       selectedIngre: '',
       recipeList: [],
       recipeLike: [],
-      dialog: false,
+      snackbar: false,
 
       recipe: null,
+      text: '',
+      timeout: 2000,
     }
   },
   computed: {
@@ -187,16 +176,12 @@ export default {
     moveMypage() {
       this.$router.push('/user/mypage')
     },
-    openDialog(recipe) {
-      this.dialog = true
-      this.recipe = recipe
-    },
-    addCart() {
-      const cartItem = [this.recipe.id]
+    addCart(mr) {
+      const cartItem = [mr.id]
       const list = { list: cartItem }
-      console.log(list)
       this.createCart(list)
-      this.dialog = false
+      this.text = '장바구니에 레시피 담기 성공!'
+      this.snackbar = true
     },
     saveLike(i, mr) {
       if (this.recipeLike[i]) {

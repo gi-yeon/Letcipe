@@ -5,9 +5,14 @@
         <v-container class="myrecipe-container d-flex-row">
           <div class="myrecipe-head-wrap">
             <div class="d-flex justify-space-between pb-3">
-              <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              <div>
+                <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              </div>
+
               <div style="font-size: x-large">즐겨찾는 레시피리스트</div>
-              <v-icon>mdi-blank</v-icon>
+              <div>
+                <v-icon>mdi-blank</v-icon>
+              </div>
             </div>
           </div>
           <v-divider></v-divider>
@@ -124,6 +129,14 @@
           ></v-pagination>
         </v-container>
       </div>
+      <v-snackbar
+        v-model="snackbar"
+        max-width="290"
+        style="z-index: 100; margin-bottom: 60px"
+        :timeout="timeout"
+      >
+        {{ text }}
+      </v-snackbar>
     </v-app>
   </div>
 </template>
@@ -151,6 +164,9 @@ export default {
       isSelected: [],
       selectedIngre: '',
       recipeList: [],
+      snackbar: false,
+      timeout: 2000,
+      text: '',
     }
   },
   computed: {
@@ -189,16 +205,13 @@ export default {
         })
         this.recipeList.push(recipeListItem)
       })
-
-      console.log(this.recipeList)
-      console.log(this.recipeList.length)
     })
   },
   methods: {
     ...mapActions('user', ['myBookmarkRecipeList']),
     ...mapActions('cart', ['createCart']),
     ...mapActions('recipelist', ['updateRecipeList', 'deleteRecipeList']),
-    ...mapMutations('recipelist', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
+    ...mapMutations('recipelist', ['SET_RECIPELIST_ID', 'CLEAR_RECIPELIST_ID']),
     editItem(mr) {
       this.CLEAR_RECIPE_ID()
       this.SET_RECIPE_ID(mr.id)
@@ -210,8 +223,8 @@ export default {
       this.deleteRecipeList(mr.id)
     },
     moveDetail(mr) {
-      this.CLEAR_RECIPE_ID()
-      this.SET_RECIPE_ID(mr.id)
+      this.CLEAR_RECIPELIST_ID()
+      this.SET_RECIPELIST_ID(mr.id)
       this.$router.push('/recipelist/detail')
     },
     moveMypage() {
@@ -228,10 +241,10 @@ export default {
         list: recipeList,
       }
       this.createCart(addrecipes)
+      this.text = '레시피가 성공적으로 담겼습니다.'
+      this.snackbar = true
     },
     modifyStatus(mr) {
-      console.log(mr)
-
       const object = {
         id: mr.id,
         ReqUpdateRecipeListDto: {
@@ -240,7 +253,6 @@ export default {
           isShared: mr.isShared,
         },
       }
-      console.log(object)
       this.updateRecipeList(object)
       if (mr.isShared === 'Y') {
         mr.isShared = 'N'
@@ -279,7 +291,7 @@ export default {
 :deep(.v-text-field__details) {
   display: none;
 }
-@media (max-width: 415px) {
+@media (max-width: 500px) {
   .recipe-item {
     width: 85px;
     overflow: hidden;

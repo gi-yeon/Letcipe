@@ -17,7 +17,6 @@ async function createRecipeDetail(formData, success, fail) {
 
 // 레시피 수정
 async function updateRecipeDetail(object, success, fail) {
-  console.log(object)
   await fileInterceptor
     .put(`/api/recipe/${object.recipeId}`, object.formData)
     .then(success)

@@ -18,14 +18,14 @@ export const state = () => ({
 export const mutations = {
   SET_HISTORY_LIST(state, historyList) {
     state.historyList = historyList
-    console.log(state.historyList)
+    // console.log(state.historyList)
   },
   SET_HISTORY(state, history) {
     state.history = history
   },
   SET_REVIEWMODIFY_TRUE(state) {
     state.reviewModifySuccess = true
-  }, 
+  },
   SET_REVIEWMODIFY_FALSE(state) {
     state.reviewModifySuccess = false
   },
@@ -106,7 +106,7 @@ export const actions = {
     await createReview(
       hitoryReview,
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         console.log('히스토리 리뷰 등록 성공!')
       },
       (error) => {

@@ -62,18 +62,27 @@
               >
               <v-divider></v-divider>
               <div v-for="(recipeInfo, i) in historyInfo.historyItems" :key="i">
-                <v-list-item three-line style="background-color: white" @click="moveDetail(recipeInfo.recipe)">
-                  <v-list-item-avatar tile size="100">
+                <v-list-item three-line style="background-color: white">
+                  <v-list-item-avatar
+                    tile
+                    size="100"
+                    style="cursor: pointer"
+                    @click="moveDetail(recipeInfo)"
+                  >
                     <v-img :src="recipeInfo.recipe.repImg"></v-img>
                   </v-list-item-avatar>
                   <v-list-item-content>
-                    <v-list-item-title>{{
-                      recipeInfo.recipe.title
-                    }}</v-list-item-title>
+                    <v-list-item-title
+                      style="cursor: pointer"
+                      @click="moveDetail(recipeInfo)"
+                      >{{ recipeInfo.recipe.title }}</v-list-item-title
+                    >
 
-                    <v-list-item-subtitle>{{
-                      recipeInfo.recipe.content
-                    }}</v-list-item-subtitle>
+                    <v-list-item-subtitle
+                      style="cursor: pointer"
+                      @click="moveDetail(recipeInfo)"
+                      >{{ recipeInfo.recipe.content }}</v-list-item-subtitle
+                    >
                     <div class="d-flex justify-space-between">
                       <v-list-item-subtitle style="margin: auto 0">
                         <v-icon small color="pink lighten-1"
@@ -168,7 +177,7 @@
 </template>
 
 <script>
-import { mapActions,mapMutations, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 export default {
   name: 'ProgressPage',
   data() {
@@ -200,11 +209,9 @@ export default {
     })
     promise.then(async () => {
       await this.getHistoryList()
-      console.log(this.historyList)
       this.historyListInfo = this.historyList
       let index = -1
       for (let i = 0; i < this.historyListInfo.length; i++) {
-        console.log('22222222222222')
         if (this.historyListInfo[i].process === 'READY') {
           this.status = '진행예정'
           index = i
@@ -236,7 +243,7 @@ export default {
     })
   },
   methods: {
-        ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
+    ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     ...mapActions('history', ['getHistoryList', 'updateHistory']),
     moveBack() {
       this.$router.go(-1)
@@ -268,6 +275,7 @@ export default {
     setDialog() {
       this.dialog = true
     },
+
     moveDetail(data) {
       this.CLEAR_RECIPE_ID()
       this.SET_RECIPE_ID(data.id)

@@ -39,7 +39,7 @@ export const actions = {
         page: object.page,
       },
       ({ data }) => {
-        console.log(JSON.stringify(data))
+        // console.log(JSON.stringify(data))
         commit('SET_COMMENT', data)
       },
       (error) => {

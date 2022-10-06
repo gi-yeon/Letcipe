@@ -109,7 +109,7 @@ export default {
       ref.isChoiced = !ref.isChoiced
     },
     moveCart() {
-      this.$router.push('/cart')
+      this.$router.push('/user/recipelist')
     },
     createRecipeList() {
       this.createRecipeListAll(this.recipeList)

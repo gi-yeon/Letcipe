@@ -23,10 +23,10 @@
           </div>
           <div class="d-flex justify-space-between">
             <div class="d-flex align-items-center">
-              <div v-if="!isAllCheck" style="z-index: 2" @click="allCheck">
+              <div v-if="!isAllCheck" class="all-select" @click="allCheck">
                 <v-icon>mdi-check-circle-outline</v-icon>전체 선택
               </div>
-              <div v-else style="z-index: 2" @click="allCheck">
+              <div v-else class="all-select" @click="allCheck">
                 <v-icon>mdi-check-circle</v-icon>전체 선택
               </div>
             </div>
@@ -57,84 +57,96 @@
               담긴 레시피가 없습니다.
             </div>
           </div>
-          <div v-for="(recipeInfo, i) in cart" v-else :key="i">
-            <v-list-item
-              three-line
-              style="background-color: white"
-              class="pl-3 pr-3"
-              @click="moveDetail(recipeInfo)"
-            >
-              <v-icon
-                v-if="!checkedRecipe[i]"
-                style="z-index: 2"
-                class="mr-3"
-                @click="addRecipe(i)"
-                >mdi-check-circle-outline</v-icon
+          <div v-else>
+            <div v-for="(recipeInfo, i) in cart" :key="i">
+              <v-list-item
+                three-line
+                style="background-color: white; z-index: 1"
+                class="pl-3 pr-3"
               >
-              <v-icon
-                v-else
-                class="mr-3"
-                style="z-index: 2"
-                @click="addRecipe(i)"
-                >mdi-check-circle</v-icon
-              >
-              <v-list-item-avatar tile size="100">
-                <v-img :src="recipeInfo.recipe.repImg"></v-img>
-              </v-list-item-avatar>
-              <v-list-item-content class="pl-4">
-                <v-list-item-title class="d-flex justify-space-between">
-                  <div>{{ recipeInfo.recipe.title }}</div>
-                  <v-icon
-                    style="z-index: 2"
-                    @click="deleteRecipe(recipeInfo.recipe.id)"
-                    >mdi-window-close</v-icon
-                  >
-                </v-list-item-title>
-
-                <v-list-item-subtitle
-                  style="
-                    text-overflow: ellipsis;
-                    over-flow: hidden;
-                    white-space: nowrap;
-                    display: inline-block;
-                  "
-                  >{{ recipeInfo.recipe.content }}</v-list-item-subtitle
+                <v-icon
+                  v-if="!checkedRecipe[i]"
+                  class="check-btn-wrap mr-3"
+                  @click="addRecipe(i)"
+                  >mdi-check-circle-outline</v-icon
                 >
-                <div class="d-flex justify-space-between">
-                  <div style="margin: auto 0">
-                    <v-icon small color="pink lighten-1"
-                      >mdi-cards-heart</v-icon
+                <v-icon
+                  v-else
+                  class="mr-3"
+                  style="z-index: 2"
+                  @click="addRecipe(i)"
+                  >mdi-check-circle</v-icon
+                >
+                <v-list-item-avatar
+                  tile
+                  size="100"
+                  class="recipe-avatar"
+                  @click="moveDetail(recipeInfo)"
+                >
+                  <v-img :src="recipeInfo.recipe.repImg"></v-img>
+                </v-list-item-avatar>
+                <v-list-item-content class="pl-4">
+                  <v-list-item-title class="d-flex justify-space-between">
+                    <div
+                      style="cursor: pointer"
+                      @click="moveDetail(recipeInfo)"
                     >
-                    {{ recipeInfo.recipe.recipeLike }}
-                  </div>
-                  <!-- <v-list-item-subtitle style="text-align: right"
+                      {{ recipeInfo.recipe.title }}
+                    </div>
+                    <v-icon
+                      style="z-index: 2"
+                      @click="deleteRecipe(recipeInfo.recipe.id)"
+                      >mdi-window-close</v-icon
+                    >
+                  </v-list-item-title>
+
+                  <v-list-item-subtitle
+                    style="
+                      text-overflow: ellipsis;
+                      over-flow: hidden;
+                      white-space: nowrap;
+                      display: inline-block;
+                    "
+                    @click="moveDetail(recipeInfo)"
+                    >{{ recipeInfo.recipe.content }}</v-list-item-subtitle
+                  >
+                  <div class="d-flex justify-space-between">
+                    <div style="margin: auto 0">
+                      <v-icon small color="pink lighten-1"
+                        >mdi-cards-heart</v-icon
+                      >
+                      {{ recipeInfo.recipe.recipeLike }}
+                    </div>
+                    <!-- <v-list-item-subtitle style="text-align: right"
                     >선택한 재료 4개를 포함하고 있어요.</v-list-item-subtitle
                   >-->
-                  <div>
-                    <v-btn
-                      elevation="3"
-                      class="mx-2"
-                      fab
-                      dark
-                      x-small
-                      color="letcipe"
-                      @click="subRecipeAmount(recipeInfo.recipe.id, i)"
-                    >
-                      <v-icon dark>mdi-minus</v-icon>
-                    </v-btn>
-                    {{ recipeInfo.amount }}
-                    <v-btn
-                      elevation="3"
-                      class="mx-2"
-                      fab
-                      dark
-                      x-small
-                      color="letcipe"
-                      @click="plusRecipeAmount(recipeInfo.recipe.id, i)"
-                    >
-                      <v-icon dark>mdi-plus</v-icon>
-                    </v-btn>
-                    <!-- <div class="d-flex justify-center">
+                    <div>
+                      <v-btn
+                        elevation="3"
+                        style="z-index: 5"
+                        class="mx-2"
+                        fab
+                        dark
+                        x-small
+                        color="letcipe"
+                        @click="subRecipeAmount(recipeInfo.recipe.id, i)"
+                      >
+                        <v-icon style="z-index: 5" dark>mdi-minus</v-icon>
+                      </v-btn>
+                      {{ recipeInfo.amount }}
+                      <v-btn
+                        elevation="3"
+                        style="z-index: 5"
+                        class="mx-2"
+                        fab
+                        dark
+                        x-small
+                        color="letcipe"
+                        @click="plusRecipeAmount(recipeInfo.recipe.id, i)"
+                      >
+                        <v-icon style="z-index: 5" dark>mdi-plus</v-icon>
+                      </v-btn>
+                      <!-- <div class="d-flex justify-center">
                       <v-icon class="mx-2" color="letcipe"
                         >mdi-minus-circle</v-icon
                       >
@@ -143,12 +155,13 @@
                         >mdi-plus-circle</v-icon
                       >
                     </div>-->
+                    </div>
                   </div>
-                </div>
-              </v-list-item-content>
-            </v-list-item>
+                </v-list-item-content>
+              </v-list-item>
 
-            <v-divider></v-divider>
+              <v-divider></v-divider>
+            </div>
           </div>
         </div>
         <div class="cart-ingredient-wrap fadeInUp">
@@ -181,17 +194,9 @@
 
                   <div>{{ cg }}</div>
                 </div>
-                <!-- <div class="d-flex align-center">
-                        <div>전체선택</div>
-                        <v-checkbox color="letcipe"></v-checkbox>
-                      </div>-->
               </div>
               <v-divider></v-divider>
               <div v-for="(item, i) in ingreList" :key="i" class="pl-3 pr-3">
-                <!-- <div
-              v-if="item.amount > 0 && ingreList[i].ingredient.category === cg"
-              class="d-flex justify-space-between pa-2"
-            > -->
                 <div
                   v-if="
                     item.amount > 0 && ingreList[i].ingredient.category === cg
@@ -532,16 +537,16 @@ export default {
       await this.getCartIngredient()
       this.allCheck()
       this.isAllCheck = true
-      console.log(this.ingreList)
+
       for (let i = 0; i < this.ingreList.length; i++) {
         // 각 재료의 인덱스 저장
-        console.log(this.ingreList[i])
+
         this.ingreIndexList[this.ingreList[i].ingredient.id] = i
         this.cartCategory.add(this.ingreList[i].ingredient.category)
       }
       await this.getHistoryList()
       this.historyListInfo = this.historyList
-      console.log(this.historyList)
+
       for (let i = 0; i < this.historyListInfo.length; i++) {
         if (this.historyListInfo[i].process === 'READY') {
           this.isProgressHistory = true
@@ -587,7 +592,7 @@ export default {
       this.CLEAR_RECIPE_ID()
       this.SET_RECIPE_ID(data.recipe.id)
       this.$router.push('/recipe/detail')
-      console.log(data)
+      // console.log(data)
     },
     close() {
       this.dialog = false
@@ -613,12 +618,10 @@ export default {
         keyword = keyword.trim()
         if (keyword.length > 0 && keyword != null) {
           this.searchIngredient(keyword)
-          console.log(keyword)
         }
       }
     },
     selectIngre(item) {
-      console.log(item)
       this.editedItem.ingredient.name = item.name
       this.editedItem.ingredient.id = item.id
       this.editedItem.ingredient.measure = item.measure
@@ -627,16 +630,9 @@ export default {
     },
     async saveIngre() {
       if (this.$refs.form.validate()) {
-        console.log(this.$refs.form.validate())
-        // const tempEditedItem = {
-        //   ingredientId : this.editedItem.id,
-        //   operator : '+'
-        // }
         this.IngreValid = false
         // ingreList를 돌면서 안에 있으면 amount를 더한 것으로 설정, 없으면 patch어짜구
         for (let i = 0; i < this.ingreList.length; i++) {
-          // console.log(this.editedItem.ingredient.name)
-          // console.log(this.ingreList[i].ingredient.name)
           if (
             this.editedItem.ingredient.name ===
             this.ingreList[i].ingredient.name
@@ -657,15 +653,8 @@ export default {
             this.IngreValid = true
           }
         }
-        // this.ingreList?.forEach((ingre) => {
-        //   if (this.editedItem.name === ingre.ingredient.name) {
-        //     ingre.amount =
-        //       parseInt(ingre.amount) + parseInt(this.editedItem.amount)
-        //     this.IngreValid = true
-        //   }
-        // })
+
         if (this.IngreValid === false) {
-          console.log(this.editedItem)
           const ingreItem = {
             amount: this.editedItem.amount,
             ingredient: {
@@ -683,26 +672,10 @@ export default {
           }
           this.createCartIngredient(createObject)
           this.cartCategory.add(this.editedItem.ingredient.category)
-          console.log(this.editedItem.ingredient.category)
+
           this.ingreIndexList[this.editedItem.ingredient.id] =
             this.ingreList.length - 1
-
-          // if (this.editedIndex > -1) {
-          //   Object.assign(this.ingreList[this.editedIndex], this.editedItem)
-          // } else {
-          //   this.ADD_INGRELIST(this.editedItem)
-          //   // this.ingreList.push(this.editedItem)
-          // }
         }
-
-        // if (this.editedIndex > -1) {
-        //   Object.assign(this.ingreList[this.editedIndex], this.editedItem)
-        // }
-        // if (this.editedIndex > -1) {
-        //   Object.assign(this.ingredients[this.editedIndex], this.editedItem)
-        // } else {
-        //   this.ingredients.push(this.editedItem)
-        // }
 
         this.close()
       }
@@ -722,8 +695,6 @@ export default {
       }
     },
     allCheck() {
-      console.log(this.isAllCheck)
-
       if (!this.isAllCheck) {
         this.isAllCheck = true
         this.checked = []
@@ -758,7 +729,7 @@ export default {
         const addAmount =
           this.cart[index].recipe.ingredients[i].amount *
           this.cart[index].amount
-        console.log(this.ingreList[ingreIndex].amount + addAmount)
+
         let updateAmountObject = {
           index: ingreIndex,
           updateAmount: this.ingreList[ingreIndex].amount + addAmount,
@@ -781,7 +752,7 @@ export default {
         const subAmount =
           this.cart[index].recipe.ingredients[i].amount *
           this.cart[index].amount
-        console.log(this.ingreList[ingreIndex].amount - subAmount)
+
         let updateAmountObject = {
           index: ingreIndex,
           updateAmount: this.ingreList[ingreIndex].amount - subAmount,
@@ -839,33 +810,33 @@ export default {
       this.snackbar = true
       this.$router.go()
     },
-    async deleteRecipe(recipeId) {
-      await this.deleteCart(recipeId)
+    deleteRecipe(recipeId) {
+      this.deleteCart(recipeId)
+      this.$router.go()
     },
     checkedDeleteAlert() {
       this.dialogTitle = 'Caution'
       this.errorMsg = '정말로 삭제하시겠습니까?'
       this.dialogAlert = true
     },
-   checkedDelete() {
+    async checkedDelete() {
       if (this.checked.length > 0) {
         for (let i = 0; i < this.checked.length; i++) {
-         this.deleteRecipe(this.checked[i].recipe.id)
+          await this.deleteCart(this.checked[i].recipe.id)
         }
-
       }
-       this.$router.go()
+      this.$router.go()
       this.dialogAlert = false
     },
     subIngreAmount(index) {
       const ingredientInfo = this.ingreList[index]
-      console.log(ingredientInfo)
+
       // 원래있던 재료에서더한 경우
-      console.log(this.amountByRecipe)
+
       if (ingredientInfo.ingredient.id in this.amountByRecipe) {
         // amountByRecipe에 재료가 있는 지 확인 -> 있으면 원래 있던 재료에서 추가한 재료
-        console.log(parseInt(ingredientInfo.amount))
-        console.log(parseInt(this.amountByRecipe[ingredientInfo.ingredient.id]))
+        // console.log(parseInt(ingredientInfo.amount))
+        // console.log(parseInt(this.amountByRecipe[ingredientInfo.ingredient.id]))
         if (
           Number(
             parseInt(ingredientInfo.amount) -
@@ -873,20 +844,7 @@ export default {
           ) === 0
         )
           return
-        console.log(
-          Number(
-            parseInt(ingredientInfo.amount) -
-              parseInt(this.amountByRecipe[ingredientInfo.ingredient.id]) -
-              1
-          )
-        )
-        console.log(
-          Number(
-            parseInt(ingredientInfo.amount) -
-              parseInt(this.amountByRecipe[ingredientInfo.ingredient.id]) -
-              1
-          ) === 0
-        )
+
         if (
           // delete하는 경우
           Number(
@@ -896,11 +854,9 @@ export default {
           ) === 0
         ) {
           this.deleteCartIngredient(ingredientInfo.ingredient.id)
-
-          console.log('11111111111111111111111111111111')
         } else {
           // 추가 재료의 수를 -1해줘야 하는 경우
-          console.log('222222222222222222')
+
           const updateObject = {
             ingredientId: this.ingreList[index].ingredient.id,
             operator: '-',
@@ -911,7 +867,6 @@ export default {
         // 원래 없는 재료를 더해준 것
 
         // 추가 재료의 수가 0이되어 cart_ingredient 테이블에서 정보를 지워야 할때
-        console.log('3333333333333333333333333')
 
         this.deleteCartIngredient(ingredientInfo.ingredient.id)
       } else {
@@ -928,7 +883,7 @@ export default {
 
     plusIngreAmount(index) {
       this.CALC_PLUS_INGRE(index)
-      console.log(this.ingreList[index])
+
       const createObject = {
         ingredientId: this.ingreList[index].ingredient.id,
         operator: '+',
@@ -949,7 +904,7 @@ export default {
           this.dialogStartCartError = true
         } else {
           this.startCart()
-          this.$router.go()
+          this.$router.push('/check')
         }
       } else {
         this.dialogTitle = 'Caution'
@@ -1025,6 +980,14 @@ export default {
 .ingre-category {
   padding: 4%;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
+.all-select {
+  z-index: auto;
+  cursor: pointer;
+}
+.check-btn-wrap {
+  z-index: 10 !important;
+  cursor: pointer;
 }
 
 @keyframes fadeInUp {

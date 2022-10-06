@@ -35,9 +35,7 @@
                   {{ recipeListWriter.job }} &nbsp;&nbsp;{{
                     recipeListWriter.nickname
                   }}
-                  <v-btn
-                    style="border: 1px solid black"
-                    @click="AllAdd()"
+                  <v-btn style="border: 1px solid black" @click="AllAdd()"
                     >+ 전체담기</v-btn
                   >
                 </v-row>
@@ -175,7 +173,7 @@ export default {
 
   async fetch() {
     await this.getRecipeList(this.recipeListId)
-    console.log(this.recipeListId)
+
     this.recipeListWriter = this.recipeListUser
     const temp = this.recipeListRes.regTime
     this.regTime = temp.replace('T', '  ')
@@ -242,8 +240,6 @@ export default {
           this.cart.push(this.recipeListItems[i])
         }
       }
-      console.log(this.checkedRecipe)
-      console.log(this.cart)
     },
     allAddCart() {
       if (!this.isAllCheck) {
@@ -262,7 +258,6 @@ export default {
           this.checkedRecipe[i] = false
         }
       }
-      console.log(this.cart)
     },
     AllAdd() {
       // this.allAddCart()

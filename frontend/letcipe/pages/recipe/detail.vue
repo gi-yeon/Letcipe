@@ -114,7 +114,10 @@
               <v-card-text>{{ recipeDetail.content }}</v-card-text>
               <v-card-title class="d-flex text-md-h4">
                 <div>재료</div>
-                <div class="ml-3" style="font-size: small; color: #ffa500">
+                <div
+                  class="d-flex ml-3"
+                  style="font-size: small; color: #ffa500"
+                >
                   <div v-if="recipeDetail.cookingTime != -1">
                     <v-icon small color="letcipe">mdi-timer</v-icon>
                     {{ recipeDetail.cookingTime }}분
@@ -325,8 +328,7 @@ export default {
       await this.readUser()
       this.recipeSteps = []
       await this.RecipeDetail(this.recipeID)
-      console.log(this.recipeDetail)
-      console.log(this.recipeDetail.user.nickname)
+
       this.recipeSteps = this.recipeDetail.recipeSteps
       this.recipeIngredient = this.recipeDetail.ingredients
       this.writer = this.recipeDetail.user
@@ -341,9 +343,9 @@ export default {
 
       // 레시피 코멘트 불러오는 부분
       await this.getCommentNum(this.recipeInfo)
-      console.log('코멘트 넘버요' + this.commentNum)
+
       this.TotalPage = Math.ceil(this.commentNum / 5)
-      console.log('토탈' + this.TotalPage)
+
       this.recipeInfo = {
         boardType: 'RECIPE',
         boardId: this.recipeDetail.id,
@@ -435,7 +437,7 @@ export default {
         console.log('내용을 입력하세요')
         return
       }
-      console.log(this.enterComment)
+
       const comment = {
         content: this.enterComment,
         boardId: this.recipeDetail.id,
@@ -463,10 +465,9 @@ export default {
       await this.getComment(this.recipeInfo)
     },
     async addCart() {
-      console.log(this.userId)
       const recipeList = []
       recipeList.push(this.recipeID)
-      console.log(this.recipeID)
+
       const addrecipes = {
         list: recipeList,
       }
@@ -479,7 +480,7 @@ export default {
     editMyRecipe() {
       this.CLEAR_RECIPE_ID()
       this.SET_RECIPE_ID(this.recipeDetail.id)
-      console.log(this.recipeID)
+
       this.$router.push('/recipe/modify')
     },
     deleteMyRecipe() {

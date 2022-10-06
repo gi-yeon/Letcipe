@@ -5,42 +5,67 @@
         <v-container class="bookmark-container d-flex-row">
           <div class="bookmark-head-wrap">
             <div class="d-flex justify-space-between pb-3">
-              <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              <div>
+                <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              </div>
               <div style="font-size: x-large">즐겨찾는 레시피</div>
-              <v-icon>mdi-blank</v-icon>
+              <div>
+                <v-icon>mdi-blank</v-icon>
+              </div>
             </div>
           </div>
           <v-divider></v-divider>
 
           <v-card-subtitle>즐겨찾는 레시피</v-card-subtitle>
 
-          <div v-if="recipeBookmarks.length> 0">
+          <div v-if="recipeBookmarks.length > 0">
             <div v-for="(mr, i) in recipeBookmarks" :key="i">
               <v-list-item three-line>
-                <v-list-item-avatar class="recipe-item" tile size="100" @click="moveDetail(mr)">
+                <v-list-item-avatar
+                  class="recipe-item"
+                  tile
+                  size="100"
+                  @click="moveDetail(mr)"
+                >
                   <v-img :src="mr.repImg"></v-img>
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title class="d-flex justify-space-between">
-                    <div class="recipe-item" @click="moveDetail(mr)">{{ mr.title }}</div>
+                    <div class="recipe-item" @click="moveDetail(mr)">
+                      {{ mr.title }}
+                    </div>
                   </v-list-item-title>
 
-                  <v-list-item-subtitle class="recipe-item" @click="moveDetail(mr)">{{ mr.content }}</v-list-item-subtitle>
+                  <v-list-item-subtitle
+                    class="recipe-item"
+                    @click="moveDetail(mr)"
+                    >{{ mr.content }}</v-list-item-subtitle
+                  >
                   <div class="d-flex justify-space-between">
                     <v-list-item-subtitle class="d-flex align-center">
                       <div class="d-flex align-center">
-                        <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
-                        <div>{{mr.recipeLike }}</div>
+                        <v-icon small color="pink lighten-1"
+                          >mdi-cards-heart</v-icon
+                        >
+                        <div>{{ mr.recipeLike }}</div>
                       </div>
                       <div>
                         <div class="d-flex align-center">
-                          <v-icon small color="yellow lighten-1">mdi-bookmark</v-icon>
-                          <div>{{mr.recipeBookmark }}</div>
+                          <v-icon small color="yellow lighten-1"
+                            >mdi-bookmark</v-icon
+                          >
+                          <div>{{ mr.recipeBookmark }}</div>
                         </div>
                       </div>
                     </v-list-item-subtitle>
                     <v-list-item-subtitle style="text-align: right">
-                      <v-btn style="z-index: 1" small color="letcipe" @click="openDialog(mr)">+담기</v-btn>
+                      <v-btn
+                        style="z-index: 1"
+                        small
+                        color="letcipe"
+                        @click="addCart(mr)"
+                        >+담기</v-btn
+                      >
                     </v-list-item-subtitle>
                   </div>
                 </v-list-item-content>
@@ -50,7 +75,9 @@
           </div>
           <div v-else>
             <div>
-              <v-list-item three-line>즐겨찾기에 추가된 레시피가 없습니다.</v-list-item>
+              <v-list-item three-line
+                >즐겨찾기에 추가된 레시피가 없습니다.</v-list-item
+              >
               <v-divider></v-divider>
             </div>
           </div>
@@ -63,28 +90,20 @@
             circle
           ></v-pagination>
         </v-container>
-
-        <div>
-          <v-row class="justify-center pa-8">
-            <v-dialog v-model="dialog" max-width="290">
-              <v-card>
-                <v-card-title class="text-h5">장바구니에 담을까요?</v-card-title>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" text @click="addCart()">담기</v-btn>
-
-                  <v-btn color="red darken-1" text @click="dialog = false">닫기</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-row>
-        </div>
       </div>
+      <v-snackbar
+        v-model="snackbar"
+        max-width="290"
+        style="z-index: 100; margin-bottom: 60px"
+        :timeout="timeout"
+      >
+        {{ text }}
+      </v-snackbar>
     </v-app>
   </div>
 </template>
 
-    <script>
+<script>
 import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
   name: 'BookmarkPage',
@@ -107,8 +126,11 @@ export default {
       isSelected: [],
       selectedIngre: '',
       recipeBookmarks: [],
-      dialog:false,
-      recipe:null,
+      dialog: false,
+      recipe: null,
+      snackbar: false,
+      timeout: 2000,
+      text: '',
     }
   },
   computed: {
@@ -118,7 +140,6 @@ export default {
   watch: {},
 
   created() {
-    console.log(this.nickname)
     const pageable = {
       page: 0,
     }
@@ -131,8 +152,6 @@ export default {
         this.recipeBookmarks.push(mr)
       })
       this.TotalPage = this.myBookMarkRecipe.length / 5
-      console.log(this.myBookMarkRecipe)
-      console.log(this.myBookMarkRecipe)
     })
   },
   methods: {
@@ -155,21 +174,21 @@ export default {
       this.$router.push('/user/mypage')
     },
     openDialog(recipe) {
-      this.dialog = true;
-      this.recipe = recipe;
+      this.dialog = true
+      this.recipe = recipe
     },
-    addCart() {
-      const cartItem = [this.recipe.id]
-      const list = { list:cartItem }
-      console.log(list);
+    addCart(mr) {
+      const cartItem = [mr.id]
+      const list = { list: cartItem }
       this.createCart(list)
-      this.dialog = false;
+      this.text = '장바구니에 레시피가 담겼습니다!'
+      this.snackbar = true
     },
   },
 }
 </script>
 
-    <style scoped>
+<style scoped>
 .bookmark-page {
   /* padding-top: 70px; */
   padding-bottom: 70px;

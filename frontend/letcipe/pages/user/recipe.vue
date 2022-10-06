@@ -5,9 +5,13 @@
         <v-container class="myrecipe-container d-flex-row">
           <div class="myrecipe-head-wrap">
             <div class="d-flex justify-space-between pb-3">
-              <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              <div>
+                <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              </div>
               <div style="font-size: x-large">내가 만든 레시피</div>
-              <v-icon>mdi-blank</v-icon>
+              <div>
+                <v-icon>mdi-blank</v-icon>
+              </div>
             </div>
           </div>
           <v-divider></v-divider>
@@ -15,7 +19,7 @@
           <v-card-subtitle>내가 만든 레시피</v-card-subtitle>
           <!-- <div :page="currentPage" :items="myRecipes" :items-per-page="perPage" class="text-center"> -->
           <div>
-            <div v-for="(mr, i) in myRecipe" :key="i">
+            <div v-for="(mr, i) in myRecipes" :key="i">
               <v-list-item three-line>
                 <v-list-item-avatar
                   class="recipe-item"
@@ -88,18 +92,17 @@
           <v-pagination
             v-model="currentPage"
             color="letcipe"
-            :length="myRecipes.length"
-            :per-page="perPage"
-            :total-visivle="5"
-            circle
+            :length="Math.ceil(recipeCnt / 10)"
+            prev-icon="mdi-menu-left"
+            next-icon="mdi-menu-right"
+            @input="handlePage"
           ></v-pagination>
         </v-container>
 
-        <v-snackbar
-          v-model="snackbar"
-          :timeout="timeout"
-        >
-          {{ isSucceededtoCart? "담기에 성공했습니다":"담기에 실패했습니다" }}
+        <v-snackbar v-model="snackbar" :timeout="timeout">
+          {{
+            isSucceededtoCart ? '담기에 성공했습니다' : '담기에 실패했습니다'
+          }}
         </v-snackbar>
       </div>
     </v-app>
@@ -114,9 +117,8 @@ export default {
     return {
       pageable: {
         page: 0,
+        size: 10,
       },
-      TotalPage: 0,
-      perPage: 5,
       currentPage: 1,
       byname: '',
       searchedName: '',
@@ -134,12 +136,12 @@ export default {
       myRecipes: [],
       dialog: false,
       selectedRecipe: {},
-      timeout:2000,
-      snackbar:false
+      timeout: 2000,
+      snackbar: false,
     }
   },
   computed: {
-    ...mapState('user', ['myRecipe']),
+    ...mapState('user', ['myRecipe', 'recipeCnt']),
     ...mapState('cart', ['isSucceededtoCart']),
   },
 
@@ -150,19 +152,14 @@ export default {
       resolve()
     })
     promise.then(async () => {
+      await this.getRecipeNum()
       await this.myrecipe(this.pageable)
-      this.myrecipe = this.myRecipe
-      //   this.myRecipe.forEach((mr) => {
-      //     this.myRecipes.push(mr)
-      //   })
-      //   this.TotalPage = this.myRecipe.length / 5
-      //   console.log(this.TotalPage)
-      //   console.log(this.myRecipes)
+      this.myRecipes = this.myRecipe
     })
   },
   methods: {
     ...mapActions('recipe', ['patchRecipeDetail']),
-    ...mapActions('user', ['myrecipe']),
+    ...mapActions('user', ['myrecipe', 'getRecipeNum']),
     ...mapActions('cart', ['createCart']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     editItem(mr) {
@@ -184,11 +181,6 @@ export default {
     moveMypage() {
       this.$router.push('/user/mypage')
     },
-    // addCart(mr) {
-    //   const cartItem = [mr.id]
-    //   const list = { cartItem }
-    //   this.createCart(list)
-    // },
     openDialog(mr) {
       this.dialog = true
       this.selectedRecipe = mr
@@ -202,6 +194,11 @@ export default {
       }
       this.createCart(addrecipes)
       this.snackbar = true
+    },
+    async handlePage(nowPage) {
+      this.pageable.page = nowPage
+      await this.myrecipe(this.pageable)
+      this.myRecipes = this.myRecipe
     },
   },
 }
