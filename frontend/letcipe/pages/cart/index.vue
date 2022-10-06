@@ -1026,6 +1026,7 @@ export default {
   padding: 4%;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }
+
 @keyframes fadeInUp {
   0% {
     transform: translate(0px, 100px);
@@ -1034,6 +1035,14 @@ export default {
   100% {
     transform: translate(0px, 0);
     opacity: 1;
+  }
+}
+
+@media (max-width: 415px) {
+  .recipe-title {
+    width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 </style>

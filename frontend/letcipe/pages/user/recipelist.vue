@@ -206,17 +206,13 @@ export default {
           name: mr.name,
           isShared: mr.isShared,
           bookmarkCnt: mr.recipeListBookmark,
-          repImg: '/icon/렛시피_레코드.png',
+          repImg: mr.recipeListItems[0].recipe.repImg,
           description: mr.description,
-          content: '',
+          content: mr.recipeListItems[0].recipe.title + ' 외',
           regTime: mr.regTime.split('T')[0],
           review: mr.review,
           cnt: 0,
           items: mr.recipeListItems,
-        }
-        if (mr.recipeListItems.length > 0) {
-          recipeListItem.repImg = mr.recipeListItems[0].recipe.repImg
-          recipeListItem.content = mr.recipeListItems[0].recipe.title + ' 외'
         }
         mr.recipeListItems.forEach((m) => {
           recipeListItem.cnt += m.amount
@@ -286,14 +282,17 @@ export default {
     },
     modifyStatus(mr) {
       console.log(mr)
-      const rb = {
-        name: mr.name,
-        description: mr.description,
-        isShared: mr.isShared,
+
+      const object = {
+        id: mr.id,
+        ReqUpdateRecipeListDto: {
+          name: mr.name,
+          description: mr.description,
+          isShared: mr.isShared,
+        },
       }
-      console.log(rb)
-      // console.log(mr)
-      this.updateRecipeList(mr.id, rb)
+      console.log(object)
+      this.updateRecipeList(object)
       if (mr.isShared === 'Y') {
         mr.isShared = 'N'
       } else {

@@ -18,18 +18,28 @@
           <template #default="{ hover }">
             <img
               class="logo_word"
-              :src="hover ? `/icon/렛시피_로고.png`: `/icon/렛시피_로고_b1.png`"
+              :src="
+                hover ? `/icon/렛시피_로고.png` : `/icon/렛시피_로고_b1.png`
+              "
               alt="Logo_word_icon_b.png"
             />
           </template>
         </v-hover>
       </div>
-      <div v-if="userId === 0 || userId === ''" class="login-icon" @click="moveLogin">
+      <div
+        v-if="userId === 0 || userId === ''"
+        class="login-icon"
+        @click="moveLogin"
+      >
         <v-hover>
           <template #default="{ hover }">
             <v-list-item>
               <v-list-item-icon>
-                <img class="login-img" :src="hover ? `/icons/로그인_h.gif`: `/icons/로그인_o.png`" alt />
+                <img
+                  class="login-img"
+                  :src="hover ? `/icons/로그인_h.gif` : `/icons/로그인_o.png`"
+                  alt
+                />
               </v-list-item-icon>
             </v-list-item>
           </template>
@@ -40,7 +50,13 @@
           <template #default="{ hover }">
             <v-list-item>
               <v-list-item-icon>
-                <img class="login-img" :src="hover ? `/icons/로그아웃_h.gif`: `/icons/로그아웃_o.png`" alt />
+                <img
+                  class="login-img"
+                  :src="
+                    hover ? `/icons/로그아웃_h.gif` : `/icons/로그아웃_o.png`
+                  "
+                  alt
+                />
               </v-list-item-icon>
             </v-list-item>
           </template>
@@ -50,11 +66,14 @@
     <v-navigation-drawer v-model="drawer" absolute temporary overlay-inherit>
       <v-list-item>
         <v-list-item-avatar>
-          <v-img v-if="profileImage !== (null && '')" :src="profileImage"></v-img>
+          <v-img
+            v-if="profileImage !== (null && '')"
+            :src="profileImage"
+          ></v-img>
           <v-img v-else src="/icons/유저_mo.png"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
-          <v-list-item-title>{{nickname}}</v-list-item-title>
+          <v-list-item-title>{{ nickname }}</v-list-item-title>
         </v-list-item-content>
         <v-list-item-icon @click.stop="drawer = !drawer">
           <v-icon>mdi-close</v-icon>
@@ -62,16 +81,25 @@
       </v-list-item>
       <v-divider></v-divider>
 
-      <v-list dense>
-        <v-list-item v-for="item in items" :key="item.title" link>
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
+      <v-list>
+        <v-list-item-group active-class="deep-letcipe--text text--accent-4">
+          <v-list-item
+            v-for="item in items"
+            :key="item.title"
+            link
+            @click="move(item)"
+          >
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
 
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+            <v-list-item-content>
+              <v-list-item-title style="font-size: large">{{
+                item.title
+              }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
   </div>
@@ -86,8 +114,29 @@ export default {
     return {
       drawer: null,
       items: [
-        { title: 'Home', icon: 'mdi-view-dashboard' },
-        { title: 'About', icon: 'mdi-forum' },
+        { title: '홈', icon: 'mdi-home', m: '/main' },
+        { title: '장바구니', icon: 'mdi-cart', m: '/cart' },
+        {
+          title: '장보기목록',
+          icon: 'mdi-format-list-checks',
+          m: '/check',
+        },
+        {
+          title: '레시피 만들기',
+          icon: 'mdi-clipboard-text',
+          m: '/recipe/create',
+        },
+        {
+          title: '레시피 검색',
+          icon: 'mdi-magnify',
+          m: '/search',
+        },
+        {
+          title: '마이페이지',
+          icon: 'mdi-account',
+          m: '/user/mypage',
+        },
+        { title: '로그아웃', icon: 'mdi-logout', m: 'logOut()' },
       ],
     }
   },
@@ -110,6 +159,13 @@ export default {
     logOut() {
       this.logout()
       this.moveMain()
+    },
+    move(item) {
+      if (item.title === '로그아웃') {
+        this.logOut()
+      } else {
+        this.$router.push(item.m)
+      }
     },
   },
 }
@@ -220,7 +276,7 @@ export default {
   height: 100vh !important;
 } */
 /* 모바일 screen */
-@media (max-width: 400px) {
+@media (max-width: 425px) {
   .hamburger-menu {
     margin: 1rem;
     display: flex;

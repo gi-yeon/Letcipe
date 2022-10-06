@@ -243,15 +243,20 @@
           </div>
           <div class="chart-chips-group">
             <v-sheet class="chip-sheet mx-auto">
-              <v-slide-group v-model="selectTag" mandatory overflow >
-                <v-slide-item v-for="(tag, i) in tag_set" :key="i" v-slot="{ active, toggle }">
+              <v-slide-group v-model="selectTag" mandatory overflow>
+                <v-slide-item
+                  v-for="(tag, i) in tag_set"
+                  :key="i"
+                  v-slot="{ active, toggle }"
+                >
                   <v-chip
                     class="mx-2"
                     :input-value="active"
                     active-class="letcipe white--text"
                     rounded
                     @click="toggle"
-                  >{{tag}}</v-chip>
+                    >{{ tag }}</v-chip
+                  >
                 </v-slide-item>
               </v-slide-group>
             </v-sheet>
@@ -263,27 +268,36 @@
                 <template #default="{ hover }">
                   <v-card
                     :elevation="hover ? 24 : 6"
-                    :class="
-                        hover ? 'letcipe lighten-2' : 'white'
-                      "
+                    :class="hover ? 'letcipe lighten-2' : 'white'"
                     class="lecipe-list-group mx-auto mt-2 mb-2 d-flex align-center"
                     @click="moveDetail2(data.recipe.id)"
                   >
-                    <div class="ml-4" style="color: #FFA500;">{{ i+1 }}</div>
+                    <div class="ml-4" style="color: #ffa500">{{ i + 1 }}</div>
                     <v-list-item three-line>
                       <v-list-item-avatar tile size="57">
-                        <v-img elevation="10" :src="data.recipe.repImg" style="border-radius: 5px"></v-img>
+                        <v-img
+                          elevation="10"
+                          :src="data.recipe.repImg"
+                          style="border-radius: 5px"
+                        ></v-img>
                       </v-list-item-avatar>
                       <v-list-item-content>
                         <v-list-item-title class="mb-1">
-                          {{
-                          data.recipe.title
-                          }}
+                          {{ data.recipe.title }}
                         </v-list-item-title>
-                        <v-list-item-subtitle>{{ data.recipe.content }}</v-list-item-subtitle>
+                        <v-list-item-subtitle>{{
+                          data.recipe.content
+                        }}</v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
-                    <v-btn class="mr-3" fab dark x-small color="letcipe" outlined>
+                    <v-btn
+                      class="mr-3"
+                      fab
+                      dark
+                      x-small
+                      color="letcipe"
+                      outlined
+                    >
                       <v-icon color="letcipe">mdi-heart</v-icon>
                     </v-btn>
                   </v-card>
@@ -293,10 +307,10 @@
           </v-row>
         </div>
         <div class="ingrediant-base-group mt-2 mb-3">
-          <div v-if="nickname!=''">{{nickname}} 님을 위한 레시피 추천</div>
+          <div v-if="nickname != ''">{{ nickname }} 님을 위한 레시피 추천</div>
           <div v-else>이런 레시피 어때요?</div>
           <div class="chart-header">
-            <div>{{recommendTitle}}</div>
+            <div>{{ recommendTitle }}</div>
           </div>
           <div class="rec-imgs-group d-flex justify-space-between">
             <v-avatar
@@ -309,7 +323,11 @@
             >
               <v-img class="ref-imgs" :src="ref.recipe.repImg">
                 <div class="ref-wrap">
-                  <v-card-title class="ref-title">{{ ref.recipe.title }}</v-card-title>
+                  <v-card-title
+                    class="ref-title"
+                    style="overflow: hidden; text-overflow: ellipsis"
+                    >{{ ref.recipe.title }}</v-card-title
+                  >
                   <v-card-subtitle class="ref-subtitle">{{
                     ref.recipe.content
                   }}</v-card-subtitle>
@@ -322,27 +340,29 @@
           <div class="chart-header">
             <div>인기있는 레시피 리스트!</div>
           </div>
-          <div v-for="(recipeList,i) in recipeLists" :key="i">
-            <div class="chart-header">
-              {{recipeList.name}}
-            </div>
-            <div class="chart-header">
-              {{recipeList.description}}
-            </div>
-            <div class="rec-imgs-group d-flex justify-space-between">
-              <v-avatar
-                v-for="(item, j) in recipeList.recipeListItems"
-                :key="j"
-                size="130"
-                tile
-                class="mr-2"
-                @click="moveListDetail"
-              >
-                <!-- <v-img class="ref-imgs" :src="item.recipe.repImg"></v-img> -->
-                <v-img class="ref-imgs" :src="item.recipe.repImg">
-              </v-img>
-              </v-avatar>
-            </div>
+          <div v-for="(recipeList, i) in recipeLists" :key="i">
+            <v-card
+              style="width: 200px; height: 230px"
+              class="d-flex-column justify-center align-item-center pt-3"
+            >
+              <div class="rec-imgs-group d-flex justify-center">
+                <v-avatar size="130" fab @click="moveListDetail">
+                  <!-- <v-img class="ref-imgs" :src="item.recipe.repImg"></v-img> -->
+                  <v-img
+                    class="ref-imgs"
+                    :src="recipeList.recipeListItems[0].recipe.repImg"
+                  >
+                    <v-icon color="letcipe" x-large>mdi-play</v-icon>
+                  </v-img>
+                </v-avatar>
+              </div>
+              <div>
+                <v-card-title class="justify-center">{{
+                  recipeList.name
+                }}</v-card-title>
+                <v-card-subtitle>{{ recipeList.description }}</v-card-subtitle>
+              </div>
+            </v-card>
           </div>
           <!-- <div class="rec-imgs-group d-flex justify-space-between">
             <v-avatar
@@ -369,7 +389,11 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex'
-import { getCartReport, getUserRecommend, getBestRecipeLists} from "@/api/recommend";
+import {
+  getCartReport,
+  getUserRecommend,
+  getBestRecipeLists,
+} from '@/api/recommend'
 
 export default {
   name: 'MainPage',
@@ -377,7 +401,7 @@ export default {
     return {
       userPlayList: [
         {
-          url: 'https://img.icons8.com/emoji/344/orange-circle-emoji.png',
+          url: '/icon/렛시피_레코드.png',
           sub_title: '아직 진행중인 레시피리스트가 없습니다.',
           title: '레시피를 진행해주세요',
           serving: 0,
@@ -412,8 +436,8 @@ export default {
       ],
       tag_set: [],
       lecipeData: [],
-      recipeChart:[],
-      selectTag:"",
+      recipeChart: [],
+      selectTag: '',
       time: '',
       historyID: null,
       eating: null,
@@ -429,9 +453,9 @@ export default {
       isRemoved: false,
       isComplete: false,
       selectedIngre: [],
-      recommendTitle:"",
-      recommendRecipes:[],
-      recipeLists:[],
+      recommendTitle: '',
+      recommendRecipes: [],
+      recipeLists: [],
     }
   },
   computed: {
@@ -447,7 +471,7 @@ export default {
     })
     promise.then(async () => {
       console.log('이거슨감자' + this.recipeLists)
-
+      console.log(this.recipeLists)
       await this.getHistoryList()
       this.historyList?.forEach((h) => {
         if (h.process === 'READY') {
@@ -472,8 +496,6 @@ export default {
           }
           this.userPlayList.push(playRecipe)
         })
-        console.log(111111111111111)
-        console.log(this.userPlayList)
       }
       if (this.historyID !== null) {
         await this.getHistory(this.historyID)
@@ -498,28 +520,25 @@ export default {
           }
         })
       }
-      getCartReport("-,-,1,-",(response) => {
-      this.tag_set.push(response.data.title);
-      this.recipeChart.push(response.data.report);
-      });
-      getCartReport("-,-,-,JUBU",(response) => {
-        this.tag_set.push(response.data.title);
-        this.recipeChart.push(response.data.report);
-      });
-      getCartReport("-,-,-,COOK",(response) => {
-        this.tag_set.push(response.data.title);
-        this.recipeChart.push(response.data.report);
-      });
-      getUserRecommend(
-        (response) => {
-          this.recommendTitle = response.data.title;
-          this.recommendRecipes = response.data.report;
-      });
-      getBestRecipeLists(1,
-        (response) => {
-          this.recipeLists = response.data;
-        }
-      );
+      getCartReport('-,-,1,-', (response) => {
+        this.tag_set.push(response.data.title)
+        this.recipeChart.push(response.data.report)
+      })
+      getCartReport('-,-,-,JUBU', (response) => {
+        this.tag_set.push(response.data.title)
+        this.recipeChart.push(response.data.report)
+      })
+      getCartReport('-,-,-,COOK', (response) => {
+        this.tag_set.push(response.data.title)
+        this.recipeChart.push(response.data.report)
+      })
+      getUserRecommend((response) => {
+        this.recommendTitle = response.data.title
+        this.recommendRecipes = response.data.report
+      })
+      getBestRecipeLists(1, (response) => {
+        this.recipeLists = response.data
+      })
     })
   },
   methods: {
@@ -668,8 +687,8 @@ export default {
   width: 150px;
 }
 .ref-imgs {
-  width: 150px;
-  height: 150px !important;
+  width: 140px;
+  height: 140px !important;
   cursor: pointer;
 }
 
@@ -685,13 +704,17 @@ export default {
   font-size: large;
   font-weight: bolder;
   display: block;
-  overflow: auto;
+  width: 130px;
+  word-break: normal;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 .ref-subtitle {
   /* color: rgb(0, 0, 0); */
   color: aliceblue;
   text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .my-container {
   padding-top: 10%;
