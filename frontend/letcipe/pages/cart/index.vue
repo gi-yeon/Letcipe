@@ -79,7 +79,7 @@
               <v-list-item-avatar
                 tile
                 size="100"
-                style="cursor: pointer"
+                class="recipe-avatar"
                 @click="moveDetail(recipeInfo)"
               >
                 <v-img :src="recipeInfo.recipe.repImg"></v-img>
@@ -102,7 +102,6 @@
                     over-flow: hidden;
                     white-space: nowrap;
                     display: inline-block;
-                    cursor: pointer;
                   "
                   @click="moveDetail(recipeInfo)"
                   >{{ recipeInfo.recipe.content }}</v-list-item-subtitle

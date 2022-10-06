@@ -66,10 +66,7 @@
     <v-navigation-drawer v-model="drawer" absolute temporary overlay-inherit>
       <v-list-item>
         <v-list-item-avatar>
-          <v-img
-            v-if="profileImage !== (null && '')"
-            :src="profileImage"
-          ></v-img>
+          <v-img v-if="profileimg !== (null && '')" :src="profileimg"></v-img>
           <v-img v-else src="/icons/유저_mo.png"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
@@ -176,13 +173,18 @@ export default {
           m: '/user/mypage',
         },
       ],
+      profileimg: null,
     }
   },
 
   computed: {
     ...mapState('user', ['userId', 'nickname', 'profileImage']),
   },
-  created() {},
+  created() {
+    if (this.profileImage !== null) {
+      this.profileimg = this.profileImage
+    }
+  },
   methods: {
     ...mapActions('user', ['logout']),
     moveLogin() {
