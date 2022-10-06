@@ -35,15 +35,18 @@ export const mutations = {
   SET_ISSUCCESS_FALSE(state) {
     state.isSucceededtoRecipeList = false
   },
-  SET_RECIPE_ID(state, id) {
+  SET_RECIPELIST_ID(state, id) {
     state.recipeListId = id
   },
-  CLEAR_RECIPE_ID(state) {
+  CLEAR_RECIPELIST_ID(state) {
     state.recipeListId = null
   },
   SET_RECIPELIST_NAME(state, newName) {
     state.recipeListRes.name = newName
   },
+  MODIFY_RECIPE_LIST_ITEM(state,index) {
+    state.recipeListItems.splice(index,1)
+  }
 }
 
 export const getters = {}

@@ -25,17 +25,17 @@ public class RecipeIngredientService {
         return recipeIngredientRepository.save(recipeIngredient);
     }
 
+
+    @Transactional
     public void deleteRecipeIngredients(Recipe recipe) {
         for (RecipeIngredient recipeIngredient : recipe.getIngredients()) {
-            deleteRecipeIngredient(recipeIngredient);
+            recipeIngredientRepository.deleteById(recipeIngredient.getId());
         }
-    }
-    @Transactional
-    public void deleteRecipeIngredient(RecipeIngredient recipeIngredient) {
-        recipeIngredientRepository.deleteById(recipeIngredient.getId());
+        recipeIngredientRepository.flush();
     }
 
     public List<RecipeIngredient> findRecipeIngredients(Recipe recipe){
         return recipeIngredientRepository.findRecipeIngredientsByRecipe(recipe);
     }
+
 }

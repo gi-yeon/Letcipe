@@ -177,7 +177,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 export default {
   name: 'ProgressPage',
   data() {
@@ -245,6 +245,7 @@ export default {
     })
   },
   methods: {
+    ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     ...mapActions('history', ['getHistoryList', 'updateHistory']),
     moveBack() {
       this.$router.go(-1)
@@ -276,11 +277,11 @@ export default {
     setDialog() {
       this.dialog = true
     },
-    moveDetail(recipeInfo) {
-      console.log(recipeInfo)
-      // this.CLEAR_RECIPE_ID()
-      // this.SET_RECIPE_ID(recipeInfo.id)
-      // this.$router.push('/recipelist/detail')
+
+    moveDetail(data) {
+      this.CLEAR_RECIPE_ID()
+      this.SET_RECIPE_ID(data.id)
+      this.$router.push('/recipe/detail')
     },
   },
 }

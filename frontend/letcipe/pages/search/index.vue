@@ -102,6 +102,7 @@
                           >
                           {{ recipeInfo['recipeLike'] }}
                         </v-list-item-subtitle>
+
                         <v-list-item-subtitle style="text-align: right">
                           <v-btn
                             small
@@ -495,6 +496,7 @@ export default {
       }
     },
     selectIngre(item) {
+      this.currentPage = 1
       if (!String(this.selectedIngre).includes(String(item.id))) {
         this.isSelected.push(item)
         if (this.selectedIngre.length === 0) {
@@ -534,6 +536,7 @@ export default {
       }
     },
     searchByName() {
+      this.currentPage = 1
       if (this.byRecipe) {
         const searchObject = {
           keyword: this.byname,

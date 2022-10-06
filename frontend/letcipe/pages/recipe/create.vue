@@ -666,7 +666,7 @@ export default {
         msg = '대표 사진을 입력해주세요.'
       } else if (this.serving === '') {
         msg = '몇 인분인지 입력해주세요.'
-      } else if (this.category.trim() === '') {
+      } else if (this.category === '') {
         msg = '카테고리를 입력해주세요.'
       } else if (this.steps.length <= 0) {
         msg = ''

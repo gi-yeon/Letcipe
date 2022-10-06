@@ -155,13 +155,18 @@
             @input="handlePage"
           ></v-pagination>
         </v-container>
+
         <v-snackbar
-          v-model="snackbar"
+          v-model="snackbar2"
           max-width="290"
           style="z-index: 100; margin-bottom: 60px"
           :timeout="timeout"
         >
-          {{ text }}
+          {{
+            isSucceededtoCart
+              ? '모두 담기에 성공했습니다'
+              : '모두 담기에 실패했습니다'
+          }}
         </v-snackbar>
       </div>
     </v-app>
@@ -197,13 +202,16 @@ export default {
       recipeList: [],
       dialog: false,
       selectedRecipe: {},
+
       snackbar: false,
       timeout: 2000,
-      text: '',
+
+      snackbar2: false,
     }
   },
   computed: {
     ...mapState('user', ['myRecipe', 'myRecipeList']),
+    ...mapState('cart', ['isSucceededtoCart']),
   },
 
   watch: {},
@@ -217,28 +225,33 @@ export default {
       console.log(111111111)
       console.log(this.myRecipeList)
       this.myRecipeList?.forEach((mr) => {
-        if (mr.recipeListItems.length !== 0) {
-          const recipeListItem = {
-            id: mr.id,
-            bookmark: mr.bookmark,
-            name: mr.name,
-            isShared: mr.isShared,
-            bookmarkCnt: mr.recipeListBookmark,
-            repImg: mr.recipeListItems[0].recipe.repImg,
-            description: mr.description,
-            content: mr.recipeListItems[0].recipe.title + ' 외',
-            regTime: mr.regTime.split('T')[0],
-            review: mr.review,
-            cnt: 0,
-            items: mr.recipeListItems,
-          }
-          mr.recipeListItems.forEach((m) => {
-            recipeListItem.cnt += m.amount
-          })
-          this.recipeList.push(recipeListItem)
-          const pages = this.recipeList.length / mr.recipeListItems.length
-          this.TotalPage = pages
+        console.log(mr.recipeListItems)
+        const repImg = mr.recipeListItems[0]
+          ? mr.recipeListItems[0].recipe.repImg
+          : ''
+        const content = mr.recipeListItems[0]
+          ? mr.recipeListItems[0].recipe.title
+          : ''
+        const recipeListItem = {
+          id: mr.id,
+          bookmark: mr.bookmark,
+          name: mr.name,
+          isShared: mr.isShared,
+          bookmarkCnt: mr.recipeListBookmark,
+          repImg,
+          description: mr.description,
+          content,
+          regTime: mr.regTime.split('T')[0],
+          review: mr.review,
+          cnt: 0,
+          items: mr.recipeListItems,
         }
+        mr.recipeListItems.forEach((m) => {
+          recipeListItem.cnt += m.amount
+        })
+        this.recipeList.push(recipeListItem)
+        const pages = this.recipeList.length / mr.recipeListItems.length
+        this.TotalPage = pages
       })
       console.log(1111111111)
       console.log('dksdud')
@@ -248,11 +261,12 @@ export default {
       //   console.log(this.myRecipes)
     })
   },
+
   methods: {
     ...mapActions('recipe', ['patchRecipeDetail']),
     ...mapActions('user', ['myrecipe', 'myrecipeList']),
     ...mapActions('cart', ['createCart']),
-    ...mapMutations('recipelist', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
+    ...mapMutations('recipelist', ['SET_RECIPELIST_ID', 'CLEAR_RECIPELIST_ID']),
     ...mapActions('recipelist', [
       'deleteRecipeList',
       'deleteRecipeListBookmark',
@@ -260,8 +274,8 @@ export default {
       'updateRecipeList',
     ]),
     editItem(mr) {
-      this.CLEAR_RECIPE_ID()
-      this.SET_RECIPE_ID(mr.id)
+      this.CLEAR_RECIPELIST_ID()
+      this.SET_RECIPELIST_ID(mr.id)
       this.$router.push('/recipelist/modify')
     },
     async deleteItem(id) {
@@ -270,8 +284,8 @@ export default {
       this.dialog = false
     },
     moveDetail(mr) {
-      this.CLEAR_RECIPE_ID()
-      this.SET_RECIPE_ID(mr.id)
+      this.CLEAR_RECIPELIST_ID()
+      this.SET_RECIPELIST_ID(mr.id)
       this.$router.push('/recipelist/detail')
     },
     moveMypage() {
@@ -288,8 +302,8 @@ export default {
         list: recipeList,
       }
       this.createCart(addrecipes)
-      this.text = '장바구니에 레시피 리스트가 담겼습니다.'
-      this.snackbar = true
+
+      this.snackbar2 = true
     },
     openDialog(mr) {
       this.dialog = true
@@ -314,7 +328,7 @@ export default {
         ReqUpdateRecipeListDto: {
           name: mr.name,
           description: mr.description,
-          isShared: mr.isShared,
+          isShared: mr.isShared === 'N' ? 'Y' : 'N',
         },
       }
       console.log(object)

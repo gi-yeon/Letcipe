@@ -355,47 +355,44 @@
           <div class="chart-header">
             <div>인기있는 레시피 리스트!</div>
           </div>
-          <!-- <div v-for="(recipeList, i) in BestRecipeLists" :key="i">
-            <v-card
-              style="width: 200px; height: 230px"
-              class="d-flex-column justify-center align-item-center pt-3"
-            >
-              <div class="rec-imgs-group d-flex justify-center">
-                <v-avatar size="130" fab @click="moveListDetail"> -->
-          <!-- <v-img class="ref-imgs" :src="item.recipe.repImg"></v-img> -->
-          <!-- <v-img
-                    class="ref-imgs"
-                    :src="recipeList.recipeListItems[0].recipe.repImg"
+
+          <v-row>
+            <v-col>
+              <div class="hot-recipe-list d-flex justify-center">
+                <div v-for="(recipeList, i) in recipeLists" :key="i">
+                  <v-card
+                    style="width: 200px; height: 230px"
+                    class="d-flex-column justify-center align-item-center pt-3"
                   >
-                    <v-icon color="letcipe" x-large>mdi-play</v-icon>
-                  </v-img>
-                </v-avatar>
-              </div>
-              <div>
-                <v-card-title class="justify-center">{{
-                  recipeList.name
-                }}</v-card-title>
-                <v-card-subtitle>{{ recipeList.description }}</v-card-subtitle>
-              </div>
-            </v-card>
-          </div> -->
-          <!-- <div class="rec-imgs-group d-flex justify-space-between">
-            <v-avatar
-              v-for="(ref, i) in refImg"
-              :key="i"
-              size="130"
-              tile
-              class="mr-2"
-              @click="moveListDetail(ref)"
-            >
-              <v-img class="ref-imgs" :src="'https://2bob.co.kr/' + ref.url">
-                <div class="ref-wrap">
-                  <v-card-title class="ref-title">{{ ref.title }}</v-card-title>
-                  <v-card-subtitle class="ref-subtitle">{{ ref.sub_title }}</v-card-subtitle>
+                    <div class="rec-imgs-group d-flex justify-center">
+                      <v-avatar
+                        size="130"
+                        fab
+                        @click="moveListDetail(recipeList)"
+                      >
+                        <!-- <v-img class="ref-imgs" :src="item.recipe.repImg"></v-img> -->
+                        <v-img
+                          v-if="recipeList.recipeListItems.length > 0"
+                          class="ref-imgs"
+                          :src="recipeList.recipeListItems[0].recipe.repImg"
+                        >
+                          <v-icon color="letcipe" x-large>mdi-play</v-icon>
+                        </v-img>
+                      </v-avatar>
+                    </div>
+                    <div>
+                      <v-card-title class="justify-center">{{
+                        recipeList.name
+                      }}</v-card-title>
+                      <v-card-subtitle>{{
+                        recipeList.description
+                      }}</v-card-subtitle>
+                    </div>
+                  </v-card>
                 </div>
-              </v-img>
-            </v-avatar>
-          </div> -->
+              </div>
+            </v-col>
+          </v-row>
         </div>
       </v-container>
     </v-app>
@@ -551,10 +548,9 @@ export default {
         this.recommendTitle = response.data.title
         this.recommendRecipes = response.data.report
       })
-      getBestRecipeLists(1, (response) => {
-        this.BestRecipeLists = response.data
-        console.log(1111111111111)
-        console.log(this.BestRecipeLists)
+
+      getBestRecipeLists(5, (response) => {
+        this.recipeLists = response.data
       })
     })
   },
@@ -568,6 +564,7 @@ export default {
     ...mapActions('search', ['getRecipes', 'getRecipeList', 'getHotRecipes']),
     ...mapActions('recipe', ['countRecipeLikes', 'decountRecipeLikes']),
     ...mapMutations('recipe', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
+    ...mapMutations('recipelist', ['SET_RECIPELIST_ID', 'CLEAR_RECIPELIST_ID']),
     findnow() {
       const today = new Date()
       const hours = ('0' + today.getHours()).slice(-2)
@@ -576,7 +573,11 @@ export default {
       this.time = hours + ':' + minutes + ':' + seconds
       // console.log(this.time)
     },
-    moveListDetail(ref) {
+    moveListDetail(mr) {
+      console.log('mr:')
+      console.log(mr.id)
+      this.CLEAR_RECIPELIST_ID()
+      this.SET_RECIPELIST_ID(mr.id)
       this.$router.push('/recipelist/detail')
     },
     moveDetail(data) {
@@ -1030,11 +1031,15 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
   .item-titles {
     white-space: initial;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     display: -webkit-box;
+  }
+  .hot-recipe-list {
+    overflow: scroll;
   }
 }
 </style>

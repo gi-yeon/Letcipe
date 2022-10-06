@@ -8,6 +8,8 @@ import com.ssafy.letcipe.domain.cart.Cart;
 import com.ssafy.letcipe.domain.cart.CartRepository;
 import com.ssafy.letcipe.domain.cartIngredient.CartIngredient;
 import com.ssafy.letcipe.domain.cartIngredient.CartIngredientRepository;
+import com.ssafy.letcipe.domain.headerCode.HeaderCode;
+import com.ssafy.letcipe.domain.headerCode.HeaderCodeRepository;
 import com.ssafy.letcipe.domain.history.History;
 import com.ssafy.letcipe.domain.history.HistoryRepository;
 import com.ssafy.letcipe.domain.history.ProcessType;
@@ -48,6 +50,7 @@ public class CartService {
     private final CartIngredientRepository cartIngredientRepository;
     private final HistoryIngredientRepository historyIngredientRepository;
     private final HistoryItemRepository historyItemRepository;
+    private final HeaderCodeRepository headerCodeRepository;
 
     @Transactional
     public void createCart(Long recipe_id, Long userId) {
@@ -109,7 +112,7 @@ public class CartService {
         Ingredient ingredient = ingredientRepository.findById(requestDto.getIngredientId())
                 .orElseThrow(() -> new NullPointerException("재료를 찾을 수 없습니다."));
 
-        cartIngredientRepository.save(new CartIngredient(user, ingredient, requestDto.getOperator()));
+        cartIngredientRepository.save(new CartIngredient(user, ingredient, requestDto.getAmount()));
     }
 
     @Transactional
@@ -152,10 +155,13 @@ public class CartService {
     @Transactional
     public void createCartHistory(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("유저를 찾을 수 없습니다."));
-        History alreadyHistory = historyRepository.findByUserAndProcessAndIsDeleted(user, ProcessType.READY, StatusType.N).orElse(null);
-
-        if (alreadyHistory != null) {
-            throw new BadRequestException("이미 실행중인 이력이 있습니다.");
+        History alreadyReadyHistory = historyRepository.findByUserAndProcessAndIsDeleted(user, ProcessType.READY, StatusType.N).orElse(null);
+        History alreadyEatingHistory = historyRepository.findByUserAndProcessAndIsDeleted(user, ProcessType.EATING, StatusType.N).orElse(null);
+        if (alreadyReadyHistory != null) {
+            throw new BadRequestException("진행 예정인 장바구니가 있습니다.");
+        }
+        if (alreadyEatingHistory != null) {
+            throw new BadRequestException("이미 진행중인 레시피리스트가 있습니다.");
         }
 
         // History 생성 및 저장
@@ -264,10 +270,11 @@ public class CartService {
         while (keys.hasNext()) {
             Long id = keys.next();
             Ingredient ingredient = ingredientObjectMap.get(id);
+        HeaderCode code = headerCodeRepository.findById(ingredient.getCategory().substring(0, 3)).orElseThrow(() -> new NullPointerException("카테고리를 찾을 수 없습니다."));
             ResGetCartIngredientDto dto = ResGetCartIngredientDto.builder()
                     .ingredient(ResGetIngredientDto.builder()
                             .id(ingredient.getId())
-                            .category(ingredient.getCategory())
+                            .category(code.getName())
                             .name(ingredient.getName())
                             .measure(ingredient.getMeasure())
                             .gml(ingredient.getGml())

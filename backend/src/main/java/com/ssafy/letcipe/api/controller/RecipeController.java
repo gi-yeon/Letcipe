@@ -19,6 +19,7 @@ import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,7 +59,8 @@ public class RecipeController {
     }
 
     @PutMapping("/{recipe_id}")
-    public ResponseEntity updateRecipe(@PathVariable long recipe_id, @ModelAttribute ReqPutRecipeDto dto, HttpServletRequest request) throws FileNotFoundException, FileUploadException {
+    @Transactional
+    public ResponseEntity updateRecipe(@PathVariable long recipe_id, @ModelAttribute @Validated ReqPutRecipeDto dto, HttpServletRequest request) throws FileNotFoundException, FileUploadException {
         Long userId = jwtService.getUserId(request); // TODO 토큰에서 유저 id 가져와야 함
         recipeService.updateRecipe(dto, recipe_id);
         return ResponseEntity.ok().build();
@@ -114,27 +116,34 @@ public class RecipeController {
             return ResponseEntity.ok(recipeService.searchRecipeByIngredients(pageable, ingredients));
     }
 
+    @GetMapping("/totalNum")
+    ResponseEntity<Integer> totalNumRecipe(@RequestParam(required = false) String keyword,@RequestParam(required = false) String ingredients) throws SQLException {
+        if (!StringUtil.isNullOrEmpty(keyword))
+            return ResponseEntity.ok(recipeService.totalNumByKeyword(keyword));
+        else
+            return ResponseEntity.ok(recipeService.totalNumByIngredients(ingredients));
+    }
+
     @GetMapping("/hot")
     @Transactional
-    ResponseEntity searchHot(Pageable pageable, HttpServletRequest request) throws SQLException {
-        // TODO 토큰에서 유저 id 가져와야 함, 없다면 -1 등으로 표기
-        Long userId;
-        try {
-            userId = jwtService.getUserId(request);
-        } catch (Exception e) {
-            userId = -1L;
-        }
-        ResGetHotRecipeComponentDto hot= userService.getAttribute(userId);
+    ResponseEntity searchHot(Pageable pageable) throws SQLException {
         LocalDate now=LocalDate.now();
-        List<ResGetCartReport> cartReport =reportService.getCartReport(
-                hot.getAttribute(),
-                now.minusDays(8),
-                now.minusDays(1),
-                pageable);
-        ResGetHotRecipeDto responseDto= ResGetHotRecipeDto.builder()
-                .title(hot.getTitle())
-                .report(cartReport)
-                .build();
+        List<ResGetCartReport> cartReport;
+        ResGetHotRecipeDto responseDto = null;
+        for (int loop = 0; loop < 5; loop++) {
+        ResGetHotRecipeComponentDto hot= userService.getAttribute2(-1L);
+            cartReport = reportService.getCartReport(
+                    hot.getAttribute(),
+                    now.minusDays(30),
+                    now.minusDays(1),
+                    pageable);
+            responseDto = ResGetHotRecipeDto.builder()
+                    .title(hot.getTitle())
+                    .report(cartReport)
+                    .build();
+
+            if (cartReport.size() > 0) break;
+        }
         return ResponseEntity.ok(responseDto);
     }
 
@@ -144,9 +153,22 @@ public class RecipeController {
     }
 
     @GetMapping("/recommend")
-    public ResponseEntity getCartReport(ReqGetCartReport reqDto, Pageable pageable) {
-        List<ResGetCartReport> cartReport = reportService.getCartReport(reqDto.getAttributes(), LocalDate.parse(reqDto.getBeginDate()), LocalDate.parse(reqDto.getEndDate()),pageable);
-        return ResponseEntity.ok(cartReport);
+    public ResponseEntity getCartReport(String attributes, Pageable pageable) {
+//        List<ResGetCartReport> cartReport = reportService.getCartReport(reqDto.getAttributes(), LocalDate.parse(reqDto.getBeginDate()), LocalDate.parse(reqDto.getEndDate()), pageable);
+        LocalDate now=LocalDate.now();
+        ResGetHotRecipeComponentDto hot = new ResGetHotRecipeComponentDto(attributes);
+        List<ResGetCartReport> cartReport = reportService.getCartReport(
+                attributes,
+                now.minusDays(30),
+                now.minusDays(1),
+                pageable);
+
+        ResGetHotRecipeDto responseDto = ResGetHotRecipeDto.builder()
+                .title(hot.getTitle())
+                .report(cartReport)
+                .build();
+
+        return ResponseEntity.ok(responseDto);
     }
 
 }

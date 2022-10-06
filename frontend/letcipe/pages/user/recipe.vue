@@ -98,6 +98,13 @@
             circle
           ></v-pagination>
         </v-container>
+
+        <v-snackbar
+          v-model="snackbar"
+          :timeout="timeout"
+        >
+          {{ isSucceededtoCart? "담기에 성공했습니다":"담기에 실패했습니다" }}
+        </v-snackbar>
       </div>
     </v-app>
   </div>
@@ -131,10 +138,13 @@ export default {
       myRecipes: [],
       dialog: false,
       selectedRecipe: {},
+      timeout:2000,
+      snackbar:false
     }
   },
   computed: {
     ...mapState('user', ['myRecipe']),
+    ...mapState('cart', ['isSucceededtoCart']),
   },
 
   watch: {},
@@ -166,7 +176,8 @@ export default {
     },
     async deleteItem(id) {
       await this.patchRecipeDetail(id)
-      await this.myrecipe(this.pageable)
+      // this.myrecipe(this.pageable)
+      this.$router.go('/user/recipe')
       this.dialog = false
     },
     moveDetail(mr) {
@@ -194,6 +205,7 @@ export default {
         list: recipeList,
       }
       this.createCart(addrecipes)
+      this.snackbar = true
     },
   },
 }

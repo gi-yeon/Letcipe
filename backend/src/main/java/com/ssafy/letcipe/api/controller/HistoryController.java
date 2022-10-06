@@ -1,5 +1,6 @@
 package com.ssafy.letcipe.api.controller;
 
+import com.ssafy.letcipe.api.dto.history.ReqHistoryReviewDto;
 import com.ssafy.letcipe.api.dto.history.ReqUpdateHistoryDto;
 import com.ssafy.letcipe.api.dto.history.ResGetHistoryDto;
 import com.ssafy.letcipe.api.service.HistoryService;
@@ -42,6 +43,7 @@ public class HistoryController {
     @PutMapping("")
     public ResponseEntity<?> updateHistory(@RequestBody ReqUpdateHistoryDto reqUpdateHistoryDto, HttpServletRequest request){
         Long userId = jwtService.getUserId(request);
+
         historyService.updateHistory(userId, reqUpdateHistoryDto);
         return ResponseEntity.ok().build();
     }
@@ -50,6 +52,26 @@ public class HistoryController {
     public ResponseEntity<?> checkHistoryIngredient(@PathVariable("history_ingredient_id") Long history_ingredient_id, HttpServletRequest request){
         Long userId = jwtService.getUserId(request);
         historyService.checkHistoryIngredient(userId, history_ingredient_id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/review")
+    public ResponseEntity postReview(@RequestBody ReqHistoryReviewDto historyReviewDto, HttpServletRequest request){
+        Long userId = jwtService.getUserId(request);
+        historyService.postReview(userId, historyReviewDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/review")
+    public ResponseEntity putReview(@RequestBody ReqHistoryReviewDto historyReviewDto, HttpServletRequest request){
+        Long userId = jwtService.getUserId(request);
+        historyService.putReview(userId, historyReviewDto);
+        return ResponseEntity.ok().build();
+    }
+    @DeleteMapping("/review")
+    public ResponseEntity deleteReview(@RequestParam Long historyId, HttpServletRequest request){
+        Long userId = jwtService.getUserId(request);
+        historyService.deleteReview(userId, historyId);
         return ResponseEntity.ok().build();
     }
 }

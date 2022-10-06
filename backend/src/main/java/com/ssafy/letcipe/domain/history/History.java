@@ -54,4 +54,8 @@ public class History {
     public void delete() {
         this.isDeleted = StatusType.Y;
     }
+
+    public void updateReview(String review){
+        this.review = review;
+    }
 }
