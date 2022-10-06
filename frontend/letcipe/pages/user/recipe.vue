@@ -172,7 +172,8 @@ export default {
     },
     async deleteItem(id) {
       await this.patchRecipeDetail(id)
-      await this.myrecipe(this.pageable)
+      // this.myrecipe(this.pageable)
+      this.$router.go('/user/recipe')
       this.dialog = false
     },
     moveDetail(mr) {
