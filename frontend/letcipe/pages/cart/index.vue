@@ -682,7 +682,8 @@ export default {
             amount: this.editedItem.amount,
           }
           this.createCartIngredient(createObject)
-
+          this.cartCategory.add(this.editedItem.ingredient.category)
+          console.log(this.editedItem.ingredient.category)
           this.ingreIndexList[this.editedItem.ingredient.id] =
             this.ingreList.length - 1
 
