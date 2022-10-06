@@ -46,17 +46,15 @@
             </div>
           </div>
         </div>
-        <v-card v-if="checkLogin === true" class="fadeInUp">
-          <v-card-title class="text-h5">Caution</v-card-title>
-          <v-card-text>아이디 또는 비밀번호가 일치하지 않습니다.</v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="checkLogin = false"
-              >확인</v-btn
-            >
-          </v-card-actions>
-        </v-card>
       </v-container>
+
+      <v-snackbar
+        v-model="snackbar"
+        max-width="290"
+        style="z-index: 100; margin-bottom: 60px"
+        :timeout="timeout"
+        >아이디 또는 비밀번호가 일치하지 않습니다.</v-snackbar
+      >
     </v-app>
   </div>
 </template>
@@ -70,7 +68,8 @@ export default {
       id: null,
       pw: null,
       showPW: false,
-      checkLogin: false,
+      snackbar: false,
+      timeout: 2000,
       rules: {
         id_rule: [
           (v) => !!v || '아이디는 필수 입력사항입니다.',
@@ -109,7 +108,7 @@ export default {
       if (this.userId !== 0) {
         this.$router.push('/main')
       } else {
-        this.checkLogin = true
+        this.snackbar = true
       }
     },
     moveMain() {
