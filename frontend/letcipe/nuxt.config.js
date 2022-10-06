@@ -40,9 +40,6 @@ export default {
       {
         src: 'https://cdn.shopify.com/s/files/1/2979/3338/files/UGC_-_new_v.3.js',
       },
-      {
-        src: 'https://code.jquery.com/jquery-3.4.1.js',
-      },
     ],
   },
 

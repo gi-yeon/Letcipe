@@ -175,7 +175,7 @@ export default {
 }
 
 /* mobile screen */
-@media (max-width: 415px) {
+@media (max-width: 500px) {
   .login-title {
     font-size: xx-large;
     color: black;

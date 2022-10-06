@@ -5,9 +5,13 @@
         <v-container class="bookmark-container d-flex-row">
           <div class="bookmark-head-wrap">
             <div class="d-flex justify-space-between pb-3">
-              <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              <div>
+                <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              </div>
               <div style="font-size: x-large">즐겨찾는 레시피</div>
-              <v-icon>mdi-blank</v-icon>
+              <div>
+                <v-icon>mdi-blank</v-icon>
+              </div>
             </div>
           </div>
           <v-divider></v-divider>
@@ -136,7 +140,6 @@ export default {
   watch: {},
 
   created() {
-    console.log(this.nickname)
     const pageable = {
       page: 0,
     }
@@ -149,8 +152,6 @@ export default {
         this.recipeBookmarks.push(mr)
       })
       this.TotalPage = this.myBookMarkRecipe.length / 5
-      console.log(this.myBookMarkRecipe)
-      console.log(this.myBookMarkRecipe)
     })
   },
   methods: {
@@ -179,7 +180,6 @@ export default {
     addCart(mr) {
       const cartItem = [mr.id]
       const list = { list: cartItem }
-      console.log(list)
       this.createCart(list)
       this.text = '장바구니에 레시피가 담겼습니다!'
       this.snackbar = true

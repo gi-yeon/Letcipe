@@ -307,7 +307,6 @@
                       x-small
                       color="letcipe"
                       outlined
-                      @click="createLike(data.recipe)"
                     >
                       <v-icon style="z-index: 5" color="letcipe"
                         >mdi-heart</v-icon
@@ -343,9 +342,6 @@
                     style="overflow: hidden; text-overflow: ellipsis"
                     >{{ ref.recipe.title }}</v-card-title
                   >
-                  <v-card-subtitle class="ref-subtitle">{{
-                    ref.recipe.content
-                  }}</v-card-subtitle>
                 </div>
               </v-img>
             </v-avatar>
@@ -356,43 +352,35 @@
             <div>인기있는 레시피 리스트!</div>
           </div>
 
-          <v-row>
-            <v-col>
-              <div class="hot-recipe-list d-flex justify-center">
-                <div v-for="(recipeList, i) in recipeLists" :key="i">
-                  <v-card
-                    style="width: 200px; height: 230px"
-                    class="d-flex-column justify-center align-item-center pt-3"
-                  >
-                    <div class="rec-imgs-group d-flex justify-center">
-                      <v-avatar
-                        size="130"
-                        fab
-                        @click="moveListDetail(recipeList)"
-                      >
-                        <!-- <v-img class="ref-imgs" :src="item.recipe.repImg"></v-img> -->
-                        <v-img
-                          v-if="recipeList.recipeListItems.length > 0"
-                          class="ref-imgs"
-                          :src="recipeList.recipeListItems[0].recipe.repImg"
-                        >
-                          <v-icon color="letcipe" x-large>mdi-play</v-icon>
-                        </v-img>
-                      </v-avatar>
-                    </div>
-                    <div>
-                      <v-card-title class="justify-center">{{
-                        recipeList.name
-                      }}</v-card-title>
-                      <v-card-subtitle>{{
-                        recipeList.description
-                      }}</v-card-subtitle>
-                    </div>
-                  </v-card>
+          <div class="hot-recipe-list d-flex justify-center">
+            <div v-for="(recipeList, i) in BestRecipeLists" :key="i">
+              <v-card
+                style="width: 200px; height: 230px"
+                class="d-flex-column justify-center align-item-center pt-3"
+              >
+                <div class="rec-imgs-group d-flex justify-center">
+                  <v-avatar size="130" fab @click="moveListDetail(recipeList)">
+                    <!-- <v-img class="ref-imgs" :src="item.recipe.repImg"></v-img> -->
+                    <v-img
+                      v-if="recipeList.recipeListItems.length > 0"
+                      class="ref-imgs"
+                      :src="recipeList.recipeListItems[0].recipe.repImg"
+                    >
+                      <v-icon color="letcipe" x-large>mdi-play</v-icon>
+                    </v-img>
+                  </v-avatar>
                 </div>
-              </div>
-            </v-col>
-          </v-row>
+                <div>
+                  <v-card-title class="justify-center">{{
+                    recipeList.name
+                  }}</v-card-title>
+                  <v-card-subtitle style="text-align: center">{{
+                    recipeList.description
+                  }}</v-card-subtitle>
+                </div>
+              </v-card>
+            </div>
+          </div>
         </div>
       </v-container>
     </v-app>
@@ -419,33 +407,7 @@ export default {
           serving: 0,
         },
       ],
-      refImg: [
-        {
-          url: 'data/recipe/20210810152825-4Y20E.jpg',
-          sub_title: '끝맛이 개운한',
-          title: '오이찜닭',
-        },
-        {
-          url: 'data/recipe/20210810142007-EYPBD.jpg',
-          sub_title: '색다른 꿀조합',
-          title: '명란 오이무침',
-        },
-        {
-          url: 'data/recipe/20210713113307-VT9JZ.jpg',
-          sub_title: '식감이 재밌는',
-          title: '소고기 오이볶음밥',
-        },
-        {
-          url: 'data/recipe/20210708104052-PX6S9.jpg',
-          sub_title: '오래도록 아삭한',
-          title: '오이 물김치',
-        },
-        {
-          url: 'data/recipe/20220825153420-BD8U3.png',
-          sub_title: '다이어터를 위한 후식냉면',
-          title: '오이냉면',
-        },
-      ],
+      refImg: [],
       tag_set: [],
       lecipeData: [],
       recipeChart: [],
@@ -482,8 +444,6 @@ export default {
       resolve()
     })
     promise.then(async () => {
-      console.log('이거슨감자' + this.recipeLists)
-      console.log(this.recipeLists)
       await this.getHistoryList()
       this.historyList?.forEach((h) => {
         if (h.process === 'READY') {
@@ -550,7 +510,7 @@ export default {
       })
 
       getBestRecipeLists(5, (response) => {
-        this.recipeLists = response.data
+        this.BestRecipeLists = response.data
       })
     })
   },
@@ -574,8 +534,6 @@ export default {
       // console.log(this.time)
     },
     moveListDetail(mr) {
-      console.log('mr:')
-      console.log(mr.id)
       this.CLEAR_RECIPELIST_ID()
       this.SET_RECIPELIST_ID(mr.id)
       this.$router.push('/recipelist/detail')
@@ -626,11 +584,6 @@ export default {
     createRecipe() {
       this.$router.push('/recipe/create')
     },
-    createLike(recipe) {
-      console.log(recipe)
-      // this.countRecipeLikes(recipe.id)
-    },
-    deleteLike(recipe) {},
   },
 }
 </script>
@@ -1039,7 +992,8 @@ export default {
     display: -webkit-box;
   }
   .hot-recipe-list {
-    overflow: scroll;
+    overflow-x: scroll;
+    width: auto;
   }
 }
 </style>

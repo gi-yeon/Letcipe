@@ -348,7 +348,6 @@ export default {
       this.$router.push('/user/mypage')
     },
     completeShopping() {
-      console.log('장보기')
       const h = {
         id: this.history.id,
         process: 1,
@@ -378,10 +377,6 @@ export default {
         this.checklist.push(c)
       })
       this.checkedList = []
-    },
-    test() {
-      console.log(this.category.length)
-      console.log(this.category)
     },
   },
 }

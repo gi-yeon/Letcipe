@@ -69,6 +69,11 @@ async function myrecipe(pageable, success, fail) {
     .catch(fail)
 }
 
+// 내 레시피 갯수 조회
+async function recipeNum(success, fail) {
+  await interceptor.get(`/api/user/recipeNum`).then(success).catch(fail)
+}
+
 // 내 레시피리스트 조회
 async function myrecipeList(pageable, success, fail) {
   await interceptor
@@ -138,4 +143,5 @@ export {
   createCode,
   modifyPassword,
   myLikeRecipe,
+  recipeNum,
 }

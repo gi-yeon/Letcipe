@@ -209,11 +209,9 @@ export default {
     })
     promise.then(async () => {
       await this.getHistoryList()
-      console.log(this.historyList)
       this.historyListInfo = this.historyList
       let index = -1
       for (let i = 0; i < this.historyListInfo.length; i++) {
-        console.log('22222222222222')
         if (this.historyListInfo[i].process === 'READY') {
           this.status = '진행예정'
           index = i

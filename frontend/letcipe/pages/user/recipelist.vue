@@ -148,11 +148,9 @@
             color="letcipe"
             :length="TotalPage"
             :per-page="perPage"
-            :total-visivle="TotalPage"
             prev-icon="mdi-menu-left"
             next-icon="mdi-menu-right"
             circle
-            @input="handlePage"
           ></v-pagination>
         </v-container>
 
@@ -202,7 +200,7 @@ export default {
       recipeList: [],
       dialog: false,
       selectedRecipe: {},
-
+      selectedRecipeList: '',
       snackbar: false,
       timeout: 2000,
 
@@ -222,10 +220,7 @@ export default {
     })
     promise.then(async () => {
       await this.myrecipeList(this.pageable)
-      console.log(111111111)
-      console.log(this.myRecipeList)
       this.myRecipeList?.forEach((mr) => {
-        console.log(mr.recipeListItems)
         const repImg = mr.recipeListItems[0]
           ? mr.recipeListItems[0].recipe.repImg
           : ''
@@ -250,15 +245,9 @@ export default {
           recipeListItem.cnt += m.amount
         })
         this.recipeList.push(recipeListItem)
-        const pages = this.recipeList.length / mr.recipeListItems.length
-        this.TotalPage = pages
+        const pages = this.recipeList.length / this.pageable.size
+        this.TotalPage = pages + 1
       })
-      console.log(1111111111)
-      console.log('dksdud')
-      console.log(this.recipeList)
-      //   this.TotalPage = this.myRecipe.length / 5
-      //   console.log(this.TotalPage)
-      //   console.log(this.myRecipes)
     })
   },
 
@@ -282,6 +271,7 @@ export default {
       await this.deleteRecipeList(id)
       this.$router.go('/user/recipelist')
       this.dialog = false
+      this.$router.go()
     },
     moveDetail(mr) {
       this.CLEAR_RECIPELIST_ID()
@@ -321,8 +311,6 @@ export default {
       }
     },
     modifyStatus(mr) {
-      console.log(mr)
-
       const object = {
         id: mr.id,
         ReqUpdateRecipeListDto: {
@@ -331,41 +319,12 @@ export default {
           isShared: mr.isShared === 'N' ? 'Y' : 'N',
         },
       }
-      console.log(object)
       this.updateRecipeList(object)
       if (mr.isShared === 'Y') {
         mr.isShared = 'N'
       } else {
         mr.isShared = 'Y'
       }
-    },
-    async handlePage() {
-      this.pageable.page += 1
-      await this.myrecipeList(this.pageable)
-      this.myRecipeList?.forEach((mr) => {
-        if (mr.recipeListItems.length !== 0) {
-          const recipeListItem = {
-            id: mr.id,
-            bookmark: mr.bookmark,
-            name: mr.name,
-            isShared: mr.isShared,
-            bookmarkCnt: mr.recipeListBookmark,
-            repImg: mr.recipeListItems[0].recipe.repImg,
-            description: mr.description,
-            content: mr.recipeListItems[0].recipe.title + ' 외',
-            regTime: mr.regTime.split('T')[0],
-            review: mr.review,
-            cnt: 0,
-            items: mr.recipeListItems,
-          }
-          mr.recipeListItems.forEach((m) => {
-            recipeListItem.cnt += m.amount
-          })
-          this.recipeList.push(recipeListItem)
-          const pages = this.recipeList.length / mr.recipeListItems.length
-          this.TotalPage = pages
-        }
-      })
     },
   },
 }
@@ -399,7 +358,7 @@ export default {
   display: none;
 }
 
-@media (max-width: 415px) {
+@media (max-width: 500px) {
   .recipe-item {
     width: 85px;
     overflow: hidden;

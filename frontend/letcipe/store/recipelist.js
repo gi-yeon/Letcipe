@@ -44,9 +44,9 @@ export const mutations = {
   SET_RECIPELIST_NAME(state, newName) {
     state.recipeListRes.name = newName
   },
-  MODIFY_RECIPE_LIST_ITEM(state,index) {
-    state.recipeListItems.splice(index,1)
-  }
+  MODIFY_RECIPE_LIST_ITEM(state, index) {
+    state.recipeListItems.splice(index, 1)
+  },
 }
 
 export const getters = {}
@@ -71,7 +71,7 @@ export const actions = {
     await createRecipeList(
       recipeList,
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         commit('SET_ISSUCCESS_TRUE')
       },
       (error) => {
@@ -97,7 +97,7 @@ export const actions = {
       recipeListId,
       ({ data }) => {
         commit('SET_RECIPELIST', data)
-        console.log(data)
+        // console.log(data)
         console.log('레시피리스트 하나 검색 성공!')
       },
       (error) => {

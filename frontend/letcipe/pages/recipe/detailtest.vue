@@ -200,8 +200,6 @@ export default {
     promise.then(async () => {
       this.recipeSteps = []
       await this.RecipeDetail(1)
-      console.log(this.recipeDetail)
-      //   console.log(this.recipeDetail.ingredients)
       this.recipeSteps = this.recipeDetail.recipeSteps
       this.recipeIngredient = this.recipeDetail.ingredients
       this.writer = this.recipeDetail.user

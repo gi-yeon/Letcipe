@@ -399,7 +399,6 @@ export default {
       }
       this.modifyReview(review)
       this.snackbar = true
-      console.log(this.reviewModifySuccess)
     },
     moveDetail(mr) {
       this.CLEAR_RECIPE_ID()

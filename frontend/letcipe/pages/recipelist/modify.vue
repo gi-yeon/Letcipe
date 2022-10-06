@@ -78,10 +78,8 @@
                   {{ recipeListWriter.job }} &nbsp;&nbsp;{{
                     recipeListWriter.nickname
                   }}
-                  <v-btn
-                      style="border: 1px solid black"
-                      @click="deleteList()"
-                      >삭제</v-btn
+                  <v-btn style="border: 1px solid black" @click="deleteList()"
+                    >삭제</v-btn
                   >
                 </v-row>
               </div>
@@ -108,13 +106,13 @@
             <br />
             <div align="center" class="d-flex justify-center">
               <!-- <v-btn style="width: 90%; border: 1px solid black" @click="partAdd()">선택 담기</v-btn> -->
-                  <v-btn
-                    :disabled="checkDisabled.length===0"
-                    height="48px"
-                    style="width: 90%; border: 1px solid black"
-                    @click="partDelete()"
-                    >선택 삭제</v-btn
-                  >
+              <v-btn
+                :disabled="checkDisabled.length === 0"
+                height="48px"
+                style="width: 90%; border: 1px solid black"
+                @click="partDelete()"
+                >선택 삭제</v-btn
+              >
             </div>
             <v-card-subtitle
               class="mx-0 mr-3 ml-3 d-flex justify-space-between"
@@ -218,15 +216,15 @@ export default {
       dialogTitle: false,
       newName: null,
       modifyDialog: false,
-      checkDisabled:[],
-      snackBarMsg:'',
-      snackBar:false,
+      checkDisabled: [],
+      snackBarMsg: '',
+      snackBar: false,
     }
   },
 
   async fetch() {
     await this.getRecipeList(this.recipeListId)
-    console.log(this.recipeListId)
+
     this.recipeListWriter = this.recipeListUser
     const temp = this.recipeListRes.regTime
     this.regTime = temp.replace('T', '  ')
@@ -260,7 +258,7 @@ export default {
       'SET_RECIPELIST_NAME',
       'SET_RECIPE_ID',
       'CLEAR_RECIPE_ID',
-      'MODIFY_RECIPE_LIST_ITEM'
+      'MODIFY_RECIPE_LIST_ITEM',
     ]),
     moveBack() {
       this.$router.go(-1)
@@ -285,10 +283,10 @@ export default {
     addCart(index) {
       this.isAllCheck = false
       this.checkedRecipe[index] = !this.checkedRecipe[index]
-      if(this.checkedRecipe[index]){
+      if (this.checkedRecipe[index]) {
         this.checkDisabled.push(true)
-      }else{
-        this.checkDisabled.shift();
+      } else {
+        this.checkDisabled.shift()
       }
     },
     allAddCart() {
@@ -308,15 +306,14 @@ export default {
           this.checkedRecipe[i] = false
         }
       }
-      console.log(this.cart)
     },
     async deleteList() {
       const sleep = (milliseconds) => {
         return new Promise((resolve) => setTimeout(resolve, milliseconds))
       }
       await this.deleteRecipeList(this.recipeListId)
-      this.snackBarMsg='레시피 리스트가 삭제되었습니다.'
-      this.snackBar=true
+      this.snackBarMsg = '레시피 리스트가 삭제되었습니다.'
+      this.snackBar = true
       await sleep(1000)
       this.$router.push('/user/mypage')
     },
@@ -324,25 +321,24 @@ export default {
       const sleep = (milliseconds) => {
         return new Promise((resolve) => setTimeout(resolve, milliseconds))
       }
-      const num=this.checkDisabled.length
-      this.checkDisabled=[]
-      for (let index = this.checkedRecipe.length-1; index >=0; index--) {
+      const num = this.checkDisabled.length
+      this.checkDisabled = []
+      for (let index = this.checkedRecipe.length - 1; index >= 0; index--) {
         if (this.checkedRecipe[index]) {
-
           const data = {
             recipeListId: this.recipeListId,
             recipeId: this.recipeListItems[index].recipe.id,
           }
           await this.deleteRecipeListItem(data)
-          this.checkedRecipe.splice(index,1)
-          await this.MODIFY_RECIPE_LIST_ITEM(index);
+          this.checkedRecipe.splice(index, 1)
+          await this.MODIFY_RECIPE_LIST_ITEM(index)
         }
       }
-      this.snackBarMsg=num+'개 레시피가 삭제되었습니다.'
-      this.snackBar=true
-      if(this.recipeListItems.length===0){
+      this.snackBarMsg = num + '개 레시피가 삭제되었습니다.'
+      this.snackBar = true
+      if (this.recipeListItems.length === 0) {
         await sleep(1000)
-        await this.$router.push("/user/mypage")
+        await this.$router.push('/user/mypage')
       }
     },
     modifyItem(recipeListRes) {
