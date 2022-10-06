@@ -40,18 +40,18 @@ export const mutations = {
      console.log(state.ingreList)
   },
   CALC_PLUS_INGRE(state, index){
-    state.ingreList[index].amount += 1
+    state.ingreList[index].amount =  Number(state.ingreList[index].amount) + 1
   },
   CALC_SUB_INGRE(state, index){
-    state.ingreList[index].amount -= 1
+    state.ingreList[index].amount =  Number(state.ingreList[index].amount) - 1
   },
   SET_INGRELIST_AMOUNT(state,updateAmountObject){
     console.log("ingre" + updateAmountObject.index + "====" + updateAmountObject.updateAmount) 
-    state.ingreList[updateAmountObject.index].amount = updateAmountObject.updateAmount
+    state.ingreList[updateAmountObject.index].amount =  Number(updateAmountObject.updateAmount)
   } ,
   SET_BYRECIPE_AMOUNT(state,updateAmountObject){
     console.log("recipe" + updateAmountObject.ingreId + "====" + updateAmountObject.updateAmount)
-    state.amountByRecipe[updateAmountObject.ingreId] = updateAmountObject.updateAmount
+    state.amountByRecipe[updateAmountObject.ingreId] =  Number(updateAmountObject.updateAmount)
   },
 
   SET_RECIPE_INGRE(state, amountByRecipe){
