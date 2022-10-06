@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface RecipeRepositoryCustom {
 
-    public List<RecipeIngredientCountDto> findRecipeContains(Pageable pageable, String[] ingredientIds) throws SQLException;
+    public List<RecipeIngredientCountDto> findRecipeContains(String[] ingredientIds) throws SQLException;
 
 }

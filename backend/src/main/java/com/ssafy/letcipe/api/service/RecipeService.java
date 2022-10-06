@@ -8,6 +8,7 @@ import com.ssafy.letcipe.api.dto.recipeIngredient.ResGetRecipeIngredientDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqDeleteRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeLike.ReqPostRecipeLikeDto;
 import com.ssafy.letcipe.api.dto.recipeStep.ReqPostRecipeStepDto;
+import com.ssafy.letcipe.api.dto.recipeStep.ReqPutRecipeStepDto;
 import com.ssafy.letcipe.domain.ingredient.Ingredient;
 import com.ssafy.letcipe.domain.recipe.Recipe;
 import com.ssafy.letcipe.domain.recipe.RecipeIngredientCountDto;
@@ -22,6 +23,8 @@ import com.ssafy.letcipe.domain.tag.Tag;
 import com.ssafy.letcipe.domain.user.User;
 import com.ssafy.letcipe.exception.AuthorityViolationException;
 import com.ssafy.letcipe.util.FileHandler;
+import com.ssafy.letcipe.util.StringUtils;
+import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -105,29 +108,34 @@ public class RecipeService {
             Tag tag = tagService.getOrCreateTag(tagName);
             recipeTagService.createRecipeTag(recipe, tag);
         }
-
-
     }
 
     @Transactional
-    public void updateRecipe(ReqPutRecipeDto updateDto, long recipe_id) throws NullPointerException, FileNotFoundException, FileUploadException {
-        // 대표 이미지 null check
-        if (updateDto.getRepImg() == null || updateDto.getRepImg().isEmpty()) {
-            throw new FileNotFoundException("대표 이미지가 없습니다.");
-        }
-
+    public void updateRecipe(ReqPutRecipeDto updateDto, long recipe_id) throws NullPointerException, FileNotFoundException, FileUploadException{
+        log.info("업데이트:{}",updateDto);
         Recipe recipe = getRecipe(recipe_id);
 
+        // 대표 이미지 null check
+        String newRepImg;
+        if (updateDto.getRepImg() == null || updateDto.getRepImg().isEmpty()) {
+            newRepImg = updateDto.getRepImgUrl();
+            if (StringUtil.isNullOrEmpty(newRepImg))
+                throw new FileNotFoundException("대표 이미지가 없습니다.");
+        } else {
+            // 새로운 대표 이미지 업로드
+            newRepImg = fileHandler.uploadImage(updateDto.getRepImg());
+        }
         // 기존 대표 이미지 삭제
-        fileHandler.deleteImageFile(recipe.getRepImg());
-        // 새로운 대표 이미지 업로드
-        String newRepImg = fileHandler.uploadImage(updateDto.getRepImg());
+        try {
+            fileHandler.deleteImageFile(recipe.getRepImg());
+        } catch (FileNotFoundException e) {
+            log.info("서버에 업로드된 이미지가 아님");
+        }
 
         // 기존 스텝 삭제
         recipeStepService.deleteRecipeSteps(recipe);
-
         // 새로운 스텝 추가
-        for (ReqPostRecipeStepDto step : updateDto.getStepDtoList()) {
+        for (ReqPutRecipeStepDto step : updateDto.getStepDtoList()) {
             recipeStepService.createRecipeStep(recipe, step);
         }
 
@@ -234,11 +242,11 @@ public class RecipeService {
 
         // 재료목록 파싱
         String[] token = ingCSV.split(",");
-        if (token.length == 0)
+        if (token.length <= 1)
             return result;
 
         // 재료를 1개 이상 포함하는 레시피 목록
-        List<RecipeIngredientCountDto> recipeContainsIngredient = customRepository.findRecipeContains(pageable,token);
+        List<RecipeIngredientCountDto> recipeContainsIngredient = customRepository.findRecipeContains(token);
         // 재료를 모두 포함하는 리스트만 추리기
         for (int i= 0 ;i<recipeContainsIngredient.size();i++) {
             if (recipeContainsIngredient.get(i).getCount() != token.length)
@@ -247,8 +255,10 @@ public class RecipeService {
         recipeContainsIngredient.forEach(i -> {
             result.add(getRecipeDto(i.getRecipe()));
         });
-        System.out.println(result);
-        return result;
+        int total = result.size();
+        int from = pageable.getPageNumber()*pageable.getPageSize();
+        int to = from+pageable.getPageSize();
+        return result.subList(from,Math.min(to,total));
     }
 
     public ResGetRecipeDto getRecipeDto(Recipe recipe) {
@@ -272,4 +282,6 @@ public class RecipeService {
         }
         return result;
     }
+
+
 }

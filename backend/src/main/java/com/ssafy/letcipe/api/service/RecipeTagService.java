@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class RecipeTagService {
     private final RecipeTagRepository recipeTagRepository;
 
+
     public RecipeTag createRecipeTag(Recipe recipe, Tag tag) {
         RecipeTag recipeTag = RecipeTag.builder()
                 .recipe(recipe)
@@ -25,11 +26,9 @@ public class RecipeTagService {
     @Transactional
     public void deleteRecipeTags(Recipe recipe) {
         for (RecipeTag tag : recipe.getTags()) {
-            deleteRecipeTag(tag);
+            System.out.println("delete tag.getId() = " + tag.getId());
+            recipeTagRepository.deleteById(tag.getId());
         }
-    }
-    @Transactional
-    public void deleteRecipeTag(RecipeTag recipeTag) {
-        recipeTagRepository.delete(recipeTag);
+        recipeTagRepository.flush();
     }
 }

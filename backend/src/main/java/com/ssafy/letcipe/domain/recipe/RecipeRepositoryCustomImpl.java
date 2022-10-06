@@ -21,7 +21,7 @@ public class RecipeRepositoryCustomImpl implements RecipeRepositoryCustom {
 
 
     @Override
-    public List<RecipeIngredientCountDto> findRecipeContains(Pageable pageable, String[] ingredientIds) throws SQLException {
+    public List<RecipeIngredientCountDto> findRecipeContains(String[] ingredientIds) throws SQLException {
         BooleanBuilder builder = new BooleanBuilder();
         for (String ingredientId : ingredientIds) {
             builder.or(recipeIngredient.ingredient.id.eq(Long.parseLong(ingredientId)));
@@ -32,8 +32,6 @@ public class RecipeRepositoryCustomImpl implements RecipeRepositoryCustom {
                 .from(recipeIngredient)
                 .where(builder)
                 .groupBy(recipeIngredient.recipe)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
                 .fetch();
     }
 

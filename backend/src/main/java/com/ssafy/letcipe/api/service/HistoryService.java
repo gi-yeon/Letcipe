@@ -89,4 +89,32 @@ public class HistoryService {
         else historyIngredient.updateHistoryIngredient(PurchaseType.N);
         historyIngredientRepository.save(historyIngredient);
     }
+
+
+    public void postReview(Long userId, ReqHistoryReviewDto historyReviewDto) {
+        History history = historyRepository.findById(historyReviewDto.getHistoryId()).orElseThrow(
+                () -> new NullPointerException("히스토리를 찾을 수 없습니다."));
+        if (!userId.equals(history.getUser().getId()))
+            throw new AuthorityViolationException("접근 권한이 없습니다.");
+        history.updateReview(historyReviewDto.getReview());
+        historyRepository.save(history);
+    }
+
+    public void putReview(Long userId, ReqHistoryReviewDto historyReviewDto) {
+        History history = historyRepository.findById(historyReviewDto.getHistoryId()).orElseThrow(
+                () -> new NullPointerException("히스토리를 찾을 수 없습니다."));
+        if (!userId.equals(history.getUser().getId()))
+            throw new AuthorityViolationException("접근 권한이 없습니다.");
+        history.updateReview(historyReviewDto.getReview());
+        historyRepository.save(history);
+    }
+
+    public void deleteReview(Long userId, Long historyId) {
+        History history = historyRepository.findById(historyId).orElseThrow(
+                () -> new NullPointerException("히스토리를 찾을 수 없습니다."));
+        if (!userId.equals(history.getUser().getId()))
+            throw new AuthorityViolationException("접근 권한이 없습니다.");
+        history.updateReview(null);
+        historyRepository.save(history);
+    }
 }
