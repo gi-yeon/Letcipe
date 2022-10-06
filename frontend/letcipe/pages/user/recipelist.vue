@@ -200,15 +200,18 @@ export default {
     promise.then(async () => {
       await this.myrecipeList(pageable)
       this.myRecipeList?.forEach((mr) => {
+        console.log(mr.recipeListItems)
+        const repImg =  mr.recipeListItems[0]? mr.recipeListItems[0].recipe.repImg:''
+        const content = mr.recipeListItems[0]? mr.recipeListItems[0].recipe.title:''
         const recipeListItem = {
           id: mr.id,
           bookmark: mr.bookmark,
           name: mr.name,
           isShared: mr.isShared,
           bookmarkCnt: mr.recipeListBookmark,
-          repImg: mr.recipeListItems[0].recipe.repImg,
+          repImg,
           description: mr.description,
-          content: mr.recipeListItems[0].recipe.title + ' 외',
+          content,
           regTime: mr.regTime.split('T')[0],
           review: mr.review,
           cnt: 0,
@@ -219,11 +222,9 @@ export default {
         })
         this.recipeList.push(recipeListItem)
       })
-      //   this.TotalPage = this.myRecipe.length / 5
-      //   console.log(this.TotalPage)
-      //   console.log(this.myRecipes)
-    })
+       })
   },
+
   methods: {
     ...mapActions('recipe', ['patchRecipeDetail']),
     ...mapActions('user', ['myrecipe', 'myrecipeList']),
