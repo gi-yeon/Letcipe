@@ -847,14 +847,13 @@ export default {
       this.errorMsg = '정말로 삭제하시겠습니까?'
       this.dialogAlert = true
     },
-   checkedDelete() {
+    checkedDelete() {
       if (this.checked.length > 0) {
         for (let i = 0; i < this.checked.length; i++) {
-         this.deleteRecipe(this.checked[i].recipe.id)
+          this.deleteRecipe(this.checked[i].recipe.id)
         }
-
       }
-       this.$router.go()
+      this.$router.go()
       this.dialogAlert = false
     },
     subIngreAmount(index) {
@@ -949,7 +948,7 @@ export default {
           this.dialogStartCartError = true
         } else {
           this.startCart()
-          this.$router.go()
+          this.$router.push('/check')
         }
       } else {
         this.dialogTitle = 'Caution'
