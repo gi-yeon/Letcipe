@@ -5,9 +5,13 @@
         <div class="my-middle-wrap">
           <div class="my-middle">
             <div class="my-container">
-              <div class="nickname-titles">
+              <div
+                v-if="nickname !== null && nickname !== ''"
+                class="nickname-titles"
+              >
                 {{ nickname }}님의 현재 진행중인 레시피리스트
               </div>
+              <div v-else>로그인을 해주세요</div>
               <v-carousel
                 hide-delimiters
                 class="my-list-carousel"
@@ -62,7 +66,13 @@
           </div>
           <div class="my-middle">
             <div class="check-wrap">
-              <div class="nickname-titles">{{ nickname }}님의 장보기목록</div>
+              <div
+                v-if="nickname !== null && nickname !== ''"
+                class="nickname-titles"
+              >
+                {{ nickname }}님의 장보기목록
+              </div>
+              <div v-else>로그인을 해주세요</div>
               <v-container elevation="3" class="check-container">
                 <div class="check-head-wrap">
                   <v-tabs v-model="tabs" fixed-tabs>
@@ -243,7 +253,7 @@
             <div>Let'cipe차트</div>
             <div>전체보기</div>
           </div>
-          <div class="chart-chips-group">
+          <div class="chart-chips-group pt-2 pb-4">
             <v-sheet class="chip-sheet mx-auto">
               <v-slide-group v-model="selectTag" mandatory overflow>
                 <v-slide-item
@@ -298,20 +308,6 @@
                         }}</v-list-item-subtitle>
                       </v-list-item-content>
                     </v-list-item>
-                    <v-btn
-                      class="mr-3"
-                      elevation="3"
-                      style="z-index: 5"
-                      fab
-                      dark
-                      x-small
-                      color="letcipe"
-                      outlined
-                    >
-                      <v-icon style="z-index: 5" color="letcipe"
-                        >mdi-heart</v-icon
-                      >
-                    </v-btn>
                   </v-card>
                 </template>
               </v-hover>
@@ -352,7 +348,7 @@
             <div>인기있는 레시피 리스트!</div>
           </div>
 
-          <div class="hot-recipe-list d-flex justify-center">
+          <div class="hot-recipe-list d-flex justify-space-between">
             <div v-for="(recipeList, i) in BestRecipeLists" :key="i">
               <v-card
                 style="width: 200px; height: 230px"

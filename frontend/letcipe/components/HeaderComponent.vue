@@ -66,7 +66,10 @@
     <v-navigation-drawer v-model="drawer" absolute temporary overlay-inherit>
       <v-list-item>
         <v-list-item-avatar>
-          <v-img v-if="profileimg !== (null && '')" :src="profileimg"></v-img>
+          <v-img
+            v-if="profileImage !== (null && '')"
+            :src="profileImage"
+          ></v-img>
           <v-img v-else src="/icons/유저_mo.png"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
@@ -124,6 +127,7 @@
           <v-list-item
             v-if="userId !== null || userId !== ''"
             @click="logOut()"
+            @click.stop="drawer = !drawer"
           >
             <v-list-item-icon>
               <v-icon>mdi-logout</v-icon>
@@ -171,11 +175,6 @@ export default {
           title: '마이페이지',
           icon: 'mdi-account',
           m: '/user/mypage',
-        },
-        {
-          title: '테스트페이지',
-          icon: 'mdi-check',
-          m: '/user/recipetest',
         },
       ],
       profileimg: null,
