@@ -66,10 +66,7 @@
     <v-navigation-drawer v-model="drawer" absolute temporary overlay-inherit>
       <v-list-item>
         <v-list-item-avatar>
-          <v-img
-            v-if="profileImage !== (null && '')"
-            :src="profileImage"
-          ></v-img>
+          <v-img v-if="profileimg !== (null && '')" :src="profileimg"></v-img>
           <v-img v-else src="/icons/유저_mo.png"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
@@ -97,6 +94,45 @@
               <v-list-item-title style="font-size: large">{{
                 item.title
               }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item v-if="userId === 1" @click="moveAdmin()">
+            <v-list-item-icon>
+              <v-icon>mdi-chart-bar-stacked</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title style="font-size: large">
+                통계</v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item
+            v-if="userId === null || userId === ''"
+            @click="moveLogin()"
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-login</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title style="font-size: large">
+                로그인</v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item
+            v-if="userId !== null || userId !== ''"
+            @click="logOut()"
+          >
+            <v-list-item-icon>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title style="font-size: large">
+                로그아웃</v-list-item-title
+              >
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
@@ -136,15 +172,19 @@ export default {
           icon: 'mdi-account',
           m: '/user/mypage',
         },
-        { title: '로그아웃', icon: 'mdi-logout', m: 'logOut()' },
       ],
+      profileimg: null,
     }
   },
 
   computed: {
     ...mapState('user', ['userId', 'nickname', 'profileImage']),
   },
-  created() {},
+  created() {
+    if (this.profileImage !== null) {
+      this.profileimg = this.profileImage
+    }
+  },
   methods: {
     ...mapActions('user', ['logout']),
     moveLogin() {
@@ -166,6 +206,9 @@ export default {
       } else {
         this.$router.push(item.m)
       }
+    },
+    moveAdmin() {
+      this.$router.push('/admin')
     },
   },
 }

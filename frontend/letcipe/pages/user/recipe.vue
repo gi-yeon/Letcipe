@@ -5,9 +5,13 @@
         <v-container class="myrecipe-container d-flex-row">
           <div class="myrecipe-head-wrap">
             <div class="d-flex justify-space-between pb-3">
-              <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              <div>
+                <v-icon @click="moveMypage">mdi-window-close</v-icon>
+              </div>
               <div style="font-size: x-large">내가 만든 레시피</div>
-              <v-icon>mdi-blank</v-icon>
+              <div>
+                <v-icon>mdi-blank</v-icon>
+              </div>
             </div>
           </div>
           <v-divider></v-divider>

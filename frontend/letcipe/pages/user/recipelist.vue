@@ -149,17 +149,25 @@
             :length="TotalPage"
             :per-page="perPage"
             :total-visivle="TotalPage"
+            prev-icon="mdi-menu-left"
+            next-icon="mdi-menu-right"
             circle
+            @input="handlePage"
           ></v-pagination>
         </v-container>
 
         <v-snackbar
           v-model="snackbar2"
+          max-width="290"
+          style="z-index: 100; margin-bottom: 60px"
           :timeout="timeout"
         >
-          {{ isSucceededtoCart? "모두 담기에 성공했습니다":"모두 담기에 실패했습니다" }}
+          {{
+            isSucceededtoCart
+              ? '모두 담기에 성공했습니다'
+              : '모두 담기에 실패했습니다'
+          }}
         </v-snackbar>
-
       </div>
     </v-app>
   </div>
@@ -171,6 +179,10 @@ export default {
   name: 'MyrecipeListPage',
   data() {
     return {
+      pageable: {
+        page: 0,
+        size: 10,
+      },
       TotalPage: 0,
       perPage: 5,
       currentPage: 1,
@@ -190,7 +202,10 @@ export default {
       recipeList: [],
       dialog: false,
       selectedRecipe: {},
+
+      snackbar: false,
       timeout: 2000,
+
       snackbar2: false,
     }
   },
@@ -202,18 +217,21 @@ export default {
   watch: {},
 
   created() {
-    const pageable = {
-      page: 0,
-    }
     const promise = new Promise((resolve, reject) => {
       resolve()
     })
     promise.then(async () => {
-      await this.myrecipeList(pageable)
+      await this.myrecipeList(this.pageable)
+      console.log(111111111)
+      console.log(this.myRecipeList)
       this.myRecipeList?.forEach((mr) => {
         console.log(mr.recipeListItems)
-        const repImg =  mr.recipeListItems[0]? mr.recipeListItems[0].recipe.repImg:''
-        const content = mr.recipeListItems[0]? mr.recipeListItems[0].recipe.title:''
+        const repImg = mr.recipeListItems[0]
+          ? mr.recipeListItems[0].recipe.repImg
+          : ''
+        const content = mr.recipeListItems[0]
+          ? mr.recipeListItems[0].recipe.title
+          : ''
         const recipeListItem = {
           id: mr.id,
           bookmark: mr.bookmark,
@@ -232,8 +250,16 @@ export default {
           recipeListItem.cnt += m.amount
         })
         this.recipeList.push(recipeListItem)
+        const pages = this.recipeList.length / mr.recipeListItems.length
+        this.TotalPage = pages
       })
-       })
+      console.log(1111111111)
+      console.log('dksdud')
+      console.log(this.recipeList)
+      //   this.TotalPage = this.myRecipe.length / 5
+      //   console.log(this.TotalPage)
+      //   console.log(this.myRecipes)
+    })
   },
 
   methods: {
@@ -276,6 +302,7 @@ export default {
         list: recipeList,
       }
       this.createCart(addrecipes)
+
       this.snackbar2 = true
     },
     openDialog(mr) {
@@ -301,7 +328,7 @@ export default {
         ReqUpdateRecipeListDto: {
           name: mr.name,
           description: mr.description,
-          isShared: mr.isShared==='N'?'Y':'N',
+          isShared: mr.isShared === 'N' ? 'Y' : 'N',
         },
       }
       console.log(object)
@@ -311,6 +338,34 @@ export default {
       } else {
         mr.isShared = 'Y'
       }
+    },
+    async handlePage() {
+      this.pageable.page += 1
+      await this.myrecipeList(this.pageable)
+      this.myRecipeList?.forEach((mr) => {
+        if (mr.recipeListItems.length !== 0) {
+          const recipeListItem = {
+            id: mr.id,
+            bookmark: mr.bookmark,
+            name: mr.name,
+            isShared: mr.isShared,
+            bookmarkCnt: mr.recipeListBookmark,
+            repImg: mr.recipeListItems[0].recipe.repImg,
+            description: mr.description,
+            content: mr.recipeListItems[0].recipe.title + ' 외',
+            regTime: mr.regTime.split('T')[0],
+            review: mr.review,
+            cnt: 0,
+            items: mr.recipeListItems,
+          }
+          mr.recipeListItems.forEach((m) => {
+            recipeListItem.cnt += m.amount
+          })
+          this.recipeList.push(recipeListItem)
+          const pages = this.recipeList.length / mr.recipeListItems.length
+          this.TotalPage = pages
+        }
+      })
     },
   },
 }

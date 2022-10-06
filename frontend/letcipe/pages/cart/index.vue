@@ -23,10 +23,10 @@
           </div>
           <div class="d-flex justify-space-between">
             <div class="d-flex align-items-center">
-              <div v-if="!isAllCheck" style="z-index: 2" @click="allCheck">
+              <div v-if="!isAllCheck" class="all-select" @click="allCheck">
                 <v-icon>mdi-check-circle-outline</v-icon>전체 선택
               </div>
-              <div v-else style="z-index: 2" @click="allCheck">
+              <div v-else class="all-select" @click="allCheck">
                 <v-icon>mdi-check-circle</v-icon>전체 선택
               </div>
             </div>
@@ -60,14 +60,12 @@
           <div v-for="(recipeInfo, i) in cart" v-else :key="i">
             <v-list-item
               three-line
-              style="background-color: white"
+              style="background-color: white; z-index: 1"
               class="pl-3 pr-3"
-              @click="moveDetail(recipeInfo)"
             >
               <v-icon
                 v-if="!checkedRecipe[i]"
-                style="z-index: 2"
-                class="mr-3"
+                class="check-btn-wrap mr-3"
                 @click="addRecipe(i)"
                 >mdi-check-circle-outline</v-icon
               >
@@ -78,12 +76,19 @@
                 @click="addRecipe(i)"
                 >mdi-check-circle</v-icon
               >
-              <v-list-item-avatar tile size="100">
+              <v-list-item-avatar
+                tile
+                size="100"
+                class="recipe-avatar"
+                @click="moveDetail(recipeInfo)"
+              >
                 <v-img :src="recipeInfo.recipe.repImg"></v-img>
               </v-list-item-avatar>
               <v-list-item-content class="pl-4">
                 <v-list-item-title class="d-flex justify-space-between">
-                  <div>{{ recipeInfo.recipe.title }}</div>
+                  <div style="cursor: pointer" @click="moveDetail(recipeInfo)">
+                    {{ recipeInfo.recipe.title }}
+                  </div>
                   <v-icon
                     style="z-index: 2"
                     @click="deleteRecipe(recipeInfo.recipe.id)"
@@ -98,6 +103,7 @@
                     white-space: nowrap;
                     display: inline-block;
                   "
+                  @click="moveDetail(recipeInfo)"
                   >{{ recipeInfo.recipe.content }}</v-list-item-subtitle
                 >
                 <div class="d-flex justify-space-between">
@@ -113,6 +119,7 @@
                   <div>
                     <v-btn
                       elevation="3"
+                      style="z-index: 5"
                       class="mx-2"
                       fab
                       dark
@@ -120,11 +127,12 @@
                       color="letcipe"
                       @click="subRecipeAmount(recipeInfo.recipe.id, i)"
                     >
-                      <v-icon dark>mdi-minus</v-icon>
+                      <v-icon style="z-index: 5" dark>mdi-minus</v-icon>
                     </v-btn>
                     {{ recipeInfo.amount }}
                     <v-btn
                       elevation="3"
+                      style="z-index: 5"
                       class="mx-2"
                       fab
                       dark
@@ -132,7 +140,7 @@
                       color="letcipe"
                       @click="plusRecipeAmount(recipeInfo.recipe.id, i)"
                     >
-                      <v-icon dark>mdi-plus</v-icon>
+                      <v-icon style="z-index: 5" dark>mdi-plus</v-icon>
                     </v-btn>
                     <!-- <div class="d-flex justify-center">
                       <v-icon class="mx-2" color="letcipe"
@@ -181,17 +189,9 @@
 
                   <div>{{ cg }}</div>
                 </div>
-                <!-- <div class="d-flex align-center">
-                        <div>전체선택</div>
-                        <v-checkbox color="letcipe"></v-checkbox>
-                      </div>-->
               </div>
               <v-divider></v-divider>
               <div v-for="(item, i) in ingreList" :key="i" class="pl-3 pr-3">
-                <!-- <div
-              v-if="item.amount > 0 && ingreList[i].ingredient.category === cg"
-              class="d-flex justify-space-between pa-2"
-            > -->
                 <div
                   v-if="
                     item.amount > 0 && ingreList[i].ingredient.category === cg
@@ -1025,6 +1025,14 @@ export default {
 .ingre-category {
   padding: 4%;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
+.all-select {
+  z-index: auto;
+  cursor: pointer;
+}
+.check-btn-wrap {
+  z-index: 10 !important;
+  cursor: pointer;
 }
 
 @keyframes fadeInUp {

@@ -265,7 +265,7 @@ export const actions = {
     await myrecipeList(
       pageable,
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         console.log('내가만든 레시피리스트 가져오기 성공!')
         commit('SET_MY_RECIPELIST', data.recipeLists)
       },

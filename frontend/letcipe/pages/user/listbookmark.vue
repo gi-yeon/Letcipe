@@ -124,6 +124,14 @@
           ></v-pagination>
         </v-container>
       </div>
+      <v-snackbar
+        v-model="snackbar"
+        max-width="290"
+        style="z-index: 100; margin-bottom: 60px"
+        :timeout="timeout"
+      >
+        {{ text }}
+      </v-snackbar>
     </v-app>
   </div>
 </template>
@@ -151,6 +159,9 @@ export default {
       isSelected: [],
       selectedIngre: '',
       recipeList: [],
+      snackbar: false,
+      timeout: 2000,
+      text: '',
     }
   },
   computed: {
@@ -228,6 +239,8 @@ export default {
         list: recipeList,
       }
       this.createCart(addrecipes)
+      this.text = '레시피가 성공적으로 담겼습니다.'
+      this.snackbar = true
     },
     modifyStatus(mr) {
       console.log(mr)
