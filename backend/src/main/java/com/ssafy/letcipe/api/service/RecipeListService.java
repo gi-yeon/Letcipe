@@ -119,8 +119,14 @@ public class RecipeListService {
 
     @Transactional
     public void deleteRecipeListItem(Long userId, ReqDeleteRecipeListItemDto reqDeleteRecipeListItemDto) {
-        RecipeListItem recipeListItem = recipeListItemRepository.findByRecipeListIdAndRecipeId(reqDeleteRecipeListItemDto.getRecipeListId(), reqDeleteRecipeListItemDto.getRecipeId());
+        long recipeListId = reqDeleteRecipeListItemDto.getRecipeListId();
+        RecipeListItem recipeListItem = recipeListItemRepository.findByRecipeListIdAndRecipeId(recipeListId, reqDeleteRecipeListItemDto.getRecipeId());
         recipeListItemRepository.delete(recipeListItem);
+        recipeListItemRepository.flush();
+        // 아이템이 0개면 레시피 리스트 삭제
+        if (recipeListItemRepository.findAllByRecipeId(recipeListId).size() == 0) {
+            deleteRecipeList(userId,recipeListId);
+        }
     }
 
     @Transactional
