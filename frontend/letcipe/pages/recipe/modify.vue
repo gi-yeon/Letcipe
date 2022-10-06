@@ -39,6 +39,7 @@
             <div class="d-flex justify-center">
               <v-img
                 v-if="url != null"
+                ref="repImg"
                 max-width="50%"
                 :src="url"
                 class="d-flex justify-center"
@@ -465,7 +466,6 @@ export default {
         // this.steps = this.recipeDetail.recipeSteps
         // console.log(this.steps)
         console.log('이것')
-        console.log(this.url)
         this.recipeDetail.recipeSteps.forEach((rs) => {
           const step = {
             no: rs.step,
@@ -676,13 +676,16 @@ export default {
     saveRecipe() {
       // console.log(this.ingredients)
       const formdata = new FormData()
+
       formdata.append('title', this.title)
       formdata.append('content', this.content)
       formdata.append('cookingTime', this.cookingTime)
       formdata.append('serving', this.serving)
+      formdata.append('category', this.category)
 
       if (this.image === null) {
-        formdata.append('repImg', this.url)
+        // formdata.append('repImg', this.image)
+        formdata.append('repImgUrl',this.url);
       } else {
         formdata.append('repImg', this.image)
       }
@@ -690,7 +693,8 @@ export default {
       for (let i = 0; i < this.steps.length; i++) {
         formdata.append(`stepDtoList[${i}].step`, this.steps[i].no)
         if (this.steps[i].image === null) {
-          formdata.append(`stepDtoList[${i}].img`, this.steps[i].imageUrl)
+          // formdata.append(`stepDtoList[${i}].img`, this.steps[i].image);
+          formdata.append(`stepDtoList[${i}].imgUrl`, this.steps[i].imageUrl)
         } else if (this.steps[i].image != null) {
           formdata.append(`stepDtoList[${i}].img`, this.steps[i].image)
           console.log(this.steps[i].image)
@@ -711,16 +715,17 @@ export default {
       // for (let i = 0; i < this.tags.length; i++) {
       //   formdata.append(`tagList[${i}]`, ingreVal[i])
       // }
-      for (let i = 0; i < this.tags.length; i++) {
-        formdata.append(`tagList[${i}]`, this.tags[i])
-      }
+      formdata.append('tagList',[]);
+      // for (let i = 0; i < this.tags.length; i++) {
+      //   formdata.append(`tagList[${i}]`, this.tags[i])
+      // }
 
       for (const p of formdata.entries()) {
         console.log(p[0] + ',' + p[1])
       }
       console.log(formdata)
       const object = {
-        recipeId: 1798,
+        recipeId: this.recipeID,
         formData: formdata,
       }
       this.updateRecipeDetail(object)
