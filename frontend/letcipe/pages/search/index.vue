@@ -412,7 +412,6 @@ export default {
 
   watch: {
     tab() {
-      console.log('====')
       this.CLEAR_RECIPE()
       this.CLEAR_RECIPE_INGRE()
       this.CLEAR_RECIPE_LIST()

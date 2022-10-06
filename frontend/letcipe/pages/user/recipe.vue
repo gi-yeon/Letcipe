@@ -155,12 +155,6 @@ export default {
       await this.getRecipeNum()
       await this.myrecipe(this.pageable)
       this.myRecipes = this.myRecipe
-      //   this.myRecipe.forEach((mr) => {
-      //     this.myRecipes.push(mr)
-      //   })
-      //   this.TotalPage = this.myRecipe.length / 5
-      //   console.log(this.TotalPage)
-      //   console.log(this.myRecipes)
     })
   },
   methods: {
@@ -187,11 +181,6 @@ export default {
     moveMypage() {
       this.$router.push('/user/mypage')
     },
-    // addCart(mr) {
-    //   const cartItem = [mr.id]
-    //   const list = { cartItem }
-    //   this.createCart(list)
-    // },
     openDialog(mr) {
       this.dialog = true
       this.selectedRecipe = mr

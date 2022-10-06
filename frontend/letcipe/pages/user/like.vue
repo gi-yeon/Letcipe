@@ -176,12 +176,9 @@ export default {
     moveMypage() {
       this.$router.push('/user/mypage')
     },
-
     addCart(mr) {
-      console.log(mr)
       const cartItem = [mr.id]
       const list = { list: cartItem }
-      console.log(list)
       this.createCart(list)
       this.text = '장바구니에 레시피 담기 성공!'
       this.snackbar = true

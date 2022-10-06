@@ -599,7 +599,6 @@ export default {
 
       await this.RecipeDetail(this.recipeID) // 1591 자리에 recipelist id 넘겨 받으면 돼.
 
-      console.log(this.recipeDetail)
       if (this.recipeDetail !== null) {
         this.title = this.recipeDetail.title
         this.url = this.recipeDetail.repImg
@@ -609,7 +608,7 @@ export default {
         this.serving = this.recipeDetail.serving
         // this.steps = this.recipeDetail.recipeSteps
         // console.log(this.steps)
-        console.log('이것')
+
         this.recipeDetail.recipeSteps.forEach((rs) => {
           const step = {
             no: rs.step,
@@ -620,7 +619,7 @@ export default {
           this.steps.push(step)
         })
         // console.log(this.steps)
-        console.log(this.recipeDetail)
+
         // console.log(this.recipeDetail.ingredients.length)
         // console.log(this.recipeDetail.ingredients[0])
 
@@ -673,7 +672,6 @@ export default {
         content: '',
       }
       this.steps.push(newStep)
-      console.log(this.steps)
     },
     deleteStep(step, index) {
       if (step.no > 1) {
@@ -693,7 +691,6 @@ export default {
       this.search = null
     },
     editItem(item) {
-      console.log(item)
       this.search = item.name
       this.editedIndex = this.ingredients.indexOf(item)
       this.editedItem = Object.assign({}, item)
@@ -722,8 +719,6 @@ export default {
     },
     saveIngre() {
       if (this.$refs.form.validate()) {
-        console.log(this.$refs.form.validate())
-
         this.IngreValid = false
         this.ingredients?.forEach((ingre) => {
           if (this.editedItem.name === ingre.name) {
@@ -754,15 +749,12 @@ export default {
     },
     setTags(tags) {
       this.tags.push(tags[0].value)
-      console.log('현재태그')
-      console.log(tags)
     },
     ingre(keyword) {
       if (keyword != null && keyword.length > 0) {
         keyword = keyword.trim()
         if (keyword.length > 0 && keyword != null) {
           this.searchIngredient(keyword)
-          console.log(keyword)
         }
       }
     },
@@ -835,7 +827,7 @@ export default {
       } else {
         formdata.append('repImg', this.image)
       }
-      console.log(this.steps.length)
+
       for (let i = 0; i < this.steps.length; i++) {
         formdata.append(`stepDtoList[${i}].step`, this.steps[i].no)
         if (this.steps[i].image === null) {
@@ -843,7 +835,6 @@ export default {
           formdata.append(`stepDtoList[${i}].imgUrl`, this.steps[i].imageUrl)
         } else if (this.steps[i].image != null) {
           formdata.append(`stepDtoList[${i}].img`, this.steps[i].image)
-          console.log(this.steps[i].image)
         }
         formdata.append(`stepDtoList[${i}].content`, this.steps[i].content)
       }
@@ -867,20 +858,17 @@ export default {
         ingreVal.push(this.tags[i])
       }
       if (this.tags.length > 0) {
-        console.log('태그있어요')
-        console.log(ingreVal)
         for (let i = 0; i < this.tags.length; i++) {
           formdata.append(`tagList[${i}]`, ingreVal[i])
         }
       } else {
-        console.log('태그없음')
         formdata.append(`tagList`, [''])
       }
 
-      for (const p of formdata.entries()) {
-        console.log(p[0] + ',' + p[1])
-      }
-      console.log(formdata)
+      // for (const p of formdata.entries()) {
+      //   console.log(p[0] + ',' + p[1])
+      // }
+      // console.log(formdata)
       const object = {
         recipeId: this.recipeID,
         formData: formdata,

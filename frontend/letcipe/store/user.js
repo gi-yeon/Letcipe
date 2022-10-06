@@ -166,7 +166,7 @@ export const actions = {
     await idCheck(
       userid,
       (res) => {
-        console.log(res.status)
+        // console.log(res.status)
         commit('SET_IDCHECK_FALSE')
       },
       (error) => {
@@ -182,7 +182,7 @@ export const actions = {
     await nicknameCheck(
       nickname,
       (res) => {
-        console.log(res.status)
+        // console.log(res.status)
         commit('SET_NICKCHECK_FALSE')
       },
       (error) => {
@@ -194,7 +194,7 @@ export const actions = {
   async readUser({ commit }) {
     await readUser(
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         commit('SET_USER', data)
       },
       (error) => {
@@ -222,7 +222,7 @@ export const actions = {
     await signup(
       user,
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         commit('SET_USERJOINCHECK_TRUE')
       },
       (error) => {
@@ -271,7 +271,7 @@ export const actions = {
     commit('CLEAR_RECIPE_CNT')
     await recipeNum(
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         console.log('내가만든 레시피 갯수 가져오기 성공!')
         commit('SET_RECIPE_CNT', data.recipes)
       },
@@ -299,7 +299,7 @@ export const actions = {
     await myBookmarkRecipe(
       pageable,
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         // console.log("북마크 레시피 가져오기 성공!")
         commit('SET_MY_BOOKMARK_RECIPE', data.recipes)
       },
@@ -313,7 +313,7 @@ export const actions = {
     await myBookmarkRecipeList(
       pageable,
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         console.log('북마크 레시피목록 가져오기 성공!')
         commit('SET_MY_BOOKMARK_RECIPELIST', data.recipeLists)
       },
@@ -351,7 +351,7 @@ export const actions = {
     await createCode(
       phone,
       (res) => {
-        console.log(res.data.code)
+        // console.log(res.data.code)
         commit('SET_CODE', res.data.code)
       },
       (error) => {
@@ -385,7 +385,7 @@ export const actions = {
     await myLikeRecipe(
       pageable,
       ({ data }) => {
-        console.log(data)
+        // console.log(data)
         commit('SET_MY_LIKE_RECIPE', data.recipes)
       },
       (error) => {

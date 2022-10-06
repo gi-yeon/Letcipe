@@ -307,7 +307,6 @@
                       x-small
                       color="letcipe"
                       outlined
-                      @click="createLike(data.recipe)"
                     >
                       <v-icon style="z-index: 5" color="letcipe"
                         >mdi-heart</v-icon
@@ -445,8 +444,6 @@ export default {
       resolve()
     })
     promise.then(async () => {
-      console.log('이거슨감자' + this.recipeLists)
-      console.log(this.recipeLists)
       await this.getHistoryList()
       this.historyList?.forEach((h) => {
         if (h.process === 'READY') {
@@ -537,8 +534,6 @@ export default {
       // console.log(this.time)
     },
     moveListDetail(mr) {
-      console.log('mr:')
-      console.log(mr.id)
       this.CLEAR_RECIPELIST_ID()
       this.SET_RECIPELIST_ID(mr.id)
       this.$router.push('/recipelist/detail')
@@ -589,11 +584,6 @@ export default {
     createRecipe() {
       this.$router.push('/recipe/create')
     },
-    createLike(recipe) {
-      console.log(recipe)
-      // this.countRecipeLikes(recipe.id)
-    },
-    deleteLike(recipe) {},
   },
 }
 </script>

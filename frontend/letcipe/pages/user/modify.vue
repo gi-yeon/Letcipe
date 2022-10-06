@@ -707,7 +707,6 @@ export default {
       this.gender = 'W'
     },
     changeIdCheck() {
-      console.log(this.idCheck)
       this.idCheckReset()
     },
   },

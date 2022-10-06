@@ -148,11 +148,9 @@
             color="letcipe"
             :length="TotalPage"
             :per-page="perPage"
-            :total-visivle="TotalPage"
             prev-icon="mdi-menu-left"
             next-icon="mdi-menu-right"
             circle
-            @input="handlePage"
           ></v-pagination>
         </v-container>
 
@@ -222,10 +220,7 @@ export default {
     })
     promise.then(async () => {
       await this.myrecipeList(this.pageable)
-      console.log(111111111)
-      console.log(this.myRecipeList)
       this.myRecipeList?.forEach((mr) => {
-        console.log(mr.recipeListItems)
         const repImg = mr.recipeListItems[0]
           ? mr.recipeListItems[0].recipe.repImg
           : ''
@@ -246,8 +241,6 @@ export default {
           cnt: 0,
           items: mr.recipeListItems,
         }
-        console.log(1111)
-        console.log(mr)
         mr.recipeListItems.forEach((m) => {
           recipeListItem.cnt += m.amount
         })
@@ -255,12 +248,6 @@ export default {
         const pages = this.recipeList.length / this.pageable.size
         this.TotalPage = pages + 1
       })
-      console.log(1111111111)
-      console.log('dksdud')
-      console.log(this.recipeList)
-      //   this.TotalPage = this.myRecipe.length / 5
-      //   console.log(this.TotalPage)
-      //   console.log(this.myRecipes)
     })
   },
 
@@ -324,8 +311,6 @@ export default {
       }
     },
     modifyStatus(mr) {
-      console.log(mr)
-
       const object = {
         id: mr.id,
         ReqUpdateRecipeListDto: {
@@ -334,27 +319,12 @@ export default {
           isShared: mr.isShared === 'N' ? 'Y' : 'N',
         },
       }
-      console.log(object)
       this.updateRecipeList(object)
       if (mr.isShared === 'Y') {
         mr.isShared = 'N'
       } else {
         mr.isShared = 'Y'
       }
-    },
-    async handlePage() {},
-    async NextPage() {
-      this.pageable.page += 1
-      console.log(this.currentPage)
-      await this.myrecipeList(this.pageable)
-      this.TotalPage += 1
-    },
-    async BeforePage() {
-      this.pageable.page -= 1
-      console.log(this.currentPage)
-      await this.myrecipeList(this.pageable)
-
-      this.TotalPage -= 1
     },
   },
 }

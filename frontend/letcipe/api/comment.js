@@ -11,7 +11,6 @@ async function getComment(recipeObject, success, fail) {
     .catch(fail)
 }
 async function postComment(commentObject, success, fail) {
-  console.log(commentObject)
   await api
     .post(`/api/comment`, JSON.stringify(commentObject))
     .then(success)
@@ -19,7 +18,6 @@ async function postComment(commentObject, success, fail) {
 }
 
 async function putComment(commentObject, success, fail) {
-  console.log(commentObject)
   await api
     .put(`/api/comment`, JSON.stringify(commentObject))
     .then(success)
@@ -27,7 +25,6 @@ async function putComment(commentObject, success, fail) {
 }
 
 async function patchComment(commentObject, success, fail) {
-  console.log(commentObject)
   await api
     .patch(`/api/comment`, JSON.stringify(commentObject))
     .then(success)

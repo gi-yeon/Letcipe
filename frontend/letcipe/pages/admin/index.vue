@@ -281,7 +281,6 @@ export default {
       this.$refs.bar.updateChart()
     },
     select_gen(e) {
-      console.log(e)
       this.attr.gen = e
     },
     select_age(e) {

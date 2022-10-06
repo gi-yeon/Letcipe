@@ -205,9 +205,6 @@ export default {
         })
         this.recipeList.push(recipeListItem)
       })
-
-      console.log(this.recipeList)
-      console.log(this.recipeList.length)
     })
   },
   methods: {
@@ -248,8 +245,6 @@ export default {
       this.snackbar = true
     },
     modifyStatus(mr) {
-      console.log(mr)
-
       const object = {
         id: mr.id,
         ReqUpdateRecipeListDto: {
@@ -258,7 +253,6 @@ export default {
           isShared: mr.isShared,
         },
       }
-      console.log(object)
       this.updateRecipeList(object)
       if (mr.isShared === 'Y') {
         mr.isShared = 'N'

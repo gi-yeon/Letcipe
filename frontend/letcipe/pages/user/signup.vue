@@ -564,7 +564,6 @@ export default {
       console.log(this.profile_img)
     },
     previewFile(file) {
-      console.log(file)
       if (file) {
         const fileData = (data) => {
           this.preview_profile = data

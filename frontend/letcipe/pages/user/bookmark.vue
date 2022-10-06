@@ -140,7 +140,6 @@ export default {
   watch: {},
 
   created() {
-    console.log(this.nickname)
     const pageable = {
       page: 0,
     }
@@ -153,8 +152,6 @@ export default {
         this.recipeBookmarks.push(mr)
       })
       this.TotalPage = this.myBookMarkRecipe.length / 5
-      console.log(this.myBookMarkRecipe)
-      console.log(this.myBookMarkRecipe)
     })
   },
   methods: {
@@ -183,7 +180,6 @@ export default {
     addCart(mr) {
       const cartItem = [mr.id]
       const list = { list: cartItem }
-      console.log(list)
       this.createCart(list)
       this.text = '장바구니에 레시피가 담겼습니다!'
       this.snackbar = true

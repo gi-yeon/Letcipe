@@ -604,7 +604,6 @@ export default {
     Preview_image() {
       if (this.image != null) {
         this.url = URL.createObjectURL(this.image)
-        console.log(this.url)
       } else {
         this.url = null
       }
@@ -663,7 +662,6 @@ export default {
         content: '',
       }
       this.steps.push(newStep)
-      console.log(this.steps)
     },
     deleteStep(index) {
       if (this.stepNum > 1) {
@@ -710,8 +708,6 @@ export default {
     },
     saveIngre() {
       if (this.$refs.form.validate()) {
-        console.log(this.$refs.form.validate())
-
         this.IngreValid = false
         this.ingredients?.forEach((ingre) => {
           if (this.editedItem.name === ingre.name) {
@@ -737,14 +733,12 @@ export default {
     },
     setTags(tags) {
       this.tags = tags
-      console.log(this.tags)
     },
     ingre(keyword) {
       if (keyword != null && keyword.length > 0) {
         keyword = keyword.trim()
         if (keyword.length > 0 && keyword != null) {
           this.searchIngredient(keyword)
-          console.log(keyword)
         }
       }
     },
@@ -784,10 +778,10 @@ export default {
       } else {
         formdata.append(`tagList`, [])
       }
-      for (const p of formdata.entries()) {
-        console.log(p[0] + ',' + p[1])
-      }
-      console.log(formdata)
+      // for (const p of formdata.entries()) {
+      //   console.log(p[0] + ',' + p[1])
+      // }
+      // console.log(formdata)
       this.createRecipeDetail(formdata)
     },
     moveBack() {
@@ -797,7 +791,6 @@ export default {
     test() {
       // console.log(item)
       console.log(this.category)
-      console.log()
     },
   },
 }

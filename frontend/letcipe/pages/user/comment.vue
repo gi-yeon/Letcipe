@@ -194,8 +194,6 @@ export default {
   async fetch() {
     this.commentNum = await this.mycommentNum()
     this.comments = await this.mycomment()
-    console.log(this.comments)
-    console.log(this.commentNum)
   },
   fetchOnServer: false,
   computed: {
@@ -224,8 +222,6 @@ export default {
         this.checkedComment.splice(index, 1)
       }
       this.isChecked[index] = !this.isChecked[index]
-      console.log(this.isChecked)
-      console.log(this.checkedComment)
     },
     allChecked() {
       if (!this.isAllCheck) {
@@ -244,12 +240,9 @@ export default {
           this.isChecked[i] = false
         }
       }
-      console.log(this.checkedComment)
     },
     async deleteComment(id) {
-      console.log(id)
       this.allChecked()
-      console.log('-----------------------------')
       const comment = {
         commentId: id,
       }

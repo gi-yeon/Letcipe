@@ -5,7 +5,7 @@
         <div class="check-head-wrap">
           <v-toolbar flat>
             <v-icon @click="moveMypage">mdi-window-close</v-icon>
-            <v-toolbar-title @click="test()">장바구니</v-toolbar-title>
+            <v-toolbar-title>장바구니</v-toolbar-title>
 
             <v-spacer></v-spacer>
             <template #extension>
@@ -348,7 +348,6 @@ export default {
       this.$router.push('/user/mypage')
     },
     completeShopping() {
-      console.log('장보기')
       const h = {
         id: this.history.id,
         process: 1,
@@ -378,10 +377,6 @@ export default {
         this.checklist.push(c)
       })
       this.checkedList = []
-    },
-    test() {
-      console.log(this.category.length)
-      console.log(this.category)
     },
   },
 }
