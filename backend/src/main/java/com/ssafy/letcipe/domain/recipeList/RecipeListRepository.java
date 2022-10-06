@@ -11,6 +11,8 @@ import java.util.List;
 
 @Repository
 public interface RecipeListRepository extends JpaRepository<RecipeList, Long> {
+
+    @Query("select rl from RecipeList rl where rl.name like concat('%',:keyword,'%') and rl.isDeleted = 0")
     List<RecipeList> findByNameContaining(Pageable pageable, String keyword);
 
     Integer countRecipeListByNameContaining(String keyword);

@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface RecipeListItemRepository extends JpaRepository<RecipeListItem, Long> {
     RecipeListItem findByRecipeListIdAndRecipeId(Long recipeListId, Long recipeId);
-    @Query("select ri from RecipeListItem ri where ri.recipe.id=:recipe_id")
-    List<RecipeListItem> findAllByRecipeId(long recipe_id);
+    @Query("select ri from RecipeListItem ri where ri.recipeList.id=:recipe_list_id")
+    List<RecipeListItem> findAllByRecipeId(long recipe_list_id);
 }

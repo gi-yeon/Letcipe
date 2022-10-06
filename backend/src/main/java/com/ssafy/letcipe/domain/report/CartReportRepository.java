@@ -11,6 +11,6 @@ import java.util.List;
 
 @Repository
 public interface CartReportRepository extends JpaRepository<CartReport,Long> {
-    @Query("select new com.ssafy.letcipe.api.dto.report.JPQLCartReportDto(cr.recipe, sum(cr.count)) from CartReport cr where cr.attributes=:attributes and cr.date >= :beginDate and cr.date <= :endDate group by cr.recipe")
+    @Query("select new com.ssafy.letcipe.api.dto.report.JPQLCartReportDto(cr.recipe, sum(cr.count)) from CartReport cr where cr.attributes=:attributes and cr.date >= :beginDate and cr.date <= :endDate and cr.recipe.statusType = 'N' group by cr.recipe")
     public List<JPQLCartReportDto> findAllByAttr(String attributes, LocalDate beginDate, LocalDate endDate, Pageable pageable);
 }
