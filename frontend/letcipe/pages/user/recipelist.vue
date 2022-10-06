@@ -152,6 +152,14 @@
             circle
           ></v-pagination>
         </v-container>
+
+        <v-snackbar
+          v-model="snackbar2"
+          :timeout="timeout"
+        >
+          {{ isSucceededtoCart? "모두 담기에 성공했습니다":"모두 담기에 실패했습니다" }}
+        </v-snackbar>
+
       </div>
     </v-app>
   </div>
@@ -182,10 +190,13 @@ export default {
       recipeList: [],
       dialog: false,
       selectedRecipe: {},
+      timeout: 2000,
+      snackbar2: false,
     }
   },
   computed: {
     ...mapState('user', ['myRecipe', 'myRecipeList']),
+    ...mapState('cart', ['isSucceededtoCart']),
   },
 
   watch: {},
@@ -200,15 +211,18 @@ export default {
     promise.then(async () => {
       await this.myrecipeList(pageable)
       this.myRecipeList?.forEach((mr) => {
+        console.log(mr.recipeListItems)
+        const repImg =  mr.recipeListItems[0]? mr.recipeListItems[0].recipe.repImg:''
+        const content = mr.recipeListItems[0]? mr.recipeListItems[0].recipe.title:''
         const recipeListItem = {
           id: mr.id,
           bookmark: mr.bookmark,
           name: mr.name,
           isShared: mr.isShared,
           bookmarkCnt: mr.recipeListBookmark,
-          repImg: mr.recipeListItems[0].recipe.repImg,
+          repImg,
           description: mr.description,
-          content: mr.recipeListItems[0].recipe.title + ' 외',
+          content,
           regTime: mr.regTime.split('T')[0],
           review: mr.review,
           cnt: 0,
@@ -264,6 +278,7 @@ export default {
         list: recipeList,
       }
       this.createCart(addrecipes)
+      this.snackbar2 = true
     },
     openDialog(mr) {
       this.dialog = true
