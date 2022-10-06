@@ -35,30 +35,11 @@
                   {{ recipeListWriter.job }} &nbsp;&nbsp;{{
                     recipeListWriter.nickname
                   }}
-                  <v-dialog v-model="dialog2" persistent max-width="290">
-                    <template #activator="{ on, attrs }">
-                      <v-btn
-                        style="border: 1px solid black"
-                        v-bind="attrs"
-                        @click="AllAdd()"
-                        v-on="on"
-                        >+ 전체담기</v-btn
-                      >
-                    </template>
-                    <v-card>
-                      <v-card-title class="text-h5">Caution</v-card-title>
-                      <v-card-text>레시피 전체 담기 성공!</v-card-text>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                          color="green darken-1"
-                          text
-                          @click="dialog2 = false"
-                          >확인</v-btn
-                        >
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
+                  <v-btn
+                    style="border: 1px solid black"
+                    @click="AllAdd()"
+                    >+ 전체담기</v-btn
+                  >
                 </v-row>
               </div>
               <v-row align="center" class="mx-0">
