@@ -101,6 +101,8 @@ public class UserController {
 
     @GetMapping("recipe")
     public ResponseEntity readUserRecipe(HttpServletRequest request, Pageable pageable) {
+        System.out.println(pageable.getPageSize());
+        System.out.println(pageable.getPageNumber());
         Long userId = jwtService.getUserId(request);
         return ResponseEntity.ok(userService.readUserRecipe(userId, pageable));
     }
