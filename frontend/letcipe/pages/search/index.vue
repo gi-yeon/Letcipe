@@ -69,11 +69,11 @@
               <div v-if="recipes != null && recipes.length > 0">
                 <v-card-subtitle>"{{ searchedName }}" 검색 결과</v-card-subtitle>
                 <div v-for="(recipeInfo, i) in recipes" :key="i">
-                  <v-list-item three-line @click="moveDetail(recipeInfo)">
+                  <v-list-item three-line >
                     <v-list-item-avatar tile size="100">
                       <v-img :src="recipeInfo['repImg']"></v-img>
                     </v-list-item-avatar>
-                    <v-list-item-content>
+                    <v-list-item-content @click="moveDetail(recipeInfo)">
                       <v-list-item-title>{{ recipeInfo['title'] }}</v-list-item-title>
 
                       <v-list-item-subtitle>{{ recipeInfo['content'] }}</v-list-item-subtitle>
@@ -82,9 +82,11 @@
                           <v-icon small color="pink lighten-1">mdi-cards-heart</v-icon>
                           {{ recipeInfo['recipeLike'] }}
                         </v-list-item-subtitle>
+
                         <v-list-item-subtitle style="text-align: right">
                           <v-btn small color="letcipe" @click="addRecipe(recipeInfo['id'])">+담기</v-btn>
                         </v-list-item-subtitle>
+
                       </div>
                     </v-list-item-content>
                   </v-list-item>
@@ -420,6 +422,7 @@ export default {
       }
     },
     selectIngre(item) {
+      this.currentPage = 1;
       if (!String(this.selectedIngre).includes(String(item.id))) {
         this.isSelected.push(item)
         if (this.selectedIngre.length === 0) {
@@ -459,6 +462,7 @@ export default {
       }
     },
     searchByName() {
+      this.currentPage = 1;
       if (this.byRecipe) {
         const searchObject = {
           keyword: this.byname,

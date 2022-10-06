@@ -37,20 +37,29 @@
                         <div style="font-size: x-small">{{ mr.regTime }}</div>
                       </div>
                       <div class="d-flex justify-end">
-                        <v-icon v-if="mr.isShared === 'N'" small color="letcipe"
+                        <v-icon
+                          v-if="mr.isShared === 'N'"
+                          style="z-index: 2"
+                          small
+                          @click="modifyStatus(mr)"
                           >mdi-lock</v-icon
                         >
-                        <v-icon v-if="mr.isShared === 'Y'" small color="letcipe"
+                        <v-icon
+                          v-if="mr.isShared === 'Y'"
+                          style="z-index: 2"
+                          small
+                          color="letcipe"
+                          @click="modifyStatus(mr)"
                           >mdi-lock-open</v-icon
                         >
                         <v-icon
-                          style="z-index: 1"
+                          style="z-index: 2"
                           small
                           color="info"
                           @click="editItem(mr)"
                           >mdi-pencil</v-icon
                         >
-                        <v-icon style="z-index: 1" small @click="deleteItem(mr)"
+                        <v-icon style="z-index: 2" small @click="deleteItem(mr)"
                           >mdi-delete</v-icon
                         >
                       </div>
@@ -186,9 +195,9 @@ export default {
     })
   },
   methods: {
-    ...mapActions('recipe', ['patchRecipeDetail']),
     ...mapActions('user', ['myBookmarkRecipeList']),
-    ...mapActions('cartr', ['createCart']),
+    ...mapActions('cart', ['createCart']),
+    ...mapActions('recipelist', ['updateRecipeList', 'deleteRecipeList']),
     ...mapMutations('recipelist', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
     editItem(mr) {
       this.CLEAR_RECIPE_ID()
@@ -198,7 +207,7 @@ export default {
     deleteItem(mr) {
       //     this.checkedList.splice(index, 1)
       //   this.checklist.push(c)
-      this.patchRecipeDetail(mr.id)
+      this.deleteRecipeList(mr.id)
     },
     moveDetail(mr) {
       this.CLEAR_RECIPE_ID()
@@ -209,9 +218,35 @@ export default {
       this.$router.push('/user/mypage')
     },
     addCart(mr) {
-      const cartItem = [mr.id]
-      const list = { cartItem }
-      this.createCart(list)
+      //  이부분 물어보기 지수한테.
+      const recipeList = []
+      mr.items.forEach((i) => {
+        const id = i.recipe.id
+        recipeList.push(id)
+      })
+      const addrecipes = {
+        list: recipeList,
+      }
+      this.createCart(addrecipes)
+    },
+    modifyStatus(mr) {
+      console.log(mr)
+
+      const object = {
+        id: mr.id,
+        ReqUpdateRecipeListDto: {
+          name: mr.name,
+          description: mr.description,
+          isShared: mr.isShared,
+        },
+      }
+      console.log(object)
+      this.updateRecipeList(object)
+      if (mr.isShared === 'Y') {
+        mr.isShared = 'N'
+      } else {
+        mr.isShared = 'Y'
+      }
     },
   },
 }

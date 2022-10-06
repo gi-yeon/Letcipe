@@ -3,6 +3,14 @@
     <v-app id="inspire">
       <div id="recipedetail-modify-container">
         <v-container style="width: 100%">
+          <v-snackbar
+            v-model="snackBar"
+            centered
+            style="z-index: 1"
+            :timeout="1500"
+          >
+            {{ snackBarMsg }}
+          </v-snackbar>
           <div class="detail-head-wrap">
             <div class="d-flex justify-space-between pb-3">
               <div>
@@ -70,30 +78,11 @@
                   {{ recipeListWriter.job }} &nbsp;&nbsp;{{
                     recipeListWriter.nickname
                   }}
-                  <v-dialog v-model="dialog2" persistent max-width="290">
-                    <template #activator="{ on, attrs }">
-                      <v-btn
-                        style="border: 1px solid black"
-                        v-bind="attrs"
-                        @click="deleteList()"
-                        v-on="on"
-                        >삭제</v-btn
-                      >
-                    </template>
-                    <v-card>
-                      <v-card-title class="text-h5">Caution</v-card-title>
-                      <v-card-text>레시피 리스트가 삭제됩니다.</v-card-text>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                          color="green darken-1"
-                          text
-                          @click="dialog2 = false"
-                          >확인</v-btn
-                        >
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
+                  <v-btn
+                      style="border: 1px solid black"
+                      @click="deleteList()"
+                      >삭제</v-btn
+                  >
                 </v-row>
               </div>
               <v-row align="center" class="mx-0">
@@ -119,50 +108,13 @@
             <br />
             <div align="center" class="d-flex justify-center">
               <!-- <v-btn style="width: 90%; border: 1px solid black" @click="partAdd()">선택 담기</v-btn> -->
-
-              <v-dialog v-model="dialog" persistent max-width="290">
-                <template #activator="{ on, attrs }">
                   <v-btn
+                    :disabled="checkDisabled.length===0"
                     height="48px"
                     style="width: 90%; border: 1px solid black"
-                    v-bind="attrs"
                     @click="partDelete()"
-                    v-on="on"
                     >선택 삭제</v-btn
                   >
-                </template>
-                <!-- <v-card v-if="isAll">
-                      <v-card-title class="text-h5">Caution</v-card-title>
-                      <v-card-text>레시피 전체 담기 성공!</v-card-text>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="green darken-1" text @click="dialog = false">확인</v-btn>
-                      </v-card-actions>
-                  </v-card>-->
-                <v-card v-if="isNothing">
-                  <v-card-title class="text-h5">Caution</v-card-title>
-                  <v-card-text
-                    >선택된 레시피가 없습니다. 레시피를
-                    선택해주세요.</v-card-text
-                  >
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="green darken-1" text @click="dialog = false"
-                      >확인</v-btn
-                    >
-                  </v-card-actions>
-                </v-card>
-                <v-card v-if="!isNothing">
-                  <v-card-title class="text-h5">Caution</v-card-title>
-                  <v-card-text>레시피 장바구니에 담기 성공!</v-card-text>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="green darken-1" text @click="dialog = false"
-                      >확인</v-btn
-                    >
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
             </div>
             <v-card-subtitle
               class="mx-0 mr-3 ml-3 d-flex justify-space-between"
@@ -238,33 +190,6 @@
               <!-- <v-btn style="border: 1px solid black" @click="modifyItem(recipeListRes)">
                 저장
               </v-btn> -->
-              <v-dialog v-model="modifyDialog" persistent max-width="290">
-                <template #activator="{ on, attrs }">
-                  <v-btn
-                    class="ml-3"
-                    style="border: 1px solid black"
-                    v-bind="attrs"
-                    v-on="on"
-                    >저장</v-btn
-                  >
-                </template>
-
-                <v-card>
-                  <v-card-title class="text-h5">Caution</v-card-title>
-                  <v-card-text>변경사항이 저장됩니다.</v-card-text>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      color="green darken-1"
-                      text
-                      @click="
-                        ;[(modifyDialog = false), modifyItem(recipeListRes)]
-                      "
-                      >확인</v-btn
-                    >
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
             </div>
           </v-card>
         </v-container>
@@ -287,13 +212,15 @@ export default {
       Bookmarks: 0,
       isBookmark: false,
       checkedRecipe: [],
-      cart: [],
       isAllCheck: false,
       id: '',
       isNothing: false,
       dialogTitle: false,
       newName: null,
       modifyDialog: false,
+      checkDisabled:[],
+      snackBarMsg:'',
+      snackBar:false,
     }
   },
 
@@ -326,12 +253,14 @@ export default {
       'deleteRecipeListBookmark',
       'deleteRecipeList',
       'updateRecipeList',
+      'deleteRecipeListItem',
     ]),
     ...mapActions('cart', ['createCart']),
     ...mapMutations('recipelist', [
       'SET_RECIPELIST_NAME',
       'SET_RECIPE_ID',
       'CLEAR_RECIPE_ID',
+      'MODIFY_RECIPE_LIST_ITEM'
     ]),
     moveBack() {
       this.$router.go(-1)
@@ -354,17 +283,12 @@ export default {
       }
     },
     addCart(index) {
-      this.cart = []
-      if (this.isAllCheck) {
-        this.isAllCheck = false
-      }
+      this.isAllCheck = false
       this.checkedRecipe[index] = !this.checkedRecipe[index]
-      // this.cart.push(this.recipeListItems[index])
-      // this.cart.splice(index, 1)
-      for (let i = 0; i < this.checkedRecipe.length; i++) {
-        if (this.checkedRecipe[i]) {
-          this.cart.push(this.recipeListItems[i])
-        }
+      if(this.checkedRecipe[index]){
+        this.checkDisabled.push(true)
+      }else{
+        this.checkDisabled.shift();
       }
     },
     allAddCart() {
@@ -387,12 +311,39 @@ export default {
       console.log(this.cart)
     },
     async deleteList() {
-      await this.deleteRecipeList(this.recipeListId).then(
-        this.$router.push('/user/mypage')
-      )
+      const sleep = (milliseconds) => {
+        return new Promise((resolve) => setTimeout(resolve, milliseconds))
+      }
+      await this.deleteRecipeList(this.recipeListId)
+      this.snackBarMsg='레시피 리스트가 삭제되었습니다.'
+      this.snackBar=true
+      await sleep(1000)
+      this.$router.push('/user/mypage')
     },
-    partDelete() {
-      this.deleteRecipeListItem()
+    async partDelete() {
+      const sleep = (milliseconds) => {
+        return new Promise((resolve) => setTimeout(resolve, milliseconds))
+      }
+      const num=this.checkDisabled.length
+      this.checkDisabled=[]
+      for (let index = this.checkedRecipe.length-1; index >=0; index--) {
+        if (this.checkedRecipe[index]) {
+
+          const data = {
+            recipeListId: this.recipeListId,
+            recipeId: this.recipeListItems[index].recipe.id,
+          }
+          await this.deleteRecipeListItem(data)
+          this.checkedRecipe.splice(index,1)
+          await this.MODIFY_RECIPE_LIST_ITEM(index);
+        }
+      }
+      this.snackBarMsg=num+'개 레시피가 삭제되었습니다.'
+      this.snackBar=true
+      if(this.recipeListItems.length===0){
+        await sleep(1000)
+        await this.$router.push("/user/mypage")
+      }
     },
     modifyItem(recipeListRes) {
       if (this.newName !== null) {
@@ -410,7 +361,7 @@ export default {
       this.updateRecipeList(object)
       this.CLEAR_RECIPE_ID()
       this.SET_RECIPE_ID(this.recipeListId)
-      this.$router.push('/recipelist/modify')
+      // this.$router.push('/recipelist/modify')
     },
   },
 }

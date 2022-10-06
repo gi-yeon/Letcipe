@@ -64,10 +64,21 @@
               <v-select
                 v-model="category"
                 class="text-md-h6"
-                :items="categories"
+                :items="categoryItems"
                 outlined
                 placeholder="카테고리 선택"
-              ></v-select>
+              >
+                <template #selection="{ item }">
+                  <img style="width: 30px" :src="item.img" />{{
+                    item.name
+                  }}</template
+                >
+                <template #item="{ item }">
+                  <img style="width: 30px" :src="item.img" />&nbsp;{{
+                    item.name
+                  }}
+                </template>
+              </v-select>
             </div>
 
             <v-card-title class="recipe-component">추가 정보</v-card-title>
@@ -286,8 +297,50 @@
               </div>
             </div>
             <div class="d-flex justify-center">
-              <v-btn dark class="mt-4 mb-6" @click="addStep">스탭 추가</v-btn>
+              <v-btn
+                :disabled="
+                  steps[steps.length - 1].content.trim() == '' ||
+                  steps[steps.length - 1].imageUrl == null
+                "
+                class="mr-6 ml-6 mb-5"
+                @click="addStep()"
+                >스탭추가</v-btn
+              >
             </div>
+            <!-- <v-snackbar v-model="stepDialog" :timeout="1500" max-width="290">
+              <template #activator="{ on, attrs }">
+                <div class="d-flex justify-center">
+                  <v-btn
+                    :disabled="step.content.trim() == ''"
+                    class="mr-6 ml-6 mb-5"
+                    v-bind="attrs"
+                    @click="addStep()"
+                    v-on="on"
+                    >스탭추가</v-btn
+                  >
+                </div>
+              </template>
+              <v-card>
+                <v-card-title class="text-h5">Caution</v-card-title>
+                <v-card-text v-if="step.image == null"
+                  >스텝 이미지는 필수 입력값입니다. 스탭 이미지를
+                  넣어주세요.</v-card-text
+                >
+                <v-card-text v-else-if="step.content.trim() == ''"
+                  >스텝 내용은 필수 입력값입니다. 스탭 내용을
+                  입력해주세요.</v-card-text
+                >
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="saveDialog = false"
+                    >확인</v-btn
+                  >
+                </v-card-actions>
+              </v-card>
+            </v-snackbar> -->
+            <!-- <div class="d-flex justify-center">
+              <v-btn dark class="mt-4 mb-6" @click="addStep">스탭 추가</v-btn>
+            </div> -->
             <v-divider></v-divider>
             <v-divider></v-divider>
             <v-card-title class="recipe-component">태그</v-card-title>
@@ -297,15 +350,32 @@
               </v-input>
             </div>
             <br />
-
             <div class="d-flex justify-center">
-              <v-btn dark class="mr-6 ml-6 mb-5" @click="saveRecipe()"
+              <v-btn
+                :disabled="userId <= 0"
+                color="black"
+                class="mr-6 ml-6 mb-5"
+                style="color: white"
+                v-bind="attrs"
+                @click="canSave()"
+                v-on="on"
                 >저장</v-btn
               >
-              <v-btn dark class="mr-6 ml-6 mb-5" @click="saveRecipe()"
-                >저장 후 공개</v-btn
+              <v-snackbar
+                v-model="saveSnackBar"
+                centered
+                style="z-index: 1"
+                :timeout="1500"
               >
-              <v-btn dark class="mr-6 ml-6 mb-5" @click="moveBack">취소</v-btn>
+                {{ snackBarMsg }}
+              </v-snackbar>
+              <v-btn
+                color="black"
+                class="mr-6 ml-6 mb-5"
+                style="color: white"
+                @click="moveBack"
+                >취소</v-btn
+              >
             </div>
           </v-card>
         </v-container>
@@ -330,7 +400,134 @@ export default {
       url: null,
       content: '',
       category: '',
-      categories: ['R0001', 'R0002'],
+      categoryItems: [
+        {
+          name: '밥요리',
+          img: 'https://img.icons8.com/emoji/344/cooked-rice-emoji.png',
+          category: 'R0001',
+        },
+        {
+          name: '국 탕',
+          img: 'https://img.icons8.com/emoji/344/pot-of-food-emoji.png',
+          category: 'R0002',
+        },
+        {
+          name: '찌개 전골',
+          img: 'https://img.icons8.com/emoji/344/shallow-pan-of-food-emoji.png',
+          category: 'R0003',
+        },
+        {
+          name: '밑반찬',
+          img: 'https://img.icons8.com/color/344/petri-dish.png',
+          category: 'R0004',
+        },
+        {
+          name: '볶음요리',
+          img: 'https://img.icons8.com/external-vitaliy-gorbachev-flat-vitaly-gorbachev/344/external-pan-camping-vitaliy-gorbachev-flat-vitaly-gorbachev.png',
+          category: 'R0005',
+        },
+        {
+          name: '구이(고기/생선)',
+          img: 'https://img.icons8.com/flat-round/2x/fish.png',
+          category: 'R0006',
+        },
+        {
+          name: '찜 조림',
+          img: 'https://img.icons8.com/external-basicons-color-edtgraphics/344/external-household-cookware-basicons-color-edtgraphics-3.png',
+          category: 'R0007',
+        },
+        {
+          name: '손님상',
+          img: 'https://img.icons8.com/color/2x/food-bar.png',
+          category: 'R0008',
+        },
+        {
+          name: '아이반찬',
+          img: 'https://img.icons8.com/emoji/344/baby-light-skin-tone.png',
+          category: 'R0009',
+        },
+        {
+          name: '김치 장아찌',
+          img: 'https://img.icons8.com/external-justicon-flat-justicon/344/external-kimchi-korea-justicon-flat-justicon.png',
+          category: 'R0010',
+        },
+        {
+          name: '도시락',
+          img: 'https://img.icons8.com/external-photo3ideastudio-flat-photo3ideastudio/2x/external-bento-japan-photo3ideastudio-flat-photo3ideastudio.png',
+          category: 'R0011',
+        },
+        {
+          name: '튀김',
+          img: 'https://img.icons8.com/external-flat-gradient-andi-nur-abdillah/344/external-fried-food-flat-gradient-flat-gradient-andi-nur-abdillah-2.png',
+          category: 'R0012',
+        },
+        {
+          name: '면요리',
+          img: 'https://img.icons8.com/external-nawicon-flat-nawicon/2x/external-noodle-fast-food-nawicon-flat-nawicon.png',
+          category: 'R0013',
+        },
+        {
+          name: '샐러드',
+          img: 'https://img.icons8.com/emoji/344/green-salad-emoji.png',
+          category: 'R0014',
+        },
+        {
+          name: '김밥 초밥',
+          img: 'https://img.icons8.com/external-sbts2018-flat-sbts2018/344/external-sushi-fast-food-sbts2018-flat-sbts2018.png',
+          category: 'R0015',
+        },
+        {
+          name: '야식 술안주',
+          img: 'https://img.icons8.com/external-wanicon-flat-wanicon/344/external-chicken-takeaway-wanicon-flat-wanicon.png',
+          category: 'R0016',
+        },
+        {
+          name: '스파게티',
+          img: 'https://img.icons8.com/emoji/344/spaghetti-emoji.png',
+          category: 'R0017',
+        },
+        {
+          name: '간식 분식',
+          img: 'https://img.icons8.com/external-flaticons-flat-flat-icons/344/external-tteokbokki-world-cuisine-flaticons-flat-flat-icons.png',
+          category: 'R0018',
+        },
+        {
+          name: '토스트 샌드위치',
+          img: 'https://img.icons8.com/emoji/344/sandwich-emoji.png',
+          category: 'R0019',
+        },
+        {
+          name: '베이킹',
+          img: 'https://img.icons8.com/emoji/344/bread-emoji.png',
+          category: 'R0020',
+        },
+        {
+          name: '디저트',
+          img: 'https://img.icons8.com/color/344/dessert.png',
+          category: 'R0021',
+        },
+        {
+          name: '주스 음료',
+          img: 'https://img.icons8.com/color-glass/344/carton-of-orange-juice.png',
+          category: 'R0022',
+        },
+        {
+          name: '술 칵테일',
+          img: 'https://img.icons8.com/fluency/344/beer.png',
+          category: 'R0023',
+        },
+        {
+          name: '명절요리',
+          img: 'https://img.icons8.com/external-flat-wichaiwi/344/external-food-soft-power-flat-wichaiwi.png',
+          category: 'R0024',
+        },
+        {
+          name: '기타요리',
+          img: 'https://img.icons8.com/fluency/344/bagel.png',
+          category: 'R0025',
+        },
+      ],
+
       cookingTime: '',
       serving: '',
       rules: [(value) => !!value || '필수 입력값입니다.'],
@@ -343,8 +540,11 @@ export default {
       stepUrl: [],
       stepImage: [],
       steps: [{ no: 1, image: null, imageUrl: null, content: '' }],
-      tags: ['바부'],
+      tags: [],
       dialog: false,
+      saveSnackBar: false,
+      snackBarMsg: '',
+      stepDialog: false,
       isLoading: false,
       keyword: null,
       search: null,
@@ -374,6 +574,7 @@ export default {
         해조류: 'grey',
         '햄 소시지': 'black',
       },
+
       amount: '',
       headers: [
         {
@@ -405,8 +606,8 @@ export default {
   },
   computed: {
     ...mapState('ingredients', ['ingredientsList']),
-    ...mapState('recipe', ['recipeDetail']),
-    ...mapState('user', ['userid']),
+    ...mapState('recipe', ['recipeDetail', 'isSucceededtoRecipe']),
+    ...mapState('user', ['userId']),
     formTitle() {
       return this.editedIndex === -1 ? '재료 추가' : '재료 수정'
     },
@@ -449,6 +650,42 @@ export default {
         )
       } else {
         this.steps[index].imageUrl = null
+      }
+    },
+    async canSave() {
+      const sleep = (milliseconds) => {
+        return new Promise((resolve) => setTimeout(resolve, milliseconds))
+      }
+      let msg = ''
+      let flag = false
+      if (this.title.trim() === '') {
+        msg = '레시피 제목을 입력해주세요.'
+      } else if (this.content.trim() === '') {
+        msg = '레시피 내용을 입력해주세요.'
+      } else if (this.image === null) {
+        msg = '대표 사진을 입력해주세요.'
+      } else if (this.serving === '') {
+        msg = '몇 인분인지 입력해주세요.'
+      } else if (this.category === '') {
+        msg = '카테고리를 입력해주세요.'
+      } else if (this.steps.length <= 0) {
+        msg = ''
+      } else if (this.ingredients.length <= 0) {
+        msg = '재료를 입력해 주세요.'
+      } else if (this.steps[this.steps.length - 1].imageUrl == null) {
+        msg = this.steps.length + '단계 이미지를 입력해주세요'
+      } else if (this.steps[this.steps.length - 1].content.trim() === '') {
+        msg = this.steps.length + '단계 내용을 입력해주세요'
+      } else {
+        flag = true
+        msg = '성공적으로 레시피가 생성되었습니다!'
+      }
+      this.snackBarMsg = msg
+      this.saveSnackBar = true
+      if (flag) {
+        await this.saveRecipe()
+        await sleep(1000)
+        this.$router.push('/user/recipe')
       }
     },
     addStep() {
@@ -597,7 +834,7 @@ export default {
       const formdata = new FormData()
       formdata.append('title', this.title)
       formdata.append('content', this.content)
-      formdata.append('category', this.category)
+      formdata.append('category', this.category.category)
       formdata.append('cookingTime', this.cookingTime)
       formdata.append('serving', this.serving)
       formdata.append('repImg', this.image)
@@ -618,8 +855,12 @@ export default {
       for (let i = 0; i < keys.length; i++) {
         ingreVal.push(this.tags[keys[i]].value)
       }
-      for (let i = 0; i < this.tags.length; i++) {
-        formdata.append(`tagList[${i}]`, ingreVal[i])
+      if (this.tags.length > 0) {
+        for (let i = 0; i < this.tags.length; i++) {
+          formdata.append(`tagList[${i}]`, ingreVal[i])
+        }
+      } else {
+        formdata.append(`tagList`, [])
       }
       for (const p of formdata.entries()) {
         console.log(p[0] + ',' + p[1])
@@ -628,7 +869,13 @@ export default {
       this.createRecipeDetail(formdata)
     },
     moveBack() {
+      this.isSucceededtoRecipe = false
       this.$router.go(-1)
+    },
+    test() {
+      // console.log(item)
+      console.log(this.category)
+      console.log()
     },
   },
 }

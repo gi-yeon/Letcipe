@@ -63,13 +63,16 @@ async function deleteMember(userid, success, fail) {
 
 // 내 레시피 조회
 async function myrecipe(pageable, success, fail) {
-  await interceptor.get(`/api/user/recipe`, pageable).then(success).catch(fail)
+  await interceptor
+    .get(`/api/user/recipe?page=${pageable.page}&size=${pageable.size}`)
+    .then(success)
+    .catch(fail)
 }
 
 // 내 레시피리스트 조회
 async function myrecipeList(pageable, success, fail) {
   await interceptor
-    .get(`/api/user/recipelist`, pageable)
+    .get(`/api/user/recipelist?page=${pageable.page}&size=${pageable.size}`)
     .then(success)
     .catch(fail)
 }
@@ -77,14 +80,14 @@ async function myrecipeList(pageable, success, fail) {
 // 내 레시피북마크 목록 조회
 async function myBookmarkRecipe(pageable, success, fail) {
   await interceptor
-    .get(`/api/user/mark/recipe`, pageable)
+    .get(`/api/user/mark/recipe?page=${pageable.page}&size=${pageable.size}`)
     .then(success)
     .catch(fail)
 }
 
 async function myLikeRecipe(pageable, success, fail) {
   await interceptor
-    .get(`/api/user/like/recipe`, pageable)
+    .get(`/api/user/like/recipe?page=${pageable.page}&size=${pageable.size}`)
     .then(success)
     .catch(fail)
 }
@@ -92,7 +95,9 @@ async function myLikeRecipe(pageable, success, fail) {
 // 내 레시피북마크 목록 조회
 async function myBookmarkRecipeList(pageable, success, fail) {
   await interceptor
-    .get(`/api/user/mark/recipelist`, pageable)
+    .get(
+      `/api/user/mark/recipelist?page=${pageable.page}&size=${pageable.size}`
+    )
     .then(success)
     .catch(fail)
 }
@@ -132,5 +137,5 @@ export {
   mycommentNum,
   createCode,
   modifyPassword,
-  myLikeRecipe
+  myLikeRecipe,
 }

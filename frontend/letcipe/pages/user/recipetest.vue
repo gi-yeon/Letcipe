@@ -85,22 +85,15 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <v-pagination
+          <!-- <v-pagination
             v-model="currentPage"
             color="letcipe"
-            :length="myRecipes.length"
+            :length="TotalPage"
             :per-page="perPage"
-            :total-visivle="5"
+            :total-visivle="TotalPage"
             circle
-          ></v-pagination>
+          ></v-pagination> -->
         </v-container>
-
-        <v-snackbar
-          v-model="snackbar"
-          :timeout="timeout"
-        >
-          {{ isSucceededtoCart? "담기에 성공했습니다":"담기에 실패했습니다" }}
-        </v-snackbar>
       </div>
     </v-app>
   </div>
@@ -109,11 +102,12 @@
 <script>
 import { mapActions, mapState, mapMutations } from 'vuex'
 export default {
-  name: 'MyrecipePage',
+  name: 'MyrecipeTestPage',
   data() {
     return {
       pageable: {
-        page: 0,
+        page: 1,
+        size: 10,
       },
       TotalPage: 0,
       perPage: 5,
@@ -134,24 +128,24 @@ export default {
       myRecipes: [],
       dialog: false,
       selectedRecipe: {},
-      timeout:2000,
-      snackbar:false
+      scrolling: false,
     }
   },
   computed: {
     ...mapState('user', ['myRecipe']),
-    ...mapState('cart', ['isSucceededtoCart']),
   },
 
   watch: {},
-
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll)
+  },
   created() {
     const promise = new Promise((resolve, reject) => {
       resolve()
     })
     promise.then(async () => {
       await this.myrecipe(this.pageable)
-      this.myrecipe = this.myRecipe
+      this.myRecipes = this.myRecipe
       //   this.myRecipe.forEach((mr) => {
       //     this.myRecipes.push(mr)
       //   })
@@ -172,8 +166,7 @@ export default {
     },
     async deleteItem(id) {
       await this.patchRecipeDetail(id)
-      // this.myrecipe(this.pageable)
-      this.$router.go('/user/recipe')
+      await this.myrecipe(this.pageable)
       this.dialog = false
     },
     moveDetail(mr) {
@@ -201,7 +194,37 @@ export default {
         list: recipeList,
       }
       this.createCart(addrecipes)
-      this.snackbar = true
+    },
+    plusPage() {
+      const p = this.pageable.page
+      this.pageable = {
+        page: p + 1,
+        size: 10,
+      }
+    },
+    handleScroll() {
+      if (
+        window.scrollY + window.innerHeight >=
+          document.body.scrollHeight + 100 &&
+        this.scrolling === false
+      ) {
+        console.log(this.pageable)
+        // console.log(this.)
+        this.plusPage()
+        let newMyrecipe = []
+        this.myrecipe(this.pageable).then(
+          setTimeout(() => {
+            newMyrecipe = this.myRecipe
+            newMyrecipe.forEach((mr) => {
+              this.myRecipes.push(mr)
+            })
+          }, 1000)
+        )
+        // console.log(1)
+        // console.log(window.scrollY + window.innerHeight)
+        // console.log(window.innerHeight)
+        // console.log(document.body.scrollHeight - 80)
+      }
     },
   },
 }

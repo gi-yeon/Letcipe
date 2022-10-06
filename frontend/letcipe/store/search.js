@@ -5,60 +5,60 @@ import {
   getTotalNumRecipe,
   getTotalNumRecipeList,
   getHotRecipes,
-  getChartInfo
+  getChartInfo,
 } from '@/api/search'
 
 export const state = () => ({
-    recipes : [],
-    recipesIngre : [],
-    recipeLists : [],
-    totalPage : 1,
-    hotRecipes: [],
-    hotTitle: '',
-    charts: [],
+  recipes: [],
+  recipesIngre: [],
+  recipeLists: [],
+  totalPage: 1,
+  hotRecipes: [],
+  hotTitle: '',
+  charts: [],
 })
 
 export const mutations = {
-    SET_RECIPE(state, recipes){
-        state.recipes = recipes
-    },
-    SET_HOT_RECIPE(state, hotRecipes) {
-      state.hotRecipes = hotRecipes
-    },
-    SET_CHARTS(state, charts) {
-      state.charts = charts
-    },
-    SET_HOT_TITLE(state, hotTitle) {
-      state.hotTitle = hotTitle
-    },
-    CLEAR_RECIPE(state){
-        state.recipes = []
-    },
-    CLEAR_HOT_RECIPE(state) {
-      state.hotRecipes = []
-    },
-    CLEAR_HOT_TITLE(state) {
-      state.hotTitle = ''
-    },
+  SET_RECIPE(state, recipes) {
+    state.recipes = recipes
+  },
+  SET_HOT_RECIPE(state, hotRecipes) {
+    state.hotRecipes = hotRecipes
+  },
+  SET_CHARTS(state, charts) {
+    state.charts = charts
+  },
+  SET_HOT_TITLE(state, hotTitle) {
+    state.hotTitle = hotTitle
+  },
+  CLEAR_RECIPE(state) {
+    state.recipes = []
+  },
+  CLEAR_HOT_RECIPE(state) {
+    state.hotRecipes = []
+  },
+  CLEAR_HOT_TITLE(state) {
+    state.hotTitle = ''
+  },
 
-    SET_RECIPE_INGRE(state, recipesIngre){
-      state.recipesIngre = recipesIngre
-    },
-    CLEAR_RECIPE_INGRE(state){
-      state.recipesIngre = []
-    },
-    SET_RECIPE_LIST(state, recipeLists){
-      state.recipeLists = recipeLists
-    },
-    CLEAR_RECIPE_LIST(state){
-      state.recipeLists = ""
-    },
-    SET_TOTAL_PAGE(state, page){
-      state.totalPage = page
-    },
-    CLEAR_CHARTS(state) {
-      state.charts = []
-    },
+  SET_RECIPE_INGRE(state, recipesIngre) {
+    state.recipesIngre = recipesIngre
+  },
+  CLEAR_RECIPE_INGRE(state) {
+    state.recipesIngre = []
+  },
+  SET_RECIPE_LIST(state, recipeLists) {
+    state.recipeLists = recipeLists
+  },
+  CLEAR_RECIPE_LIST(state) {
+    state.recipeLists = ''
+  },
+  SET_TOTAL_PAGE(state, page) {
+    state.totalPage = page
+  },
+  CLEAR_CHARTS(state) {
+    state.charts = []
+  },
 }
 export const getters = {}
 
@@ -82,9 +82,8 @@ export const actions = {
     await getTotalNumRecipe(
       {
         keyword: object.keyword,
-
       },
-      ({data}) => {
+      ({ data }) => {
         console.log(data)
         commit('SET_TOTAL_PAGE', data)
       },
@@ -129,9 +128,9 @@ export const actions = {
     )
     await getTotalNumRecipe(
       {
-        ingredients : object.ingredients,
+        ingredients: object.ingredients,
       },
-      ({data}) => {
+      ({ data }) => {
         console.log(data)
         commit('SET_TOTAL_PAGE', data)
       },
@@ -139,16 +138,15 @@ export const actions = {
         console.log(error)
       }
     )
-  }, 
+  },
   async getRecipeList({ commit }, object) {
-    commit('CLEAR_RECIPE_LIST');
-    commit('CLEAR_RECIPE');
+    commit('CLEAR_RECIPE_LIST')
+    commit('CLEAR_RECIPE')
     console.log(object)
     await getRecipeList(
-         object.keyword,
-        object.size,
-        object.page
-       ,
+      object.keyword,
+      object.size,
+      object.page,
       ({ data }) => {
         commit('SET_RECIPE_LIST', data)
         console.log(data)
@@ -159,9 +157,8 @@ export const actions = {
     )
     await getTotalNumRecipeList(
       object.keyword,
-  
-      ({data}) => {
-    console.log(data)
+      ({ data }) => {
+        console.log(data)
         commit('SET_TOTAL_PAGE', data)
       },
       (error) => {
@@ -170,70 +167,22 @@ export const actions = {
     )
   },
   async getCharts({ commit }, object) {
-      commit('CLEAR_CHARTS')
-      await getChartInfo(
-        {
-          size: object.size,
-          page: object.page,
-        },
-        ({ data }) => {
-          commit('SET_RECIPE_INGRE', data)
-          console.log(data)
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
-      await getTotalNumRecipe(
-        {
-          ingredients : object.ingredients,
-        },
-        ({data}) => {
-          console.log(data)
-          commit('SET_TOTAL_PAGE', data)
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
-    }, 
-    async getRecipeList({ commit }, object) {
-      commit('CLEAR_RECIPE_LIST');
-      commit('CLEAR_RECIPE');
-      console.log(object)
-      await getRecipeList(
-           object.keyword,
-          object.size,
-          object.page
-         ,
-        ({ data }) => {
-          commit('SET_RECIPE_LIST', data)
-          console.log(data)
-          // commit('SET_CHARTS', data.report)
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
-    },
-      async getCharts({ commit }, object) {
-        commit('CLEAR_CHARTS')
-        console.log(object)
-        await getChartInfo(
-          {
-            reqDto: object.attr,
-            begin: object.begin,
-            end: object.end,
-            size: object.size,
-            page: object.page,
-          },
-          ({ data }) => {
-            commit('SET_CHARTS', data)
-          },
-          (error) => {
-            console.log(error)
-          }
-        )
+    commit('CLEAR_CHARTS')
+    console.log(object)
+    await getChartInfo(
+      {
+        reqDto: object.attr,
+        begin: object.begin,
+        end: object.end,
+        size: object.size,
+        page: object.page,
       },
-  }
-  
+      ({ data }) => {
+        commit('SET_CHARTS', data)
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  },
+}

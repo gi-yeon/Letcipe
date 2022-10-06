@@ -15,6 +15,8 @@ import {
 export const state = () => ({
   recipeDetail: {},
   recipeID: null,
+  isSucceededtoRecipe: false,
+  isSucceededtoRecipeDetail: false,
 })
 
 export const mutations = {
@@ -24,7 +26,18 @@ export const mutations = {
   SET_RECIPE_ID(state, id) {
     state.recipeID = id
   },
-
+  SET_SUCCESS_RECIPE(state) {
+    state.isSucceededtoRecipe = true
+  },
+  SET_FAIL_RECIPE(state) {
+    state.isSucceededtoRecipe = false
+  },
+  SET_SUCCESS_DETAIL(state) {
+    state.isSucceededtoRecipeDetail = true
+  },
+  SET_FAIL_DETAIL(state) {
+    state.isSucceededtoRecipeDetail = false
+  },
   CLEAR_RECIPE_DETAIL(state) {
     state.recipeDetail = {}
   },
@@ -49,10 +62,11 @@ export const actions = {
     )
   },
   async createRecipeDetail({ commit }, formData) {
+    commit('SET_FAIL_RECIPE')
     await createRecipeDetail(
       formData,
       ({ data }) => {
-        commit('')
+        commit('SET_SUCCESS_RECIPE')
         console.log('등록 성공!')
       },
       (error) => {
@@ -75,12 +89,6 @@ export const actions = {
   async patchRecipeDetail({ commit }, recipeId) {
     await patchRecipeDetail(
       recipeId,
-      ({ data }) => {
-        commit('')
-      },
-      (error) => {
-        console.log(error)
-      }
     )
   },
   async countRecipeLikes({ commit }, recipeId) {
