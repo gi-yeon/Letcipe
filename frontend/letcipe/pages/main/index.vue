@@ -646,17 +646,20 @@ export default {
 }
 .before-shopping {
   background-image: url('/bg/bg_img.png');
+  background-repeat: repeat;
   padding: 4%;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }
 .after-shopping {
   background-image: url('/bg/bg_img.png');
+  background-repeat: repeat;
   padding: 4%;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }
 .before-shopping-none,
 .after-shopping-none {
   background-image: url('/bg/bg_img.png');
+  background-repeat: repeat;
   height: 165px;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }
