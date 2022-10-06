@@ -3,6 +3,7 @@ package com.ssafy.letcipe.api.dto.user;
 import com.ssafy.letcipe.domain.user.GenderType;
 import com.ssafy.letcipe.domain.user.JobType;
 import com.ssafy.letcipe.domain.user.User;
+import com.ssafy.letcipe.domain.user.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class ResGetUserDto {
     JobType job;
     Integer family;
     LocalDate birth;
+    UserType userType;
 
     public static ResGetUserDto createDto(User user) {
         return ResGetUserDto.builder()
@@ -34,6 +36,7 @@ public class ResGetUserDto {
                 .job(user.getJob())
                 .family(user.getFamily())
                 .birth(user.getBirth())
+                .userType(user.getUserType())
                 .build();
     }
 

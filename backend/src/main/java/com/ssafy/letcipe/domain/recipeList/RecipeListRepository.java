@@ -13,6 +13,7 @@ import java.util.List;
 public interface RecipeListRepository extends JpaRepository<RecipeList, Long> {
     List<RecipeList> findByNameContaining(Pageable pageable, String keyword);
 
+    Integer countRecipeListByNameContaining(String keyword);
     List<RecipeList> findAllByUser(Pageable pageable, User user);
 
     @Query("select b.recipeList from RecipeListBookmark b where (b.recipeList.isDeleted = 0 and b.recipeList.isShared = 0) group by b.recipeList order by count(b.recipeList) desc")
