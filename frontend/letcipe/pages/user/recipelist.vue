@@ -301,7 +301,7 @@ export default {
         ReqUpdateRecipeListDto: {
           name: mr.name,
           description: mr.description,
-          isShared: mr.isShared,
+          isShared: mr.isShared==='N'?'Y':'N',
         },
       }
       console.log(object)
