@@ -44,6 +44,9 @@ export const mutations = {
   SET_RECIPELIST_NAME(state, newName) {
     state.recipeListRes.name = newName
   },
+  MODIFY_RECIPE_LIST_ITEM(state,index) {
+    state.recipeListItems.splice(index,1)
+  }
 }
 
 export const getters = {}

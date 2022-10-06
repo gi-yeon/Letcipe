@@ -233,11 +233,9 @@ export default {
         })
         this.recipeList.push(recipeListItem)
       })
-      //   this.TotalPage = this.myRecipe.length / 5
-      //   console.log(this.TotalPage)
-      //   console.log(this.myRecipes)
-    })
+       })
   },
+
   methods: {
     ...mapActions('recipe', ['patchRecipeDetail']),
     ...mapActions('user', ['myrecipe', 'myrecipeList']),
