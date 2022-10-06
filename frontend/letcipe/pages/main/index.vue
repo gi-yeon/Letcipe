@@ -349,6 +349,7 @@
                 <v-avatar size="130" fab @click="moveListDetail">
                   <!-- <v-img class="ref-imgs" :src="item.recipe.repImg"></v-img> -->
                   <v-img
+                    v-if="recipeList.recipeListItems.length > 0"
                     class="ref-imgs"
                     :src="recipeList.recipeListItems[0].recipe.repImg"
                   >
