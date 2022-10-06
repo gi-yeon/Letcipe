@@ -1,27 +1,41 @@
 <template>
-  <div>
-    <bar-chart :data="chartData" :options="chartOptions"></bar-chart>
-    <line-chart :data="chartData" :options="chartOptions"></line-chart>
-    <pie-chart :data="chartData" :options="chartOptions"></pie-chart>
+  <div data-app>
+    <v-select></v-select>
+    <bar-chart
+      v-bind="chartData"
+      :data="chartData"
+      :options="chartOptions"
+    ></bar-chart>
+    <line-chart
+      v-bind="chartData"
+      :data="chartData"
+      :options="chartOptions"
+    ></line-chart>
+    <pie-chart
+      v-bind="chartData"
+      :data="chartData"
+      :options="chartOptions"
+    ></pie-chart>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: 'ChartComponent',
   data() {
     return {
       chartData: {
-        labels: ['a', 'b'],
+        labels: [],
         datasets: [
           {
             label: '',
-            data: [10, 20],
+            data: [],
             backgroundColor: [],
             borderColor: [
               // 'rgba(255, 159, 64, 1)',
             ],
-            borderWidth: 2,
+            borderWidth: 1,
           },
         ],
       },
@@ -51,7 +65,7 @@ export default {
             {
               ticks: {
                 beginAtZero: true,
-                max: 100,
+                max: 50,
                 min: 0,
                 stepSize: 1,
               },
@@ -63,6 +77,39 @@ export default {
         },
       },
     }
+  },
+  // async fetch() {
+  //   await this.getData()
+  // },
+  computed: {
+    ...mapState('search', ['charts']),
+  },
+  created() {},
+  mounted() {
+    console.log('before')
+    // console.log(this.chartData)
+    this.chartData.labels = this.charts.recipeName
+    this.chartData.datasets[0].data = this.charts.count
+    // console.log(this.chartData)
+  },
+  methods: {
+    getData() {
+      console.log('부모에서 호출')
+      console.log('vue입니다')
+      console.log(this.charts)
+      this.charts.recipeName.forEach((name) => {
+        this.chartData.labels.push(name)
+        console.log(this.chartData.labels)
+      })
+      this.charts.count.forEach((cnt) => {
+        this.chartData.datasets[0].data.push(cnt)
+        console.log(cnt)
+      })
+      // this.chartData.labels = this.charts.recipeName
+      // this.chartData.datasets[0].data = this.charts.count
+      console.log('eeeeeee')
+      console.log(this.chartData.labels)
+    },
   },
 }
 </script>

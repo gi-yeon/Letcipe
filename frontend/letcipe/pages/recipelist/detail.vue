@@ -3,6 +3,14 @@
     <v-app id="inspire">
       <div id="recipedetail-container">
         <v-container style="width: 100%">
+          <v-snackbar
+            v-model="snackBar"
+            centered
+            style="z-index: 1"
+            :timeout="1500"
+          >
+            {{ snackBarMsg }}
+          </v-snackbar>
           <div class="detail-head-wrap">
             <div class="d-flex justify-space-between pb-3">
               <div>
@@ -27,30 +35,11 @@
                   {{ recipeListWriter.job }} &nbsp;&nbsp;{{
                     recipeListWriter.nickname
                   }}
-                  <v-dialog v-model="dialog2" persistent max-width="290">
-                    <template #activator="{ on, attrs }">
-                      <v-btn
-                        style="border: 1px solid black"
-                        v-bind="attrs"
-                        @click="AllAdd()"
-                        v-on="on"
-                        >+ 전체담기</v-btn
-                      >
-                    </template>
-                    <v-card>
-                      <v-card-title class="text-h5">Caution</v-card-title>
-                      <v-card-text>레시피 전체 담기 성공!</v-card-text>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                          color="green darken-1"
-                          text
-                          @click="dialog2 = false"
-                          >확인</v-btn
-                        >
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
+                  <v-btn
+                    style="border: 1px solid black"
+                    @click="AllAdd()"
+                    >+ 전체담기</v-btn
+                  >
                 </v-row>
               </div>
               <v-row align="center" class="mx-0">
@@ -75,20 +64,14 @@
             </v-card-text>
             <br />
             <div align="center" class="d-flex justify-center">
-              <!-- <v-btn style="width: 90%; border: 1px solid black" @click="partAdd()">선택 담기</v-btn> -->
-
-              <v-dialog v-model="dialog" persistent max-width="290">
-                <template #activator="{ on, attrs }">
-                  <v-btn
-                    height="48px"
-                    style="width: 90%; border: 1px solid black"
-                    v-bind="attrs"
-                    @click="partAdd()"
-                    v-on="on"
-                    >선택 담기</v-btn
-                  >
-                </template>
-                <!-- <v-card v-if="isAll">
+              <v-btn
+                :disabled="cart.length === 0"
+                height="48px"
+                style="width: 90%; border: 1px solid black"
+                @click="partAdd()"
+                >선택 담기</v-btn
+              >
+              <!-- <v-card v-if="isAll">
                     <v-card-title class="text-h5">Caution</v-card-title>
                     <v-card-text>레시피 전체 담기 성공!</v-card-text>
                     <v-card-actions>
@@ -96,30 +79,6 @@
                       <v-btn color="green darken-1" text @click="dialog = false">확인</v-btn>
                     </v-card-actions>
                 </v-card>-->
-                <v-card v-if="isNothing">
-                  <v-card-title class="text-h5">Caution</v-card-title>
-                  <v-card-text
-                    >선택된 레시피가 없습니다. 레시피를
-                    선택해주세요.</v-card-text
-                  >
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="green darken-1" text @click="dialog = false"
-                      >확인</v-btn
-                    >
-                  </v-card-actions>
-                </v-card>
-                <v-card v-if="!isNothing">
-                  <v-card-title class="text-h5">Caution</v-card-title>
-                  <v-card-text>레시피 장바구니에 담기 성공!</v-card-text>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="green darken-1" text @click="dialog = false"
-                      >확인</v-btn
-                    >
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
             </div>
             <v-card-subtitle
               class="mx-0 mr-3 ml-3 d-flex justify-space-between"
@@ -209,6 +168,8 @@ export default {
       isAllCheck: false,
       id: '',
       isNothing: false,
+      snackBarMsg: '',
+      snackBar: false,
     }
   },
 
@@ -244,16 +205,23 @@ export default {
     moveBack() {
       this.$router.go(-1)
     },
-    bookmark() {
+    async bookmark() {
+      let msg = ''
       if (this.userId === 0) return
       if (this.isBookmark) {
+        msg = '북마크 취소!'
         this.isBookmark = !this.isBookmark
-        this.deleteRecipeListBookmark(this.recipeListRes.id)
+        await this.deleteRecipeListBookmark(this.recipeListRes.id)
         this.Bookmarks--
+        this.snackBar = true
+        this.snackBarMsg = msg
       } else {
+        msg = '북마크 추가!'
         this.isBookmark = !this.isBookmark
-        this.createRecipeListBookmark(this.recipeListRes.id)
+        await this.createRecipeListBookmark(this.recipeListRes.id)
         this.Bookmarks++
+        this.snackBar = true
+        this.snackBarMsg = msg
       }
     },
     initCart() {
@@ -274,6 +242,8 @@ export default {
           this.cart.push(this.recipeListItems[i])
         }
       }
+      console.log(this.checkedRecipe)
+      console.log(this.cart)
     },
     allAddCart() {
       if (!this.isAllCheck) {
@@ -303,6 +273,10 @@ export default {
       const addrecipes = {
         list: cartid,
       }
+
+      const msg = '장바구니에 추가!'
+      this.snackBar = true
+      this.snackBarMsg = msg
       this.createCart(addrecipes)
       // console.log(addrecipes)
     },
@@ -320,6 +294,10 @@ export default {
         this.isNothing = false
         this.createCart(addrecipes)
       }
+
+      const msg = '장바구니에 추가!'
+      this.snackBar = true
+      this.snackBarMsg = msg
       // console.log(addrecipes)
     },
   },

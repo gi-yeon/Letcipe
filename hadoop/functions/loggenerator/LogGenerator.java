@@ -47,7 +47,7 @@ public class LogGenerator {
 
 
                     String time = String.format("%d:%d:%d", h, m, s);
-                    int rid = rnd.nextInt(recipeList.length);
+                    int rid = recipeList[rnd.nextInt(recipeList.length)];
                     String category = "R" + rnd.nextInt(15);
                     int uid = rnd.nextInt(1000);
                     String gender = rnd.nextBoolean() ? "F" : "M";

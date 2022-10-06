@@ -1,9 +1,7 @@
 import Vue from 'vue'
-import { Line } from 'vue-chartjs'
-import { Pie } from 'vue-chartjs'
-import { Bar } from 'vue-chartjs'
+import { Line, Pie, Bar } from 'vue-chartjs'
 
-Vue.component('line-chart', {
+Vue.component('LineChart', {
   extends: Line,
   props: ['data', 'options'],
   mounted() {
@@ -11,7 +9,7 @@ Vue.component('line-chart', {
   },
 })
 
-Vue.component('pie-chart', {
+Vue.component('PieChart', {
   extends: Pie,
   props: ['data', 'options'],
   mounted() {
@@ -19,7 +17,7 @@ Vue.component('pie-chart', {
   },
 })
 
-Vue.component('bar-chart', {
+Vue.component('BarChart', {
   extends: Bar,
   props: ['data', 'options'],
   mounted() {

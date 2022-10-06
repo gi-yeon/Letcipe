@@ -30,15 +30,27 @@
                 </div>
               </v-img>
             </div>
-
             <v-card-title class="d-flex justify-space-between text-md-h3">
               <div>
                 {{ recipeDetail.title }}
               </div>
 
-              <v-btn color="letcipe" @click="addCart">+ 담기</v-btn>
+              <v-btn
+                :disabled="userId <= 0"
+                color="letcipe"
+                style="color: white"
+                @click="addCart"
+                >+ 담기</v-btn
+              >
+              <v-snackbar
+                v-model="addSnackBar"
+                centered
+                style="z-index: 1"
+                :timeout="1500"
+              >
+                {{ snackBarMsg }}
+              </v-snackbar>
             </v-card-title>
-
             <v-card-subtitle class="text-md-h5">맛있겠다!</v-card-subtitle>
 
             <v-card-text>
@@ -71,7 +83,7 @@
                 >등록일자 : {{ regTime }}</v-row
               >
               <v-row class="d-flex justify-space-between">
-                <div class="my-4 text-subtitle-1 pl-4">
+                <div class="my-4 pl-4">
                   <v-avatar size="27px" color="letcipe">
                     <v-img
                       v-if="writer.profileImage"
@@ -96,7 +108,6 @@
                 </div>
               </v-row></v-card-text
             >
-
             <v-divider class="mx-4"></v-divider>
 
             <div>
@@ -166,7 +177,31 @@
 
             <div align="center">
               <v-row class="d-flex justify-center">
-                <v-btn color="letcipe" @click="addCart">+ 담기</v-btn>
+                <v-dialog v-model="dialog" persistent max-width="290">
+                  <template #activator="{ on, attrs }">
+                    <v-btn
+                      :disabled="userId <= 0"
+                      color="letcipe"
+                      height="48px"
+                      style="color: white"
+                      v-bind="attrs"
+                      @click="addCart"
+                      v-on="on"
+                    >
+                      + 담기</v-btn
+                    >
+                  </template>
+                  <v-card>
+                    <v-card-title class="text-h5">Caution</v-card-title>
+                    <v-card-text>성공적으로 레시피를 담았습니다!</v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="green darken-1" text @click="dialog = false"
+                        >확인</v-btn
+                      >
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
               </v-row>
               <v-row align="center">
                 <v-col cols="1"></v-col>
@@ -183,7 +218,6 @@
                 </v-col>
                 <v-col cols="1"></v-col>
               </v-row>
-
               <v-row>
                 <v-col align="center">
                   <div
@@ -254,9 +288,12 @@ export default {
       TotalPage: 1,
       currentPage: 1,
       enterComment: null,
+      addSnackBar: false,
+      addCommentSnack: false,
       writer: {},
       content: '',
       regTime: '',
+      dialog: false,
       Likes: 0,
       isLike: false,
       Bookmarks: 0,
@@ -264,11 +301,17 @@ export default {
       recipeSteps: [],
       recipeIngredient: [],
       ingredient: [],
+      snackBarMsg: '',
+      barCommentMsg: '',
     }
   },
   computed: {
     ...mapState('comment', ['comments', 'commentNum']),
-    ...mapState('recipe', ['recipeDetail', 'recipeID']),
+    ...mapState('recipe', [
+      'recipeDetail',
+      'recipeID',
+      'isSucceededtoRecipeDetail',
+    ]),
     ...mapState('user', ['userId', 'nickname']),
   },
 
@@ -350,24 +393,38 @@ export default {
       this.$router.go(-1)
     },
     saveBookmark() {
+      let msg = ''
       if (this.userId === 0) return
       if (this.isBookmark) {
+        msg = '북마크 취소!'
         this.deleteBookmarks(this.recipeDetail.id)
         this.Bookmarks--
+        this.snackBarMsg = msg
+        this.addSnackBar = true
       } else {
+        msg = '북마크 추가!'
         this.selectBookmarks(this.recipeDetail.id)
         this.Bookmarks++
+        this.snackBarMsg = msg
+        this.addSnackBar = true
       }
       this.isBookmark = !this.isBookmark
     },
-    saveLike() {
+    async saveLike() {
+      let msg = ''
       if (this.userId === 0) return
       if (this.isLike) {
-        this.decountRecipeLikes(this.recipeDetail.id)
+        msg = '좋아요 취소!'
+        await this.decountRecipeLikes(this.recipeDetail.id)
         this.Likes--
+        this.snackBarMsg = msg
+        this.addSnackBar = true
       } else {
-        this.countRecipeLikes(this.recipeDetail.id)
+        msg = '이 레시피가 좋아요!'
+        await this.countRecipeLikes(this.recipeDetail.id)
         this.Likes++
+        this.snackBarMsg = msg
+        this.addSnackBar = true
       }
       this.isLike = !this.isLike
     },
@@ -387,29 +444,40 @@ export default {
         boardId: this.recipeDetail.id,
         boardType: 'RECIPE',
       }
+      const msg = '댓글을 작성했습니다.'
       await this.postComment(comment)
       this.enterComment = null
       this.reloadComment()
+      this.snackBarMsg = msg
+      this.addSnackBar = true
     },
     async deleteComment(id) {
       const comment = {
         commentId: id,
       }
+      const msg = '댓글을 삭제했습니다.'
       await this.patchComment(comment)
       this.reloadComment()
+      this.snackBarMsg = msg
+      this.addSnackBar = true
     },
     async reloadComment() {
       await this.getCommentNum(this.recipeInfo)
       await this.getComment(this.recipeInfo)
     },
-    addCart() {
+    async addCart() {
+      console.log(this.userId)
       const recipeList = []
       recipeList.push(this.recipeID)
       console.log(this.recipeID)
       const addrecipes = {
         list: recipeList,
       }
-      this.createCart(addrecipes)
+
+      const msg = '카트에 담겼습니다.'
+      await this.createCart(addrecipes)
+      this.snackBarMsg = msg
+      this.addSnackBar = true
     },
     editMyRecipe() {
       this.CLEAR_RECIPE_ID()

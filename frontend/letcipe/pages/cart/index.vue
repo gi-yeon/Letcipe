@@ -1,11 +1,13 @@
 <template>
   <div id="app">
     <v-app class="cart-page">
-      <v-container class="cart-container d-flex-row">
+      <v-container class="cart-container d-flex-row" style="position: absoulte">
         <div class="cart-head-wrap">
           <div class="d-flex justify-space-between pb-3">
             <div>
-              <v-icon @click="moveBack">mdi-window-close</v-icon>
+              <v-icon style="z-index: 2" @click="moveBack"
+                >mdi-window-close</v-icon
+              >
             </div>
             <div style="font-size: x-large">장바구니</div>
             <div>
@@ -30,6 +32,7 @@
             </div>
             <div>
               <v-btn
+                style="z-index: 2"
                 small
                 color="letcipe"
                 class="white--text"
@@ -63,11 +66,16 @@
             >
               <v-icon
                 v-if="!checkedRecipe[i]"
+                style="z-index: 2"
                 class="mr-3"
                 @click="addRecipe(i)"
                 >mdi-check-circle-outline</v-icon
               >
-              <v-icon v-else class="mr-3" @click="addRecipe(i)"
+              <v-icon
+                v-else
+                class="mr-3"
+                style="z-index: 2"
+                @click="addRecipe(i)"
                 >mdi-check-circle</v-icon
               >
               <v-list-item-avatar tile size="100">
@@ -75,8 +83,10 @@
               </v-list-item-avatar>
               <v-list-item-content class="pl-4">
                 <v-list-item-title class="d-flex justify-space-between">
-                  <div class="recipe-title">{{ recipeInfo.recipe.title }}</div>
-                  <v-icon @click="deleteRecipe(recipeInfo.recipe.id)"
+                  <div>{{ recipeInfo.recipe.title }}</div>
+                  <v-icon
+                    style="z-index: 2"
+                    @click="deleteRecipe(recipeInfo.recipe.id)"
                     >mdi-window-close</v-icon
                   >
                 </v-list-item-title>
@@ -102,23 +112,25 @@
                   >-->
                   <div>
                     <v-btn
+                      elevation="3"
                       class="mx-2"
                       fab
                       dark
                       x-small
                       color="letcipe"
-                      @click="subRecipeAmount(recipeInfo.recipe.id)"
+                      @click="subRecipeAmount(recipeInfo.recipe.id, i)"
                     >
                       <v-icon dark>mdi-minus</v-icon>
                     </v-btn>
                     {{ recipeInfo.amount }}
                     <v-btn
+                      elevation="3"
                       class="mx-2"
                       fab
                       dark
                       x-small
                       color="letcipe"
-                      @click="plusRecipeAmount(recipeInfo.recipe.id)"
+                      @click="plusRecipeAmount(recipeInfo.recipe.id, i)"
                     >
                       <v-icon dark>mdi-plus</v-icon>
                     </v-btn>
@@ -193,6 +205,7 @@
                     <div>
                       <v-btn
                         class="mx-2"
+                        elevation="3"
                         fab
                         dark
                         x-small
@@ -204,11 +217,12 @@
                       {{ Math.ceil(item.amount) }}{{ item.ingredient.measure }}
                       <v-btn
                         class="mx-2"
+                        elevation="3"
                         fab
                         dark
                         x-small
                         color="letcipe"
-                        @click="plusIngreAmount(index)"
+                        @click="plusIngreAmount(i)"
                       >
                         <v-icon dark>mdi-plus</v-icon>
                       </v-btn>
@@ -239,6 +253,7 @@
             <v-dialog v-model="dialog" max-width="500px">
               <template #activator="{ on, attrs }">
                 <v-btn
+                  elevation="3"
                   small
                   color="letcipe"
                   class="mb-5 mt-6 white--text"
@@ -402,6 +417,10 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+
+        <v-snackbar v-model="snackbar" :timeout="timeout">
+          {{ text }}
+        </v-snackbar>
       </v-container>
     </v-app>
   </div>
@@ -413,8 +432,13 @@ export default {
   name: 'CartIndex',
   data() {
     return {
-      ingredients: [],
+      dialogAlert: false,
       errorMsg: '',
+      timeout: 2000,
+      snackbar: false,
+      text: '',
+      ingredients: [],
+      dialogTitle: 'Caution',
       totalAmount: 0,
       dialog: false,
       dialogStartCartError: false,
@@ -658,7 +682,8 @@ export default {
             amount: this.editedItem.amount,
           }
           this.createCartIngredient(createObject)
-
+          this.cartCategory.add(this.editedItem.ingredient.category)
+          console.log(this.editedItem.ingredient.category)
           this.ingreIndexList[this.editedItem.ingredient.id] =
             this.ingreList.length - 1
 
@@ -681,9 +706,11 @@ export default {
 
         this.close()
       }
-      this.dialogTitle = '재료 추가 성공'
-      this.errorMsg = '재료가 추가되었습니다.'
-      this.dialogStartCartError = true
+      this.text = '재료가 추가되었습니다.'
+      this.snackbar = true
+      // this.dialogTitle = '재료 추가 성공'
+      // this.errorMsg = '재료가 추가되었습니다.'
+      // this.dialogStartCartError = true
     },
     initSelectIndex() {
       this.focusIndex = null
@@ -791,20 +818,26 @@ export default {
       }
       this.totalIngreAmount()
     },
-    subRecipeAmount(id) {
-      const updateObject = {
-        recipeId: id,
-        operator: '-',
+    subRecipeAmount(id, i) {
+      if (this.cart[i].amount > 1) {
+        const updateObject = {
+          recipeId: id,
+          operator: '-',
+        }
+        this.updateCartRecipe(updateObject)
+        this.text = '레시피의 수량을 수정하였습니다.'
+        this.snackbar = true
+        this.$router.go()
       }
-      this.updateCartRecipe(updateObject)
-      this.$router.go()
     },
-    plusRecipeAmount(id) {
+    plusRecipeAmount(id, i) {
       const updateObject = {
         recipeId: id,
         operator: '+',
       }
       this.updateCartRecipe(updateObject)
+      this.text = '레시피의 수량을 수정하였습니다.'
+      this.snackbar = true
       this.$router.go()
     },
     deleteRecipe(recipeId) {
@@ -823,6 +856,7 @@ export default {
         }
         this.$router.go()
       }
+      this.dialogAlert = false
     },
     subIngreAmount(index) {
       const ingredientInfo = this.ingreList[index]
@@ -889,6 +923,8 @@ export default {
         this.patchCartIngredient(updateObject)
       }
       this.CALC_SUB_INGRE(index)
+      this.text = '재료의 수량을 수정하였습니다.'
+      this.snackbar = true
     },
 
     plusIngreAmount(index) {
@@ -899,6 +935,8 @@ export default {
         operator: '+',
       }
       this.patchCartIngredient(createObject)
+      this.text = '재료의 수량을 수정하였습니다.'
+      this.snackbar = true
     },
     deleteIngre(item) {
       this.deleteCartIngredient(item.id)

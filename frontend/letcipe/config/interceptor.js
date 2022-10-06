@@ -6,12 +6,10 @@ import { API_BASE_URL } from '.'
 Vue.use(VueCookies)
 const instance = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 1000,
+  timeout: 5000,
 })
 
 instance.interceptors.request.use(
-
-
   function (config) {
     config.headers['Content-Type'] = 'application/json'
     config.headers['access-token'] = VueCookies.get('access-token')
@@ -21,7 +19,6 @@ instance.interceptors.request.use(
     return Promise.reject(error)
   }
 )
-
 
 instance.interceptors.response.use(
   function (response) {

@@ -7,6 +7,7 @@ function apiInstance() {
     headers: {
       'Content-type': 'application/json',
     },
+    timeout: 5000,
   })
   return instance
 }

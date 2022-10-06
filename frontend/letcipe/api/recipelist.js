@@ -46,7 +46,7 @@ async function addRecipeListItem(RLItem, success, fail) {
 // 레시피리스트에 레시피 삭제
 async function deleteRecipeListItem(RLItem, success, fail) {
   await api
-    .delete(`/api/recipelist/recipe`, JSON.stringify(RLItem))
+    .delete(`/api/recipelist/recipe`, { data: RLItem })
     .then(success)
     .catch(fail)
 }
