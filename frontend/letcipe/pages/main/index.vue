@@ -45,7 +45,7 @@
                                     </v-avatar>
                                   </div>
                                   <v-card-title
-                                    class="my-title text-h5"
+                                    class="my-title text-h5 justify-center"
                                     v-text="item.title"
                                   ></v-card-title>
                                   <v-card-subtitle
