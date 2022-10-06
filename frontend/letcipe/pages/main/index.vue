@@ -323,9 +323,11 @@
             >
               <v-img class="ref-imgs" :src="ref.recipe.repImg">
                 <div class="ref-wrap">
-                  <v-card-title class="ref-title">{{
-                    ref.recipe.title
-                  }}</v-card-title>
+                  <v-card-title
+                    class="ref-title"
+                    style="overflow: hidden; text-overflow: ellipsis"
+                    >{{ ref.recipe.title }}</v-card-title
+                  >
                   <v-card-subtitle class="ref-subtitle">{{
                     ref.recipe.content
                   }}</v-card-subtitle>
@@ -702,13 +704,17 @@ export default {
   font-size: large;
   font-weight: bolder;
   display: block;
-  overflow: auto;
+  width: 130px;
+  word-break: normal;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
 .ref-subtitle {
   /* color: rgb(0, 0, 0); */
   color: aliceblue;
   text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .my-container {
   padding-top: 10%;

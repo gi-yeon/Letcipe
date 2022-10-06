@@ -88,9 +88,9 @@
           <v-pagination
             v-model="currentPage"
             color="letcipe"
-            :length="TotalPage"
+            :length="myRecipes.length"
             :per-page="perPage"
-            :total-visivle="TotalPage"
+            :total-visivle="5"
             circle
           ></v-pagination>
         </v-container>
@@ -111,7 +111,6 @@ export default {
       TotalPage: 0,
       perPage: 5,
       currentPage: 1,
-      myrecipe: [],
       byname: '',
       searchedName: '',
       dialogSameIngre: false,
