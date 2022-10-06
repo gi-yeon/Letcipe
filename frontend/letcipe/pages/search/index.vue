@@ -228,7 +228,7 @@
                 </v-col>
               </v-row>
 
-              <v-card-subtitle v-if="isSelected.length < 2"
+              <v-card-subtitle v-if="isSelected.length < 2" align="center"
                 >두 개 이상의 재료를 선택해 주세요</v-card-subtitle
               >
               <v-card-subtitle v-if="isSelected.length >= 2"
@@ -310,12 +310,15 @@
               </div>
               <div
                 v-if="
-                  isSelected.length == 0 ||
-                  recipesIngre == null ||
-                  recipesIngre.length == 0
+                  isSelected.length >= 2 &&
+                  (isSelected.length == 0 ||
+                    recipesIngre == null ||
+                    recipesIngre.length == 0)
                 "
               >
-                <v-img src="/img/noSearchIngre.png"></v-img>
+                <v-card-subtitle align="center"
+                  >검색 결과가 없습니다.</v-card-subtitle
+                >
               </div>
             </v-tab-item>
           </v-tabs-items>
