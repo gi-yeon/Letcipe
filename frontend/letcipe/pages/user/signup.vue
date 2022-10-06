@@ -177,7 +177,7 @@
                   <v-btn
                     height="48px"
                     width="47%"
-                    :color="gender === 'W'?'letcipe':'white'"
+                    :color="gender === 'F'?'letcipe':'white'"
                     @click="setGenderW"
                   >여</v-btn>
                 </div>
@@ -550,7 +550,7 @@ export default {
       this.gender = 'M'
     },
     setGenderW() {
-      this.gender = 'W'
+      this.gender = 'F'
     },
     signupSuccess() {
       this.resetStat()
