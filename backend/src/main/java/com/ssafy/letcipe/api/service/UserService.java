@@ -382,6 +382,7 @@ public class UserService {
         return new ResGetUserRecipesDto(dtoList);
     }
 
+    @Transactional
     public ResGetUserRecipeListsDto readRecipeListBookmark(Long userId, Pageable pageable) {
         User user = userRepository.findByIdAndStatusType(userId, StatusType.N).orElseThrow(() -> new NullPointerException());
         List<RecipeListBookmark> recipeListBookmarkList = recipeListBookmarkRepository.findAllByUser(pageable, user);
@@ -393,6 +394,7 @@ public class UserService {
         return new ResGetUserRecipeListsDto(dtoList);
     }
 
+    @Transactional
     public List<ResGetUserCommentDto> getUserComment(Long userId, Pageable pageable) {
         List<Comment> commentList = commentRepository.findAllByUserIdAndBoardTypeAndStatusType(pageable, userId, BoardType.RECIPE, StatusType.N);
         List<ResGetUserCommentDto> dtoList = new ArrayList<>();
@@ -445,6 +447,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public ResLoginUserDto updateToken(String token, String refreshToken) {
         if (jwtService.checkJwtToken(token)) {
             throw new AuthorityViolationException("접근할 수 없음");
