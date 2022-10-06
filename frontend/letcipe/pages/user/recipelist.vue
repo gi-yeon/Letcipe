@@ -280,7 +280,7 @@ export default {
     },
     async deleteItem(id) {
       await this.deleteRecipeList(id)
-      await this.myrecipeList(this.pageable)
+      this.$router.go('/user/recipelist')
       this.dialog = false
     },
     moveDetail(mr) {
