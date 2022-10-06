@@ -729,7 +729,6 @@ export default {
         this.checked = []
         for (let i = 0; i < this.cart.length; i++) {
           this.checked.push(this.cart[i])
-          console.log(this.checked)
         }
 
         for (let i = 0; i < this.checked.length; i++) {
@@ -840,22 +839,22 @@ export default {
       this.snackbar = true
       this.$router.go()
     },
-    deleteRecipe(recipeId) {
-      this.deleteCart(recipeId)
-      this.$router.go()
+    async deleteRecipe(recipeId) {
+      await this.deleteCart(recipeId)
     },
     checkedDeleteAlert() {
       this.dialogTitle = 'Caution'
       this.errorMsg = '정말로 삭제하시겠습니까?'
       this.dialogAlert = true
     },
-    checkedDelete() {
+   checkedDelete() {
       if (this.checked.length > 0) {
         for (let i = 0; i < this.checked.length; i++) {
-          this.deleteRecipe(this.checked[i].recipe.id)
+         this.deleteRecipe(this.checked[i].recipe.id)
         }
-        this.$router.go()
+
       }
+       this.$router.go()
       this.dialogAlert = false
     },
     subIngreAmount(index) {
