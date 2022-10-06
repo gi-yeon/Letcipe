@@ -27,6 +27,7 @@ public class RecipeTagService {
         for (RecipeTag tag : recipe.getTags()) {
             deleteRecipeTag(tag);
         }
+        recipeTagRepository.flush();
     }
     @Transactional
     public void deleteRecipeTag(RecipeTag recipeTag) {
