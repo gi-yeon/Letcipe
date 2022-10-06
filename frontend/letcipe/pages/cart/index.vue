@@ -949,7 +949,7 @@ export default {
           this.dialogStartCartError = true
         } else {
           this.startCart()
-          this.$router.go()
+          this.$router.push('/main')
         }
       } else {
         this.dialogTitle = 'Caution'
