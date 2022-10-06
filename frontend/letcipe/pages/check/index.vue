@@ -32,17 +32,27 @@
                   <div class="before-shopping">
                     <div class="d-flex justify-space-between align-center">
                       <div>
-                        <v-icon color="letcipe">mdi-cart-outline</v-icon>구매할식재료
+                        <v-icon color="letcipe">mdi-cart-outline</v-icon
+                        >구매할식재료
                       </div>
                       <div class="d-flex align-center">
                         <div>전체선택</div>
 
-                        <v-checkbox color="letcipe" @click="checkAll"></v-checkbox>
+                        <v-checkbox
+                          color="letcipe"
+                          @click="checkAll"
+                        ></v-checkbox>
                       </div>
                     </div>
                     <v-divider></v-divider>
-                    <div v-for="(c, index) in checklist" :key="index" class="pl-3 pr-3">
-                      <div class="check-wrap d-flex justify-space-between align-center mt-1">
+                    <div
+                      v-for="(c, index) in checklist"
+                      :key="index"
+                      class="pl-3 pr-3"
+                    >
+                      <div
+                        class="check-wrap d-flex justify-space-between align-center mt-1"
+                      >
                         <div class="ingre-name">
                           <v-checkbox
                             v-model="checklist[index]"
@@ -54,7 +64,9 @@
                             @click="bought(c, index)"
                           ></v-checkbox>
                         </div>
-                        <div class="ingre-amount">{{c.amount}}{{c.measure}}</div>
+                        <div class="ingre-amount">
+                          {{ c.amount }}{{ c.measure }}
+                        </div>
                       </div>
 
                       <v-divider></v-divider>
@@ -70,12 +82,21 @@
                       <div class="d-flex align-center">
                         <div>전체선택</div>
 
-                        <v-checkbox color="letcipe" @click="removeAll"></v-checkbox>
+                        <v-checkbox
+                          color="letcipe"
+                          @click="removeAll"
+                        ></v-checkbox>
                       </div>
                     </div>
                     <v-divider></v-divider>
-                    <div v-for="(c, index) in checkedList" :key="index" class="pl-3 pr-3">
-                      <div class="check-wrap d-flex justify-space-between align-center mt-1">
+                    <div
+                      v-for="(c, index) in checkedList"
+                      :key="index"
+                      class="pl-3 pr-3"
+                    >
+                      <div
+                        class="check-wrap d-flex justify-space-between align-center mt-1"
+                      >
                         <div class="ingre-name">
                           <v-checkbox
                             v-model="checkedList[index]"
@@ -87,7 +108,9 @@
                             @click="needtobuy(c, index)"
                           ></v-checkbox>
                         </div>
-                        <div class="ingre-amount">{{c.amount}}{{c.measure}}</div>
+                        <div class="ingre-amount">
+                          {{ c.amount }}{{ c.measure }}
+                        </div>
                       </div>
                       <v-divider></v-divider>
                     </div>
@@ -103,9 +126,13 @@
                   >
                     <div class="d-flex justify-space-between align-center">
                       <div class="d-flex justify-center mt-2 mb-2">
-                        <img class="category-images" :src="`/cart_icon/${cg}.png`" alt="flour" />
+                        <img
+                          class="category-images"
+                          :src="`/cart_icon/${cg}.png`"
+                          alt="flour"
+                        />
 
-                        <div>{{cg}}</div>
+                        <div>{{ cg }}</div>
                       </div>
                       <!-- <div class="d-flex align-center">
                         <div>전체선택</div>
@@ -113,7 +140,11 @@
                       </div>-->
                     </div>
                     <v-divider></v-divider>
-                    <div v-for="(c, idx) in checklist" :key="idx" class="pl-3 pr-3">
+                    <div
+                      v-for="(c, idx) in checklist"
+                      :key="idx"
+                      class="pl-3 pr-3"
+                    >
                       <div
                         v-if="checklist[idx].categoryName === cg"
                         class="check-wrap d-flex justify-space-between align-center mt-1"
@@ -129,9 +160,13 @@
                             @click="bought(c, idx)"
                           ></v-checkbox>
                         </div>
-                        <div class="ingre-amount">{{c.amount}}{{c.measure}}</div>
+                        <div class="ingre-amount">
+                          {{ c.amount }}{{ c.measure }}
+                        </div>
                       </div>
-                      <v-divider v-if="checklist[idx].categoryName === cg"></v-divider>
+                      <v-divider
+                        v-if="checklist[idx].categoryName === cg"
+                      ></v-divider>
                     </div>
                   </div>
                 </div>
@@ -147,8 +182,14 @@
                       </div>-->
                     </div>
                     <v-divider></v-divider>
-                    <div v-for="(c, index) in checkedList" :key="index" class="pl-3 pr-3">
-                      <div class="check-wrap d-flex justify-space-between align-center mt-1">
+                    <div
+                      v-for="(c, index) in checkedList"
+                      :key="index"
+                      class="pl-3 pr-3"
+                    >
+                      <div
+                        class="check-wrap d-flex justify-space-between align-center mt-1"
+                      >
                         <div class="ingre-name">
                           <v-checkbox
                             v-model="checkedList[index]"
@@ -160,7 +201,9 @@
                             @click="needtobuy(c, index)"
                           ></v-checkbox>
                         </div>
-                        <div class="ingre-amount">{{c.amount}}{{c.measure}}</div>
+                        <div class="ingre-amount">
+                          {{ c.amount }}{{ c.measure }}
+                        </div>
                       </div>
                       <v-divider></v-divider>
                     </div>
@@ -175,12 +218,17 @@
                   style="color: white; width: 100%"
                   v-bind="attrs"
                   v-on="on"
-                >장보기 완료</v-btn>
+                  >장보기 완료</v-btn
+                >
               </template>
-              <v-card v-if="checklist.length===0">
-                <v-card-title style="font-size: x-large;">
+              <v-card v-if="checklist.length === 0">
+                <v-card-title style="font-size: x-large">
                   장보기완료
-                  <img class="category-images" src="/cart_icon/담은카트_1.png" alt="flour" />
+                  <img
+                    class="category-images"
+                    src="/cart_icon/담은카트_1.png"
+                    alt="flour"
+                  />
                 </v-card-title>
                 <v-card-text>장보기를 완료하시겠습니까?</v-card-text>
                 <v-card-actions>
@@ -188,24 +236,35 @@
                   <v-btn
                     color="green darken-1"
                     text
-                    @click="[dialog1 = false, completeShopping()]"
-                  >확인</v-btn>
+                    @click=";[(dialog1 = false), completeShopping()]"
+                    >확인</v-btn
+                  >
                 </v-card-actions>
               </v-card>
               <v-card v-else>
                 <v-card-title style="font-size: x-large">
                   잠깐
-                  <img class="category-images" src="/cart_icon/빈카트_1.png" alt="flour" />
+                  <img
+                    class="category-images"
+                    src="/cart_icon/빈카트_1.png"
+                    alt="flour"
+                  />
                 </v-card-title>
-                <v-card-text>아직 구매하지 않은 식재료가 있습니다. 장보기를 완료하시겠습니까?</v-card-text>
+                <v-card-text
+                  >아직 구매하지 않은 식재료가 있습니다. 장보기를
+                  완료하시겠습니까?</v-card-text
+                >
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" text @click="dialog1 = false">돌아가기</v-btn>
+                  <v-btn color="green darken-1" text @click="dialog1 = false"
+                    >돌아가기</v-btn
+                  >
                   <v-btn
                     color="green darken-1"
                     text
-                    @click="[dialog1 = false, completeShopping()]"
-                  >확인</v-btn>
+                    @click=";[(dialog1 = false), completeShopping()]"
+                    >확인</v-btn
+                  >
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -328,8 +387,6 @@ export default {
 }
 </script>
 
-
-
 <style scoped>
 .check-page {
   padding-top: 70px;
@@ -352,10 +409,12 @@ export default {
   padding: 4%;
 }
 .before-shopping {
+  background-image: url('/bg/bg_img.png');
   padding: 4%;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }
 .after-shopping {
+  background-image: url('/bg/bg_img.png');
   padding: 4%;
   box-shadow: 0px 3px 3px 1px rgba(0, 0, 0, 0.2);
 }

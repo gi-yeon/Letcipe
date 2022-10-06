@@ -103,7 +103,10 @@
               <v-card-text>{{ recipeDetail.content }}</v-card-text>
               <v-card-title class="d-flex text-md-h4">
                 <div>재료</div>
-                <div class="ml-3" style="font-size: small; color: #ffa500">
+                <div
+                  class="d-flex ml-3"
+                  style="font-size: small; color: #ffa500"
+                >
                   <div v-if="recipeDetail.cookingTime != -1">
                     <v-icon small color="letcipe">mdi-timer</v-icon>
                     {{ recipeDetail.cookingTime }}분
@@ -167,7 +170,7 @@
               </v-row>
               <v-row align="center">
                 <v-col cols="1"></v-col>
-                  <v-col cols="10" class="pr-0 pl-0">
+                <v-col cols="10" class="pr-0 pl-0">
                   <v-text-field
                     v-model="enterComment"
                     color="letcipe"

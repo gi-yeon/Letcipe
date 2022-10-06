@@ -21,10 +21,10 @@
           </div>
           <div class="d-flex justify-space-between">
             <div class="d-flex align-items-center">
-              <div v-if="!isAllCheck" @click="allCheck">
+              <div v-if="!isAllCheck" style="z-index: 5" @click="allCheck">
                 <v-icon>mdi-check-circle-outline</v-icon>전체 선택
               </div>
-              <div v-else @click="allCheck">
+              <div v-else style="z-index: 5" @click="allCheck">
                 <v-icon>mdi-check-circle</v-icon>전체 선택
               </div>
             </div>
