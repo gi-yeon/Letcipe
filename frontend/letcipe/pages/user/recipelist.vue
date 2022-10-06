@@ -199,7 +199,6 @@ export default {
     })
     promise.then(async () => {
       await this.myrecipeList(pageable)
-      console.log(this.myRecipeList)
       this.myRecipeList?.forEach((mr) => {
         const recipeListItem = {
           id: mr.id,
@@ -223,7 +222,6 @@ export default {
       //   this.TotalPage = this.myRecipe.length / 5
       //   console.log(this.TotalPage)
       //   console.log(this.myRecipes)
-      console.log(this.recipeList)
     })
   },
   methods: {

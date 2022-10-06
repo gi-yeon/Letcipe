@@ -16,6 +16,7 @@ export const state = () => ({
   amountByRecipe : {},
   isSucceededtoHistory : false,
   isSucceededtoRecipeList : false,
+  isSucceededtoCart : false,
 })
 
 export const mutations = {
@@ -62,6 +63,12 @@ export const mutations = {
   SET_ISSUCCEEDEDTOHISTORY(state, isSucceededtoHistory){
    state.isSucceededtoHistory = isSucceededtoHistory
   },
+  SET_ISSUCCEEDEDTOCART_TRUE(state){
+    state.isSucceededtoCart = true
+  },
+  SET_ISSUCCEEDEDTOCART_FALSE(state){
+    state.isSucceededtoCart = false
+  },
   ADD_INGRELIST(state, ingreItem){
     console.log(state.ingreList)
     state.ingreList.push(ingreItem);
@@ -90,11 +97,11 @@ export const actions = {
       await createCart(
         addrecipes,
         ({ data }) => {
-          console.log(data)
-           console.log('장바구니에 레시피 등록 성공!')
+          commit('SET_ISSUCCEEDEDTOCART_TRUE')
         },
         (error) => {
           console.log(error)
+          commit('SET_ISSUCCEEDEDTOCART_FALSE')
         }
       )
     },
