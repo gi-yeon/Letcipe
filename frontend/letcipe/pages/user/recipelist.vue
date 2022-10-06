@@ -240,7 +240,7 @@ export default {
     ...mapActions('recipe', ['patchRecipeDetail']),
     ...mapActions('user', ['myrecipe', 'myrecipeList']),
     ...mapActions('cart', ['createCart']),
-    ...mapMutations('recipelist', ['SET_RECIPE_ID', 'CLEAR_RECIPE_ID']),
+    ...mapMutations('recipelist', ['SET_RECIPELIST_ID', 'CLEAR_RECIPELIST_ID']),
     ...mapActions('recipelist', [
       'deleteRecipeList',
       'deleteRecipeListBookmark',
@@ -248,8 +248,8 @@ export default {
       'updateRecipeList',
     ]),
     editItem(mr) {
-      this.CLEAR_RECIPE_ID()
-      this.SET_RECIPE_ID(mr.id)
+      this.CLEAR_RECIPELIST_ID()
+      this.SET_RECIPELIST_ID(mr.id)
       this.$router.push('/recipelist/modify')
     },
     async deleteItem(id) {
@@ -258,8 +258,8 @@ export default {
       this.dialog = false
     },
     moveDetail(mr) {
-      this.CLEAR_RECIPE_ID()
-      this.SET_RECIPE_ID(mr.id)
+      this.CLEAR_RECIPELIST_ID()
+      this.SET_RECIPELIST_ID(mr.id)
       this.$router.push('/recipelist/detail')
     },
     moveMypage() {
