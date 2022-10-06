@@ -172,6 +172,11 @@ export default {
           icon: 'mdi-account',
           m: '/user/mypage',
         },
+        {
+          title: '테스트페이지',
+          icon: 'mdi-check',
+          m: '/user/recipetest',
+        },
       ],
       profileimg: null,
     }

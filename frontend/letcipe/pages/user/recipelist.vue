@@ -246,12 +246,14 @@ export default {
           cnt: 0,
           items: mr.recipeListItems,
         }
+        console.log(1111)
+        console.log(mr)
         mr.recipeListItems.forEach((m) => {
           recipeListItem.cnt += m.amount
         })
         this.recipeList.push(recipeListItem)
-        const pages = this.recipeList.length / mr.recipeListItems.length
-        this.TotalPage = pages
+        const pages = this.recipeList.length / this.pageable.size
+        this.TotalPage = pages + 1
       })
       console.log(1111111111)
       console.log('dksdud')
@@ -339,33 +341,19 @@ export default {
         mr.isShared = 'Y'
       }
     },
-    async handlePage() {
+    async handlePage() {},
+    async NextPage() {
       this.pageable.page += 1
+      console.log(this.currentPage)
       await this.myrecipeList(this.pageable)
-      this.myRecipeList?.forEach((mr) => {
-        if (mr.recipeListItems.length !== 0) {
-          const recipeListItem = {
-            id: mr.id,
-            bookmark: mr.bookmark,
-            name: mr.name,
-            isShared: mr.isShared,
-            bookmarkCnt: mr.recipeListBookmark,
-            repImg: mr.recipeListItems[0].recipe.repImg,
-            description: mr.description,
-            content: mr.recipeListItems[0].recipe.title + ' 외',
-            regTime: mr.regTime.split('T')[0],
-            review: mr.review,
-            cnt: 0,
-            items: mr.recipeListItems,
-          }
-          mr.recipeListItems.forEach((m) => {
-            recipeListItem.cnt += m.amount
-          })
-          this.recipeList.push(recipeListItem)
-          const pages = this.recipeList.length / mr.recipeListItems.length
-          this.TotalPage = pages
-        }
-      })
+      this.TotalPage += 1
+    },
+    async BeforePage() {
+      this.pageable.page -= 1
+      console.log(this.currentPage)
+      await this.myrecipeList(this.pageable)
+
+      this.TotalPage -= 1
     },
   },
 }

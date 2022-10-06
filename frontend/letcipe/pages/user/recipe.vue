@@ -92,18 +92,17 @@
           <v-pagination
             v-model="currentPage"
             color="letcipe"
-            :length="myRecipes.length"
+            :length="TotalPage"
             :per-page="perPage"
             :total-visivle="5"
             circle
           ></v-pagination>
         </v-container>
 
-        <v-snackbar
-          v-model="snackbar"
-          :timeout="timeout"
-        >
-          {{ isSucceededtoCart? "담기에 성공했습니다":"담기에 실패했습니다" }}
+        <v-snackbar v-model="snackbar" :timeout="timeout">
+          {{
+            isSucceededtoCart ? '담기에 성공했습니다' : '담기에 실패했습니다'
+          }}
         </v-snackbar>
       </div>
     </v-app>
@@ -118,8 +117,9 @@ export default {
     return {
       pageable: {
         page: 0,
+        size: 10,
       },
-      TotalPage: 0,
+      TotalPage: 5,
       perPage: 5,
       currentPage: 1,
       byname: '',
@@ -138,8 +138,8 @@ export default {
       myRecipes: [],
       dialog: false,
       selectedRecipe: {},
-      timeout:2000,
-      snackbar:false
+      timeout: 2000,
+      snackbar: false,
     }
   },
   computed: {
@@ -156,6 +156,7 @@ export default {
     promise.then(async () => {
       await this.myrecipe(this.pageable)
       this.myrecipe = this.myRecipe
+
       //   this.myRecipe.forEach((mr) => {
       //     this.myRecipes.push(mr)
       //   })
