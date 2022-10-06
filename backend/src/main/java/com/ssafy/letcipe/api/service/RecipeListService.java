@@ -104,8 +104,14 @@ public class RecipeListService {
 
     @Transactional
     public void deleteRecipeListItem(Long userId, ReqDeleteRecipeListItemDto reqDeleteRecipeListItemDto) {
-        RecipeListItem recipeListItem = recipeListItemRepository.findByRecipeListIdAndRecipeId(reqDeleteRecipeListItemDto.getRecipeListId(), reqDeleteRecipeListItemDto.getRecipeId());
+        long recipeListId = reqDeleteRecipeListItemDto.getRecipeListId();
+        RecipeListItem recipeListItem = recipeListItemRepository.findByRecipeListIdAndRecipeId(recipeListId, reqDeleteRecipeListItemDto.getRecipeId());
         recipeListItemRepository.delete(recipeListItem);
+        recipeListItemRepository.flush();
+        // 아이템이 0개면 레시피 리스트 삭제
+        if (recipeListItemRepository.findAllByRecipeId(recipeListId).size() == 0) {
+            deleteRecipeList(userId,recipeListId);
+        }
     }
 
     @Transactional
@@ -117,4 +123,21 @@ public class RecipeListService {
         }
         return result;
     }
+
+    @Transactional
+    public Integer totalNumRecipeList(String keyword) {
+      return recipeListRepository.countRecipeListByNameContaining(keyword);
+    }
+
+    @Transactional
+    public List<ResGetRecipeListDto> getBestRecipeList(Pageable pageable) {
+        List<ResGetRecipeListDto> result = new ArrayList<>();
+        List<RecipeList> lists = recipeListRepository.findBestRecipeLists(pageable);
+        for (RecipeList list : lists) {
+            result.add(new ResGetRecipeListDto(list,false));
+        }
+        return result;
+    }
+
+
 }

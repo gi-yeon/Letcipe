@@ -35,6 +35,8 @@ public class AdminService {
     public void saveCartReport(String fileName) throws IOException {
         // 분석결과 파일 읽기
         File result = fileHandler.getFile(CART_RESULT_PATH, fileName);
+        if (!result.exists())
+            throw new FileNotFoundException("장바구니 분석 결과 파일이 없습니다.");
 
         BufferedReader br = new BufferedReader(new FileReader(result));
         String str;
@@ -69,6 +71,8 @@ public class AdminService {
     public void saveApiReport(String fileName) throws IOException, DataIntegrityViolationException {
         // 분석결과 파일 읽기
         File result = fileHandler.getFile(API_RESULT_PATH, fileName);
+        if (!result.exists())
+            throw new FileNotFoundException("API 분석 결과 파일이 없습니다.");
 
         BufferedReader br = new BufferedReader(new FileReader(result));
         String str;

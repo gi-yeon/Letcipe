@@ -8,6 +8,8 @@ import com.ssafy.letcipe.domain.cart.Cart;
 import com.ssafy.letcipe.domain.cart.CartRepository;
 import com.ssafy.letcipe.domain.cartIngredient.CartIngredient;
 import com.ssafy.letcipe.domain.cartIngredient.CartIngredientRepository;
+import com.ssafy.letcipe.domain.headerCode.HeaderCode;
+import com.ssafy.letcipe.domain.headerCode.HeaderCodeRepository;
 import com.ssafy.letcipe.domain.history.History;
 import com.ssafy.letcipe.domain.history.HistoryRepository;
 import com.ssafy.letcipe.domain.history.ProcessType;
@@ -48,6 +50,7 @@ public class CartService {
     private final CartIngredientRepository cartIngredientRepository;
     private final HistoryIngredientRepository historyIngredientRepository;
     private final HistoryItemRepository historyItemRepository;
+    private final HeaderCodeRepository headerCodeRepository;
 
     @Transactional
     public void createCart(Long recipe_id, Long userId) {
@@ -264,10 +267,11 @@ public class CartService {
         while (keys.hasNext()) {
             Long id = keys.next();
             Ingredient ingredient = ingredientObjectMap.get(id);
+        HeaderCode code = headerCodeRepository.findById(ingredient.getCategory().substring(0, 3)).orElseThrow(() -> new NullPointerException("카테고리를 찾을 수 없습니다."));
             ResGetCartIngredientDto dto = ResGetCartIngredientDto.builder()
                     .ingredient(ResGetIngredientDto.builder()
                             .id(ingredient.getId())
-                            .category(ingredient.getCategory())
+                            .category(code.getName())
                             .name(ingredient.getName())
                             .measure(ingredient.getMeasure())
                             .gml(ingredient.getGml())
