@@ -839,18 +839,19 @@ export default {
       this.snackbar = true
       this.$router.go()
     },
-    async deleteRecipe(recipeId) {
-      await this.deleteCart(recipeId)
+    deleteRecipe(recipeId) {
+      this.deleteCart(recipeId)
+      this.$router.go()
     },
     checkedDeleteAlert() {
       this.dialogTitle = 'Caution'
       this.errorMsg = '정말로 삭제하시겠습니까?'
       this.dialogAlert = true
     },
-    checkedDelete() {
+    async checkedDelete() {
       if (this.checked.length > 0) {
         for (let i = 0; i < this.checked.length; i++) {
-          this.deleteRecipe(this.checked[i].recipe.id)
+          await this.deleteCart(this.checked[i].recipe.id)
         }
       }
       this.$router.go()
