@@ -136,9 +136,8 @@
 ### 로고 정보는 아래를 참고해주세요.
 
 <p display="inline-block">
-<img src="logo/렛시피_로고_b1.png">
+<img src="https://lab.ssafy.com/s07-bigdata-dist-sub2/S07P22A705/-/blob/master/logo/%EB%A0%9B%EC%8B%9C%ED%94%BC_%EB%A1%9C%EA%B3%A0_b1.png">
 </p>
-
 
 ### 렛시피의 색상입니다.
 
