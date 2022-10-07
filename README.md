@@ -121,7 +121,7 @@
 
 - [ERD](https://www.erdcloud.com/d/f5NYtLuAcKGhGZPw2)
 
-![image-20221007100409477](image-20221007100409477.png)
+
 
 # 디자인🎨
 
