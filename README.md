@@ -127,7 +127,9 @@
 
 - [ERD](https://www.erdcloud.com/d/f5NYtLuAcKGhGZPw2)
 
+![ERD](/docs/ERD.png)
 
+#
 
 # 디자인🎨
 
@@ -151,9 +153,9 @@
 
 ## 2. 폰트와 아이콘
 
-![image-20221007093339286](C:\Users\SSAFY\AppData\Roaming\Typora\typora-user-images\image-20221007093339286.png)
+![이서윤체](/docs/이서윤체.png)
 
-![image-20221007093324224](C:\Users\SSAFY\AppData\Roaming\Typora\typora-user-images\image-20221007093324224.png)
+![렛시피_이서윤](/docs/렛시피_이서윤.png)
 
 
 ### 렛시피의 폰트입니다.
