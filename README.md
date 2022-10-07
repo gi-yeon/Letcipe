@@ -20,7 +20,6 @@
 
 ## FRONT-END🖥️
 
-김정아, 박지수
 
 ### Skills
 
