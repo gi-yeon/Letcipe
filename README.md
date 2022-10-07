@@ -7,11 +7,22 @@
 와이어프레임 →  https://miro.com/app/board/uXjVPZPaM24=/
 
 
+🙋‍♂️팀장 오성준
+
+👨‍👩‍👦‍👦팀원 김정아, 민상규, 박지수, 이준성, 정기연
+
+
+
+### Developer
+
+- 김정아
+- 박지수
 
 ## FRONT-END🖥️
 
-### Skills
+김정아, 박지수
 
+### Skills
 
 <p display="inline-block">
 <img src="https://img.shields.io/badge/HTML-E34F26?style=for-the-badge&logo=HTML5&logoColor=white">
@@ -24,14 +35,17 @@
 </p>
 
 
+### Developer
 
-
+- 민상규
+- 박지수
+- 오성준
+- 이준성
 
 
 ## BACK-END💽
 
 ### Skills
-
 
 <p display="inline-block">
 <img src="https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring%20boot&logoColor=white">
@@ -42,6 +56,9 @@
 
 
 
+### Developer
+
+- 정기연
 
 ## Server📤
 
@@ -58,8 +75,12 @@
 
 
 
-## Hadoop🐘
+### Developer
 
+- 정기연
+- 이준성
+
+## Hadoop🐘
 
 <p display="inline-block">
 <img src="https://img.shields.io/badge/Hadoop-ECD53F?style=for-the-badge&logo=Apache Hadoop&logoColor=black">
