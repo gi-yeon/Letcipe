@@ -139,8 +139,6 @@
 
 ![로고](/logo/렛시피_로고_b1.png)
 
-<img src="/logo/로고고.gif" width="300" height="700">
-
 
 ### 렛시피의 색상입니다.
 
@@ -290,30 +288,4 @@
     - **primary key → id (Long, auto increment)**
     - full length → **column 명**
 
-## 🖥실행화면
 
-### 메인 화면
-
-- 진행 중인 레시피 리스트(식단)과 장볼 목록 표시
-
-- 사용자 맞춤 레시피 추천
-
-<img src="/logo/메인화면.gif" width="300" height="700">
-
-### 장바구니 화면
-
-- 레시피를 진행할 시 필요한 재료들을 카테고리별로 확인
-
-<img src="/logo/카트시작.gif" width="300" height="700">
-
-### 레시피 리스트(식단) 화면
-
-- 북마크된 레시피 리스트 상세 보기
-
-<img src="/logo/레시피리스트.gif" width="300" height="700">
-
-### 마케터 화면
-
-- 사용자 정보에 따른 데이터 분석 보기
-
-<img src="/logo/관리자.gif" width="300" height="700">
