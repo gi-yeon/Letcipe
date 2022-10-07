@@ -2,9 +2,9 @@
 
 스마트한 데일리 장보기, EAT, PLAT, SHARE
 
-### 렛시피 바로가기 →  https://j7a705.q.ssafy.io/
+### [렛시피 바로가기](https://j7a705.q.ssafy.io/)
 
-와이어프레임 →  https://miro.com/app/board/uXjVPZPaM24=/
+
 
 
 🙋‍♂️팀장 오성준
