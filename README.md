@@ -2,8 +2,6 @@
 
 스마트한 데일리 장보기, EAT, PLAT, SHARE
 
-### [렛시피 바로가기](https://j7a705.q.ssafy.io/)
-
 
 
 
