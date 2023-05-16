@@ -11,13 +11,12 @@
 
 
 
+
+## FRONT-END🖥️
 ### Developer
 
 - 김정아
 - 박지수
-
-## FRONT-END🖥️
-
 
 ### Skills
 
@@ -31,15 +30,15 @@
 </p>
 
 
+
+
+## BACK-END💽
 ### Developer
 
 - 민상규
 - 박지수
 - 오성준
 - 이준성
-
-
-## BACK-END💽
 
 ### Skills
 
@@ -52,11 +51,11 @@
 
 
 
+
+## Server📤
 ### Developer
 
 - 정기연
-
-## Server📤
 
 ### Skills
 
@@ -71,12 +70,12 @@
 
 
 
+
+## Hadoop🐘
 ### Developer
 
 - 정기연
 - 이준성
-
-## Hadoop🐘
 
 <p display="inline-block">
 <img src="https://img.shields.io/badge/Hadoop-ECD53F?style=for-the-badge&logo=Apache Hadoop&logoColor=black">
